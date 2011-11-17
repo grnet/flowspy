@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*- vim:encoding=utf-8:
+# vim: tabstop=4:shiftwidth=4:softtabstop=4:expandtab
+
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -5,6 +8,7 @@ import nxpy as np
 from ncclient import manager
 from ncclient.transport.errors import AuthenticationError, SSHError
 from lxml import etree as ET
+from ipaddr import *
 
 FRAGMENT_CODES = (
     ("dont-fragment", "Don't fragment"),
@@ -27,9 +31,17 @@ THEN_CHOICES = (
 
     
 class MatchAddress(models.Model):
-    address = models.CharField(max_length=255)
+    address = models.CharField(max_length=255, help_text=u"Network address. Use address/CIDR notation")
     def __unicode__(self):
         return self.address
+
+    def clean(self, *args, **kwargs):
+        from django.core.exceptions import ValidationError
+        try:
+            assert(IPNetwork(self.address))
+        except Exception:
+            raise ValidationError('Invalid network address format')
+
     class Meta:
         db_table = u'match_address'
 
@@ -94,7 +106,7 @@ class ThenAction(models.Model):
         db_table = u'then_action'
 
 class ThenStatement(models.Model):
-    thenaction = models.ManyToManyField(ThenAction, blank=True, null=True)
+    thenaction = models.ManyToManyField(ThenAction)
     class Meta:
         db_table = u'then'    
 
@@ -111,6 +123,37 @@ class MatchStatement(models.Model):
     matchSource = models.ForeignKey(MatchAddress, blank=True, null=True, related_name="matchSource")
     matchSourcePort = models.ManyToManyField(MatchPort, blank=True, null=True, related_name="matchSourcePort")
     matchTcpFlag = models.ForeignKey(MatchTcpFlag, blank=True, null=True)
+    
+#    def clean(self, *args, **kwargs):
+#        clean_error = True
+#        from django.core.exceptions import ValidationError
+#        if not (self.matchDestination or self.matchfragmenttype or self.matchicmpcode or self.matchicmptype 
+#                   or self.matchpacketlength or self.matchprotocol or self.matchSource or self.matchTcpFlag):
+#            clean_error = False
+#        try:
+#            assert(self.matchDestinationPort)
+#            clean_error = False
+#        except:
+#            pass
+#        try: 
+#            assert(self.matchSourcePort)
+#            clean_error = False
+#        except:
+#            pass
+#        try:
+#            assert(self.matchport)
+#            clean_error = False
+#        except:
+#            pass
+#        try:
+#            print self.matchdscp
+#            assert(self.matchdscp)
+#            clean_error = False
+#        except:
+#            pass
+#        if clean_error:
+#            raise ValidationError('At least one match statement has to be declared')
+        
     class Meta:
         db_table = u'match'
 
@@ -127,7 +170,7 @@ class Route(models.Model):
     
     class Meta:
         db_table = u'route'
-
+        
     def save(self, *args, **kwargs):
         # Begin translation to device xml configuration
         device = np.Device()

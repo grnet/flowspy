@@ -63,44 +63,7 @@ class MatchDscp(models.Model):
     class Meta:
         db_table = u'match_dscp'
 
-class MatchFragmentType(models.Model):
-    fragmenttype = models.CharField(max_length=20, choices=FRAGMENT_CODES)
-    def __unicode__(self):
-        return self.fragmenttype
-    class Meta:
-        db_table = u'match_fragment_type'
-    
-class MatchIcmpCode(models.Model):
-    icmp_code = models.CharField(max_length=64)
-    def __unicode__(self):
-        return self.icmp_code
-    class Meta:
-        db_table = u'match_icmp_code'    
-
-class MatchIcmpType(models.Model):
-    icmp_type = models.CharField(max_length=64)
-    class Meta:
-        db_table = u'match_icmp_type'    
-
-class MatchPacketLength(models.Model):
-    packet_length = models.IntegerField()
-    class Meta:
-        db_table = u'match_packet_length'    
-
-class MatchProtocol(models.Model):
-    protocol = models.CharField(max_length=64)
-    def __unicode__(self):
-        return self.protocol
-    class Meta:
-        db_table = u'match_protocol'    
-
-class MatchTcpFlag(models.Model):
-    tcp_flag = models.CharField(max_length=255)
-    def __unicode__(self):
-        return self.tcp_flag
-    class Meta:
-        db_table = u'match_tcp_flag'    
-    
+   
 class ThenAction(models.Model):
     action = models.CharField(max_length=60, choices=THEN_CHOICES)
     action_value = models.CharField(max_length=255, blank=True, null=True)
@@ -109,68 +72,29 @@ class ThenAction(models.Model):
     class Meta:
         db_table = u'then_action'
 
-class ThenStatement(models.Model):
-    thenaction = models.ManyToManyField(ThenAction)
-    class Meta:
-        db_table = u'then'
-
-class MatchStatement(models.Model):
-    matchDestination = models.ForeignKey(MatchAddress, blank=True, null=True, related_name="matchDestination")
-    matchDestinationPort = models.ManyToManyField(MatchPort, blank=True, null=True, related_name="matchDestinationPort")
-    matchdscp = models.ManyToManyField(MatchDscp, blank=True, null=True)
-    matchfragmenttype = models.ForeignKey(MatchFragmentType, blank=True, null=True)
-    matchicmpcode = models.ForeignKey(MatchIcmpCode, blank=True, null=True)
-    matchicmptype = models.ForeignKey(MatchIcmpType, blank=True, null=True)
-    matchpacketlength = models.ForeignKey(MatchPacketLength, blank=True, null=True)
-    matchport = models.ManyToManyField(MatchPort, blank=True, null=True, related_name="matchPort")
-    matchprotocol = models.ForeignKey(MatchProtocol, blank=True, null=True)
-    matchSource = models.ForeignKey(MatchAddress, blank=True, null=True, related_name="matchSource")
-    matchSourcePort = models.ManyToManyField(MatchPort, blank=True, null=True, related_name="matchSourcePort")
-    matchTcpFlag = models.ForeignKey(MatchTcpFlag, blank=True, null=True)
-
-#    def clean(self, *args, **kwargs):
-#        clean_error = True
-#        from django.core.exceptions import ValidationError
-#        if not (self.matchDestination or self.matchfragmenttype or self.matchicmpcode or self.matchicmptype 
-#                   or self.matchpacketlength or self.matchprotocol or self.matchSource or self.matchTcpFlag):
-#            clean_error = False
-#        try:
-#            assert(self.matchDestinationPort)
-#            clean_error = False
-#        except:
-#            pass
-#        try: 
-#            assert(self.matchSourcePort)
-#            clean_error = False
-#        except:
-#            pass
-#        try:
-#            assert(self.matchport)
-#            clean_error = False
-#        except:
-#            pass
-#        try:
-#            print self.matchdscp
-#            assert(self.matchdscp)
-#            clean_error = False
-#        except:
-#            pass
-#        if clean_error:
-#            raise ValidationError('At least one match statement has to be declared')
-        
-    class Meta:
-        db_table = u'match'
-
 class Route(models.Model):
     name = models.CharField(max_length=128)
     applier = models.ForeignKey(User)
-    match = models.ForeignKey(MatchStatement)
-    then = models.ForeignKey(ThenStatement)
+    destination = models.CharField(max_length=32, blank=True, null=True, help_text=u"Network address. Use address/CIDR notation")
+    destinationport = models.ManyToManyField(MatchPort, blank=True, null=True, related_name="matchDestinationPort")
+    dscp = models.ManyToManyField(MatchDscp, blank=True, null=True)
+    fragmenttype = models.CharField(max_length=20, choices=FRAGMENT_CODES, blank=True, null=True)
+    icmpcode = models.CharField(max_length=32, blank=True, null=True)
+    icmptype = models.CharField(max_length=32, blank=True, null=True)
+    packetlength = models.IntegerField(blank=True, null=True)
+    port = models.ManyToManyField(MatchPort, blank=True, null=True, related_name="matchPort")
+    protocol = models.CharField(max_length=32, blank=True, null=True)
+    source = models.CharField(max_length=32, blank=True, null=True, help_text=u"Network address. Use address/CIDR notation")
+    sourceport = models.ManyToManyField(MatchPort, blank=True, null=True, related_name="matchSourcePort")
+    tcpflag = models.CharField(max_length=128, blank=True, null=True)
+    then = models.ManyToManyField(ThenAction)
     filed = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
     is_online = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=False)
     expires = models.DateTimeField()
     response = models.CharField(max_length=512, blank=True, null=True)
+    comments = models.TextField(null=True, blank=True)
 
     
     def __unicode__(self):
@@ -178,7 +102,22 @@ class Route(models.Model):
     
     class Meta:
         db_table = u'route'
-        
+    
+    def clean(self, *args, **kwargs):
+        from django.core.exceptions import ValidationError
+        if self.destination:
+            try:
+                address = IPNetwork(self.address)
+                self.address = address.exploded
+            except Exception:
+                raise ValidationError('Invalid network address format')
+        if self.source:
+            try:
+                address = IPNetwork(self.address)
+                self.address = address.exploded
+            except Exception:
+                raise ValidationError('Invalid network address format')
+    
     def save(self, *args, **kwargs):
         applier = PR.Applier(route_object=self)
         commit, response = applier.apply()

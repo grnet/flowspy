@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Register" %}{% endblock %}
+{% block brcrmb_container %}{% endblock %}
+{% block content %}
+<!-- change recaptcha theme -->
+<script type="text/javascript">
+var RecaptchaOptions = {
+   theme : 'white'
+};
+</script>
+
+<div align="center" id="registration">
+
+<h3>{% trans "Register new user" %}</h3>
+        <form method="post">
+        	{% csrf_token %}
+        	<table>
+		{% for field in form %}
+          	<tr><th>{% trans field.label|capfirst %}</th><td>{{ field }}{% if field.errors %} <span class="error">{{ field.errors|join:", " }}</span>{% endif %}</td></tr>
+		{% endfor %}
+	        </table>
+          <input class="submit"type="submit" value="{% trans "Create" %}" />
+        </form>
+</div>
+{% endblock %}

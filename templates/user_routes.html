@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block extrahead %}
+<script type="text/javascript" src="/static/js/jquery.dataTables.js"></script>
+<script type="text/javascript">
+	$(document).ready( function(){
+			$('#routes_table').dataTable( {
+			"bJQueryUI": true,
+			"oLanguage": {
+				"sLengthMenu": '{% trans "Display" %} <select><option value="25">25</option><option value="50">50</option><option value="-1">{% trans "All" %}</option></select> rules'
+			},
+			"iDisplayLength": 25,
+	} );
+		});
+</script>
+{% endblock %}
+{% block title %}{% trans "My routes" %}{% endblock %}
+{% block content %}
+<h3>{% trans "My routes" %}</h3>
+
+<table class="display" width="100%" id="routes_table">
+<thead>
+<tr>
+	<th>{% trans "Name" %}</th>
+	<th>{% trans "Match" %}</th>
+	<th style="text-align: center;">{% trans "Then" %}</th>
+	<th style="text-align: center;">{% trans "Status" %}</th>
+	{% comment %}<th style="text-align: center;">{% trans "Details" %}</th>{% endcomment %}
+	<th style="text-align: center;">{% trans "Expires" %}</th>
+</tr>
+</thead>
+
+<tbody>
+{% for route in routes %}
+
+<tr {% if route.is_online %} class="GradeA" {% else %} class="GradeX" {% endif %}>
+	<td>{{ route.name }}</td>
+	<td>{{ route.get_match|safe|escape }}</td>
+	<td style="text-align: center;">{{route.get_then|safe|escape}}</td>
+	<td style="text-align: center;">{% if route.is_online %}Online{% else %}Offline{% endif %}</td>
+	{% comment %}<td style="text-align: center;">{{ route.response }}</td>{% endcomment %}
+	<td style="text-align: center;">{{ route.expires }}</td>
+</tr>
+
+{% endfor %}
+</tbody>
+</table>
+
+{% endblock %}

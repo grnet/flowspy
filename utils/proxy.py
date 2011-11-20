@@ -66,35 +66,45 @@ class Applier(object):
             flow.routes.append(route)
             device.routing_options.append(flow)
             route.name = route_obj.name
-            match = route_obj.match
-            if match.matchSource:
-                route.match['source'].append(match.matchSource.address)
-            if match.matchDestination:
-                route.match['destination'].append(match.matchDestination.address)
-            if match.matchprotocol:
-                route.match['protocol'].append(match.matchprotocol.protocol)
-            if match.matchport:
-                for port in match.matchport.all():
-                    route.match['port'].append(port.port)
-            if match.matchDestinationPort:
-                for port in match.matchDestinationPort.all():
-                    route.match['destination-port'].append(port.port)
-            if match.matchSourcePort:
-                for port in match.matchSourcePort.all():
-                    route.match['source-port'].append(port.port)
-            if match.matchicmpcode:
-                route.match['icmp-code'].append(match.matchicmpcode.icmp_code)
-            if match.matchicmptype:
-                route.match['icmp-type'].append(match.matchicmptype.icmp_type)
-            if match.matchTcpFlag:
-                route.match['tcp-flags'].append(match.matchTcpFlag.tcp_flags)
-            if match.matchdscp:
-                for dscp in match.matchdscp.all():
-                    route.match['dscp'].append(dscp.dscp)
-            if match.matchfragmenttype:
-                route.match['fragment'].append(match.matchfragmenttype.fragmenttype)
-            then = route_obj.then
-            for thenaction in then.thenaction.all():
+            if route_obj.source:
+                route.match['source'].append(route_obj.source)
+            if route_obj.destination:
+                route.match['destination'].append(route_obj.destination)
+            if route_obj.protocol:
+                route.match['protocol'].append(route_obj.protocol)
+            try:
+                if route_obj.port:
+                    for port in route_obj.port.all():
+                        route.match['port'].append(port.port)
+            except:
+                pass
+            try:
+                if route_obj.destinationport:
+                    for port in route_obj.destinationport.all():
+                        route.match['destination-port'].append(port.port)
+            except:
+                pass
+            try:
+                if route_obj.sourceport:
+                    for port in route_obj.sourceport.all():
+                        route.match['source-port'].append(port.port)
+            except:
+                pass
+            if route_obj.icmpcode:
+                route.match['icmp-code'].append(route_obj.icmpcode)
+            if route_obj.icmptype:
+                route.match['icmp-type'].append(route_obj.icmptype)
+            if route_obj.tcpflag:
+                route.match['tcp-flags'].append(route_obj.tcpflag)
+            try:
+                if route_obj.dscp:
+                    for dscp in route_obj.dscp.all():
+                        route.match['dscp'].append(dscp.dscp)
+            except:
+                pass
+            if route_obj.fragmenttype:
+                route.match['fragment'].append(route_obj.fragmenttype)
+            for thenaction in route_obj.then.all():
                 if thenaction.action_value:
                     route.then[thenaction.action] = thenaction.action_value
                 else:

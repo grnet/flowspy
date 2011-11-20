@@ -10,33 +10,41 @@ class RouteAdmin(admin.ModelAdmin):
         applier = PR.Applier(route_objects=queryset)
         commit, response = applier.apply(configuration=applier.delete_routes())
         if commit:
-            rows = queryset.update(is_online=False)
+            rows = queryset.update(is_online=False, is_active=False)
             queryset.update(response="Successfully removed route from network")
             self.message_user(request, "Successfully removed %s routes from network" % rows)
         else:
             self.message_user(request, "Could not remove routes from network")
-    deactivate.short_description = "Remove selected routes from network"
+    deactivate.short_description = "Deactivate selected routes from network"
 
-    list_display = ('name', 'get_match', 'get_then', 'is_online', 'applier', 'response')
-    fields = ('name', 'match','then','applier', 'expires')
+    list_display = ('name', 'is_online', 'applier', 'get_match', 'get_then', 'response')
+    fieldsets = [
+        (None,               {'fields': ['name',]}),
+        ("Match",               {'fields': ['source', 'sourceport', 'destination', 'destinationport', 'port']}),
+        ('Advanced Match Statements', {'fields': ['dscp', 'fragmenttype', 'icmpcode', 'icmptype', 'packetlength', 'protocol', 'tcpflag'], 'classes': ['collapse']}),
+        ("Then",               {'fields': ['then' ]}),
+        (None,               {'fields': ['comments',]}),
+        
+    ]
+#    fields = ('name', 'applier', 'expires')
 
     #def formfield_for_dbfield(self, db_field, **kwargs):
     #    if db_field.name == 'password':
     #        kwargs['widget'] = PasswordInput
     #    return db_field.formfield(**kwargs)
 
-admin.site.register(MatchAddress)
+#admin.site.register(MatchAddress)
 admin.site.register(MatchPort)
 admin.site.register(MatchDscp)
-admin.site.register(MatchFragmentType)
-admin.site.register(MatchIcmpCode)
-admin.site.register(MatchIcmpType)
-admin.site.register(MatchPacketLength)
-admin.site.register(MatchProtocol)
-admin.site.register(MatchTcpFlag)
+#admin.site.register(MatchFragmentType)
+#admin.site.register(MatchIcmpCode)
+#admin.site.register(MatchIcmpType)
+#admin.site.register(MatchPacketLength)
+#admin.site.register(MatchProtocol)
+#admin.site.register(MatchTcpFlag)
 admin.site.register(ThenAction)
-admin.site.register(ThenStatement)
-admin.site.register(MatchStatement)
+#admin.site.register(ThenStatement)
+#admin.site.register(MatchStatement)
 admin.site.register(Route, RouteAdmin)
 
 admin.site.disable_action('delete_selected')

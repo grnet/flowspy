@@ -3,12 +3,15 @@
 
 from django.db import models
 from django.contrib.auth.models import User
-
-import nxpy as np
-from ncclient import manager
-from ncclient.transport.errors import AuthenticationError, SSHError
-from lxml import etree as ET
+from utils import proxy as PR
 from ipaddr import *
+import logging
+
+FORMAT = '%(asctime)s %(levelname)s: %(message)s'
+logging.basicConfig(format=FORMAT)
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+
 
 FRAGMENT_CODES = (
     ("dont-fragment", "Don't fragment"),
@@ -38,7 +41,8 @@ class MatchAddress(models.Model):
     def clean(self, *args, **kwargs):
         from django.core.exceptions import ValidationError
         try:
-            assert(IPNetwork(self.address))
+            address = IPNetwork(self.address)
+            self.address = address.exploded
         except Exception:
             raise ValidationError('Invalid network address format')
 
@@ -108,7 +112,7 @@ class ThenAction(models.Model):
 class ThenStatement(models.Model):
     thenaction = models.ManyToManyField(ThenAction)
     class Meta:
-        db_table = u'then'    
+        db_table = u'then'
 
 class MatchStatement(models.Model):
     matchDestination = models.ForeignKey(MatchAddress, blank=True, null=True, related_name="matchDestination")
@@ -123,7 +127,7 @@ class MatchStatement(models.Model):
     matchSource = models.ForeignKey(MatchAddress, blank=True, null=True, related_name="matchSource")
     matchSourcePort = models.ManyToManyField(MatchPort, blank=True, null=True, related_name="matchSourcePort")
     matchTcpFlag = models.ForeignKey(MatchTcpFlag, blank=True, null=True)
-    
+
 #    def clean(self, *args, **kwargs):
 #        clean_error = True
 #        from django.core.exceptions import ValidationError
@@ -164,7 +168,11 @@ class Route(models.Model):
     then = models.ForeignKey(ThenStatement)
     filed = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
+    is_online = models.BooleanField(default=False)
     expires = models.DateTimeField()
+    response = models.CharField(max_length=512, blank=True, null=True)
+
+    
     def __unicode__(self):
         return self.name
     
@@ -172,45 +180,151 @@ class Route(models.Model):
         db_table = u'route'
         
     def save(self, *args, **kwargs):
-        # Begin translation to device xml configuration
-        device = np.Device()
-        flow = np.Flow()
-        route = np.Route()
-        flow.routes.append(route)
-        device.routing_options.append(flow)
-        route.name = self.name
+        applier = PR.Applier(route_object=self)
+        commit, response = applier.apply()
+        if commit:
+            self.is_online = True
+            self.response = response
+        else:
+            self.is_online = False
+            self.response = response
+        super(Route, self).save(*args, **kwargs)
+    
+    def is_synced(self):
+        
+        found = False
+        get_device = PR.Retriever()
+        device = get_device.fetch_device()
+        try:
+            routes = device.routing_options[0].routes
+        except Exception as e:
+            logger.error("No routing options on device. Exception: %s" %e)
+            return False
+        for route in routes:
+            if route.name == self.name:
+                found = True
+                logger.info('Found a matching route name')
+                devicematch = route.match
+                routematch = self.match
+                try:
+                    assert(routematch.matchDestination.address)
+                    assert(devicematch['destination'][0])
+                    if routematch.matchDestination.address == devicematch['destination'][0]:
+                        found = found and True
+                        logger.info('Found a matching destination')
+                    else:
+                        found = False
+                        logger.info('Destination fields do not match')
+                except:
+                    pass
+                try:
+                    assert(routematch.matchSource.address)
+                    assert(devicematch['source'][0])
+                    if routematch.matchSource.address == devicematch['source'][0]:
+                        found = found and True
+                        logger.info('Found a matching source')
+                    else:
+                        found = False
+                        logger.info('Source fields do not match')
+                except:
+                    pass
+                try:
+                    assert(routematch.matchfragmenttype.fragmenttype)
+                    assert(devicematch['fragment'][0])
+                    if routematch.matchfragmenttype.fragmenttype == devicematch['fragment'][0]:
+                        found = found and True
+                        logger.info('Found a matching fragment type')
+                    else:
+                        found = False
+                        logger.info('Fragment type fields do not match')
+                except:
+                    pass
+                try:
+                    assert(routematch.matchicmpcode.icmp_code)
+                    assert(devicematch['icmp-code'][0])
+                    if routematch.matchicmpcode.icmp_code == devicematch['icmp-code'][0]:
+                        found = found and True
+                        logger.info('Found a matching icmp code')
+                    else:
+                        found = False
+                        logger.info('Icmp code fields do not match')
+                except:
+                    pass
+                try:
+                    assert(routematch.matchicmptype.icmp_type)
+                    assert(devicematch['icmp-type'][0])
+                    if routematch.matchicmpcode.icmp_type == devicematch['icmp-type'][0]:
+                        found = found and True
+                        logger.info('Found a matching icmp type')
+                    else:
+                        found = False
+                        logger.info('Icmp type fields do not match')
+                except:
+                    pass
+                try:
+                    assert(routematch.matchprotocol.protocol)
+                    assert(devicematch['protocol'][0])
+                    if routematch.matchprotocol.protocol == devicematch['protocol'][0]:
+                        found = found and True
+                        logger.info('Found a matching protocol')
+                    else:
+                        found = False
+                        logger.info('Protocol fields do not match')
+                except:
+                    pass
+                if found and not self.is_online:
+                     logger.error('Rule is applied on device but appears as offline')
+                     found = False
+        
+        return found
+
+    
+    def get_then(self):
+        ret = ''
+        then_statements = self.then.thenaction.all()
+        for statement in then_statements:
+            if statement.action_value:
+                ret = "%s %s:<strong>%s</strong><br/>" %(ret, statement.action, statement.action_value)
+            else: 
+                ret = "%s %s<br>" %(ret, statement.action)
+        return ret.rstrip(',')
+    
+    get_then.short_description = 'Then statement'
+    get_then.allow_tags = True
+
+    def get_match(self):
+        ret = ''
         match = self.match
-        if match.matchSource:
-            route.match['source'].append(match.matchSource.address)
         if match.matchDestination:
-            route.match['destination'].append(match.matchDestination.address)
+            ret = ret = '%s Destination Address:<strong>%s</strong><br/>' %(ret, match.matchDestination)
+        if match.matchfragmenttype:
+            ret = ret = "%s Fragment Type:<strong>%s</strong><br/>" %(ret, match.matchfragmenttype)
+        if match.matchicmpcode:
+            ret = ret = "%s ICMP code:<strong>%s</strong><br/>" %(ret, match.matchicmpcode)
+        if match.matchicmptype:
+            ret = ret = "%s ICMP Type:<strong>%s</strong><br/>" %(ret, match.matchicmptype)
+        if match.matchpacketlength:
+            ret = ret = "%s Packet Length:<strong>%s</strong><br/>" %(ret, match.matchpacketlength)
         if match.matchprotocol:
-            route.match['protocol'].append(match.matchprotocol.protocol)
+            ret = ret = "%s Protocol:<strong>%s</strong><br/>" %(ret, match.matchprotocol)
+        if match.matchSource:
+            ret = ret = "%s Source Address:<strong>%s</strong><br/>" %(ret, match.matchSource)
+        if match.matchTcpFlag:
+            ret = ret = "%s TCP flag:<strong>%s</strong><br/>" %(ret, match.matchTcpFlag)
         if match.matchport:
             for port in match.matchport.all():
-                route.match['port'].append(port.port)
+                    ret = "%s Port:<strong>%s</strong><br/>" %(ret, port)
         if match.matchDestinationPort:
             for port in match.matchDestinationPort.all():
-                route.match['destination-port'].append(port.port)
+                    ret = "%s Port:<strong>%s</strong><br/>" %(ret, port)
         if match.matchSourcePort:
             for port in match.matchSourcePort.all():
-                route.match['source-port'].append(port.port)
-        if match.matchicmpcode:
-            route.match['icmp-code'].append(match.matchicmpcode.icmp_code)
-        if match.matchicmptype:
-            route.match['icmp-type'].append(match.matchicmptype.icmp_type)
-        if match.matchTcpFlag:
-            route.match['tcp-flags'].append(match.matchTcpFlag.tcp_flags)
+                    ret = "%s Port:<strong>%s</strong><br/>" %(ret, port)
         if match.matchdscp:
             for dscp in match.matchdscp.all():
-                route.match['dscp'].append(dscp.dscp)
-        if match.matchfragmenttype:
-            route.match['fragment'].append(match.matchfragmenttype.fragmenttype)
-        then = self.then
-        for thenaction in then.thenaction.all():
-            if thenaction.action_value:
-                route.then[thenaction.action] = thenaction.action_value
-            else:
-                route.then[thenaction.action] = True
-        print ET.tostring(device.export())
-        super(Route, self).save(*args, **kwargs)
+                    ret = "%s Port:<strong>%s</strong><br/>" %(ret, dscp)
+        return ret.rstrip('<br/>')
+        
+    get_match.short_description = 'Match statement'
+    get_match.allow_tags = True
+

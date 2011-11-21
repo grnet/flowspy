@@ -8,6 +8,8 @@ from utils import proxy as PR
 from ipaddr import *
 from datetime import *
 import logging
+from flowspec.tasks import *
+from time import sleep
 
 FORMAT = '%(asctime)s %(levelname)s: %(message)s'
 logging.basicConfig(format=FORMAT)
@@ -61,7 +63,7 @@ class ThenAction(models.Model):
 
 class Route(models.Model):
     name = models.CharField(max_length=128)
-    applier = models.ForeignKey(User)
+    applier = models.ForeignKey(User, blank=True, null=True)
     source = models.CharField(max_length=32, blank=True, null=True, help_text=u"Network address. Use address/CIDR notation", verbose_name="Source Address")
     sourceport = models.ManyToManyField(MatchPort, blank=True, null=True, related_name="matchSourcePort", verbose_name="Source Port")
     destination = models.CharField(max_length=32, blank=True, null=True, help_text=u"Network address. Use address/CIDR notation", verbose_name="Destination Address")
@@ -79,7 +81,7 @@ class Route(models.Model):
     last_updated = models.DateTimeField(auto_now=True)
     is_online = models.BooleanField(default=False)
     is_active = models.BooleanField(default=False)
-    expires = models.DateField(default=days_offset)
+    expires = models.DateField(default=days_offset, blank=True, null=True,)
     response = models.CharField(max_length=512, blank=True, null=True)
     comments = models.TextField(null=True, blank=True, verbose_name="Comments")
 
@@ -106,17 +108,24 @@ class Route(models.Model):
             except Exception:
                 raise ValidationError('Invalid network address format at Source Field')
     
-    def save(self, *args, **kwargs):
-        applier = PR.Applier(route_object=self)
-        commit, response = applier.apply()
-        if commit:
-            self.is_online = True
-            self.is_active = True
-            self.response = response
-        else:
-            self.is_online = False
-            self.response = response
-        super(Route, self).save(*args, **kwargs)
+#    def save(self, *args, **kwargs):
+#        edit = False
+#        if self.pk:
+#            #This is an edit
+#            edit = True
+#        super(Route, self).save(*args, **kwargs)
+#        if not edit:
+#            response = add.delay(self)
+#            logger.info("Got save job id: %s" %response)
+    
+    def commit_add(self, *args, **kwargs):
+        response = add.delay(self)
+        logger.info("Got save job id: %s" %response)
+#    
+#    def delete(self, *args, **kwargs):
+#        response = delete.delay(self)
+#        logger.info("Got delete job id: %s" %response)
+        
 
     def is_synced(self):
         

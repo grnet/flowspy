@@ -5,7 +5,7 @@ from utils import proxy as PR
 class RouteAdmin(admin.ModelAdmin):
     
     actions = ['deactivate']
-
+    
     def deactivate(self, request, queryset):
         applier = PR.Applier(route_objects=queryset)
         commit, response = applier.apply(configuration=applier.delete_routes())
@@ -19,7 +19,7 @@ class RouteAdmin(admin.ModelAdmin):
 
     list_display = ('name', 'is_online', 'applier', 'get_match', 'get_then', 'response')
     fieldsets = [
-        (None,               {'fields': ['name',]}),
+        (None,               {'fields': ['name','applier']}),
         ("Match",               {'fields': ['source', 'sourceport', 'destination', 'destinationport', 'port']}),
         ('Advanced Match Statements', {'fields': ['dscp', 'fragmenttype', 'icmpcode', 'icmptype', 'packetlength', 'protocol', 'tcpflag'], 'classes': ['collapse']}),
         ("Then",               {'fields': ['then' ]}),

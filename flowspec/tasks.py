@@ -15,6 +15,10 @@ def add(route):
     route.is_active = is_active
     route.response = response
     route.save()
+
+@task
+def multi(x,y):
+    return x*y
 #
 #@task
 #def delete(route):

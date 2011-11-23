@@ -62,11 +62,11 @@ class ThenAction(models.Model):
         db_table = u'then_action'
 
 class Route(models.Model):
-    name = models.CharField(max_length=128)
+    name = models.SlugField(max_length=128)
     applier = models.ForeignKey(User, blank=True, null=True)
     source = models.CharField(max_length=32, blank=True, null=True, help_text=u"Network address. Use address/CIDR notation", verbose_name="Source Address")
     sourceport = models.ManyToManyField(MatchPort, blank=True, null=True, related_name="matchSourcePort", verbose_name="Source Port")
-    destination = models.CharField(max_length=32, blank=True, null=True, help_text=u"Network address. Use address/CIDR notation", verbose_name="Destination Address")
+    destination = models.CharField(max_length=32, help_text=u"Network address. Use address/CIDR notation", verbose_name="Destination Address")
     destinationport = models.ManyToManyField(MatchPort, blank=True, null=True, related_name="matchDestinationPort", verbose_name="Destination Port")
     port = models.ManyToManyField(MatchPort, blank=True, null=True, related_name="matchPort", verbose_name="Port" )
     dscp = models.ManyToManyField(MatchDscp, blank=True, null=True, verbose_name="DSCP")
@@ -135,6 +135,8 @@ class Route(models.Model):
         try:
             routes = device.routing_options[0].routes
         except Exception as e:
+            self.is_online = False
+            self.save()
             logger.error("No routing options on device. Exception: %s" %e)
             return False
         for route in routes:

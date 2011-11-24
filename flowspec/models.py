@@ -11,6 +11,9 @@ import logging
 from flowspec.tasks import *
 from time import sleep
 
+from flowspy.utils import beanstalkc
+
+
 FORMAT = '%(asctime)s %(levelname)s: %(message)s'
 logging.basicConfig(format=FORMAT)
 logger = logging.getLogger(__name__)
@@ -119,14 +122,31 @@ class Route(models.Model):
 #            logger.info("Got save job id: %s" %response)
     
     def commit_add(self, *args, **kwargs):
+        send_message("Adding route %s. Please wait..." %self.name)
         response = add.delay(self)
         logger.info("Got save job id: %s" %response)
-#    
+
+    def deactivate(self):
+        self.is_online = False
+        self.is_active = False
+        self.save()
 #    def delete(self, *args, **kwargs):
 #        response = delete.delay(self)
 #        logger.info("Got delete job id: %s" %response)
         
+    def commit_edit(self, *args, **kwargs):
+        send_message("Editing route %s. Please wait..." %self.name)
+        response = edit.delay(self)
+        logger.info("Got edit job id: %s" %response)
 
+    def commit_delete(self, *args, **kwargs):
+        send_message("Removing route %s. Please wait..." %self.name)
+        response = delete.delay(self)
+        logger.info("Got edit job id: %s" %response)
+#    
+#    def delete(self, *args, **kwargs):
+#        response = delete.delay(self)
+#        logger.info("Got delete job id: %s" %response)
     def is_synced(self):
         
         found = False
@@ -232,35 +252,40 @@ class Route(models.Model):
     def get_match(self):
         ret = ''
         if self.destination:
-            ret = ret = '%s Destination Address:<strong>%s</strong><br/>' %(ret, self.destination)
+            ret = '%s Destination Address:<strong>%s</strong><br/>' %(ret, self.destination)
         if self.fragmenttype:
-            ret = ret = "%s Fragment Type:<strong>%s</strong><br/>" %(ret, self.fragmenttype)
+            ret = "%s Fragment Type:<strong>%s</strong><br/>" %(ret, self.fragmenttype)
         if self.icmpcode:
-            ret = ret = "%s ICMP code:<strong>%s</strong><br/>" %(ret, self.icmpcode)
+            ret = "%s ICMP code:<strong>%s</strong><br/>" %(ret, self.icmpcode)
         if self.icmptype:
-            ret = ret = "%s ICMP Type:<strong>%s</strong><br/>" %(ret, self.icmptype)
+            ret = "%s ICMP Type:<strong>%s</strong><br/>" %(ret, self.icmptype)
         if self.packetlength:
-            ret = ret = "%s Packet Length:<strong>%s</strong><br/>" %(ret, self.packetlength)
+            ret = "%s Packet Length:<strong>%s</strong><br/>" %(ret, self.packetlength)
         if self.protocol:
-            ret = ret = "%s Protocol:<strong>%s</strong><br/>" %(ret, self.protocol)
+            ret = "%s Protocol:<strong>%s</strong><br/>" %(ret, self.protocol)
         if self.source:
-            ret = ret = "%s Source Address:<strong>%s</strong><br/>" %(ret, self.source)
+            ret = "%s Source Address:<strong>%s</strong><br/>" %(ret, self.source)
         if self.tcpflag:
-            ret = ret = "%s TCP flag:<strong>%s</strong><br/>" %(ret, self.tcpflag)
+            ret = "%s TCP flag:<strong>%s</strong><br/>" %(ret, self.tcpflag)
         if self.port:
             for port in self.port.all():
-                    ret = "%s Port:<strong>%s</strong><br/>" %(ret, port)
+                    ret = ret + "Port:<strong>%s</strong><br/>" %(port)
         if self.destinationport:
             for port in self.destinationport.all():
-                    ret = "%s Port:<strong>%s</strong><br/>" %(ret, port)
+                    ret = ret + "Destination Port:<strong>%s</strong><br/>" %(port)
         if self.sourceport:
             for port in self.sourceport.all():
-                    ret = "%s Port:<strong>%s</strong><br/>" %(ret, port)
+                    ret = ret +"Source Port:<strong>%s</strong><br/>" %(port)
         if self.dscp:
             for dscp in self.dscp.all():
-                    ret = "%s Port:<strong>%s</strong><br/>" %(ret, dscp)
+                    ret = ret + "%s Port:<strong>%s</strong><br/>" %(ret, dscp)
         return ret.rstrip('<br/>')
         
     get_match.short_description = 'Match statement'
     get_match.allow_tags = True
 
+def send_message(msg):
+    b = beanstalkc.Connection()
+    b.use(settings.POLLS_TUBE)
+    b.put(str(msg))
+    b.close()

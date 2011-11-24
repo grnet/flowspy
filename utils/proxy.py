@@ -56,7 +56,8 @@ class Applier(object):
         self.username = username
         self.password = password
     
-    def to_xml(self):
+    def to_xml(self, operation=None):
+        logger.info("Operation: %s"%operation)
         if self.route_object:
             logger.info("Generating XML config")
             route_obj = self.route_object
@@ -66,6 +67,11 @@ class Applier(object):
             flow.routes.append(route)
             device.routing_options.append(flow)
             route.name = route_obj.name
+            if operation == "delete":
+                logger.info("Requesting a delete operation")
+                route.operation = operation
+                device = device.export(netconf_config=True)
+                return ET.tostring(device)
             if route_obj.source:
                 route.match['source'].append(route_obj.source)
             if route_obj.destination:
@@ -109,22 +115,9 @@ class Applier(object):
                     route.then[thenaction.action] = thenaction.action_value
                 else:
                     route.then[thenaction.action] = True
-            device = device.export(netconf_config=True)
-            return ET.tostring(device)
-        else:
-            return False
-    
-    def delete_route(self):
-        if self.route_object:
-            logger.info("Generating XML config")
-            route_obj = self.route_object
-            device = np.Device()
-            flow = np.Flow()
-            route = np.Route()
-            flow.routes.append(route)
-            device.routing_options.append(flow)
-            route.name = route_obj.name
-            route.operation = 'delete'
+            if operation == "replace":
+                logger.info("Requesting a replace operation")
+                route.operation = operation
             device = device.export(netconf_config=True)
             return ET.tostring(device)
         else:
@@ -147,10 +140,10 @@ class Applier(object):
         else:
             return False    
     
-    def apply(self, configuration = None):
+    def apply(self, configuration = None, operation=None):
         reason = None
         if not configuration:
-            configuration = self.to_xml()
+            configuration = self.to_xml(operation=operation)
         edit_is_successful = False
         commit_confirmed_is_successful = False
         commit_is_successful = False

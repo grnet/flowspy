@@ -1,7 +1,22 @@
 {% extends "base.html" %}
 {% load i18n %}
-{% block title %}{% trans "Create new Route" %}{% endblock %}
-{% block breadcrumbs %}:: {% trans "Create Route" %}{% endblock %}
+	
+{% block title %}
+	{% if edit %}
+		{% trans "Edit Route" %} {{form.data.name}}
+	{% else %}
+		{% trans "Create new Route" %}
+	{% endif %}
+{% endblock %}
+
+{% block breadcrumbs %}:: 
+	{% if edit %}
+		{% trans "Edit route" %} {{form.data.name}}
+	{% else %}
+	{% trans "Create route" %}
+	{% endif %}
+		{% endblock %}
+
 {% block content %}
 <style type="text/css">
 th {
@@ -17,13 +32,18 @@ th {
 </style>
 
 <div align="center">
+	{% if edit %}
+	<h3>{% trans "Edit route" %}: {{form.data.name}}</h3>
+	{% else %}
 <h3>{% trans "Apply for a new route" %}</h3>
+{% endif %}
 <form method="POST">
 {% csrf_token %}
 {% if form.non_field_errors %}
 <p class="error">{{ form.non_field_errors|join:", "}}</p>
 {% endif %}
-<fieldset>
+
+<fieldset {% if edit %} style="display:none;" {% endif %}>
 	<legend>{% trans "Route Basic Info" %}</legend>
 <table>
 <tr><th>{{ form.name.label_tag }}</th><td>{{ form.name }}<span class="error">{{ form.name.errors|join:", " }}</span></td></tr>

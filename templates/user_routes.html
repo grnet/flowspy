@@ -4,16 +4,42 @@
 <script type="text/javascript" src="/static/js/jquery.dataTables.js"></script>
 <script type="text/javascript">
 	$(document).ready( function(){
-		$('#create_dialog').dialog({
-			height: 400,
-            width: 500,
+		$('#dialog').dialog({
+			height: 220,
+            width: 300,
 			modal: true,
 			autoOpen: false,
+			buttons: {
+		'Delete': function() {
+		route = $('#route_to_delete').text();
+		route_url_id = '#del_route_'+route;
+		console.log(route_url_id);
+		url = $(route_url_id).attr('href');
+		console.log(route, url);
+			$.ajax({
+			url: url ,
+			cache: false,
+			success: function(data) {
+				$('#dialog').dialog('close');
+			  }
 		});
+//				$('#dialog').dialog('close');
+		},
+		Cancel: function() {
+			$('#dialog').dialog('close');
+		}
+	}
+		});
+		$('#console').dialog({
+			height: 250,
+            width: 500,
+			modal: true,
+			autoOpen: false
+			});
 			$('#routes_table').dataTable( {
 			"bJQueryUI": true,
 			"oLanguage": {
-				"sLengthMenu": '{% trans "Display" %} <select><option value="25">25</option><option value="50">50</option><option value="-1">{% trans "All" %}</option></select> rules'
+				"sLengthMenu": '{% trans "Display" %} <select><option value="25">25</option><option value="50">50</option><option value="-1">{% trans "All" %}</option></select> routes'
 			},
 			"iDisplayLength": 25,
 	} );
@@ -22,12 +48,53 @@
                 primary: "ui-icon-circle-plus"
             },
 			});
+		$( " .edit_button" ).button({
+            icons: {
+                primary: "ui-icon-wrench"
+            },
+			});
+		$( " .del_button" ).button({
+            icons: {
+                primary: "ui-icon-circle-close"
+            },
+			})
+			.click(function(){
+				$('#dialog').dialog('open');
+				return false;
+			});
+		$("#consolebutton").button({
+            icons: {
+                primary: "ui-icon-image"
+            },
+			})
+			.click(function(){
+				$("#consolebutton").stop().stop();
+				$("#consolebutton").css('color', '#555555');
+				$('#console').dialog('open');
+				return false;
+			});
 		});
 		
+function delete_route(route){
+	route_name = route;
+	$('#route_to_delete').text(route_name);
+	return false;
+}		
 		
 		
 
 </script>
+<style type="text/css">
+	#console {
+		background: none repeat scroll 0 0 #36102a !important;
+		color: #edeae8 !important;
+		font-family: monospace !important;
+	}
+	.message {
+		font-family: monospace !important;
+	}
+	
+</style>
 {% endblock %}
 {% block title %}{% trans "My routes" %}{% endblock %}
 {% block content %}
@@ -35,9 +102,8 @@
 	<h3 style="margin-top: 0px;">{% trans "My routes" %}</h3>
 </div>
 <div class='button_place' style="float:right">
-	<a href="{% url add-route %}" id="routebutton">Add Route</a>
+	<button id="consolebutton">Console</button> <a href="{% url add-route %}" id="routebutton">Add Route</a>
 </div>
-
 <table class="display" width="100%" id="routes_table">
 <thead>
 <tr>
@@ -48,6 +114,7 @@
 	{% comment %}<th style="text-align: center;">{% trans "Details" %}</th>{% endcomment %}
 	<th style="text-align: center;">{% trans "Expires" %}</th>
 	<th style="text-align: center;">{% trans "Response" %}</th>
+	<th style="text-align: center; width:120px;">{% trans "Actions" %}</th>
 </tr>
 </thead>
 
@@ -62,14 +129,26 @@
 	{% comment %}<td style="text-align: center;">{{ route.response }}</td>{% endcomment %}
 	<td style="text-align: center;">{{ route.expires }}</td>
 	<td style="text-align: center;">{{ route.response }}</td>
+	<td style="text-align: center;">
+		{% if route.is_active %}
+		<a href="{% url edit-route route.name %}" class="edit_button" id="edit_button_{{route.pk}}">Edit</a> 
+		<button class="del_button" id="{{route.name}}" onclick="javascript:delete_route(this.id)">Del</button>
+		<a href="{% url delete-route route.name %}" style="display:none" id="del_route_{{route.name}}"></a>
+		{% else %}
+		-
+		{% endif %}</td>
 </tr>
 
 {% endfor %}
 </tbody>
 </table>
 
-<div id="create_dialog" title="Add a new Route">
-	KOKO
-	</div>
-
+<div id="dialog" title="Delete Route">
+		<p>You are about to delete route <strong><span id="route_to_delete"></span></strong></p>
+		<p>Deleting the route will automatically remove the configuration from the network and mark this route as inactive.</p>
+		<p>Are you sure you want to proceed?</p>
+</div>
+<div id="console" title="Console">
+					{% include "poll.html" %}
+</div>
 {% endblock %}

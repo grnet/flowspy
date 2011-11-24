@@ -8,6 +8,7 @@
 <link rel="stylesheet" type="text/css" href="/static/css/base.css">
 <link rel="stylesheet" type="text/css" href="/static/css/smoothness/jquery-ui-1.8.13.custom.css">
 <script type="text/javascript" src="/static/js/jquery-ui-1.8.12.custom.min.js"></script>
+<script type="text/javascript" src="/static/js/poller.js"></script>
 <script type="text/javascript">
 
   	function setlang(lang){
@@ -79,13 +80,7 @@
 				<div class="info_content_title">{% if user.is_authenticated %}<a href="/">{% trans "My routes" %}</a>{% endif %}
 				{% block breadcrumbs %}{% endblock %}
 				</div>
-				{% if messages %}
-				<div id="messages">
-				{% for message in messages %}
-					<span{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</span><br />
-				{% endfor %}
-				</div>
-				{% endif %}
+				
 				{% endblock %}
 				{% block content %}
 				{% endblock %}

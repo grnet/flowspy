@@ -120,7 +120,7 @@ var updater = {
     	try {
     	    updater.existingMessages(eval("(" + response + ")"));
     	} catch (e) {
-    	    updater.onError();
+//    	    updater.onError();
     	    return;
     	}
         },

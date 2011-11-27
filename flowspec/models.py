@@ -122,7 +122,7 @@ class Route(models.Model):
 #            logger.info("Got save job id: %s" %response)
     
     def commit_add(self, *args, **kwargs):
-        send_message("Adding route %s. Please wait..." %self.name)
+        send_message("Adding route %s. Please wait..." %self.name, self.applier)
         response = add.delay(self)
         logger.info("Got save job id: %s" %response)
 
@@ -135,12 +135,12 @@ class Route(models.Model):
 #        logger.info("Got delete job id: %s" %response)
         
     def commit_edit(self, *args, **kwargs):
-        send_message("Editing route %s. Please wait..." %self.name)
+        send_message("Editing route %s. Please wait..." %self.name, self.applier)
         response = edit.delay(self)
         logger.info("Got edit job id: %s" %response)
 
     def commit_delete(self, *args, **kwargs):
-        send_message("Removing route %s. Please wait..." %self.name)
+        send_message("Removing route %s. Please wait..." %self.name, self.applier)
         response = delete.delay(self)
         logger.info("Got edit job id: %s" %response)
 #    
@@ -284,8 +284,10 @@ class Route(models.Model):
     get_match.short_description = 'Match statement'
     get_match.allow_tags = True
 
-def send_message(msg):
+def send_message(msg, user):
+    username = user.username
     b = beanstalkc.Connection()
     b.use(settings.POLLS_TUBE)
-    b.put(str(msg))
+    tube_message = json.dumps({'message': str(msg), 'username':username})
+    b.put(tube_message)
     b.close()

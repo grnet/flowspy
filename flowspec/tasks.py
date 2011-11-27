@@ -2,6 +2,8 @@ from utils import proxy as PR
 from celery.task import task
 from celery.task.sets import subtask
 import logging
+import json
+
 from celery.task.http import *
 from flowspy.utils import beanstalkc
 from django.conf import settings
@@ -24,7 +26,7 @@ def add(route, callback=None):
     route.is_online = is_online
     route.is_active = is_active
     route.response = response
-    subtask(announce).delay("Route add: %s - Result: %s" %(route.name, response))
+    subtask(announce).delay("Route add: %s - Result: %s" %(route.name, response), route.applier)
     route.save()
 
 @task
@@ -39,7 +41,7 @@ def edit(route, callback=None):
     route.is_online = is_online
     route.response = response
     route.save()
-    subtask(announce).delay("Route edit: %s - Result: %s" %(route.name, response))
+    subtask(announce).delay("Route edit: %s - Result: %s" %(route.name, response), route.applier)
 
 
 
@@ -57,16 +59,18 @@ def delete(route, callback=None):
     route.is_active = is_active
     route.response = response
     route.save()
-    subtask(announce).delay("Route delete: %s - Result %s" %(route.name, response))
+    subtask(announce).delay("Route delete: %s - Result %s" %(route.name, response), route.applier)
 
 
 
 @task
-def announce(messg):
+def announce(messg, user):
     messg = str(messg)
+    username = user.username
     b = beanstalkc.Connection()
     b.use(settings.POLLS_TUBE)
-    b.put(messg)
+    tube_message = json.dumps({'message': messg, 'username':username})
+    b.put(tube_message)
     b.close()
 
 

@@ -5,7 +5,7 @@ from flowspy.peers.models import *
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User)
-    domain = models.ForeignKey(Peer)
+    peer = models.ForeignKey(Peer)
 
     def get_address_space(self):
         networks = self.domain.networks.all()

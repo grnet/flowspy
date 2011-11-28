@@ -8,7 +8,7 @@ urlpatterns = patterns('',
     # Example:
     # (r'^flowspy/', include('flowspy.foo.urls')),
     (r'^poll/', include('flowspy.poller.urls')),
-    url(r'^/?$', 'flowspy.flowspec.views.user_routes', name="user-routes"),
+    url(r'^/?$', 'flowspy.flowspec.views.group_routes', name="group-routes"),
     url(r'^add/?$', 'flowspy.flowspec.views.add_route', name="add-route"),
     url(r'^edit/(?P<route_slug>\w+)/$', 'flowspy.flowspec.views.edit_route', name="edit-route"),
     url(r'^delete/(?P<route_slug>\w+)/$', 'flowspy.flowspec.views.delete_route', name="delete-route"),

@@ -1,5 +1,6 @@
 from django.db import models
 from utils.whois import *
+from django.contrib.auth.models import User
 
 # Create your models here.
 class PeerRange(models.Model):
@@ -15,8 +16,9 @@ class Peer(models.Model):
     peer_name = models.CharField(max_length=128)
     peer_as = models.IntegerField()
     peer_tag = models.CharField(max_length=64)
-    domain_name = models.CharField(max_length=128)
+    domain_name = models.CharField(max_length=128, null=True, blank=True)
     networks = models.ManyToManyField(PeerRange, null=True, blank=True)
+
     def __unicode__(self):
         return self.peer_name
     class Meta:
@@ -34,5 +36,3 @@ class Peer(models.Model):
             self.save()
                     
             
-        
-        

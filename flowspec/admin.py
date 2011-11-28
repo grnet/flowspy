@@ -1,5 +1,6 @@
 from django.contrib import admin
 from flowspy.flowspec.models import *
+from flowspy.accounts.models import *
 from utils import proxy as PR
 
 class RouteAdmin(admin.ModelAdmin):
@@ -36,6 +37,7 @@ class RouteAdmin(admin.ModelAdmin):
 #admin.site.register(MatchAddress)
 admin.site.register(MatchPort)
 admin.site.register(MatchDscp)
+admin.site.register(UserProfile)
 #admin.site.register(MatchFragmentType)
 #admin.site.register(MatchIcmpCode)
 #admin.site.register(MatchIcmpType)

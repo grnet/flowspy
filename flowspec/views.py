@@ -14,6 +14,7 @@ from django.template.loader import get_template
 from django.utils import simplejson
 from django.core.urlresolvers import reverse
 from django.contrib import messages
+from flowspy.accounts.models import *
 
 from django.forms.models import model_to_dict
 
@@ -31,6 +32,19 @@ def user_routes(request):
     user_routes = Route.objects.filter(applier=request.user)
     return render_to_response('user_routes.html', {'routes': user_routes},
                               context_instance=RequestContext(request))
+
+@login_required
+def group_routes(request):
+    if request.user.is_anonymous():
+        return HttpResponseRedirect(reverse('login'))
+    peer = request.user.get_profile().peer
+    if peer:
+       peer_members = UserProfile.objects.filter(peer=peer)
+       users = [prof.user for prof in peer_members]
+       group_routes = Route.objects.filter(applier__in=users)
+    return render_to_response('user_routes.html', {'routes': group_routes},
+                              context_instance=RequestContext(request))
+
 
 @login_required
 def add_route(request):

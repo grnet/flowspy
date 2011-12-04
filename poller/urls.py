@@ -3,9 +3,9 @@ from django.conf import settings
 
 urlpatterns = patterns('flowspy.poller.views',
                        ('^$', 'main'),
-                       ('^a/message/existing$', 'message_existing'),
-                       ('^a/message/new$', 'message_new'),
-                       ('^a/message/updates$', 'message_updates'))
+                       url('^a/message/existing$', 'message_existing', name='fetch-existing'),
+                       url('^a/message/new$', 'message_new',name='fetch-new'),
+                       url('^a/message/updates$', 'message_updates', name='fetch-updates'))
 
 urlpatterns += patterns('',
     (r'^static/(?P<path>.*)', 'django.views.static.serve',\

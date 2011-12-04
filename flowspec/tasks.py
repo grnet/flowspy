@@ -18,15 +18,12 @@ def add(route, callback=None):
     applier = PR.Applier(route_object=route)
     commit, response = applier.apply()
     if commit:
-        is_online = True
-        is_active = True
+        status = "ACTIVE"
     else:
-        is_online = False
-        is_active = True
-    route.is_online = is_online
-    route.is_active = is_active
+        status = "ERROR"
+    route.status = status
     route.response = response
-    subtask(announce).delay("Route add: %s - Result: %s" %(route.name, response), route.applier)
+    subtask(announce).delay("[%s] Route add: %s - Result: %s" %(route.applier, route.name, response), route.applier)
     route.save()
 
 @task
@@ -34,14 +31,13 @@ def edit(route, callback=None):
     applier = PR.Applier(route_object=route)
     commit, response = applier.apply(operation="replace")
     if commit:
-        is_online = True
+        status = "ACTIVE"
     else:
-        is_online = False
-    route.is_active = True
-    route.is_online = is_online
+        status = "ERROR"
+    route.status = status
     route.response = response
     route.save()
-    subtask(announce).delay("Route edit: %s - Result: %s" %(route.name, response), route.applier)
+    subtask(announce).delay("[%s] Route edit: %s - Result: %s"%(route.applier, route.name, response), route.applier)
 
 
 
@@ -50,30 +46,40 @@ def delete(route, callback=None):
     applier = PR.Applier(route_object=route)
     commit, response = applier.apply(operation="delete")
     if commit:
-        is_online = False
-        is_active = False
+        status = "INACTIVE"
     else:
-        is_online = route.is_online
-        is_active = route.is_active
-    route.is_online = is_online
-    route.is_active = is_active
+        status = "ERROR"
+    route.status = status
     route.response = response
     route.save()
-    subtask(announce).delay("Route delete: %s - Result %s" %(route.name, response), route.applier)
+    subtask(announce).delay("[%s] Route delete: %s - Result %s" %(route.applier, route.name, response), route.applier)
 
 
 
 @task
 def announce(messg, user):
     messg = str(messg)
-    username = user.username
+#    username = user.username
+    username = user.get_profile().peer.domain_name
     b = beanstalkc.Connection()
     b.use(settings.POLLS_TUBE)
     tube_message = json.dumps({'message': messg, 'username':username})
     b.put(tube_message)
     b.close()
 
-
+@task
+def check_sync(route_name=None, selected_routes = []):
+    if not selected_routes:
+        routes = Route.objects.all()
+    else:
+        routes = selected_routes
+    if route_name:
+        routes = routes.filter(name=route_name)
+    for route in roures:
+        if route.is_synced():
+            logger.info("Route %s is synced" %route.name)
+        else:
+            logger.warn("Route %s is out of sync" %route.name)
 #def delete(route):
 #    
 #    applier = PR.Applier(route_object=route)

@@ -12,6 +12,7 @@ from flowspec.tasks import *
 from time import sleep
 
 from flowspy.utils import beanstalkc
+from flowspy.utils.randomizer import id_generator as id_gen
 
 
 FORMAT = '%(asctime)s %(levelname)s: %(message)s'
@@ -38,11 +39,20 @@ THEN_CHOICES = (
     ("sample", "Sample")                
 )
 
+ROUTE_STATES = (
+    ("ACTIVE", "ACTIVE"),
+    ("ERROR", "ERROR"),
+    ("EXPIRED", "EXPIRED"),
+    ("PENDING", "PENDING"),
+    ("OUTOFSYNC", "OUTOFSYNC"),
+    ("INACTIVE", "INACTIVE"),            
+)
+
 
 def days_offset(): return datetime.now() + timedelta(days = settings.EXPIRATION_DAYS_OFFSET)
     
 class MatchPort(models.Model):
-    port = models.CharField(max_length=24)
+    port = models.CharField(max_length=24, unique=True)
     def __unicode__(self):
         return self.port
     class Meta:
@@ -60,7 +70,8 @@ class ThenAction(models.Model):
     action = models.CharField(max_length=60, choices=THEN_CHOICES, verbose_name="Action")
     action_value = models.CharField(max_length=255, blank=True, null=True, verbose_name="Action Value")
     def __unicode__(self):
-        return "%s: %s" %(self.action, self.action_value)
+        ret = "%s:%s" %(self.action, self.action_value)
+        return ret.rstrip(":")
     class Meta:
         db_table = u'then_action'
 
@@ -82,8 +93,9 @@ class Route(models.Model):
     then = models.ManyToManyField(ThenAction, verbose_name="Then")
     filed = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
-    is_online = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=False)
+    status = models.CharField(max_length=20, choices=ROUTE_STATES, blank=True, null=True, verbose_name="Status", default="PENDING")
+#    is_online = models.BooleanField(default=False)
+#    is_active = models.BooleanField(default=False)
     expires = models.DateField(default=days_offset, blank=True, null=True,)
     response = models.CharField(max_length=512, blank=True, null=True)
     comments = models.TextField(null=True, blank=True, verbose_name="Comments")
@@ -93,9 +105,15 @@ class Route(models.Model):
         return self.name
     
     class Meta:
-        unique_together = (("name", "is_active"),)
         db_table = u'route'
     
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            hash = id_gen()
+            self.name = "%s_%s" %(self.name, hash)
+        super(Route, self).save(*args, **kwargs) # Call the "real" save() method.
+
+        
     def clean(self, *args, **kwargs):
         from django.core.exceptions import ValidationError
         if self.destination:
@@ -122,40 +140,42 @@ class Route(models.Model):
 #            logger.info("Got save job id: %s" %response)
     
     def commit_add(self, *args, **kwargs):
-        send_message("Adding route %s. Please wait..." %self.name, self.applier)
+        peer = self.applier.get_profile().peer.domain_name
+        send_message("[%s] Adding route %s. Please wait..." %(self.applier.username, self.name), peer)
         response = add.delay(self)
         logger.info("Got save job id: %s" %response)
 
     def deactivate(self):
-        self.is_online = False
-        self.is_active = False
+        self.status = "INACTIVE"
         self.save()
 #    def delete(self, *args, **kwargs):
 #        response = delete.delay(self)
 #        logger.info("Got delete job id: %s" %response)
         
     def commit_edit(self, *args, **kwargs):
-        send_message("Editing route %s. Please wait..." %self.name, self.applier)
+        peer = self.applier.get_profile().peer.domain_name
+        send_message("[%s] Editing route %s. Please wait..." %(self.applier.username, self.name), peer)
         response = edit.delay(self)
         logger.info("Got edit job id: %s" %response)
 
     def commit_delete(self, *args, **kwargs):
-        send_message("Removing route %s. Please wait..." %self.name, self.applier)
+        peer = self.applier.get_profile().peer.domain_name
+        send_message("[%s] Removing route %s. Please wait..." %(self.applier.username, self.name), peer)
         response = delete.delay(self)
         logger.info("Got edit job id: %s" %response)
 #    
 #    def delete(self, *args, **kwargs):
 #        response = delete.delay(self)
 #        logger.info("Got delete job id: %s" %response)
-    def is_synced(self):
-        
+
+    def is_synced(self):      
         found = False
         get_device = PR.Retriever()
         device = get_device.fetch_device()
         try:
             routes = device.routing_options[0].routes
         except Exception as e:
-            self.is_online = False
+            self.status = "EXPIRED"
             self.save()
             logger.error("No routing options on device. Exception: %s" %e)
             return False
@@ -230,7 +250,7 @@ class Route(models.Model):
                         logger.info('Protocol fields do not match')
                 except:
                     pass
-                if found and not self.is_online:
+                if found and self.status != "ACTIVE":
                      logger.error('Rule is applied on device but appears as offline')
                      found = False
         
@@ -252,7 +272,7 @@ class Route(models.Model):
     def get_match(self):
         ret = ''
         if self.destination:
-            ret = '%s Destination Address:<strong>%s</strong><br/>' %(ret, self.destination)
+            ret = '%s Dst Addr:<strong>%s</strong><br/>' %(ret, self.destination)
         if self.fragmenttype:
             ret = "%s Fragment Type:<strong>%s</strong><br/>" %(ret, self.fragmenttype)
         if self.icmpcode:
@@ -264,7 +284,7 @@ class Route(models.Model):
         if self.protocol:
             ret = "%s Protocol:<strong>%s</strong><br/>" %(ret, self.protocol)
         if self.source:
-            ret = "%s Source Address:<strong>%s</strong><br/>" %(ret, self.source)
+            ret = "%s Src Addr:<strong>%s</strong><br/>" %(ret, self.source)
         if self.tcpflag:
             ret = "%s TCP flag:<strong>%s</strong><br/>" %(ret, self.tcpflag)
         if self.port:
@@ -272,10 +292,10 @@ class Route(models.Model):
                     ret = ret + "Port:<strong>%s</strong><br/>" %(port)
         if self.destinationport:
             for port in self.destinationport.all():
-                    ret = ret + "Destination Port:<strong>%s</strong><br/>" %(port)
+                    ret = ret + "Dst Port:<strong>%s</strong><br/>" %(port)
         if self.sourceport:
             for port in self.sourceport.all():
-                    ret = ret +"Source Port:<strong>%s</strong><br/>" %(port)
+                    ret = ret +"Src Port:<strong>%s</strong><br/>" %(port)
         if self.dscp:
             for dscp in self.dscp.all():
                     ret = ret + "%s Port:<strong>%s</strong><br/>" %(ret, dscp)
@@ -285,9 +305,10 @@ class Route(models.Model):
     get_match.allow_tags = True
 
 def send_message(msg, user):
-    username = user.username
+#    username = user.username
+    peer = user
     b = beanstalkc.Connection()
     b.use(settings.POLLS_TUBE)
-    tube_message = json.dumps({'message': str(msg), 'username':username})
+    tube_message = json.dumps({'message': str(msg), 'username':peer})
     b.put(tube_message)
     b.close()

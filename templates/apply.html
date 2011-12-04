@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
-	
+
 {% block title %}
 	{% if edit %}
 		{% trans "Edit Route" %} {{form.data.name}}
@@ -16,7 +16,119 @@
 	{% trans "Create route" %}
 	{% endif %}
 		{% endblock %}
-
+{% block extrahead %}
+<script>
+	$(document).ready( function(){
+		
+		$("#id_sourceport").css('width', '100px').attr('size', '5');
+		$("#id_port").css('width', '100px').attr('size', '5');
+		$("#id_destinationport").css('width', '100px').attr('size', '5');
+		$('#id_then').attr("multiple", "");
+		$('#then_diag').dialog({
+			height: 220,
+            width: 340,
+			modal: true,
+			autoOpen: false,
+			buttons: {
+		'Add': function() {
+			console.log($("#add_rl_form").serialize());
+			$.ajax({
+			url:"{% url add-rate-limit %}", 
+			data:$("#add_rl_form").serialize(),
+			type: "POST",
+			cache: false,
+			success:function(data){
+					try {
+						value = data.pk;
+						text = data.value;
+						$('#id_then').append($("<option></option>").attr("value",value).text(text));
+						$('#then_diag').dialog('close');
+					}
+					catch (exception) {
+						$('#then_diag').html(data);
+					}					
+				}
+				});
+		},
+		Cancel: function() {
+			$('#then_diag').dialog('close');
+		}
+	}
+		});
+		
+		$('#port_diag').dialog({
+			height: 220,
+            width: 340,
+			modal: true,
+			autoOpen: false,
+			buttons: {
+		'Add': function() {
+			console.log($("#add_port_form").serialize());
+			$.ajax({
+			url:"{% url add-port %}", 
+			data:$("#add_port_form").serialize(),
+			type: "POST",
+			cache: false,
+			success:function(data){
+					try {
+						value = data.value;
+						text = data.text;
+						$('#id_port').append($("<option></option>").attr("value",value).text(text));
+						$('#id_destinationport').append($("<option></option>").attr("value",value).text(text));
+						$('#id_sourceport').append($("<option></option>").attr("value",value).text(text));
+						$('#port_diag').dialog('close');
+					}
+					catch (exception) {
+						$('#port_diag').html(data);
+					}					
+				}
+				});
+		},
+		Cancel: function() {
+			$('#port_diag').dialog('close');
+		}
+	}
+		});
+		
+		
+		$("#new_then_actions").button({
+            icons: {
+                primary: "ui-icon-plusthick"
+            },
+			})
+			.click(function(){
+				$.ajax({
+					url: "{% url add-rate-limit %}",
+					cache: false,
+					success: function(data){
+						$("#then_diag").html(data);
+					}
+				});
+				$('#then_diag').dialog('open');
+				return false;
+			});
+			
+			
+			$(".new_port").button({
+            icons: {
+                primary: "ui-icon-plusthick"
+            },
+			})
+			.click(function(){
+				$.ajax({
+					url: "{% url add-port %}",
+					cache: false,
+					success: function(data){
+						$("#port_diag").html(data);
+					}
+				});
+				$('#port_diag').dialog('open');
+				return false;
+			});
+		});
+		
+</script>
+{% endblock %}
 {% block content %}
 <style type="text/css">
 th {
@@ -30,7 +142,6 @@ th {
 
 }
 </style>
-
 <div align="center">
 	{% if edit %}
 	<h3>{% trans "Edit route" %}: {{form.data.name}}</h3>
@@ -47,30 +158,30 @@ th {
 	<legend>{% trans "Route Basic Info" %}</legend>
 <table>
 <tr><th>{{ form.name.label_tag }}</th><td>{{ form.name }}<span class="error">{{ form.name.errors|join:", " }}</span></td></tr>
-<tr class="help"><td></td><td>{{ form.name.help_text }}</td></tr>
+<tr class="help"><td></td><td>A unique identifier will be added as a name_suffix</td></tr>
 </table>
 </fieldset>
 
 <fieldset>
 <legend>{% trans "Route Match Conditions" %}</legend>
 <table>
+<input type="hidden" id="id_applier" name="applier" value="{{applier}}"/>
 <tr><th>{{ form.source.label_tag }}</th><td>{{ form.source }}<span class="error">{{ form.source.errors|join:", " }}</span></td></tr>
 <tr class="help"><td></td><td>{{ form.source.help_text }}</td></tr>
-<tr><th>{{ form.sourceport.label_tag }}</th><td>{{ form.sourceport }}<span class="error">{{ form.sourceport.errors|join:", " }}</span></td></tr>
+<tr><th>{{ form.sourceport.label_tag }}</th><td>{{ form.sourceport }}&nbsp;&nbsp;<button class="new_port">Port</button><span class="error">{{ form.sourceport.errors|join:", " }}</span></td></tr>
 <tr class="help"><td></td><td>{{ form.sourceport.help_text }}</td></tr>
 <tr><th>{{ form.destination.label_tag }}</th><td>{{ form.destination }}<span class="error">{{ form.destination.errors|join:", " }}</span></td></tr>
 <tr class="help"><td></td><td>{{ form.destination.help_text }}</td></tr>
-<tr><th>{{ form.destinationport.label_tag }}</th><td>{{ form.destinationport }}<span class="error">{{ form.destinationport.errors|join:", " }}</span></td></tr>
+<tr><th>{{ form.destinationport.label_tag }}</th><td>{{ form.destinationport }}&nbsp;&nbsp;<button class="new_port">Port</button><span class="error">{{ form.destinationport.errors|join:", " }}</span></td></tr>
 <tr class="help"><td></td><td>{{ form.destinationport.help_text }}</td></tr>
-<tr><th>{{ form.port.label_tag }}</th><td>{{ form.port }}<span class="error">{{ form.port.errors|join:", " }}</span></td></tr>
+<tr><th>{{ form.port.label_tag }}</th><td>{{ form.port }}&nbsp;&nbsp;<button class="new_port">Port</button><span class="error">{{ form.port.errors|join:", " }}</span></td></tr>
 <tr class="help"><td></td><td>{{ form.port.help_text }}</td></tr>
 </table>
 </fieldset>
 <fieldset>
 <legend>{% trans "Route Actions" %}</legend>
 <table>
-<tr><th>{{ form.then.label_tag }}</th><td>{{ form.then }}<span class="error">{{ form.then.errors|join:", " }}</span></td></tr>
-<tr class="help"><td></td><td>{{ form.then.help_text }}</td></tr>
+<tr><th>{{ form.then.label_tag }}</th><td>{{ form.then }}&nbsp;&nbsp;<button id="new_then_actions">Rate-limit</button><span class="error">{{ form.then.errors|join:", " }}</span></td></tr>
 </table>
 </fieldset>
 <fieldset>
@@ -85,6 +196,12 @@ th {
 
 <p><input type="submit" value="{% trans "Apply" %}" /></p>
 </form>
+</div>
+
+<div id="then_diag" title="Add new rate-limit value">
+</div>
+
+<div id="port_diag" title="Add new port">
 </div>
 
 {% endblock %}

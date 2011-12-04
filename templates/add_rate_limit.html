@@ -1,0 +1,8 @@
+<form id="add_rl_form" method="POST">
+	{% csrf_token %}
+<table>
+<input type="hidden" id="id_action" name="action" value="rate-limit"/>
+<tr><th>Value</th><td>{{ form.action_value }}Kbps<span class="error" id='rl_error'>{{ form.action_value.errors|join:", " }}</span></td></tr>
+<tr class="help"><td></td><td>Value should be >50Kbps</td></tr>
+</table>
+</form>

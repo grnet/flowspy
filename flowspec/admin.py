@@ -3,30 +3,30 @@ from flowspy.flowspec.models import *
 from flowspy.accounts.models import *
 from utils import proxy as PR
 
-class RouteAdmin(admin.ModelAdmin):
-    
-    actions = ['deactivate']
-    
-    def deactivate(self, request, queryset):
-        applier = PR.Applier(route_objects=queryset)
-        commit, response = applier.apply(configuration=applier.delete_routes())
-        if commit:
-            rows = queryset.update(is_online=False, is_active=False)
-            queryset.update(response="Successfully removed route from network")
-            self.message_user(request, "Successfully removed %s routes from network" % rows)
-        else:
-            self.message_user(request, "Could not remove routes from network")
-    deactivate.short_description = "Deactivate selected routes from network"
-
-    list_display = ('name', 'is_online', 'applier', 'get_match', 'get_then', 'response')
-    fieldsets = [
-        (None,               {'fields': ['name','applier']}),
-        ("Match",               {'fields': ['source', 'sourceport', 'destination', 'destinationport', 'port']}),
-        ('Advanced Match Statements', {'fields': ['dscp', 'fragmenttype', 'icmpcode', 'icmptype', 'packetlength', 'protocol', 'tcpflag'], 'classes': ['collapse']}),
-        ("Then",               {'fields': ['then' ]}),
-        (None,               {'fields': ['comments',]}),
-        
-    ]
+#class RouteAdmin(admin.ModelAdmin):
+#    
+#    actions = ['deactivate']
+#    
+#    def deactivate(self, request, queryset):
+#        applier = PR.Applier(route_objects=queryset)
+#        commit, response = applier.apply(configuration=applier.delete_routes())
+#        if commit:
+#            rows = queryset.update(is_online=False, is_active=False)
+#            queryset.update(response="Successfully removed route from network")
+#            self.message_user(request, "Successfully removed %s routes from network" % rows)
+#        else:
+#            self.message_user(request, "Could not remove routes from network")
+#    deactivate.short_description = "Deactivate selected routes from network"
+#
+#    list_display = ('name', 'is_online', 'applier', 'get_match', 'get_then', 'response')
+#    fieldsets = [
+#        (None,               {'fields': ['name','applier']}),
+#        ("Match",               {'fields': ['source', 'sourceport', 'destination', 'destinationport', 'port']}),
+#        ('Advanced Match Statements', {'fields': ['dscp', 'fragmenttype', 'icmpcode', 'icmptype', 'packetlength', 'protocol', 'tcpflag'], 'classes': ['collapse']}),
+#        ("Then",               {'fields': ['then' ]}),
+#        (None,               {'fields': ['comments',]}),
+#        
+#    ]
 #    fields = ('name', 'applier', 'expires')
 
     #def formfield_for_dbfield(self, db_field, **kwargs):
@@ -47,7 +47,7 @@ admin.site.register(UserProfile)
 admin.site.register(ThenAction)
 #admin.site.register(ThenStatement)
 #admin.site.register(MatchStatement)
-admin.site.register(Route, RouteAdmin)
+admin.site.register(Route)
 
 admin.site.disable_action('delete_selected')
 

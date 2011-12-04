@@ -455,7 +455,9 @@ margin: 1px;
 #cluster_overview_table_wrapper{
 	width: 100%;
 }
-
+/*
+ * jQuery UI specific styling
+ */
 
 .paging_two_button .ui-button {
 	float: left;
@@ -518,30 +520,39 @@ table.display thead th div.DataTables_sort_wrapper span {
 }
 
 
+
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ *
+ * Everything below this line is the same as demo_table.css. This file is
+ * required for 'cleanliness' of the markup
+ *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * DataTables features
+ */
+
 .dataTables_wrapper {
 	position: relative;
 	min-height: 302px;
-	float: left;
-	clear: both;
 	_height: 302px;
-	width: 100%;
-	zoom: 1; /* Feeling sorry for IE */
+	clear: both;
 }
 
 .dataTables_processing {
 	position: absolute;
-	top: 50%;
+	top: 0px;
 	left: 50%;
 	width: 250px;
-	height: 30px;
 	margin-left: -125px;
-	margin-top: -15px;
-	padding: 14px 0 2px 0;
 	border: 1px solid #ddd;
 	text-align: center;
 	color: #999;
-	font-size: 14px;
-	background-color: white;
+	font-size: 11px;
+	padding: 2px 0;
 }
 
 .dataTables_length {
@@ -556,13 +567,11 @@ table.display thead th div.DataTables_sort_wrapper span {
 }
 
 .dataTables_info {
-	width: 60%;
+	width: 50%;
 	float: left;
 }
 
 .dataTables_paginate {
-	width: 44px;
-	* width: 50px;
 	float: right;
 	text-align: right;
 }
@@ -593,42 +602,14 @@ table.display thead th div.DataTables_sort_wrapper span {
 
 
 
-
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * DataTables display
+ */
 table.display {
 	margin: 0 auto;
-	clear: both;
 	width: 100%;
+	clear: both;
 	border-collapse: collapse;
-	
-}
-
-table.display thead th {
-	padding: 3px 18px 3px 10px;
-	font-weight: normal;
-	cursor: pointer;
-	* cursor: hand;
-}
-
-table.display tfoot th {
-	padding: 3px 18px 3px 10px;
-	border-top: 1px solid black;
-	font-weight: bold;
-}
-
-table.display tr.heading2 td {
-	border-bottom: 1px solid #aaa;
-}
-
-table.display td {
-	padding: 3px 10px;
-}
-
-table.display td a {
-	font-weight: normal;
-}
-
-table.display td.center {
-	text-align: center;
 }
 
 table.display tfoot th {
@@ -648,6 +629,12 @@ table.display td {
 table.display td.center {
 	text-align: center;
 }
+
+
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * DataTables sorting
+ */
 
 .sorting_asc {
 	background: url('../images/sort_asc.png') no-repeat center right;
@@ -669,12 +656,29 @@ table.display td.center {
 	background: url('../images/sort_desc_disabled.png') no-repeat center right;
 }
 
+
+
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * DataTables row classes
+ */
 table.display tr.odd.gradeA {
-	background-color: #EEEEEE;
+	background-color: #ddffdd;
 }
 
 table.display tr.even.gradeA {
-	background-color: #F6F6F6;
+	background-color: #eeffee;
+}
+
+
+
+
+table.display tr.odd.gradeA {
+	background-color: #ddffdd;
+}
+
+table.display tr.even.gradeA {
+	background-color: #eeffee;
 }
 
 table.display tr.odd.gradeC {
@@ -710,12 +714,15 @@ tr.even {
 	background-color: white;
 }
 
+
+
+
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * Misc
+ */
 .dataTables_scroll {
 	clear: both;
-}
-
-.dataTables_scrollBody {
-	*margin-top: -1px;
 }
 
 .top, .bottom {
@@ -762,12 +769,6 @@ td.details {
 	width: 40%;
 }
 
-.paging_full_numbers {
-	width: 400px;
-	height: 22px;
-	line-height: 22px;
-}
-
 .paging_full_numbers span.paginate_button,
  	.paging_full_numbers span.paginate_active {
 	border: 1px solid #aaa;
@@ -799,6 +800,11 @@ table.display tr.odd.row_selected td {
 	background-color: #9FAFD1;
 }
 
+
+/*
+ * Sorting classes for columns
+ */
+/* For the standard odd/even */
 tr.odd td.sorting_1 {
 	background-color: #D3D6FF;
 }
@@ -823,28 +829,39 @@ tr.even td.sorting_3 {
 	background-color: #F9F9FF;
 }
 
+
+/* For the Conditional-CSS grading rows */
+/*
+ 	Colour calculations (based off the main row colours)
+  Level 1:
+		dd > c4
+		ee > d5
+	Level 2:
+	  dd > d1
+	  ee > e2
+ */
 tr.odd.gradeA td.sorting_1 {
-	background-color: #E1E1E1;
+	background-color: #c4ffc4;
 }
 
 tr.odd.gradeA td.sorting_2 {
-	background-color: #E8E8E8;
+	background-color: #d1ffd1;
 }
 
 tr.odd.gradeA td.sorting_3 {
-	background-color: #E8E8E8;
+	background-color: #d1ffd1;
 }
 
 tr.even.gradeA td.sorting_1 {
-	background-color: #EAEAEA;
+	background-color: #d5ffd5;
 }
 
 tr.even.gradeA td.sorting_2 {
-	background-color: #F0F0F0;
+	background-color: #e2ffe2;
 }
 
 tr.even.gradeA td.sorting_3 {
-	background-color: #F0F0F0;
+	background-color: #e2ffe2;
 }
 
 tr.odd.gradeC td.sorting_1 {
@@ -919,68 +936,16 @@ tr.even.gradeU td.sorting_3 {
 	background-color: #e2e2e2;
 }
 
+
+/*
+ * Row highlighting example
+ */
 .ex_highlight #example tbody tr.even:hover, #example tbody tr.even td.highlighted {
 	background-color: #ECFFB3;
 }
 
 .ex_highlight #example tbody tr.odd:hover, #example tbody tr.odd td.highlighted {
 	background-color: #E6FF99;
-}
-
-.ex_highlight_row #example tr.even:hover {
-	background-color: #ECFFB3;
-}
-
-.ex_highlight_row #example tr.even:hover td.sorting_1 {
-	background-color: #DDFF75;
-}
-
-.ex_highlight_row #example tr.even:hover td.sorting_2 {
-	background-color: #E7FF9E;
-}
-
-.ex_highlight_row #example tr.even:hover td.sorting_3 {
-	background-color: #E2FF89;
-}
-
-.ex_highlight_row #example tr.odd:hover {
-	background-color: #E6FF99;
-}
-
-.ex_highlight_row #example tr.odd:hover td.sorting_1 {
-	background-color: #D6FF5C;
-}
-
-.ex_highlight_row #example tr.odd:hover td.sorting_2 {
-	background-color: #E0FF84;
-}
-
-.ex_highlight_row #example tr.odd:hover td.sorting_3 {
-	background-color: #DBFF70;
-}
-
-table.KeyTable td {
-	border: 3px solid transparent;
-}
-
-table.KeyTable td.focus {
-	border: 3px solid #3366FF;
-}
-
-table.display tr.gradeA {
-	background-color: #eeffee;
-}
-
-table.display tr.gradeC {
-	background-color: #ddddff;
-}
-
-table.display tr.gradeX {
-	background-color: #ffdddd;
-}
-
-table.display tr.gradeU {
-	background-color: #ddd;
 }
 
 div.box {

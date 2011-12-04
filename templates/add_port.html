@@ -1,0 +1,6 @@
+<form id="add_port_form" method="POST">
+	{% csrf_token %}
+<table>
+<tr><th>Port</th><td>{{ form.port }}<span class="error" id='rl_error'>{{ form.port.errors|join:", " }}</span></td></tr>
+</table>
+</form>

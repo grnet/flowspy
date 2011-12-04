@@ -12,6 +12,9 @@ from django.http import HttpResponse
 from gevent.event import Event
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponseRedirect
+from django.core.urlresolvers import reverse
+
 
 from flowspy.utils import beanstalkc
 
@@ -37,6 +40,7 @@ class Msgs(object):
     cache_size = 200
 
     def __init__(self):
+        self.user = None
         self.user_cache = {}
         self.user_cursor = {}
         self.cache = []
@@ -47,22 +51,28 @@ class Msgs(object):
         if self.user_cache:
             request.session['cursor'] = self.user_cache[-1]['id']
         return render_to_response('poll.html', {'messages': self.user_cache})
-    
+
     @csrf_exempt
     def message_existing(self, request):
-        
-        try:
-            user = request.user.username
-        except:
-            user = None
-        self.new_message_user_event[user] = Event()
-        try:
-            if self.user_cache[user]:
-                self.user_cursor[user] = self.user_cache[user][-1]['id']
-        except:
-            self.user_cache[user] = []
-            self.user_cursor[user] = ''
-        return json_response({'messages': self.user_cache[user]})
+        if request.is_ajax():
+            try:
+                user = request.user.get_profile().peer.domain_name
+            except:
+                user = None
+                return False
+            try:
+                assert(self.new_message_user_event[user])
+            except:
+                self.new_message_user_event[user] = Event()
+    #        self.new_message_user_event[user] = Event()
+            try:
+                if self.user_cache[user]:
+                    self.user_cursor[user] = self.user_cache[user][-1]['id']
+            except:
+                self.user_cache[user] = []
+                self.user_cursor[user] = ''
+            return json_response({'messages': self.user_cache[user]})
+        return HttpResponseRedirect(reverse('login'))
     
     @csrf_exempt
     def message_new(self, mesg=None):
@@ -89,40 +99,42 @@ class Msgs(object):
     
     @csrf_exempt
     def message_updates(self, request):
-        cursor = {}
-        try:
-            user = request.user.username
-        except:
-            user = None
-
-        cursor[user] = self.user_cursor[user]
-            
-        try:
-            if not isinstance(self.user_cache[user], list):
+        if request.is_ajax():
+            cursor = {}
+            try:
+    #            user = request.user.username
+                user = request.user.get_profile().peer.domain_name
+            except:
+                user = None
+                return False
+            cursor[user] = self.user_cursor[user]
+                
+            try:
+                if not isinstance(self.user_cache[user], list):
+                    self.user_cache[user] = []
+            except:
                 self.user_cache[user] = []
-        except:
-            self.user_cache[user] = []
-        if not self.user_cache[user] or cursor[user] == self.user_cache[user][-1]['id']:
-            self.new_message_user_event[user].wait()
-#            self.new_message_event.wait()
-#        assert cursor[user] != self.user_cache[user][-1]['id'], cursor[user]
-        try:
-            for index, m in enumerate(self.user_cache[user]):
-                if m['id'] == cursor[user]:
-                    return json_response({'messages': self.user_cache[user][index + 1:]})
-            return json_response({'messages': self.user_cache[user]})
-        finally:
-            if self.user_cache[user]:
-                self.user_cursor[user] = self.user_cache[user][-1]['id']
-#            else:
-#                request.session.pop('cursor', None)
+            if not self.user_cache[user] or cursor[user] == self.user_cache[user][-1]['id']:
+                self.new_message_user_event[user].wait()
+    #            self.new_message_event.wait()
+    #        assert cursor[user] != self.user_cache[user][-1]['id'], cursor[user]
+            try:
+                for index, m in enumerate(self.user_cache[user]):
+                    if m['id'] == cursor[user]:
+                        return json_response({'messages': self.user_cache[user][index + 1:]})
+                return json_response({'messages': self.user_cache[user]})
+            finally:
+                if self.user_cache[user]:
+                    self.user_cursor[user] = self.user_cache[user][-1]['id']
+        return HttpResponseRedirect(reverse('login'))
+    #            else:
+    #                request.session.pop('cursor', None)
 
     def monitor_polls(self, polls=None):
         b = beanstalkc.Connection()
         b.watch(settings.POLLS_TUBE)
         while True:
             job = b.reserve()
-            print job.body
             msg = json.loads(job.body)
             job.bury()
             self.message_new(msg)

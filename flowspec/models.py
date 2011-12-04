@@ -6,7 +6,7 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from utils import proxy as PR
 from ipaddr import *
-from datetime import *
+import datetime
 import logging
 from flowspec.tasks import *
 from time import sleep
@@ -49,7 +49,7 @@ ROUTE_STATES = (
 )
 
 
-def days_offset(): return datetime.now() + timedelta(days = settings.EXPIRATION_DAYS_OFFSET)
+def days_offset(): return datetime.date.today() + datetime.timedelta(days = settings.EXPIRATION_DAYS_OFFSET)
     
 class MatchPort(models.Model):
     port = models.CharField(max_length=24, unique=True)
@@ -167,6 +167,11 @@ class Route(models.Model):
 #    def delete(self, *args, **kwargs):
 #        response = delete.delay(self)
 #        logger.info("Got delete job id: %s" %response)
+    def has_expired(self):
+        today = datetime.date.today()
+        if today > self.expires:
+            return True
+        return False
 
     def is_synced(self):      
         found = False

@@ -96,7 +96,13 @@ def add_then(request):
 @login_required
 def edit_route(request, route_slug):
     applier = request.user.pk
+    applier_peer = request.user.get_profile().peer
     route_edit = get_object_or_404(Route, name=route_slug)
+    route_edit_applier_peer = route_edit.applier.get_profile().peer
+    if applier_peer != route_edit_applier_peer:
+        messages.add_message(request, messages.WARNING,
+                             "Insufficient rights to edit route %s" %(route_slug))
+        return HttpResponseRedirect(reverse("group-routes"))
     route_original = deepcopy(route_edit)
     if request.POST:
         form = RouteForm(request.POST, instance = route_edit)

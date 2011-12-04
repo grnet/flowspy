@@ -82,7 +82,13 @@
 				<div class="info_content_title">{% if user.is_authenticated %}<a href="{% url group-routes %}">{% trans "My routes" %}</a>{% endif %}
 				{% block breadcrumbs %}{% endblock %}
 				</div>
-				
+				{% if messages %}
+				<div id="messages">
+				{% for message in messages %}
+					<span{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</span><br />
+				{% endfor %}
+				</div>
+				{% endif %}
 				{% endblock %}
 				{% block content %}
 				{% endblock %}

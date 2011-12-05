@@ -24,6 +24,10 @@ class shibauthBackend:
 
         try:
             user = User.objects.get(username__exact=username)
+            user.mail = mail
+            user.first_name = firstname
+            user.last_name = lastname
+            user.save()
         # The user did not exist. Create one with no privileges
         except:
             user = User.objects.create_user(username, mail, None)

@@ -42,19 +42,44 @@ def edit(route, callback=None):
 
 
 @task
-def delete(route, callback=None):
+def delete(route, **kwargs):
     applier = PR.Applier(route_object=route)
     commit, response = applier.apply(operation="delete")
+    reason_text = ''
     if commit:
         status = "INACTIVE"
+        if "reason" in kwargs and kwargs['reason']=='EXPIRED':
+            status = 'EXPIRED'
+            reason_text = " Reason: %s " %status
     else:
         status = "ERROR"
     route.status = status
     route.response = response
     route.save()
-    subtask(announce).delay("[%s] Route delete: %s - Result %s" %(route.applier, route.name, response), route.applier)
+    subtask(announce).delay("[%s] Route removal: %s%s- Result %s" %(route.applier, route.name, reason_text, response), route.applier)
 
-
+# May not work in the first place... proxy is not aware of Route models
+@task
+def batch_delete(routes, **kwargs):
+    if routes:
+        applier = PR.Applier(route_objects=routes)
+        conf = applier.delete_routes()
+        commit, response = applier.apply(configuration = conf)
+        reason_text = ''
+        if commit:
+            status = "INACTIVE"
+            if "reason" in kwargs and kwargs['reason']=='EXPIRED':
+                status = 'EXPIRED'
+                reason_text = " Reason: %s " %status
+        else:
+            status = "ERROR"
+        for route in routes:
+            route.status = status
+            route.response = response
+            route.save()
+            subtask(announce).delay("[%s] Route removal: %s%s- Result %s" %(route.applier, route.name, reason_text, response), route.applier)
+    else:
+        return False
 
 @task
 def announce(messg, user):
@@ -69,17 +94,21 @@ def announce(messg, user):
 
 @task
 def check_sync(route_name=None, selected_routes = []):
+    from flowspy.flowspec.models import Route, MatchPort, MatchDscp, ThenAction
     if not selected_routes:
         routes = Route.objects.all()
     else:
         routes = selected_routes
     if route_name:
         routes = routes.filter(name=route_name)
-    for route in roures:
-        if route.is_synced():
-            logger.info("Route %s is synced" %route.name)
-        else:
-            logger.warn("Route %s is out of sync" %route.name)
+    for route in routes:
+        if route.has_expired() and route.status != 'EXPIRED':
+            logger.info('Expiring route %s' %route.name)
+            subtask(delete).delay(route, reason="EXPIRED")
+        elif route.status != 'EXPIRED':
+            route.check_sync()
+
+
 #def delete(route):
 #    
 #    applier = PR.Applier(route_object=route)

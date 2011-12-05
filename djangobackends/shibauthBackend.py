@@ -39,7 +39,7 @@ class shibauthBackend:
             peer = Peer.objects.get(domain_name=organization)
             up = UserProfile.objects.get_or_create(user=user,peer=peer)
         except:
-            pass
+            return False
         return user
 
     def get_user(self, user_id):

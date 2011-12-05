@@ -128,29 +128,12 @@ class Route(models.Model):
                 self.source = address.exploded
             except Exception:
                 raise ValidationError('Invalid network address format at Source Field')
-    
-#    def save(self, *args, **kwargs):
-#        edit = False
-#        if self.pk:
-#            #This is an edit
-#            edit = True
-#        super(Route, self).save(*args, **kwargs)
-#        if not edit:
-#            response = add.delay(self)
-#            logger.info("Got save job id: %s" %response)
-    
+   
     def commit_add(self, *args, **kwargs):
         peer = self.applier.get_profile().peer.domain_name
         send_message("[%s] Adding route %s. Please wait..." %(self.applier.username, self.name), peer)
         response = add.delay(self)
-        logger.info("Got save job id: %s" %response)
-
-    def deactivate(self):
-        self.status = "INACTIVE"
-        self.save()
-#    def delete(self, *args, **kwargs):
-#        response = delete.delay(self)
-#        logger.info("Got delete job id: %s" %response)
+        logger.info("Got add job id: %s" %response)
         
     def commit_edit(self, *args, **kwargs):
         peer = self.applier.get_profile().peer.domain_name
@@ -159,21 +142,27 @@ class Route(models.Model):
         logger.info("Got edit job id: %s" %response)
 
     def commit_delete(self, *args, **kwargs):
+        reason_text = ''
+        if "reason" in kwargs:
+            reason = kwargs['reason']
+            reason_text = "Reason: %s. " %reason
         peer = self.applier.get_profile().peer.domain_name
-        send_message("[%s] Removing route %s. Please wait..." %(self.applier.username, self.name), peer)
-        response = delete.delay(self)
-        logger.info("Got edit job id: %s" %response)
-#    
-#    def delete(self, *args, **kwargs):
-#        response = delete.delay(self)
-#        logger.info("Got delete job id: %s" %response)
+        send_message("[%s] Removing route %s. %sPlease wait..." %(self.applier.username, self.name, reason), peer)
+        response = delete.delay(self, reason=reason)
+        logger.info("Got delete job id: %s" %response)
+
     def has_expired(self):
         today = datetime.date.today()
         if today > self.expires:
             return True
         return False
-
-    def is_synced(self):      
+    
+    def check_sync(self):
+        if not self.is_synced():
+            self.status = "OUTOFSYNC"
+            self.save()
+    
+    def is_synced(self):
         found = False
         get_device = PR.Retriever()
         device = get_device.fetch_device()
@@ -183,7 +172,7 @@ class Route(models.Model):
             self.status = "EXPIRED"
             self.save()
             logger.error("No routing options on device. Exception: %s" %e)
-            return False
+            return True
         for route in routes:
             if route.name == self.name:
                 found = True
@@ -257,8 +246,9 @@ class Route(models.Model):
                     pass
                 if found and self.status != "ACTIVE":
                      logger.error('Rule is applied on device but appears as offline')
-                     found = False
-        
+                     self.status = "ACTIVE"
+                     self.save()
+                     found = True
         return found
 
     def get_then(self):

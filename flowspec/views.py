@@ -27,8 +27,13 @@ from flowspy.flowspec.models import *
 
 from copy import deepcopy
 from flowspy.utils.decorators import shib_required
+import datetime
 
-def days_offset(): return datetime.now() + timedelta(days = settings.EXPIRATION_DAYS_OFFSET)
+from django.views.decorators.cache import never_cache
+from django.conf import settings
+
+
+def days_offset(): return datetime.date.today() + datetime.timedelta(days = settings.EXPIRATION_DAYS_OFFSET)
 
 @login_required
 def user_routes(request):
@@ -37,6 +42,7 @@ def user_routes(request):
                               context_instance=RequestContext(request))
 
 @login_required
+@never_cache
 def group_routes(request):
     group_routes = []
     peer = request.user.get_profile().peer
@@ -49,8 +55,14 @@ def group_routes(request):
 
 
 @login_required
+@never_cache
 def add_route(request):
     applier = request.user.pk
+    applier_peer_networks = request.user.get_profile().peer.networks.all()
+    if not applier_peer_networks:
+         messages.add_message(request, messages.WARNING,
+                             "Insufficient rights on administrative networks. Cannot add route. Contact your administrator")
+         return HttpResponseRedirect(reverse("group-routes"))
     if request.method == "GET":
         form = RouteForm()
         return render_to_response('apply.html', {'form': form, 'applier': applier},
@@ -72,6 +84,7 @@ def add_route(request):
                                       context_instance=RequestContext(request))
 
 @login_required
+@never_cache
 def add_then(request):
     applier = request.user.pk
     if request.method == "GET":
@@ -94,6 +107,7 @@ def add_then(request):
                                       context_instance=RequestContext(request))
 
 @login_required
+@never_cache
 def edit_route(request, route_slug):
     applier = request.user.pk
     applier_peer = request.user.get_profile().peer
@@ -127,13 +141,14 @@ def edit_route(request, route_slug):
                                   context_instance=RequestContext(request))
 
 @login_required
+@never_cache
 def delete_route(request, route_slug):
     if request.is_ajax():
         route = get_object_or_404(Route, name=route_slug)
         applier_peer = route.applier.get_profile().peer
         requester_peer = request.user.get_profile().peer
         if applier_peer == requester_peer:
-            route.deactivate()
+            route.status = "PENDING"
             route.commit_delete()
         html = "<html><body>Done</body></html>"
         return HttpResponse(html)
@@ -141,6 +156,7 @@ def delete_route(request, route_slug):
         return HttpResponseRedirect(reverse("group-routes"))
 
 @login_required
+@never_cache
 def user_profile(request):
     user = request.user
     peer = request.user.get_profile().peer
@@ -148,11 +164,13 @@ def user_profile(request):
     return render_to_response('profile.html', {'user': user, 'peer':peer},
                                   context_instance=RequestContext(request))
 
-
+@never_cache
 def user_login(request):
     try:
         error_username = None
         error_orgname = None
+        error_affiliation = None
+        error = ''
         username = request.META['HTTP_EPPN']
         if not username:
             error_username = True
@@ -160,29 +178,41 @@ def user_login(request):
         lastname = request.META['HTTP_SHIB_PERSON_SURNAME']
         mail = request.META['HTTP_SHIB_INETORGPERSON_MAIL']
         organization = request.META['HTTP_SHIB_HOMEORGANIZATION']
+        affiliation = request.META['HTTP_SHIB_EP_ENTITLEMENT']
+        match = re.compile(settings.SHIB_AUTH_AFFILIATION)
+        has_affiliation = match.search(affiliation)
+        if not has_affiliation:
+            error_affiliation = True
         if not organization:
             error_orgname = True
-
-        if error_orgname or error_username:
-            error = "Your idP should release the HTTP_EPPN, HTTP_SHIB_HOMEORGANIZATION attributes towards this service" 
+        if error_username:
+            error = "Your idP should release the HTTP_EPPN attribute towards this service\n"
+        if error_orgname:
+            error = error + "Your idP should release the HTTP_SHIB_HOMEORGANIZATION attribute towards this service\n"
+        if error_affiliation:
+            error = error + "Your idP should release an appropriate HTTP_SHIB_EP_ENTITLEMENT attribute towards this service"
+        if error_username or error_orgname or error_affiliation:
             return render_to_response('error.html', {'error': error,},
                                   context_instance=RequestContext(request))
-        user = authenticate(username=username, firstname=firstname, lastname=lastname, mail=mail, organization=organization, affiliation=None)
+        user = authenticate(username=username, firstname=firstname, lastname=lastname, mail=mail, organization=organization, affiliation)
         if user is not None:
             login(request, user)
             return HttpResponseRedirect(reverse("group-routes"))
                 # Redirect to a success page.
                 # Return a 'disabled account' error message
         else:
-            html = "<html><body>Invalid User</body></html>"
-            return HttpResponse(html)
+            error = "Something went wrong during user authentication. Contact your administrator"
+            return render_to_response('error.html', {'error': error,},
+                                  context_instance=RequestContext(request))
     except Exception as e:
-        html = "<html><body>Invalid Login Procedure %s </body></html>" %e
-        return HttpResponse(html)
+        error = "Invalid login procedure"
+        return render_to_response('error.html', {'error': error,},
+                                  context_instance=RequestContext(request))
         # Return an 'invalid login' error message.
 #    return HttpResponseRedirect(reverse("user-routes"))
 
 @login_required
+@never_cache
 def add_rate_limit(request):
     if request.method == "GET":
         form = ThenPlainForm()
@@ -204,6 +234,7 @@ def add_rate_limit(request):
                                       context_instance=RequestContext(request))
 
 @login_required
+@never_cache
 def add_port(request):
     if request.method == "GET":
         form = PortPlainForm()
@@ -223,6 +254,7 @@ def add_port(request):
                                       context_instance=RequestContext(request))
 
 @login_required
+@never_cache
 def user_logout(request):
     return HttpResponseRedirect(settings.SHIB_LOGOUT_URL)
     

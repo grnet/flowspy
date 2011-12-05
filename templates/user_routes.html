@@ -54,6 +54,18 @@
 			
 		$('#routes_table').dataTable( {
 			"bJQueryUI": true,
+			"aoColumns": [ 
+				{"bVisible": false, "bSearchable": false,"bSortable": false },
+				{"bSearchable": true,"bSortable": true},
+				{"bSearchable": true,"bSortable": true},
+				{"bSearchable": true,"bSortable": true},
+				{"bSearchable": true,"bSortable": true},
+				{"bSearchable": true,"bSortable": true},
+				{"bSearchable": true,"bSortable": true},
+				{"bSearchable": true,"bSortable": true},
+				{"bVisible": true, "bSearchable": false,"bSortable": false}
+			],
+			 "aaSorting": [[0,'desc']],
 			"oLanguage": {
 				"sLengthMenu": '{% trans "Display" %} <select><option value="25">25</option><option value="50">50</option><option value="-1">{% trans "All" %}</option></select> rules'
 			},
@@ -124,6 +136,7 @@ function delete_route(route){
 <table class="display" width="100%" id="routes_table">
 <thead>
 <tr>
+	<th>Id</th>
 	<th>{% trans "Name" %}</th>
 	<th>{% trans "Match" %}</th>
 	<th style="text-align: center;">{% trans "Then" %}</th>
@@ -132,7 +145,7 @@ function delete_route(route){
 	<th style="text-align: center;">{% trans "Applier" %}</th>
 	<th style="text-align: center;">{% trans "Expires" %}</th>
 	<th style="text-align: center;">{% trans "Response" %}</th>
-	<th style="text-align: center; width:140px;">{% trans "Actions" %}</th>
+	<th style="text-align: center; width:130px;">{% trans "Actions" %}</th>
 </tr>
 </thead>
 
@@ -140,6 +153,7 @@ function delete_route(route){
 {% for route in routes %}
 
 <tr {% ifequal route.status 'ACTIVE' %} class="GradeA" {% else %} class="GradeX" {% endifequal %}>
+	<td>{{ route.pk }}</td>
 	<td>{{ route.name }}</td>
 	<td>{{ route.get_match|safe|escape }}</td>
 	<td style="text-align: center;">{{route.get_then|safe|escape}}</td>
@@ -148,7 +162,7 @@ function delete_route(route){
 	<td style="text-align: center;">{{ route.applier }}</td>
 	<td style="text-align: center;">{{ route.expires }}</td>
 	<td style="text-align: center;">{{ route.response }}</td>
-	<td style="text-align: center;">
+	<td style="text-align: center; width:140px;">
 		{% ifequal route.status 'ACTIVE' %}
 		<a href="{% url edit-route route.name %}" class="edit_button" id="edit_button_{{route.pk}}">Edit</a> 
 		<button class="del_button" id="{{route.name}}" onclick="javascript:delete_route(this.id)">Del</button>

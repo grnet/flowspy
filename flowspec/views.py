@@ -1,6 +1,5 @@
 # Create your views here.
 import urllib2
-import re
 import socket
 import json
 from django import forms
@@ -182,8 +181,8 @@ def user_login(request):
         mail = request.META['HTTP_SHIB_INETORGPERSON_MAIL']
         organization = request.META['HTTP_SHIB_HOMEORGANIZATION']
         affiliation = request.META['HTTP_SHIB_EP_ENTITLEMENT']
-        match = re.compile(settings.SHIB_AUTH_AFFILIATION)
-        has_affiliation = match.search(affiliation)
+        if settings.SHIB_AUTH_AFFILIATION in affiliation.split(";"):
+            has_affiliation = True
         if not has_affiliation:
             error_affiliation = True
         if not organization:

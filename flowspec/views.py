@@ -64,7 +64,7 @@ def add_route(request):
     applier_peer_networks = request.user.get_profile().peer.networks.all()
     if not applier_peer_networks:
          messages.add_message(request, messages.WARNING,
-                             "Insufficient rights on administrative networks. Cannot add route. Contact your administrator")
+                             "Insufficient rights on administrative networks. Cannot add rule. Contact your administrator")
          return HttpResponseRedirect(reverse("group-routes"))
     if request.method == "GET":
         form = RouteForm()
@@ -118,7 +118,7 @@ def edit_route(request, route_slug):
     route_edit_applier_peer = route_edit.applier.get_profile().peer
     if applier_peer != route_edit_applier_peer:
         messages.add_message(request, messages.WARNING,
-                             "Insufficient rights to edit route %s" %(route_slug))
+                             "Insufficient rights to edit rule %s" %(route_slug))
         return HttpResponseRedirect(reverse("group-routes"))
     route_original = deepcopy(route_edit)
     if request.POST:

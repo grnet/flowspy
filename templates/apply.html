@@ -3,17 +3,17 @@
 
 {% block title %}
 	{% if edit %}
-		{% trans "Edit Route" %} {{form.data.name}}
+		{% trans "Edit Rule" %} {{form.data.name}}
 	{% else %}
-		{% trans "Create new Route" %}
+		{% trans "Create new Rule" %}
 	{% endif %}
 {% endblock %}
 
 {% block breadcrumbs %}:: 
 	{% if edit %}
-		{% trans "Edit route" %} {{form.data.name}}
+		{% trans "Edit rule" %} {{form.data.name}}
 	{% else %}
-	{% trans "Create route" %}
+	{% trans "Create rule" %}
 	{% endif %}
 		{% endblock %}
 {% block extrahead %}
@@ -144,9 +144,9 @@ th {
 </style>
 <div align="center">
 	{% if edit %}
-	<h3>{% trans "Edit route" %}: {{form.data.name}}</h3>
+	<h3>{% trans "Edit rule" %}: {{form.data.name}}</h3>
 	{% else %}
-<h3>{% trans "Apply for a new route" %}</h3>
+<h3>{% trans "Apply for a new rule" %}</h3>
 {% endif %}
 <form method="POST">
 {% csrf_token %}
@@ -155,7 +155,7 @@ th {
 {% endif %}
 
 <fieldset {% if edit %} style="display:none;" {% endif %}>
-	<legend>{% trans "Route Basic Info" %}</legend>
+	<legend>{% trans "Rule Basic Info" %}</legend>
 <table>
 <tr><th>{{ form.name.label_tag }}</th><td>{{ form.name }}<span class="error">{{ form.name.errors|join:", " }}</span></td></tr>
 <tr class="help"><td></td><td>A unique identifier will be added as a name_suffix</td></tr>
@@ -163,7 +163,7 @@ th {
 </fieldset>
 
 <fieldset>
-<legend>{% trans "Route Match Conditions" %}</legend>
+<legend>{% trans "Rule Match Conditions" %}</legend>
 <table>
 <input type="hidden" id="id_applier" name="applier" value="{{applier}}"/>
 <tr><th>{{ form.source.label_tag }}</th><td>{{ form.source }}<span class="error">{{ form.source.errors|join:", " }}</span></td></tr>
@@ -179,7 +179,7 @@ th {
 </table>
 </fieldset>
 <fieldset>
-<legend>{% trans "Route Actions" %}</legend>
+<legend>{% trans "Rule Actions" %}</legend>
 <table>
 <tr><th>{{ form.then.label_tag }}</th><td>{{ form.then }}&nbsp;&nbsp;<button id="new_then_actions">Rate-limit</button><span class="error">{{ form.then.errors|join:", " }}</span></td></tr>
 </table>
@@ -187,7 +187,7 @@ th {
 <fieldset>
 <legend>{% trans "Use/Comments" %}</legend>
 {% blocktrans %}
-<p>Give a short description of the intended use of this route, that justifies the parameter selection above. Feel free to include any additional comments.</p>
+<p>Give a short description of the intended use of this rule, that justifies the parameter selection above. Feel free to include any additional comments.</p>
 {% endblocktrans %}
 <p>{{ form.comments }}
 {% if form.errors %}<br /><span class="error">{{ form.comments.errors|join:", " }}</span>{% endif %}

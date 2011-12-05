@@ -49,7 +49,7 @@
 					<img class="logoimg" src="/static/grnet_logo.png">
 				</a>
 				<div id="title">
-					<a href="/">Firewall on Demand</a>
+					<a href="{% url group-routes %}">Firewall on Demand</a>
 				</div>
 				<div class="loginform">
 					<div id="formcontent">
@@ -82,7 +82,7 @@
 			</div>
 			<div id="content">
 				{% block brcrmb_container %}
-				<div class="info_content_title">{% if user.is_authenticated %}<a href="{% url group-routes %}">{% trans "My routes" %}</a>{% endif %}
+				<div class="info_content_title">{% if user.is_authenticated %}<a href="{% url group-routes %}">{% trans "My rules" %}</a>{% endif %}
 				{% block breadcrumbs %}{% endblock %}
 				</div>
 				{% if messages %}
@@ -97,11 +97,14 @@
 				{% endblock %}
 
 			</div>
+			
 			<div id="footer">
+				{% comment %}
 			{% if user.is_authenticated %}
 			{% trans "If you have any questions or need help, contact GRNET Helpdesk at <a href='mailto:helpdesk@grnet.gr'>helpdesk@grnet.gr</a> or 800-11-47638." %}<br />
 			{% endif %}
 			<a href="http://www.grnet.gr">{% trans "GRNET" %} NOC</a> | <a href="/about/info/">{% trans "Info" %}</a> | <a href="/about/terms-of-service">{% trans "Service Terms" %}</a>
+			{% endcomment %}
 			</div>
 	</div>
 </body>

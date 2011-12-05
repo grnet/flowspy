@@ -141,8 +141,10 @@ var updater = {
 	for (var i = 0; i < messages.length; i++) {
 	    updater.showMessage(messages[i]);
 	}
+	$("#hid_mid").val('UPDATED');
 	if (($('#console').dialog('isOpen')) == false){
 		blink("#consolebutton");
+		window.setTimeout('location.reload()', 3000);
 	}
     },
 

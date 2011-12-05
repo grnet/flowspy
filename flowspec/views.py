@@ -41,6 +41,9 @@ def user_routes(request):
     return render_to_response('user_routes.html', {'routes': user_routes},
                               context_instance=RequestContext(request))
 
+def welcome(request):
+    return render_to_response('welcome.html', context_instance=RequestContext(request))
+
 @login_required
 @never_cache
 def group_routes(request):
@@ -194,9 +197,10 @@ def user_login(request):
         if error_username or error_orgname or error_affiliation:
             return render_to_response('error.html', {'error': error,},
                                   context_instance=RequestContext(request))
-        user = authenticate(username=username, firstname=firstname, lastname=lastname, mail=mail, organization=organization, affiliation)
+        user = authenticate(username=username, firstname=firstname, lastname=lastname, mail=mail, organization=organization, affiliation=affiliation)
         if user is not None:
             login(request, user)
+            update_user_attributes(user, firstname=firstname, lastname=lastname, mail=mail)
             return HttpResponseRedirect(reverse("group-routes"))
                 # Redirect to a success page.
                 # Return a 'disabled account' error message
@@ -232,6 +236,12 @@ def add_rate_limit(request):
         else:
             return render_to_response('add_rate_limit.html', {'form': form,},
                                       context_instance=RequestContext(request))
+            
+def update_user_attributes(user, firstname, lastname, mail):
+    user.first_name = firstname
+    user.last_name = lastname
+    user.email = mail
+    user.save()
 
 @login_required
 @never_cache
@@ -258,6 +268,6 @@ def add_port(request):
 def user_logout(request):
     return HttpResponseRedirect(settings.SHIB_LOGOUT_URL)
     
-    
+@never_cache
 def load_jscript(request, file):
     return render_to_response('%s.js' % file, context_instance=RequestContext(request), mimetype="text/javascript")

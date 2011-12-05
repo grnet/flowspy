@@ -8,7 +8,8 @@ GRNETWHOIS = 'whois.grnet.gr'
 def query(query, hostname, flags):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.connect((hostname, 43))
-    s.send(" -i origin -r -K -T route -T route6 " + query + "\r\n")
+    # as IPv6 is not supported by flowspec for the time ommit -T route6 
+    s.send(" -i origin -r -K -T route " + query + "\r\n")
     response = ''
     while True:
         d = s.recv(4096)

@@ -4,6 +4,7 @@
 <script type="text/javascript" src="/static/js/jquery.dataTables.js"></script>
 <script type="text/javascript">
 	$(document).ready( function(){
+		$("#hid_mid").val('');
 		$('#dialog').dialog({
 			height: 220,
             width: 300,
@@ -19,21 +20,39 @@
 			cache: false,
 			success: function(data) {
 				$('#dialog').dialog('close');
+				window.setTimeout('location.reload()', 1000);
 			  }
 		});
 		},
 		Cancel: function() {
 			$('#dialog').dialog('close');
+		},
+		
+
+	},
+	close: function() {
+        update_val = $("#hid_mid").val();
+		if (update_val == 'UPDATED'){
+			$("#hid_mid").val('');
+			window.setTimeout('location.reload()', 500);
 		}
-	}
+    }
 		});
 		$('#console').dialog({
 			height: 250,
             width: 800,
 			modal: true,
-			autoOpen: false
-			});
-			$('#routes_table').dataTable( {
+			autoOpen: false,
+			close: function() {
+		        update_val = $("#hid_mid").val();
+				if (update_val == 'UPDATED'){
+					$("#hid_mid").val('');
+					window.setTimeout('location.reload()', 500);
+				}
+		    }
+		});
+			
+		$('#routes_table').dataTable( {
 			"bJQueryUI": true,
 			"oLanguage": {
 				"sLengthMenu": '{% trans "Display" %} <select><option value="25">25</option><option value="50">50</option><option value="-1">{% trans "All" %}</option></select> routes'
@@ -70,6 +89,7 @@
 				$('#console').dialog('open');
 				return false;
 			});
+
 		});
 		
 function delete_route(route){

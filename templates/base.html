@@ -9,7 +9,9 @@
 <link rel="stylesheet" type="text/css" href="/static/css/base.css">
 <link rel="stylesheet" type="text/css" href="/static/css/smoothness/jquery-ui-1.8.13.custom.css">
 <script type="text/javascript" src="/static/js/jquery-ui-1.8.12.custom.min.js"></script>
+{% if user.is_authenticated %}
 <script type="text/javascript" src="{% url load-js 'poller' %}"></script>
+{% endif %}
 <script type="text/javascript">
 
   	function setlang(lang){
@@ -72,7 +74,7 @@
 						{% endif %}
 						<span class="topmenuaction"><a href="{% url logout %}">{% trans "Logout" %}</a></span>
 						{% else %}
-						<span class="topmenuaction"><a href="{% url login %}">{% trans "Login" %}</a></span>
+						<span class="topmenuaction"><a href="{% url login %}">{% trans "Shibboleth Login" %}</a></span>
 						{% endif %}
 					</div>
 					

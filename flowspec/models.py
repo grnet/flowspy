@@ -143,11 +143,12 @@ class Route(models.Model):
 
     def commit_delete(self, *args, **kwargs):
         reason_text = ''
+        reason = ''
         if "reason" in kwargs:
             reason = kwargs['reason']
             reason_text = "Reason: %s. " %reason
         peer = self.applier.get_profile().peer.domain_name
-        send_message("[%s] Removing route %s. %sPlease wait..." %(self.applier.username, self.name, reason), peer)
+        send_message("[%s] Removing route %s. %sPlease wait..." %(self.applier.username, self.name, reason_text), peer)
         response = delete.delay(self, reason=reason)
         logger.info("Got delete job id: %s" %response)
 

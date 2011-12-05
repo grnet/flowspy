@@ -58,6 +58,7 @@
 				{% endblock %}
 				{% block content %}
 				A required shibboleth attribute was not released towards this service<br>
+				{% if error %}Details: {{error}}<br>{% endif %}
 				Required shibboleth attributes:<br>
 				<strong>HTTP_EPPN</strong><br>
 				<strong>HTTP_SHIB_HOMEORGANIZATION</strong>

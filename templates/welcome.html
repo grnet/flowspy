@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Login" %}{% endblock %}
+{% block brcrmb_container %}{% endblock %}
+{% block content %}
+<div id="welcome">
+<h3>{% trans "Welcome" %}</h3>
+{% blocktrans %}
+<p>Welcome to GRNET's FoD service.</p>
+<p>If you are new to the service, take some time to read the service description <a href="/about/info">here</a>.</p>
+<p>For troubleshooting info and remarks do not hesitate to contact GRNET's Helpdesk.</p>
+{% endblocktrans %}</p>
+</div>
+
+<div id="loginform">
+					<a href="{% url login %}">
+					<img src="/static/shib_login.png" style="border:none;">
+					<p>Shibboleth Login</p>
+				</a>
+</div>
+{% endblock %}

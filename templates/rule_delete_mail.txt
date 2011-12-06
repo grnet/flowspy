@@ -1,0 +1,7 @@
+A new rule removal job has spawned
+
+User {{route.applier.username}} requested the removal of the following rule:
+
+rule_name: {{route.name}}
+rule_source: {{route.source}}
+rule_destination: {{route.destination}}

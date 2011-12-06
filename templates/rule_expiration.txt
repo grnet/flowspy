@@ -1,0 +1,5 @@
+Rule {{route.name}} expires in {{expiration_days}} days.
+
+rule_name: {{route.name}}
+rule_source: {{route.source}}
+rule_destination: {{route.destination}}

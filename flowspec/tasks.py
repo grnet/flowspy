@@ -3,7 +3,6 @@ from celery.task import task
 from celery.task.sets import subtask
 import logging
 import json
-
 from celery.task.http import *
 from flowspy.utils import beanstalkc
 from django.conf import settings
@@ -105,15 +104,16 @@ def check_sync(route_name=None, selected_routes = []):
     if route_name:
         routes = routes.filter(name=route_name)
     for route in routes:
-        if route.has_expired() and (route.status != 'EXPIRED' or route.status != 'ADMININACTIVE' or route.status != 'INACTIVE'):
+        if route.has_expired() and (route.status != 'EXPIRED' and route.status != 'ADMININACTIVE' and route.status != 'INACTIVE'):
             logger.info('Expiring route %s' %route.name)
             subtask(delete).delay(route, reason="EXPIRED")
         elif route.has_expired() and (route.status == 'ADMININACTIVE' or route.status == 'INACTIVE'):
             route.status = 'EXPIRED'
             route.response = 'Route Expired'
             route.save()
-        elif route.status != 'EXPIRED':
-            route.check_sync()
+        else:
+            if route.status != 'EXPIRED':
+                route.check_sync()
 
 
 #def delete(route):

@@ -13,6 +13,8 @@ class RouteAdmin(admin.ModelAdmin):
     actions = ['deactivate']
     
     def deactivate(self, request, queryset):
+        queryset = queryset.filter(status='ACTIVE')
+        rows = queryset.update(status='PENDING')
         response = batch_delete.delay(queryset, reason="ADMININACTIVE")
         self.message_user(request, "Added request %s to job que. Check in a while for result" % response)
     deactivate.short_description = "Remove selected routes from network"

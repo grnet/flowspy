@@ -253,6 +253,8 @@ class Route(models.Model):
                      self.status = "ACTIVE"
                      self.save()
                      found = True
+                if not found and self.status == "ADMININACTIVE":
+                     found = True
         return found
 
     def get_then(self):

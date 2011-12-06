@@ -11,7 +11,7 @@ from django.http import HttpResponseRedirect, HttpResponseForbidden, HttpRespons
 from django.shortcuts import get_object_or_404, render_to_response
 from django.core.context_processors import request
 from django.template.context import RequestContext
-from django.template.loader import get_template
+from django.template.loader import get_template, render_to_string
 from django.utils import simplejson
 from django.core.urlresolvers import reverse
 from django.contrib import messages
@@ -30,6 +30,7 @@ import datetime
 
 from django.views.decorators.cache import never_cache
 from django.conf import settings
+from django.core.mail import mail_admins, mail_managers, send_mail
 
 
 def days_offset(): return datetime.date.today() + datetime.timedelta(days = settings.EXPIRATION_DAYS_OFFSET)
@@ -80,6 +81,10 @@ def add_route(request):
             route.save()
             form.save_m2m()
             route.commit_add()
+            mail_body = render_to_string("rule_add_mail.txt",
+                                             {"route": route})
+            mail_admins("Rule %s creation request submitted by %s" %(route.name, route.applier.username),
+                          mail_body, fail_silently=True)
             return HttpResponseRedirect(reverse("group-routes"))
         else:
             return render_to_response('apply.html', {'form': form, 'applier':applier},
@@ -127,6 +132,10 @@ def edit_route(request, route_slug):
         messages.add_message(request, messages.WARNING,
                              "Cannot edit the expired rule %s. Contact helpdesk to enable it" %(route_slug))
         return HttpResponseRedirect(reverse("group-routes"))
+    if route_edit.status == "PENDING" :
+        messages.add_message(request, messages.WARNING,
+                             "Cannot edit a pending rule: %s." %(route_slug))
+        return HttpResponseRedirect(reverse("group-routes"))
     route_original = deepcopy(route_edit)
     if request.POST:
         form = RouteForm(request.POST, instance = route_edit)
@@ -139,6 +148,10 @@ def edit_route(request, route_slug):
             route.save()
             form.save_m2m()
             route.commit_edit()
+            mail_body = render_to_string("rule_edit_mail.txt",
+                                             {"route": route})
+            mail_admins("Rule %s edit request submitted by %s" %(route.name, route.applier.username),
+                          mail_body, fail_silently=True)
             return HttpResponseRedirect(reverse("group-routes"))
         else:
             return render_to_response('apply.html', {'form': form, 'edit':True, 'applier': applier},
@@ -160,6 +173,10 @@ def delete_route(request, route_slug):
         if applier_peer == requester_peer:
             route.status = "PENDING"
             route.commit_delete()
+            mail_body = render_to_string("rule_delete_mail.txt",
+                                             {"route": route})
+            mail_admins("Rule %s removal request submitted by %s" %(route.name, route.applier.username),
+                          mail_body, fail_silently=True)
         html = "<html><body>Done</body></html>"
         return HttpResponse(html)
     else:

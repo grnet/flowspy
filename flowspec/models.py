@@ -107,6 +107,8 @@ class Route(models.Model):
     
     class Meta:
         db_table = u'route'
+        verbose_name = "Rule"
+        verbose_name_plural = "Rules"
     
     def save(self, *args, **kwargs):
         if not self.pk:

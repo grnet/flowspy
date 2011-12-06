@@ -17,7 +17,8 @@ class RouteAdmin(admin.ModelAdmin):
         self.message_user(request, "Added request %s to job que. Check in a while for result" % response)
     deactivate.short_description = "Remove selected routes from network"
 
-    list_display = ('name', 'status', 'applier' , 'applier_peer', 'get_match', 'get_then', 'response')
+    list_display = ('name', 'status', 'applier' , 'applier_peer', 'get_match', 'get_then', 'response', "expires", "comments")
+
     fieldsets = [
         (None,               {'fields': ['name','applier']}),
         ("Match",               {'fields': ['source', 'sourceport', 'destination', 'destinationport', 'port']}),

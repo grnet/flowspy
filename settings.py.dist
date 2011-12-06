@@ -163,13 +163,22 @@ CELERY_CONCURRENCY = 1
 # List of modules to import when celery starts.
 CELERY_IMPORTS = ("flowspec.tasks", )
 
-## Result store settings.
-#CELERY_RESULT_BACKEND = "database"
-#CELERY_RESULT_DBURI = "sqlite:///flowspec_dev.db"
+SERVER_EMAIL = "noreply@grnet.gr"
+EMAIL_SUBJECT_PREFIX = "[fod] "
 
-## Broker settings.
 BROKER_URL = "beanstalk://localhost:11300//"
 
-SHIB_AUTH_AFFILIATION = ''
-SHIB_ADMIN_DOMAIN = ''
+SHIB_AUTH_AFFILIATION = 'urn:mace:grnet.gr:pki:user'
+SHIB_ADMIN_DOMAIN = 'grnet.gr'
 SHIB_LOGOUT_URL = 'https://netdev.grnet.gr/Shibboleth.sso/Logout'
+
+from celery.schedules import crontab
+
+CELERYBEAT_SCHEDULE = {
+    # Executes every day at 01:35 AM 
+    "every-day-sync": {
+        "task": "flowspec.tasks.check_sync",
+        "schedule": crontab(minute=35, hour=01),
+        "args": (),
+    },
+}

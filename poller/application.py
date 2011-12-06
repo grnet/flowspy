@@ -12,7 +12,6 @@ def exception_printer(sender, **kwargs):
     traceback.print_exc()
 
 got_request_exception.connect(exception_printer)
-
 call_command('syncdb')
 
 application = WSGIHandler()

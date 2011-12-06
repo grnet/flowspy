@@ -45,7 +45,8 @@ ROUTE_STATES = (
     ("EXPIRED", "EXPIRED"),
     ("PENDING", "PENDING"),
     ("OUTOFSYNC", "OUTOFSYNC"),
-    ("INACTIVE", "INACTIVE"),            
+    ("INACTIVE", "INACTIVE"),
+    ("ADMININACTIVE", "ADMININACTIVE"),           
 )
 
 
@@ -299,6 +300,14 @@ class Route(models.Model):
         
     get_match.short_description = 'Match statement'
     get_match.allow_tags = True
+    
+    @property
+    def applier_peer(self):
+        try:
+            applier_peer = self.applier.get_profile().peer
+        except:
+            applier_peer = None
+        return applier_peer
 
 def send_message(msg, user):
 #    username = user.username

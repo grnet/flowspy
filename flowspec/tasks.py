@@ -71,6 +71,9 @@ def batch_delete(routes, **kwargs):
             if "reason" in kwargs and kwargs['reason']=='EXPIRED':
                 status = 'EXPIRED'
                 reason_text = " Reason: %s " %status
+            elif "reason" in kwargs and kwargs['reason']!='EXPIRED':
+                status = kwargs['reason']
+                reason_text = " Reason: %s " %status
         else:
             status = "ERROR"
         for route in routes:
@@ -102,9 +105,13 @@ def check_sync(route_name=None, selected_routes = []):
     if route_name:
         routes = routes.filter(name=route_name)
     for route in routes:
-        if route.has_expired() and route.status != 'EXPIRED':
+        if route.has_expired() and (route.status != 'EXPIRED' or route.status != 'ADMININACTIVE' or route.status != 'INACTIVE'):
             logger.info('Expiring route %s' %route.name)
             subtask(delete).delay(route, reason="EXPIRED")
+        elif route.has_expired() and (route.status == 'ADMININACTIVE' or route.status == 'INACTIVE'):
+            route.status = 'EXPIRED'
+            route.response = 'Route Expired'
+            route.save()
         elif route.status != 'EXPIRED':
             route.check_sync()
 

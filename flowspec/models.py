@@ -249,12 +249,12 @@ class Route(models.Model):
                 except:
                     pass
                 if found and self.status != "ACTIVE":
-                     logger.error('Rule is applied on device but appears as offline')
-                     self.status = "ACTIVE"
-                     self.save()
-                     found = True
-                if not found and self.status == "ADMININACTIVE":
-                     found = True
+                    logger.error('Rule is applied on device but appears as offline')
+                    self.status = "ACTIVE"
+                    self.save()
+                    found = True
+            if self.status == "ADMININACTIVE":
+                found = True
         return found
 
     def get_then(self):

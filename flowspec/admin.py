@@ -7,14 +7,12 @@ from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
 from accounts.models import UserProfile
 
-
 class RouteAdmin(admin.ModelAdmin):
     
     actions = ['deactivate']
     
     def deactivate(self, request, queryset):
         queryset = queryset.filter(status='ACTIVE')
-        rows = queryset.update(status='PENDING')
         response = batch_delete.delay(queryset, reason="ADMININACTIVE")
         self.message_user(request, "Added request %s to job que. Check in a while for result" % response)
     deactivate.short_description = "Remove selected routes from network"

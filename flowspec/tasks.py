@@ -61,6 +61,8 @@ def delete(route, **kwargs):
 @task
 def batch_delete(routes, **kwargs):
     if routes:
+        for route in routes:
+            route.status='PENDING';route.save()
         applier = PR.Applier(route_objects=routes)
         conf = applier.delete_routes()
         commit, response = applier.apply(configuration = conf)

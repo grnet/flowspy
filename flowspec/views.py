@@ -144,6 +144,7 @@ def delete_route(request, route_slug):
         requester_peer = request.user.get_profile().peer
         if applier_peer == requester_peer:
             route.status = "PENDING"
+            route.save()
             route.commit_delete()
             mail_body = render_to_string("rule_delete_mail.txt",
                                              {"route": route})

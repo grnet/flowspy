@@ -111,12 +111,8 @@ class RouteForm(forms.ModelForm):
         for route in existing_routes:
             if name != route.name:
                 existing_url = reverse('edit-route', args=[route.name])
-                if IPNetwork(destination) in IPNetwork(route.destination):
-                    raise forms.ValidationError('There is an exact %s rule, %s whose destination (%s) is supernet of (or the same as) network (%s).<br>To avoid overlapping try editing rule <a href=\'%s\'>%s</a>' %(route.status, route.name, route.destination, destination, existing_url, route.name))
-                if IPNetwork(route.destination) in IPNetwork(destination):
-                    raise forms.ValidationError('There is an exact %s rule, %s whose destination network (%s) belongs to the destination network %s.<br>To avoid overlapping try editing rule <a href=\'%s\'>%s</a>' %(route.status, route.name, route.destination, destination, existing_url, route.name))
-        
-
+                if IPNetwork(destination) in IPNetwork(route.destination) or IPNetwork(route.destination) in IPNetwork(destination):
+                    raise forms.ValidationError('Found an exact %s rule, %s with destination prefix %s<br>To avoid overlapping try editing rule <a href=\'%s\'>%s</a>' %(route.status, route.name, route.destination, existing_url, route.name))
         return self.cleaned_data
 
 class ThenPlainForm(forms.ModelForm):

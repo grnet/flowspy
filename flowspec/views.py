@@ -7,6 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.core import urlresolvers
 from django.core import serializers
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import logout
 from django.http import HttpResponseRedirect, HttpResponseForbidden, HttpResponse
 from django.shortcuts import get_object_or_404, render_to_response
 from django.core.context_processors import request
@@ -263,7 +264,8 @@ def add_port(request):
 @login_required
 @never_cache
 def user_logout(request):
-    return HttpResponseRedirect(settings.SHIB_LOGOUT_URL)
+    logout(request)
+    return HttpResponseRedirect(reverse('group-routes'))
     
 @never_cache
 def load_jscript(request, file):

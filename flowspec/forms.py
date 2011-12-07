@@ -26,12 +26,20 @@ class RouteForm(forms.ModelForm):
     
     def clean_source(self):
         data = self.cleaned_data['source']
+        private_error = False
         if data:
             try:
                 address = IPNetwork(data)
-                return self.cleaned_data["source"]
+                if address.is_private:
+                    private_error = True
+                    raise forms.ValidationError('Private addresses not allowed')
+                else:
+                    return self.cleaned_data["source"]
             except Exception:
-                raise forms.ValidationError('Invalid network address format')
+                error_text = 'Invalid network address format'
+                if private_error:
+                    error_text = 'Private addresses not allowed'
+                raise forms.ValidationError(error_text)
 
     def clean_destination(self):
         data = self.cleaned_data['destination']

@@ -253,7 +253,7 @@ class Route(models.Model):
                     self.status = "ACTIVE"
                     self.save()
                     found = True
-            if self.status == "ADMININACTIVE":
+            if self.status == "ADMININACTIVE" or self.status == "INACTIVE":
                 found = True
         return found
 

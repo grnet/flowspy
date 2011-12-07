@@ -1,5 +1,12 @@
 Rule {{route.name}} expires in {{expiration_days}} days.
 
-rule_name: {{route.name}}
-rule_source: {{route.source}}
-rule_destination: {{route.destination}}
+Match
+* Dst Addr:{{route.destination}}
+* Src Addr: {{route.source}}
+* Ports:{% for port in route.ports.all %}
+  {{ port }}{% if not forloop.last %}, {% endif %}
+{% endfor %}
+* Source Ports:{% for port in route.sourceport.all %}{{ port }}{% if not forloop.last %}, {% endif %}{% endfor %}
+* Destination Ports:{% for port in route.destinationport.all %}{{ port }}{% if not forloop.last %}, {% endif %}{% endfor %}
+
+*Then:{% for then in route.then.all %}{{ then }}{% if not forloop.last %}, {% endif %}{% endfor %}

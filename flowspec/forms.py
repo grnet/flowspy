@@ -3,9 +3,12 @@ from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _
 from django.utils.translation import ugettext_lazy
 from django.template.defaultfilters import filesizeformat
-from flowspy.flowspec.models import * 
+from flowspy.flowspec.models import *
 from ipaddr import *
+from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
+from django.db.models import Avg, Max, Min, Count
+
 
 class RouteForm(forms.ModelForm):
 #    name = forms.CharField(help_text=ugettext_lazy("A unique route name,"
@@ -39,14 +42,19 @@ class RouteForm(forms.ModelForm):
                 raise forms.ValidationError('Invalid network address format')
 
     def clean(self):
+        name = self.cleaned_data.get('name', None)
         source = self.cleaned_data.get('source', None)
         sourceports = self.cleaned_data.get('sourceport', None)
         ports = self.cleaned_data.get('port', None)
+        then = self.cleaned_data.get('then', None)
         destination = self.cleaned_data.get('destination', None)
         destinationports = self.cleaned_data.get('destinationport', None)
         user = self.cleaned_data.get('applier', None)
-        networks = user.get_profile().peer.networks.all()
+        peer = user.get_profile().peer
+        networks = peer.networks.all()
         mynetwork = False
+        route_pk_list = []
+        
         if destination:
             for network in networks:
                 net = IPNetwork(network.network)
@@ -64,6 +72,41 @@ class RouteForm(forms.ModelForm):
             raise forms.ValidationError('Once destination port is matched, destination has to be filled as well. Either deselect destination port or fill destination address')
         if not (source or sourceports or ports or destination or destinationports):
             raise forms.ValidationError('Fill at least a Route Match Condition')
+        existing_routes = Route.objects.exclude(status='EXPIRED').exclude(status='PENDING').exclude(status='ERROR').exclude(status='ADMININACTIVE')
+        existing_routes = existing_routes.filter(applier__userprofile__peer=peer)
+        if source:
+            source = IPNetwork(source).compressed
+            existing_routes = existing_routes.filter(source=source)
+        else:
+            existing_routes = existing_routes.filter(source=None)
+        if sourceports:
+            route_pk_list=get_matchingport_route_pks(sourceports, existing_routes)
+            if route_pk_list:
+                existing_routes = existing_routes.filter(pk__in=route_pk_list)
+        else:
+            existing_routes = existing_routes.filter(sourceport=None)
+        if destinationports:
+            route_pk_list=get_matchingport_route_pks(destinationports, existing_routes)
+            if route_pk_list:
+                existing_routes = existing_routes.filter(pk__in=route_pk_list)
+        else:
+            existing_routes = existing_routes.filter(destinationport=None)
+        if ports:
+            route_pk_list=get_matchingport_route_pks(ports, existing_routes)
+            if route_pk_list:
+                existing_routes = existing_routes.filter(pk__in=route_pk_list)              
+        else:
+            existing_routes = existing_routes.filter(port=None)
+        
+        for route in existing_routes:
+            if name != route.name:
+                existing_url = reverse('edit-route', args=[route.name])
+                if IPNetwork(destination) in IPNetwork(route.destination):
+                    raise forms.ValidationError('There is an exact %s rule, %s whose destination (%s) is supernet of (or the same as) network (%s).<br>To avoid overlapping try editing rule <a href=\'%s\'>%s</a>' %(route.status, route.name, route.destination, destination, existing_url, route.name))
+                if IPNetwork(route.destination) in IPNetwork(destination):
+                    raise forms.ValidationError('There is an exact %s rule, %s whose destination network (%s) belongs to the destination network %s.<br>To avoid overlapping try editing rule <a href=\'%s\'>%s</a>' %(route.status, route.name, route.destination, destination, existing_url, route.name))
+        
+
         return self.cleaned_data
 
 class ThenPlainForm(forms.ModelForm):
@@ -106,3 +149,18 @@ class PortPlainForm(forms.ModelForm):
                 raise forms.ValidationError('Port should be an integer')
         else:
             raise forms.ValidationError('Cannot be empty')
+
+def value_list_to_list(valuelist):
+    vl = []
+    for val in valuelist:
+        vl.append(val[0])
+    return vl
+
+def get_matchingport_route_pks(portlist, routes):
+    route_pk_list = []
+    ports_value_list = value_list_to_list(portlist.values_list('port').order_by('port'))
+    for route in routes:
+        rsp = value_list_to_list(route.destinationport.all().values_list('port').order_by('port'))
+        if rsp and rsp == ports_value_list:
+            route_pk_list.append(route.pk)
+    return route_pk_list

@@ -150,8 +150,9 @@ th {
 {% endif %}
 <form method="POST">
 {% csrf_token %}
+{% load unescape %}
 {% if form.non_field_errors %}
-<p class="error">{{ form.non_field_errors|join:", "}}</p>
+<p class="error">{{ form.non_field_errors|unescape}}</p>
 {% endif %}
 
 <fieldset {% if edit %} style="display:none;" {% endif %}>

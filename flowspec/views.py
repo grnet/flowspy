@@ -26,14 +26,11 @@ from flowspy.flowspec.models import *
 
 from copy import deepcopy
 from flowspy.utils.decorators import shib_required
-import datetime
 
 from django.views.decorators.cache import never_cache
 from django.conf import settings
 from django.core.mail import mail_admins, mail_managers, send_mail
 
-
-def days_offset(): return datetime.date.today() + datetime.timedelta(days = settings.EXPIRATION_DAYS_OFFSET)
 
 @login_required
 def user_routes(request):
@@ -76,7 +73,6 @@ def add_route(request):
         if form.is_valid():
             route=form.save(commit=False)
             route.applier = request.user
-            route.expires = days_offset()
             route.status = "PENDING"
             route.save()
             form.save_m2m()
@@ -120,7 +116,6 @@ def edit_route(request, route_slug):
             route=form.save(commit=False)
             route.name = route_original.name
             route.applier = request.user
-            route.expires = route_original.expires
             route.status = "PENDING"
             route.save()
             form.save_m2m()

@@ -92,29 +92,6 @@ def add_route(request):
 
 @login_required
 @never_cache
-def add_then(request):
-    applier = request.user.pk
-    if request.method == "GET":
-        form = RouteForm()
-        return render_to_response('apply.html', {'form': form, 'applier': applier},
-                                  context_instance=RequestContext(request))
-
-    else:
-        form = RouteForm(request.POST)
-        if form.is_valid():
-            route=form.save(commit=False)
-            route.applier = request.user
-            route.expires = days_offset()
-            route.save()
-            form.save_m2m()
-            route.commit_add()
-            return HttpResponseRedirect(reverse("group-routes"))
-        else:
-            return render_to_response('apply.html', {'form': form, 'applier':applier},
-                                      context_instance=RequestContext(request))
-
-@login_required
-@never_cache
 def edit_route(request, route_slug):
     applier = request.user.pk
     applier_peer = request.user.get_profile().peer

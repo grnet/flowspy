@@ -24,6 +24,7 @@
 		$("#id_port").css('width', '100px').attr('size', '5');
 		$("#id_destinationport").css('width', '100px').attr('size', '5');
 		$('#id_then').attr("multiple", "");
+		$( "#id_expires" ).datepicker({ dateFormat: 'yy-mm-dd' , maxDate: '+10d', minDate: '+1d', changeMonth: false, changeYear: false }).datepicker( $.datepicker.regional[ "el" ] );
 		$('#then_diag').dialog({
 			height: 220,
             width: 340,
@@ -183,6 +184,12 @@ th {
 <legend>{% trans "Rule Actions" %}</legend>
 <table>
 <tr><th>{{ form.then.label_tag }}</th><td>{{ form.then }}&nbsp;&nbsp;<button id="new_then_actions">Rate-limit</button><span class="error">{{ form.then.errors|join:", " }}</span></td></tr>
+</table>
+</fieldset>
+<fieldset>
+<legend>{% trans "Expiration" %}</legend>
+<table>
+<tr><th>{{ form.expires.label_tag }}</th><td>{{ form.expires }}<span class="error">{{ form.expires.errors|join:", " }}</span></td></tr>
 </table>
 </fieldset>
 <fieldset>

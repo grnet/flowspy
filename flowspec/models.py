@@ -97,7 +97,7 @@ class Route(models.Model):
     status = models.CharField(max_length=20, choices=ROUTE_STATES, blank=True, null=True, verbose_name="Status", default="PENDING")
 #    is_online = models.BooleanField(default=False)
 #    is_active = models.BooleanField(default=False)
-    expires = models.DateField(default=days_offset, blank=True, null=True,)
+    expires = models.DateField(default=days_offset)
     response = models.CharField(max_length=512, blank=True, null=True)
     comments = models.TextField(null=True, blank=True, verbose_name="Comments")
 

@@ -7,7 +7,8 @@ from flowspy.flowspec.models import *
 from ipaddr import *
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
-from django.db.models import Avg, Max, Min, Count
+import datetime
+
 
 
 class RouteForm(forms.ModelForm):
@@ -40,6 +41,15 @@ class RouteForm(forms.ModelForm):
                 return self.cleaned_data["destination"]
             except Exception:
                 raise forms.ValidationError('Invalid network address format')
+    
+    def clean_expires(self):
+        date = self.cleaned_data['expires']
+        if date:
+            range_days = (date - datetime.date.today()).days
+            if range_days > 0 and range_days < 11:
+                return self.cleaned_data["expires"]
+            else:
+                raise forms.ValidationError('Invalid date range')
 
     def clean(self):
         name = self.cleaned_data.get('name', None)

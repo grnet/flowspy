@@ -11,7 +11,7 @@ from django.template.loader import render_to_string
 from django.http import HttpResponse
 from gevent.event import Event
 from django.conf import settings
-from django.views.decorators.csrf import csrf_exempt
+#from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 
@@ -37,7 +37,7 @@ def json_response(value, **kwargs):
     return HttpResponse(simplejson.dumps(value), **kwargs)
 
 class Msgs(object):
-    cache_size = 200
+    cache_size = 500
 
     def __init__(self):
         self.user = None
@@ -52,7 +52,6 @@ class Msgs(object):
             request.session['cursor'] = self.user_cache[-1]['id']
         return render_to_response('poll.html', {'messages': self.user_cache})
 
-    @csrf_exempt
     def message_existing(self, request):
         if request.is_ajax():
             try:
@@ -72,9 +71,8 @@ class Msgs(object):
                 self.user_cache[user] = []
                 self.user_cursor[user] = ''
             return json_response({'messages': self.user_cache[user]})
-        return HttpResponseRedirect(reverse('login'))
+        return HttpResponseRedirect(reverse('group-routes'))
     
-    @csrf_exempt
     def message_new(self, mesg=None):
         if mesg:
             message = mesg['message']
@@ -97,7 +95,6 @@ class Msgs(object):
         self.new_message_user_event[user].clear()
         return json_response(msg)
     
-    @csrf_exempt
     def message_updates(self, request):
         if request.is_ajax():
             cursor = {}
@@ -126,7 +123,7 @@ class Msgs(object):
             finally:
                 if self.user_cache[user]:
                     self.user_cursor[user] = self.user_cache[user][-1]['id']
-        return HttpResponseRedirect(reverse('login'))
+        return HttpResponseRedirect(reverse('group-routes'))
     #            else:
     #                request.session.pop('cursor', None)
 

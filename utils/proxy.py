@@ -43,7 +43,7 @@ class Retriever(object):
         else:
             device = self.proccess_xml()
             if device.routing_options:
-                cache.set("device", device, 600)
+                cache.set("device", device)
                 return device
             else:
                 return False
@@ -188,7 +188,7 @@ class Applier(object):
                                     logger.info("Successfully committed @ %s" % self.device)
                                     newconfig = m.get_config(source='running', filter=('subtree',settings.ROUTES_FILTER)).data_xml
                                     retrieve = Retriever(xml=newconfig)
-                                    cache.set("device", retrieve.proccess_xml(), 600)
+                                    cache.set("device", retrieve.proccess_xml())
                                     
                                     if not commit_is_successful:
                                         raise Exception()

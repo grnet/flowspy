@@ -27,8 +27,10 @@ $(document).ready(function() {
 	}
     });
     $("#message").select();
+    {% if user.is_authenticated %}
     updater.start();
     updater.poll();
+    {% endif %}
 });
 
 function newMessage(form) {
@@ -52,8 +54,7 @@ function getCookie(name) {
 }
 
 jQuery.postJSON = function(url, args, callback) {
-    args._xsrf = getCookie("_xsrf");
-    $.ajax({url: url, data: $.param(args), dataType: "text", type: "POST",
+    $.ajax({url: url, dataType: "text", type: "POST",
 	    success: function(response) {
 	if (callback) callback(eval("(" + response + ")"));
     }, error: function(response) {
@@ -90,19 +91,17 @@ var updater = {
     cursor: null,
     
     start: function() {
-    	var args = {"_xsrf": getCookie("_xsrf")};
-    	if (updater.cursor) args.cursor = updater.cursor;
     	$.ajax({url: "{% url fetch-existing %}", type: "POST", dataType: "text",
-    		data: $.param(args), success: updater.onFetchExisting,
+    		success: updater.onFetchExisting,
     		error: updater.onError});
         },
     
     poll: function() {
-	var args = {"_xsrf": getCookie("_xsrf")};
-	if (updater.cursor) args.cursor = updater.cursor;
+	{% if user.is_authenticated %}
 	$.ajax({url: "{% url fetch-updates %}", type: "POST", dataType: "text",
-		data: $.param(args), success: updater.onSuccess,
+		success: updater.onSuccess,
 		error: updater.onError});
+	{% endif %}
     },
 
     onSuccess: function(response) {

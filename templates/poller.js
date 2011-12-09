@@ -11,7 +11,7 @@
 // WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 // License for the specific language governing permissions and limitations
 // under the License.
-
+var xhrlp = '';
 $(document).ready(function() {
     if (!window.console) window.console = {};
     if (!window.console.log) window.console.log = function() {};
@@ -29,9 +29,12 @@ $(document).ready(function() {
     $("#message").select();
     {% if user.is_authenticated %}
     updater.start();
-    updater.poll();
+    updater.keepalive();
+    
     {% endif %}
 });
+
+
 
 function newMessage(form) {
     var message = form.formToDict();
@@ -89,21 +92,39 @@ jQuery.fn.enable = function(opt_enable) {
 var updater = {
     errorSleepTime: 500,
     cursor: null,
+    xhrlp: null,
+    
+    keepalive: function (){
+	try {
+		updater.xhrlp.abort();
+	}
+	catch (e) {	 
+	}
+	updater.poll();
+	if (updater.errorSleepTime == 500){
+		window.setTimeout(updater.keepalive, 180000);
+	}
+//	if (updater.errorSleepTime > 60000){
+//		window.setTimeout('location.reload()', 3000);
+//		}
+	},
     
     start: function() {
-    	$.ajax({url: "{% url fetch-existing %}", type: "POST", dataType: "text",
+		$.ajax({url: "{% url fetch-existing %}", type: "POST", dataType: "text",
     		success: updater.onFetchExisting,
     		error: updater.onError});
         },
     
     poll: function() {
-	{% if user.is_authenticated %}
-	$.ajax({url: "{% url fetch-updates %}", type: "POST", dataType: "text",
-		success: updater.onSuccess,
-		error: updater.onError});
-	{% endif %}
+    	{% if user.is_authenticated %}
+    	if (updater.errorSleepTime > 60000){
+    		window.setTimeout('location.reload()', 1000);
+    		}
+    	updater.xhrlp=$.ajax({url: "{% url fetch-updates %}", type: "POST", dataType: "text",
+    		success: updater.onSuccess,
+    		error: updater.onError});
+    	{% endif %}
     },
-
     onSuccess: function(response) {
 	try {
 	    updater.newMessages(eval("(" + response + ")"));
@@ -124,10 +145,12 @@ var updater = {
     	}
         },
      
-    onError: function(response) {
-	updater.errorSleepTime *= 2;
-	console.log("Poll error; sleeping for", updater.errorSleepTime, "ms");
-	window.setTimeout(updater.poll, updater.errorSleepTime);
+    onError: function(response, text) {
+        	if (text != 'abort'){
+				updater.errorSleepTime *= 2;
+				console.log("Poll error; sleeping for", updater.errorSleepTime, "ms");
+				window.setTimeout(updater.keepalive, updater.errorSleepTime);
+        	}
     },
 
     newMessages: function(response) {

@@ -38,12 +38,14 @@ class Retriever(object):
     
     def fetch_device(self):
         device = cache.get("device")
+        logger.info("[CACHE] hit! got device")
         if device:
             return device
         else:
             device = self.proccess_xml()
             if device.routing_options:
-                cache.set("device", device)
+                cache.set("device", device, 3600)
+                logger.info("[CACHE] miss, setting device")
                 return device
             else:
                 return False
@@ -188,7 +190,8 @@ class Applier(object):
                                     logger.info("Successfully committed @ %s" % self.device)
                                     newconfig = m.get_config(source='running', filter=('subtree',settings.ROUTES_FILTER)).data_xml
                                     retrieve = Retriever(xml=newconfig)
-                                    cache.set("device", retrieve.proccess_xml())
+                                    logger.info("[CACHE] caching device configuration")
+                                    cache.set("device", retrieve.proccess_xml(), 3600)
                                     
                                     if not commit_is_successful:
                                         raise Exception()

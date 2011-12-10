@@ -318,7 +318,7 @@ class Route(models.Model):
         if self.status not in ['EXPIRED', 'ADMININACTIVE', 'ERROR']:
             expiration_days = (self.expires - datetime.date.today()).days
             if expiration_days < settings.EXPIRATION_NOTIFY_DAYS:
-                return expiration_days
+                return "%s" %expiration_days
             else:
                 return False
         else:

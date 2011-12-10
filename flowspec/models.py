@@ -312,6 +312,17 @@ class Route(models.Model):
         except:
             applier_peer = None
         return applier_peer
+    
+    @property
+    def days_to_expire(self):
+        if self.status not in ['EXPIRED', 'ADMININACTIVE', 'ERROR']:
+            expiration_days = (self.expires - datetime.date.today()).days
+            if expiration_days < settings.EXPIRATION_NOTIFY_DAYS:
+                return expiration_days
+            else:
+                return False
+        else:
+            return False
 
 def send_message(msg, user):
 #    username = user.username

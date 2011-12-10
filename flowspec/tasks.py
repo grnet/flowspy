@@ -22,7 +22,7 @@ def add(route, callback=None):
         status = "ERROR"
     route.status = status
     route.response = response
-    subtask(announce).delay("[%s] Route add: %s - Result: %s" %(route.applier, route.name, response), route.applier)
+    subtask(announce).delay("[%s] Rule add: %s - Result: %s" %(route.applier, route.name, response), route.applier)
     route.save()
 
 @task
@@ -36,7 +36,7 @@ def edit(route, callback=None):
     route.status = status
     route.response = response
     route.save()
-    subtask(announce).delay("[%s] Route edit: %s - Result: %s"%(route.applier, route.name, response), route.applier)
+    subtask(announce).delay("[%s] Rule edit: %s - Result: %s"%(route.applier, route.name, response), route.applier)
 
 
 
@@ -55,7 +55,7 @@ def delete(route, **kwargs):
     route.status = status
     route.response = response
     route.save()
-    subtask(announce).delay("[%s] Route removal: %s%s- Result %s" %(route.applier, route.name, reason_text, response), route.applier)
+    subtask(announce).delay("[%s] Rule removal: %s%s- Result %s" %(route.applier, route.name, reason_text, response), route.applier)
 
 # May not work in the first place... proxy is not aware of Route models
 @task
@@ -81,7 +81,7 @@ def batch_delete(routes, **kwargs):
             route.status = status
             route.response = response
             route.save()
-            subtask(announce).delay("[%s] Route removal: %s%s- Result %s" %(route.applier, route.name, reason_text, response), route.applier)
+            subtask(announce).delay("[%s] Rule removal: %s%s- Result %s" %(route.applier, route.name, reason_text, response), route.applier)
     else:
         return False
 
@@ -111,7 +111,7 @@ def check_sync(route_name=None, selected_routes = []):
             subtask(delete).delay(route, reason="EXPIRED")
         elif route.has_expired() and (route.status == 'ADMININACTIVE' or route.status == 'INACTIVE'):
             route.status = 'EXPIRED'
-            route.response = 'Route Expired'
+            route.response = 'Rule Expired'
             route.save()
         else:
             if route.status != 'EXPIRED':

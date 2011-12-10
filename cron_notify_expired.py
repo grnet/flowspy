@@ -10,7 +10,7 @@ import datetime
 def notify_expired():
     routes = Route.objects.all()
     for route in routes:
-        if route.status != 'EXPIRED':
+        if route.status not in ['EXPIRED', 'ADMININACTIVE', 'ERROR']:
             expiration_days = (route.expires - datetime.date.today()).days
             if expiration_days < settings.EXPIRATION_NOTIFY_DAYS:
                 try:

@@ -170,7 +170,7 @@ function delete_route(route){
 	<td style="text-align: center;">{{route.get_then|safe|escape}}</td>
 	<td style="text-align: center; ">
 		<span 
-		{% if route.days_to_expire and route.days_to_expire >= 0 %}
+		{% if route.days_to_expire %}
 		class="expiresclass" 
 		style="border-bottom:2px dashed red;" 
         title="Expires {% ifequal route.days_to_expire '0' %}today{% else%}in {{route.days_to_expire}} day{{ route.days_to_expire|pluralize }}{% endifequal %}"

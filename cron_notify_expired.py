@@ -16,8 +16,15 @@ def notify_expired():
                 try:
                     mail_body = render_to_string("rule_expiration.txt",
                                              {"route": route, 'expiration_days':expiration_days})
-                    send_mail(settings.EMAIL_SUBJECT_PREFIX + "Rule %s expires in %s days" %
-                              (route.name,expiration_days),
+                    days_num = ' days'
+                    expiration_days_text = "%s %s" %('in',expiration_days)
+                    if expiration_days == 0:
+                        days_num = ' today'
+                        expiration_days_text = ''
+                    if expiration_days == 1:
+                        days_num = ' day'
+                    send_mail(settings.EMAIL_SUBJECT_PREFIX + "Rule %s expires %s%s" %
+                              (route.name,expiration_days_text, days_num),
                               mail_body, settings.SERVER_EMAIL,
                               [route.applier.email])
                 except Exception as e:

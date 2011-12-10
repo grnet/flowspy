@@ -1,4 +1,4 @@
-Rule {{route.name}} expires in {{expiration_days}} days.
+Rule {{route.name}} expires {% ifequal expiration_days 0 %}today{% else%}in {{expiration_days}} day{{ expiration_days|pluralize }}{% endifequal %}
 
 Match
 * Dst Addr:{{route.destination}}

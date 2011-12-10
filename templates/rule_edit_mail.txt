@@ -1,5 +1,6 @@
 A new rule edit job has spawned
 
+Peer: {{route.applier.get_profile.peer.peer_name}}
 User {{route.applier.username}} requested the application of the following rule:
 
 Match

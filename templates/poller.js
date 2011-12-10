@@ -93,7 +93,7 @@ var updater = {
     errorSleepTime: 500,
     cursor: null,
     xhrlp: null,
-    
+    keepalivetime:  120000,
     keepalive: function (){
 	try {
 		updater.xhrlp.abort();
@@ -102,11 +102,11 @@ var updater = {
 	}
 	updater.poll();
 	if (updater.errorSleepTime == 500){
-		window.setTimeout(updater.keepalive, 180000);
+		window.setTimeout(updater.keepalive, updater.keepalivetime);
 	}
-//	if (updater.errorSleepTime > 60000){
-//		window.setTimeout('location.reload()', 3000);
-//		}
+	else{
+		window.setTimeout(updater.keepalive, updater.keepalivetime+updater.errorSleepTime);
+	}
 	},
     
     start: function() {

@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% block extrahead %}
+{% if user.is_authenticated %}
+<script type="text/javascript" src="{% url load-js 'poller' %}"></script>
+{% endif %}
 <script type="text/javascript" src="/static/js/jquery.dataTables.js"></script>
 <script type="text/javascript">
 	$(document).ready( function(){

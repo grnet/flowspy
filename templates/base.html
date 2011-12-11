@@ -11,9 +11,6 @@
 <link rel="stylesheet" type="text/css" href="/static/css/smoothness/jquery-ui-1.8.13.custom.css">
 <script type="text/javascript" src="/static/js/jquery-ui-1.8.12.custom.min.js"></script>
 <script type="text/javascript" src="/static/js/jquery.tooltip.min.js"></script>
-{% if user.is_authenticated %}
-<script type="text/javascript" src="{% url load-js 'poller' %}"></script>
-{% endif %}
 <script type="text/javascript">
 
   	function setlang(lang){

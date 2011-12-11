@@ -40,6 +40,7 @@ class Msgs(object):
     cache_size = 500
 
     def __init__(self):
+        logger.info("initializing")
         self.user = None
         self.user_cache = {}
         self.user_cursor = {}
@@ -63,7 +64,6 @@ class Msgs(object):
                 assert(self.new_message_user_event[user])
             except:
                 self.new_message_user_event[user] = Event()
-    #        self.new_message_user_event[user] = Event()
             try:
                 if self.user_cache[user]:
                     self.user_cursor[user] = self.user_cache[user][-1]['id']
@@ -88,7 +88,6 @@ class Msgs(object):
             self.user_cursor[user] = self.user_cache[user][-1]['id']
         else:
             self.user_cursor[user] = self.user_cache[user][-2]['id']
-#        self.cache.append(msg)
         if len(self.user_cache[user]) > self.cache_size:
             self.user_cache[user] = self.user_cache[user][-self.cache_size:]
         self.new_message_user_event[user].set()
@@ -99,7 +98,6 @@ class Msgs(object):
         if request.is_ajax():
             cursor = {}
             try:
-    #            user = request.user.username
                 user = request.user.get_profile().peer.domain_name
             except:
                 user = None
@@ -112,9 +110,7 @@ class Msgs(object):
             except:
                 self.user_cache[user] = []
             if not self.user_cache[user] or cursor[user] == self.user_cache[user][-1]['id']:
-                self.new_message_user_event[user].wait()
-    #            self.new_message_event.wait()
-    #        assert cursor[user] != self.user_cache[user][-1]['id'], cursor[user]
+                self.new_message_user_event[user].wait(settings.POLL_SESSION_UPDATE)
             try:
                 for index, m in enumerate(self.user_cache[user]):
                     if m['id'] == cursor[user]:
@@ -124,8 +120,6 @@ class Msgs(object):
                 if self.user_cache[user]:
                     self.user_cursor[user] = self.user_cache[user][-1]['id']
         return HttpResponseRedirect(reverse('group-routes'))
-    #            else:
-    #                request.session.pop('cursor', None)
 
     def monitor_polls(self, polls=None):
         b = beanstalkc.Connection()
@@ -144,7 +138,6 @@ class Msgs(object):
             p.spawn(self.monitor_polls)
             
 msgs = Msgs()
-
 main = msgs.main
 
 message_new = msgs.message_new
@@ -153,13 +146,4 @@ message_existing = msgs.message_existing
 
 poll = msgs.start_polling
 poll()
-
-
-
-
-
-
-
-
-
 

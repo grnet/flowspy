@@ -269,4 +269,5 @@ def user_logout(request):
     
 @never_cache
 def load_jscript(request, file):
-    return render_to_response('%s.js' % file, context_instance=RequestContext(request), mimetype="text/javascript")
+    long_polling_timeout = int(settings.POLL_SESSION_UPDATE)*1000 + 10000
+    return render_to_response('%s.js' % file, {'timeout': long_polling_timeout}, context_instance=RequestContext(request), mimetype="text/javascript")

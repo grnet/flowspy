@@ -29,7 +29,7 @@ $(document).ready(function() {
     $("#message").select();
     {% if user.is_authenticated %}
     updater.start();
-    updater.keepalive();
+    updater.poll();
     
     {% endif %}
 });
@@ -57,11 +57,11 @@ function getCookie(name) {
 }
 
 jQuery.postJSON = function(url, args, callback) {
-    $.ajax({url: url, dataType: "text", type: "POST",
+    $.ajax({url: url, dataType: "json", type: "POST",
 	    success: function(response) {
-	if (callback) callback(eval("(" + response + ")"));
+	if (callback) callback(response);
     }, error: function(response) {
-	console.log("ERROR:", response)
+	console.log("ERROR:", response);
     }});
 };
 
@@ -92,42 +92,27 @@ jQuery.fn.enable = function(opt_enable) {
 var updater = {
     errorSleepTime: 500,
     cursor: null,
-    xhrlp: null,
-    keepalivetime:  120000,
-    keepalive: function (){
-	try {
-		updater.xhrlp.abort();
-	}
-	catch (e) {	 
-	}
-	updater.poll();
-	if (updater.errorSleepTime == 500){
-		window.setTimeout(updater.keepalive, updater.keepalivetime);
-	}
-	else{
-		window.setTimeout(updater.keepalive, updater.keepalivetime+updater.errorSleepTime);
-	}
-	},
-    
     start: function() {
-		$.ajax({url: "{% url fetch-existing %}", type: "POST", dataType: "text",
+		$.ajax({url: "{% url fetch-existing %}", type: "POST", dataType: "json",
     		success: updater.onFetchExisting,
     		error: updater.onError});
         },
     
     poll: function() {
     	{% if user.is_authenticated %}
-    	if (updater.errorSleepTime > 60000){
-    		window.setTimeout('location.reload()', 1000);
-    		}
-    	updater.xhrlp=$.ajax({url: "{% url fetch-updates %}", type: "POST", dataType: "text",
+    	if (errorSleepTime > 128000){
+    		window.setTimeout('location.reload()', 500);
+    	}
+    	timeout = {{timeout}};
+    	$.ajax({url: "{% url fetch-updates %}", type: "POST", dataType: "json",
     		success: updater.onSuccess,
+    		timeout: timeout,
     		error: updater.onError});
     	{% endif %}
     },
     onSuccess: function(response) {
 	try {
-	    updater.newMessages(eval("(" + response + ")"));
+	    updater.newMessages(response);
 	} catch (e) {
 	    updater.onError();
 	    return;
@@ -138,27 +123,33 @@ var updater = {
 
     onFetchExisting: function(response) {
     	try {
-    	    updater.existingMessages(eval("(" + response + ")"));
+    	    updater.existingMessages(response);
+
     	} catch (e) {
-//    	    updater.onError();
+    	    updater.onError();
     	    return;
     	}
         },
      
     onError: function(response, text) {
-        	if (text != 'abort'){
-				updater.errorSleepTime *= 2;
-				console.log("Poll error; sleeping for", updater.errorSleepTime, "ms");
-				window.setTimeout(updater.keepalive, updater.errorSleepTime);
+        	if (text == 'timeout'){
+        		window.setTimeout('location.reload()', 3000);
         	}
+        	updater.errorSleepTime *= 2;
+			console.log("Poll error; sleeping for", updater.errorSleepTime, "ms");
+			window.setTimeout(updater.poll, updater.errorSleepTime);
+        	
     },
 
     newMessages: function(response) {
 	if (!response.messages) return;
+	if (response.messages.length == 0){
+		return true;
+	}
 	updater.cursor = response.cursor;
 	var messages = response.messages;
 	updater.cursor = messages[messages.length - 1].id;
-//	console.log(messages.length, "new messages, cursor:", updater.cursor);
+	console.log(messages.length, "new messages, cursor:", updater.cursor);
 	
 	for (var i = 0; i < messages.length; i++) {
 	    updater.showMessage(messages[i]);
@@ -172,6 +163,9 @@ var updater = {
 
     existingMessages: function(response) {
     	if (!response.messages) return;
+    	if (response.messages.length == 0){
+    		return true;
+    	}
     	updater.cursor = response.cursor;
     	var messages = response.messages;
     	updater.cursor = messages[messages.length - 1].id;

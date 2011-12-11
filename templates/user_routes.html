@@ -8,8 +8,10 @@
 <script type="text/javascript">
 	$(document).ready( function(){
 		var noaction = readCookie('noaction');
+		$( "#hide_noaction" ).button();
 		if (noaction == 'true'){
 			$('#hide_noaction').attr('checked','checked');
+			$("#hide_noaction").button( "option", "label", "Show Expired, AdminInactive, Error" );
 		}
 		$("#hid_mid").val('');
 		$('#dialog').dialog({
@@ -96,6 +98,12 @@
 	oTable.fnDraw();
 	$('#hide_noaction').change( function(){
 			var noaction = $('#hide_noaction').attr('checked');
+			if (noaction == true){
+				$("#hide_noaction").button( "option", "label", "Show Expired, AdminInactive, Error" );
+				}
+			else{
+				$("#hide_noaction").button( "option", "label", "Hide Expired, AdminInactive, Error" );
+			}
 			createCookie("noaction", noaction, 30);
 			oTable.fnDraw(); 
 		});
@@ -177,10 +185,7 @@ function delete_route(route){
 <table cellpadding="0" cellspacing="0" border="0" style="width:220px; clear:both;">
 	<tbody>
 		<tr>
-			<td align="left">Hide Expired, AdminInactive, Error</td>
-			<td align="left">
-				<input type="checkbox" id="hide_noaction" name="hide_noaction" value="Hide" />
-			</td>
+			<td align="left"><input type="checkbox" id="hide_noaction" name="hide_noaction" value="Hide" /><label for="hide_noaction">Hide Expired, AdminInactive, Error</label></td>
 		</tr>
 	</tbody>
 </table>

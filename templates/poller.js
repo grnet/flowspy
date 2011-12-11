@@ -100,7 +100,7 @@ var updater = {
     
     poll: function() {
     	{% if user.is_authenticated %}
-    	if (errorSleepTime > 128000){
+    	if (updater.errorSleepTime > 128000){
     		window.setTimeout('location.reload()', 500);
     	}
     	timeout = {{timeout}};

@@ -209,7 +209,7 @@ function delete_route(route){
 <tbody>
 {% for route in routes %}
 
-<tr {% ifequal route.status 'ACTIVE' %} class="GradeA" {% else %} class="GradeX" {% endifequal %}>
+<tr class="GradeC" >
 	<td>{{ route.pk }}</td>
 	<td>{{ route.name }}</td>
 	<td>{{ route.get_match|safe|escape }}</td>

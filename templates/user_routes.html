@@ -5,143 +5,180 @@
 <script type="text/javascript" src="{% url load-js 'poller' %}"></script>
 {% endif %}
 <script type="text/javascript" src="/static/js/jquery.dataTables.js"></script>
+<link rel="stylesheet" type="text/css" href="/static/css/engage.itoggle.css"/>
+<script type="text/javascript" src="/static/js/engage.itoggle-min.js"></script>
 <script type="text/javascript">
-	$(document).ready( function(){
-		var noaction = readCookie('noaction');
-		$( "#hide_noaction" ).button();
-		if (noaction == 'true'){
-			$('#hide_noaction').attr('checked','checked');
-			$("#hide_noaction").button( "option", "label", "Show Expired, AdminInactive, Error" );
-		}
-		$("#hid_mid").val('');
-		$('#dialog').dialog({
-			height: 220,
-            width: 300,
-			modal: true,
-			autoOpen: false,
-			buttons: {
-		'Delete': function() {
-		route = $('#route_to_delete').text();
-		route_url_id = '#del_route_'+route;
-		url = $(route_url_id).attr('href');
-			$.ajax({
-			url: url ,
-			cache: false,
-			success: function(data) {
-				$('#dialog').dialog('close');
-				window.setTimeout('location.reload()', 1000);
-			  }
-		});
-		},
-		Cancel: function() {
-			$('#dialog').dialog('close');
-		},
-		
-
-	},
-	close: function() {
-        update_val = $("#hid_mid").val();
-		if (update_val == 'UPDATED'){
-			$("#hid_mid").val('');
-			window.setTimeout('location.reload()', 500);
-		}
+$(document).ready(function(){
+    $("#hid_mid").val('');
+    $('#dialog').dialog({
+        height: 220,
+        width: 300,
+        modal: true,
+        autoOpen: false,
+        buttons: {
+            'Delete': function(){
+                route = $('#route_to_delete').text();
+                route_url_id = '#del_route_' + route;
+                url = $(route_url_id).attr('href');
+                $.ajax({
+                    url: url,
+                    cache: false,
+                    success: function(data){
+                        $('#dialog').dialog('close');
+                        window.setTimeout('location.reload()', 1000);
+                    }
+                });
+            },
+            Cancel: function(){
+                $('#dialog').dialog('close');
+            },
+        
+        
+        },
+        close: function(){
+            update_val = $("#hid_mid").val();
+            if (update_val == 'UPDATED') {
+                $("#hid_mid").val('');
+                window.setTimeout('location.reload()', 500);
+            }
+        }
+    });
+    $('#console').dialog({
+        height: 250,
+        width: 800,
+        modal: true,
+        autoOpen: false,
+        close: function(){
+            update_val = $("#hid_mid").val();
+            if (update_val == 'UPDATED') {
+                $("#hid_mid").val('');
+                window.setTimeout('location.reload()', 500);
+            }
+        }
+    });
+    
+    var oTable = $('#routes_table').dataTable({
+        "bJQueryUI": true,
+        "aoColumns": [{
+            "bVisible": false,
+            "bSearchable": false,
+            "bSortable": false
+        }, {
+            "bSearchable": true,
+            "bSortable": true
+        }, {
+            "bSearchable": true,
+            "bSortable": true
+        }, {
+            "bSearchable": true,
+            "bSortable": true
+        }, {
+            "bSearchable": true,
+            "bSortable": true
+        }, {
+            "bSearchable": true,
+            "bSortable": true
+        }, {
+            "bSearchable": true,
+            "bSortable": true
+        }, {
+            "bSearchable": true,
+            "bSortable": true
+        }, {
+            "bVisible": true,
+            "bSearchable": false,
+            "bSortable": false
+        }],
+        "aaSorting": [[0, 'desc']],
+        "oLanguage": {
+            "sLengthMenu": '{% trans "Display" %} <select><option value="25">25</option><option value="50">50</option><option value="-1">{% trans "All" %}</option></select> rules'
+        },
+        "iDisplayLength": 25,
+    });
+    
+    oTable.fnDraw();
+    
+    $('input[name="status_filter"]').click(function(){
+    
+        //slice off the last '|' or it doesn't work
+        //also be sure to use the third parameter
+    });
+    
+    $(".button_place #routebutton").button({
+        icons: {
+            primary: "ui-icon-circle-plus"
+        },
+    });
+    $(".edit_button").button({
+        icons: {
+            primary: "ui-icon-wrench"
+        },
+    }).css('width','100px');;
+    $(" .del_button").button({
+        icons: {
+            primary: "ui-icon-circle-close"
+        },
+    }).click(function(){
+        $('#dialog').dialog('open');
+        return false;
+    }).css('width','100px');
+    $("#consolebutton").button({
+        icons: {
+            primary: "ui-icon-image"
+        },
+    }).click(function(){
+        $("#consolebutton").stop().stop();
+        $("#consolebutton").css('color', '#555555');
+        $('#console').dialog('open');
+        return false;
+    });
+    
+    $(".expiresclass").tooltip();
+	$(".commentclass").tooltip();
+    var reg_exp = '';
+    var checkboxs = document.getElementsByName('status_filter');
+    for (var i = 0, inp; inp = checkboxs[i]; i++) {
+        checkCookie = readCookie("cookie_" + inp.value);
+        if (checkCookie) {
+            if (checkCookie == 'true') {
+                $(inp).attr('checked', true);
+            }
+            else {
+                $(inp).attr('checked', false);
+            }
+        }
+        
+        if (inp.type.toLowerCase() == 'checkbox' && inp.checked == true) {
+            reg_exp = reg_exp + inp.value + '|';
+        }
+        
     }
-		});
-		$('#console').dialog({
-			height: 250,
-            width: 800,
-			modal: true,
-			autoOpen: false,
-			close: function() {
-		        update_val = $("#hid_mid").val();
-				if (update_val == 'UPDATED'){
-					$("#hid_mid").val('');
-					window.setTimeout('location.reload()', 500);
-				}
-		    }
-		});
-			
-		$('#routes_table').dataTable({
-			"bJQueryUI": true,
-			"aoColumns": [ 
-				{"bVisible": false, "bSearchable": false,"bSortable": false },
-				{"bSearchable": true,"bSortable": true},
-				{"bSearchable": true,"bSortable": true},
-				{"bSearchable": true,"bSortable": true},
-				{"bSearchable": true,"bSortable": true},
-				{"bSearchable": true,"bSortable": true},
-				{"bSearchable": true,"bSortable": true},
-				{"bSearchable": true,"bSortable": true},
-				{"bVisible": true, "bSearchable": false,"bSortable": false}
-			],
-			 "aaSorting": [[0,'desc']],
-			"oLanguage": {
-				"sLengthMenu": '{% trans "Display" %} <select><option value="25">25</option><option value="50">50</option><option value="-1">{% trans "All" %}</option></select> rules'
-			},
-			"iDisplayLength": 25,
-	});
-	$.fn.dataTableExt.afnFiltering = new Array();
-	$.fn.dataTableExt.afnFiltering.push(
- 	function( oSettings, aData, iDataIndex ) {
-		// 4 here is the column where my statuses are.
- 		var status_middle = $(aData[4]);
-		var status = $(status_middle[0]).text();
- 		if (( status == "EXPIRED" || status == "ADMININACTIVE" || status == "ERROR") && ($('#hide_noaction').attr('checked'))) {
- 			return false;
- 		}
-		else {
-			return true;
-		}
- 		
- 	});
-	var oTable = $('#routes_table').dataTable();
-	oTable.fnDraw();
-	$('#hide_noaction').change( function(){
-			var noaction = $('#hide_noaction').attr('checked');
-			if (noaction == true){
-				$("#hide_noaction").button( "option", "label", "Show Expired, AdminInactive, Error" );
-				}
-			else{
-				$("#hide_noaction").button( "option", "label", "Hide Expired, AdminInactive, Error" );
-			}
-			createCookie("noaction", noaction, 30);
-			oTable.fnDraw(); 
-		});
-	
-	$( ".button_place #routebutton" ).button({
-            icons: {
-                primary: "ui-icon-circle-plus"
-            },
-			});
-		$( " .edit_button" ).button({
-            icons: {
-                primary: "ui-icon-wrench"
-            },
-			});
-		$( " .del_button" ).button({
-            icons: {
-                primary: "ui-icon-circle-close"
-            },
-			})
-			.click(function(){
-				$('#dialog').dialog('open');
-				return false;
-			});
-		$("#consolebutton").button({
-            icons: {
-                primary: "ui-icon-image"
-            },
-			})
-			.click(function(){
-				$("#consolebutton").stop().stop();
-				$("#consolebutton").css('color', '#555555');
-				$('#console').dialog('open');
-				return false;
-			});
-			
-		$(".expiresclass").tooltip();
-
-		});
+	if (reg_exp == '') {
+            reg_exp = 'X|'
+        }
+    oTable.fnFilter(reg_exp.slice(0, -1), 4, true);
+    
+    $('input[name="status_filter"]').iToggle({
+        type: 'checkbox',
+        onSlide: function(){
+            var reg_exp = '';
+            var checkboxs = document.getElementsByName('status_filter');
+            
+            for (var i = 0, inp; inp = checkboxs[i]; i++) {
+                if (inp.type.toLowerCase() == 'checkbox' && inp.checked) {
+                    reg_exp = reg_exp + inp.value + '|';
+                }
+                createCookie("cookie_" + inp.value, inp.checked, 30);
+            }
+            //passing an empty string will result in no filter
+            //thus, it must be set to something that will not exist in the column
+            if (reg_exp == '') {
+                reg_exp = 'X|'
+            }
+            oTable.fnFilter(reg_exp.slice(0, -1), 4, true);
+        },
+    });
+});
 		
 function delete_route(route){
 	route_name = route;
@@ -182,14 +219,42 @@ function delete_route(route){
 	<button id="consolebutton">Console</button> <a href="{% url add-route %}" id="routebutton">Add Rule</a>
 </div>
 <br><br>
-<table cellpadding="0" cellspacing="0" border="0" style="width:220px; clear:both;">
-	<tbody>
-		<tr>
-			<td align="left"><input type="checkbox" id="hide_noaction" name="hide_noaction" value="Hide" /><label for="hide_noaction">Hide Expired, AdminInactive, Error</label></td>
-		</tr>
-	</tbody>
-</table>
-<br>
+
+<div id='itoggle'>
+<table cellpadding="0" cellspacing="0" border="0" class="display" style='width:200px;'>
+				<tbody>
+					<tr>
+				        <th>ACTIVE</th><th>SUSPENDED</th><th>EXPIRED</th><th>ADMINDISABLED</th><th>ERROR</th><th>PENDING</th>
+					</tr>
+					<tr class="on_off">
+				        <td>
+				            <input type="checkbox" class="onoff" name="status_filter" value="ACTIVE" checked id="show_active"/>
+				        </td>
+				    
+				        <td>
+				            <input type="checkbox" class="onoff" name="status_filter" value="SUSPENDED" checked id="show_inactive"/>
+				        </td>
+				   
+				        <td>
+				            <input type="checkbox" class="onoff" name="status_filter" value="EXPIRED" id="show_expired"/>
+				        </td>
+				    
+				        <td>
+				            <input type="checkbox" class="onoff" name="status_filter" value="ADMINDISABLED" id="show_admininactive"/>
+				        </td>
+				    
+				        <td>
+				            <input type="checkbox" class="onoff" name="status_filter" value="ERROR" id="show_error"/>
+				        </td>
+				   
+				        <td>
+				            <input type="checkbox" class="onoff" name="status_filter" value="PENDING" checked id="show_pending"/>
+				        </td>
+				    </tr>
+				</tbody>
+			</table>
+			</div>
+	<table class="display" width="100%" id="nodes_table">
 <table class="display" width="100%" id="routes_table">
 <thead>
 <tr>
@@ -211,25 +276,26 @@ function delete_route(route){
 
 <tr class="GradeC" >
 	<td>{{ route.pk }}</td>
-	<td>{{ route.name }}</td>
+	<td><span {% if route.comments %}
+	class="commentclass" 
+		style="border-bottom:1px dotted red;" 
+        title="{{route.comments}}"
+		{% endif %}>{{ route.name }}</span></td>
 	<td>{{ route.get_match|safe|escape }}</td>
 	<td style="text-align: center;">{{route.get_then|safe|escape}}</td>
-	<td style="text-align: center; ">
-		<span 
-		{% if route.days_to_expire %}
+	<td style="text-align: center; ">{% ifequal route.status 'INACTIVE' %}SUSPENDED{% else %}{% ifequal route.status 'ADMININACTIVE' %}ADMINDISABLED{% else %}{{route.status}}{% endifequal %}{% endifequal %}</td>
+	{% comment %}<td style="text-align: center;">{{ route.response }}</td>{% endcomment %}
+	<td style="text-align: center;">{{ route.applier }}</td>
+	<td style="text-align: center;"><span {% if route.days_to_expire %}
 		class="expiresclass" 
 		style="border-bottom:2px dashed red;" 
         title="Expires {% ifequal route.days_to_expire '0' %}today{% else%}in {{route.days_to_expire}} day{{ route.days_to_expire|pluralize }}{% endifequal %}"
-		{% endif %}>{{route.status}}</span>
-	</td>
-	{% comment %}<td style="text-align: center;">{{ route.response }}</td>{% endcomment %}
-	<td style="text-align: center;">{{ route.applier }}</td>
-	<td style="text-align: center;">{{ route.expires }}</td>
+		{% endif %}>{{ route.expires }}</span></td>
 	<td style="text-align: center;">{{ route.response }}</td>
 	<td style="text-align: center; width:180px;">
 		{% ifequal route.status 'ACTIVE' %}
 		<a href="{% url edit-route route.name %}" class="edit_button" id="edit_button_{{route.pk}}">Edit</a> 
-		<button class="del_button" id="{{route.name}}" onclick="javascript:delete_route(this.id)">Del</button>
+		<button class="del_button" id="{{route.name}}" onclick="javascript:delete_route(this.id)">Suspend</button>
 		<a href="{% url delete-route route.name %}" style="display:none" id="del_route_{{route.name}}"></a>
 		{% else %}
 		{% ifequal route.status 'INACTIVE' %}

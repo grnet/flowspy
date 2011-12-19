@@ -154,7 +154,7 @@ $(document).ready(function(){
         
     }
 	if (reg_exp == '') {
-            reg_exp = 'X|'
+            reg_exp = 'XXX|'
         }
     oTable.fnFilter(reg_exp.slice(0, -1), 4, true);
     
@@ -232,7 +232,7 @@ function delete_route(route){
 				        </td>
 				    
 				        <td>
-				            <input type="checkbox" class="onoff" name="status_filter" value="SUSPENDED" checked id="show_inactive"/>
+				            <input type="checkbox" class="onoff" name="status_filter" value="SUSPENDED" id="show_inactive"/>
 				        </td>
 				   
 				        <td>
@@ -248,7 +248,7 @@ function delete_route(route){
 				        </td>
 				   
 				        <td>
-				            <input type="checkbox" class="onoff" name="status_filter" value="PENDING" checked id="show_pending"/>
+				            <input type="checkbox" class="onoff" name="status_filter" value="PENDING" id="show_pending"/>
 				        </td>
 				    </tr>
 				</tbody>

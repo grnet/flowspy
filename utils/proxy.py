@@ -5,11 +5,22 @@ from lxml import etree as ET
 from django.conf import settings
 import logging
 from django.core.cache import cache
+import os
 
-FORMAT = '%(asctime)s %(levelname)s: %(message)s'
-logging.basicConfig(format=FORMAT)
+cwd = os.getcwd()
+    
+
+LOG_FILENAME = os.path.join(cwd, 'log/celery_jobs.log')
+
+#FORMAT = '%(asctime)s %(levelname)s: %(message)s'
+#logging.basicConfig(format=FORMAT)
+formatter = logging.Formatter('%(asctime)s %(levelname)s: %(message)s')
+
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
+handler = logging.FileHandler(LOG_FILENAME)
+handler.setFormatter(formatter)
+logger.addHandler(handler)
 
 class Retriever(object):
     def __init__(self, device=settings.NETCONF_DEVICE, username=settings.NETCONF_USER, password=settings.NETCONF_PASS, filter=settings.ROUTES_FILTER, route_name=None, xml=None):

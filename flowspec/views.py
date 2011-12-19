@@ -32,6 +32,24 @@ from django.views.decorators.cache import never_cache
 from django.conf import settings
 from django.core.mail import mail_admins, mail_managers, send_mail
 
+import os
+
+cwd = os.getcwd()
+    
+
+LOG_FILENAME = os.path.join(cwd, 'log/celery_jobs.log')
+
+#FORMAT = '%(asctime)s %(levelname)s: %(message)s'
+#logging.basicConfig(format=FORMAT)
+formatter = logging.Formatter('%(asctime)s %(levelname)s: %(message)s')
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+handler = logging.FileHandler(LOG_FILENAME)
+handler.setFormatter(formatter)
+logger.addHandler(handler)
+
+
 
 @login_required
 def user_routes(request):
@@ -82,6 +100,7 @@ def add_route(request):
                                              {"route": route})
             mail_admins("Rule %s creation request submitted by %s" %(route.name, route.applier.username),
                           mail_body, fail_silently=True)
+            logger.info(mail_body)
             return HttpResponseRedirect(reverse("group-routes"))
         else:
             return render_to_response('apply.html', {'form': form, 'applier':applier},
@@ -125,6 +144,7 @@ def edit_route(request, route_slug):
                                              {"route": route})
             mail_admins("Rule %s edit request submitted by %s" %(route.name, route.applier.username),
                           mail_body, fail_silently=True)
+            logger.info(mail_body)
             return HttpResponseRedirect(reverse("group-routes"))
         else:
             return render_to_response('apply.html', {'form': form, 'edit':True, 'applier': applier},
@@ -151,6 +171,7 @@ def delete_route(request, route_slug):
                                              {"route": route})
             mail_admins("Rule %s removal request submitted by %s" %(route.name, route.applier.username),
                           mail_body, fail_silently=True)
+            logger.info(mail_body)
         html = "<html><body>Done</body></html>"
         return HttpResponse(html)
     else:

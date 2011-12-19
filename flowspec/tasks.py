@@ -7,10 +7,22 @@ from celery.task.http import *
 from flowspy.utils import beanstalkc
 from django.conf import settings
 
-FORMAT = '%(asctime)s %(levelname)s: %(message)s'
-logging.basicConfig(format=FORMAT)
+import os
+
+cwd = os.getcwd()
+
+LOG_FILENAME = os.path.join(cwd, 'log/celery_jobs.log')
+
+#FORMAT = '%(asctime)s %(levelname)s: %(message)s'
+#logging.basicConfig(format=FORMAT)
+formatter = logging.Formatter('%(asctime)s %(levelname)s: %(message)s')
+
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
+handler = logging.FileHandler(LOG_FILENAME)
+handler.setFormatter(formatter)
+logger.addHandler(handler)
+
 
 @task
 def add(route, callback=None):
@@ -112,6 +124,7 @@ def check_sync(route_name=None, selected_routes = []):
         elif route.has_expired() and (route.status == 'ADMININACTIVE' or route.status == 'INACTIVE'):
             route.status = 'EXPIRED'
             route.response = 'Rule Expired'
+            logger.info('Expiring route %s' %route.name)
             route.save()
         else:
             if route.status != 'EXPIRED':

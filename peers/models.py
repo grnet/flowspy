@@ -34,5 +34,21 @@ class Peer(models.Model):
                 if not range.network in self.networks.all():
                     self.networks.add(range)
             self.save()
-                    
-            
+
+    def techc(self):
+        try:
+            techcmails = PeerTechc.objects.get(peer_id=self).emails
+        except:
+            techcmails = None
+        return techcmails
+
+class PeerTechc(models.Model):
+    peer_id = models.OneToOneField(Peer, primary_key=True,
+            db_column="peer_id", parent_link=True)
+    emails = models.CharField(max_length=352, db_column="emails")
+
+    def __unicode__(self):
+        return "%s %s" %(self.peer_id.peer_name, self.emails)
+
+    class Meta:
+        db_table="v_tech_c_peers"

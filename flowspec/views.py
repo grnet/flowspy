@@ -98,14 +98,14 @@ def edit_route(request, route_slug):
         messages.add_message(request, messages.WARNING,
                              "Insufficient rights to edit rule %s" %(route_slug))
         return HttpResponseRedirect(reverse("group-routes"))
-    if route_edit.status == "ADMININACTIVE" :
-        messages.add_message(request, messages.WARNING,
-                             "Administrator has disabled editing of rule %s" %(route_slug))
-        return HttpResponseRedirect(reverse("group-routes"))
-    if route_edit.status == "EXPIRED" :
-        messages.add_message(request, messages.WARNING,
-                             "Cannot edit the expired rule %s. Contact helpdesk to enable it" %(route_slug))
-        return HttpResponseRedirect(reverse("group-routes"))
+#    if route_edit.status == "ADMININACTIVE" :
+#        messages.add_message(request, messages.WARNING,
+#                             "Administrator has disabled editing of rule %s" %(route_slug))
+#        return HttpResponseRedirect(reverse("group-routes"))
+#    if route_edit.status == "EXPIRED" :
+#        messages.add_message(request, messages.WARNING,
+#                             "Cannot edit the expired rule %s. Contact helpdesk to enable it" %(route_slug))
+#        return HttpResponseRedirect(reverse("group-routes"))
     if route_edit.status == "PENDING" :
         messages.add_message(request, messages.WARNING,
                              "Cannot edit a pending rule: %s." %(route_slug))

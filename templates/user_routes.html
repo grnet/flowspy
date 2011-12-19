@@ -11,12 +11,12 @@
 $(document).ready(function(){
     $("#hid_mid").val('');
     $('#dialog').dialog({
-        height: 220,
-        width: 300,
+        height: 250,
+        width: 340,
         modal: true,
         autoOpen: false,
         buttons: {
-            'Delete': function(){
+            'Suspend': function(){
                 route = $('#route_to_delete').text();
                 route_url_id = '#del_route_' + route;
                 url = $(route_url_id).attr('href');
@@ -133,6 +133,7 @@ $(document).ready(function(){
         return false;
     });
     
+	$(".statustootipclass").tooltip();
     $(".expiresclass").tooltip();
 	$(".commentclass").tooltip();
     var reg_exp = '';
@@ -224,7 +225,7 @@ function delete_route(route){
 <table cellpadding="0" cellspacing="0" border="0" class="display" style='width:200px;'>
 				<tbody>
 					<tr>
-				        <th>ACTIVE</th><th>SUSPENDED</th><th>EXPIRED</th><th>ADMINDISABLED</th><th>ERROR</th><th>PENDING</th>
+				        <th>ACTIVE</th><th>SUSPENDED</th><th>OUTOFSYNC</th><th>ERROR</th><th>PENDING</th>
 					</tr>
 					<tr class="on_off">
 				        <td>
@@ -236,11 +237,7 @@ function delete_route(route){
 				        </td>
 				   
 				        <td>
-				            <input type="checkbox" class="onoff" name="status_filter" value="EXPIRED" id="show_expired"/>
-				        </td>
-				    
-				        <td>
-				            <input type="checkbox" class="onoff" name="status_filter" value="ADMINDISABLED" id="show_admininactive"/>
+				            <input type="checkbox" class="onoff" name="status_filter" value="OUTOFSYNC" id="show_outofsync"/>
 				        </td>
 				    
 				        <td>
@@ -283,7 +280,11 @@ function delete_route(route){
 		{% endif %}>{{ route.name }}</span></td>
 	<td>{{ route.get_match|safe|escape }}</td>
 	<td style="text-align: center;">{{route.get_then|safe|escape}}</td>
-	<td style="text-align: center; ">{% ifequal route.status 'INACTIVE' %}SUSPENDED{% else %}{% ifequal route.status 'ADMININACTIVE' %}ADMINDISABLED{% else %}{{route.status}}{% endifequal %}{% endifequal %}</td>
+	<td style="text-align: center; "><span 
+		{% if route.status == 'EXPIRED' or route.status == 'ADMININACTIVE' or route.status == 'INACTIVE' %}
+	    class="statustootipclass" 
+		style="border-bottom:1px dotted red;" 
+		title = "{% ifequal route.status 'INACTIVE' %}Suspended by user{% else %}{% ifequal route.status 'ADMININACTIVE' %}Suspended by administrator{% else %}{% ifequal route.status 'EXPIRED' %}Suspended due to expiration{% endifequal %}{% endifequal %}{% endifequal %}"{% endif %}>{% if route.status == 'EXPIRED' or route.status == 'ADMININACTIVE' or route.status == 'INACTIVE' %}SUSPENDED{% else %}{{route.status}}{% endif %}</span></td>
 	{% comment %}<td style="text-align: center;">{{ route.response }}</td>{% endcomment %}
 	<td style="text-align: center;">{{ route.applier }}</td>
 	<td style="text-align: center;"><span {% if route.days_to_expire %}
@@ -298,7 +299,7 @@ function delete_route(route){
 		<button class="del_button" id="{{route.name}}" onclick="javascript:delete_route(this.id)">Suspend</button>
 		<a href="{% url delete-route route.name %}" style="display:none" id="del_route_{{route.name}}"></a>
 		{% else %}
-		{% ifequal route.status 'INACTIVE' %}
+		{% if route.status == 'EXPIRED' or route.status == 'ADMININACTIVE' or route.status == 'INACTIVE' %}
 		<a href="{% url edit-route route.name %}" class="edit_button" id="edit_button_{{route.pk}}">Reactivate</a>
 		{% else %}
 		{% ifequal route.status 'OUTOFSYNC' %}
@@ -306,7 +307,7 @@ function delete_route(route){
 		{% else %}
 		-
 		{% endifequal %}
-		{% endifequal %}
+		{% endif %}
 		{% endifequal %}
 		</td>
 </tr>
@@ -315,9 +316,9 @@ function delete_route(route){
 </tbody>
 </table>
 
-<div id="dialog" title="Delete Route">
-		<p>You are about to delete rule <strong><span id="route_to_delete"></span></strong></p>
-		<p>Deleting the rule will automatically remove the configuration from the network and mark this route as inactive.</p>
+<div id="dialog" title="Suspend Rule">
+		<p>You are about to suspend rule <strong><span id="route_to_delete"></span></strong></p>
+		<p>Suspending the rule will automatically remove the configuration from the network and mark this rule as inactive.</p>
 		<p>Are you sure you want to proceed?</p>
 </div>
 <div id="console" title="Console">

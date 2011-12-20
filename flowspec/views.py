@@ -34,9 +34,6 @@ from django.core.mail import mail_admins, mail_managers, send_mail
 
 import os
 
-cwd = os.getcwd()
-    
-
 LOG_FILENAME = os.path.join(settings.LOG_FILE_LOCATION, 'celery_jobs.log')
 #FORMAT = '%(asctime)s %(levelname)s: %(message)s'
 #logging.basicConfig(format=FORMAT)
@@ -93,8 +90,6 @@ def add_route(request):
             route.save()
             form.save_m2m()
             route.commit_add()
-            fqdn = Site.objects.get_current().domain
-            
             mail_body = render_to_string("rule_add_mail.txt",
                                              {"route": route})
             send_mail(settings.EMAIL_SUBJECT_PREFIX + "Rule %s creation request submitted by %s" %(route.name, route.applier.username),

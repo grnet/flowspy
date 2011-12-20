@@ -126,6 +126,15 @@
 				$('#port_diag').dialog('open');
 				return false;
 			});
+			
+		$("#portsacc").accordion({
+			collapsible: true,
+			active: false,
+
+		});
+		
+		$("#applybutton").button();
+
 		});
 		
 </script>
@@ -137,6 +146,10 @@ th {
 	padding-right: 0.5em;
 	vertical-align: top;
 }
+
+.accord_wrapper{
+	height: 100% !important;
+} 
 
 .help {
 	font-style: italic;
@@ -170,15 +183,23 @@ th {
 <input type="hidden" id="id_applier" name="applier" value="{{applier}}"/>
 <tr><th>{{ form.source.label_tag }}</th><td>{{ form.source }}<span class="error">{{ form.source.errors|join:", " }}</span></td></tr>
 <tr class="help"><td></td><td>{{ form.source.help_text }}</td></tr>
-<tr><th>{{ form.sourceport.label_tag }}</th><td>{{ form.sourceport }}&nbsp;&nbsp;<button class="new_port">Port</button><span class="error">{{ form.sourceport.errors|join:", " }}</span></td></tr>
-<tr class="help"><td></td><td>{{ form.sourceport.help_text }}</td></tr>
 <tr><th>{{ form.destination.label_tag }}</th><td>{{ form.destination }}<span class="error">{{ form.destination.errors|join:", " }}</span></td></tr>
 <tr class="help"><td></td><td>{{ form.destination.help_text }}</td></tr>
+</table>
+<div id='portsacc' style="width: 500px;">
+	<h3 style="padding: 0.5em 0.5em 0.5em 0.7em;">Advanced Settings (Ports)</h3>
+	<div class='accord_wrapper' style="height: 100% !important;">
+	Select source/destination port(s), or select common port(s) for both source/destination
+<table>
+<tr><th>{{ form.sourceport.label_tag }}</th><td>{{ form.sourceport }}&nbsp;&nbsp;<button class="new_port">Port</button><span class="error">{{ form.sourceport.errors|join:", " }}</span></td></tr>
+<tr class="help"><td></td><td>{{ form.sourceport.help_text }}</td></tr>
 <tr><th>{{ form.destinationport.label_tag }}</th><td>{{ form.destinationport }}&nbsp;&nbsp;<button class="new_port">Port</button><span class="error">{{ form.destinationport.errors|join:", " }}</span></td></tr>
 <tr class="help"><td></td><td>{{ form.destinationport.help_text }}</td></tr>
 <tr><th>{{ form.port.label_tag }}</th><td>{{ form.port }}&nbsp;&nbsp;<button class="new_port">Port</button><span class="error">{{ form.port.errors|join:", " }}</span></td></tr>
 <tr class="help"><td></td><td>{{ form.port.help_text }}</td></tr>
+</div>
 </table>
+</div>
 </fieldset>
 <fieldset>
 <legend>{% trans "Rule Actions" %}</legend>
@@ -202,7 +223,7 @@ th {
 </p>
 </fieldset>
 
-<p><input type="submit" value="{% trans "Apply" %}" /></p>
+<p><input type="submit" id="applybutton" value="{% trans "Apply" %}" /></p>
 </form>
 </div>
 

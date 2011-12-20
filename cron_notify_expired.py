@@ -4,6 +4,9 @@ setup_environ(settings)
 from django.core.mail import send_mail
 from flowspy.flowspec.models import *
 from django.template.loader import render_to_string
+from django.contrib.sites.models import Site
+from django.core.urlresolvers import reverse
+
 import datetime
 
 
@@ -14,8 +17,12 @@ def notify_expired():
             expiration_days = (route.expires - datetime.date.today()).days
             if expiration_days < settings.EXPIRATION_NOTIFY_DAYS:
                 try:
+                    fqdn = Site.objects.get_current().domain
+                    admin_url = "https://%s%s" % \
+                    (fqdn,
+                     "/fod/edit/%s"%route.name)
                     mail_body = render_to_string("rule_expiration.txt",
-                                             {"route": route, 'expiration_days':expiration_days})
+                                             {"route": route, 'expiration_days':expiration_days, 'url':admin_url})
                     days_num = ' days'
                     expiration_days_text = "%s %s" %('in',expiration_days)
                     if expiration_days == 0:

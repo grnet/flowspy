@@ -48,8 +48,6 @@ handler = logging.FileHandler(LOG_FILENAME)
 handler.setFormatter(formatter)
 logger.addHandler(handler)
 
-
-
 @login_required
 def user_routes(request):
     user_routes = Route.objects.filter(applier=request.user)
@@ -95,10 +93,13 @@ def add_route(request):
             route.save()
             form.save_m2m()
             route.commit_add()
+            fqdn = Site.objects.get_current().domain
+            
             mail_body = render_to_string("rule_add_mail.txt",
                                              {"route": route})
-            mail_admins("Rule %s creation request submitted by %s" %(route.name, route.applier.username),
-                          mail_body, fail_silently=True)
+            send_mail(settings.EMAIL_SUBJECT_PREFIX + "Rule %s creation request submitted by %s" %(route.name, route.applier.username),
+                              mail_body, settings.SERVER_EMAIL,
+                              get_peer_techc_mails(route.applier), fail_silently=True)
             logger.info(mail_body)
             return HttpResponseRedirect(reverse("group-routes"))
         else:
@@ -141,9 +142,11 @@ def edit_route(request, route_slug):
             route.commit_edit()
             mail_body = render_to_string("rule_edit_mail.txt",
                                              {"route": route})
-            mail_admins("Rule %s edit request submitted by %s" %(route.name, route.applier.username),
-                          mail_body, fail_silently=True)
+            send_mail(settings.EMAIL_SUBJECT_PREFIX + "Rule %s edit request submitted by %s" %(route.name, route.applier.username),
+                              mail_body, settings.SERVER_EMAIL,
+                              get_peer_techc_mails(route.applier), fail_silently=True)
             logger.info(mail_body)
+
             return HttpResponseRedirect(reverse("group-routes"))
         else:
             return render_to_response('apply.html', {'form': form, 'edit':True, 'applier': applier},
@@ -168,8 +171,9 @@ def delete_route(request, route_slug):
             route.commit_delete()
             mail_body = render_to_string("rule_delete_mail.txt",
                                              {"route": route})
-            mail_admins("Rule %s removal request submitted by %s" %(route.name, route.applier.username),
-                          mail_body, fail_silently=True)
+            send_mail(settings.EMAIL_SUBJECT_PREFIX + "Rule %s removal request submitted by %s" %(route.name, route.applier.username),
+                              mail_body, settings.SERVER_EMAIL,
+                             get_peer_techc_mails(route.applier), fail_silently=True)            
             logger.info(mail_body)
         html = "<html><body>Done</body></html>"
         return HttpResponse(html)
@@ -291,3 +295,16 @@ def user_logout(request):
 def load_jscript(request, file):
     long_polling_timeout = int(settings.POLL_SESSION_UPDATE)*1000 + 10000
     return render_to_response('%s.js' % file, {'timeout': long_polling_timeout}, context_instance=RequestContext(request), mimetype="text/javascript")
+
+
+def get_peer_techc_mails(user):
+    user_mail = user.email
+    techmails = user.get_profile().peer.techc()
+    additional_mail = "%s;%s" %(settings.HELPDESK_MAIL,settings.NOC_MAIL) 
+    if techmails:
+        mail = "%s;%s" %(techmails, additional_mail)
+    else:
+        mail = additional_mail
+    mail = "%s;%s" %(user_mail, mail)
+    mail =  mail.split(';')
+    return mail

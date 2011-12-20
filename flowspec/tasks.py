@@ -9,9 +9,9 @@ from django.conf import settings
 
 import os
 
-cwd = os.getcwd()
 
-LOG_FILENAME = os.path.join(cwd, 'log/celery_jobs.log')
+
+LOG_FILENAME = os.path.join(settings.LOG_FILE_LOCATION, 'celery_jobs.log')
 
 #FORMAT = '%(asctime)s %(levelname)s: %(message)s'
 #logging.basicConfig(format=FORMAT)

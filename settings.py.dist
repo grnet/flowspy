@@ -1,14 +1,20 @@
 # Django settings for flowspy project.
 
+import os
+import djcelery
+djcelery.setup_loader()
+from celery.schedules import crontab
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
-    # ('Your Name', 'your_email@domain.com'),
+    ('Admin', 'admin_mail@admin.ad'),
 )
 
-import djcelery
-djcelery.setup_loader()
+
+here = lambda x: os.path.join(os.path.abspath(os.path.dirname(__file__)), x)
+
 
 
 MANAGERS = ADMINS
@@ -139,13 +145,14 @@ INSTALLED_APPS = (
 
 LOGIN_URL = '/fod/welcome'
 
-CACHE_BACKEND = "memcached://127.0.0.1:11211/?timeout=600"
+CACHE_BACKEND = "memcached://127.0.0.1:11211/?timeout=3600"
 
 AUTH_PROFILE_MODULE = 'accounts.UserProfile'
 
 NETCONF_DEVICE = ""
 NETCONF_USER = ""
 NETCONF_PASS = ""
+
 ROUTES_FILTER = "<configuration><routing-options><flow/></routing-options></configuration>"
 ROUTE_FILTER = "<configuration><routing-options><flow><route><name>%s</name></route></flow></routing-options></configuration>"
 COMMIT_CONFIRMED_TIMEOUT = "120"
@@ -164,7 +171,13 @@ CELERY_CONCURRENCY = 1
 CELERY_IMPORTS = ("flowspec.tasks", )
 
 SERVER_EMAIL = "noreply@grnet.gr"
-EMAIL_SUBJECT_PREFIX = "[fod] "
+EMAIL_SUBJECT_PREFIX = "[FoD] "
+
+LOG_FILE_LOCATION = here("log")
+
+EXPIRATION_NOTIFY_DAYS = 4
+PREFIX_LENGTH = 32 
+POLL_SESSION_UPDATE = 60.0
 
 BROKER_URL = "beanstalk://localhost:11300//"
 
@@ -172,13 +185,11 @@ SHIB_AUTH_AFFILIATION = 'urn:mace:grnet.gr:pki:user'
 SHIB_ADMIN_DOMAIN = 'grnet.gr'
 SHIB_LOGOUT_URL = 'https://netdev.grnet.gr/Shibboleth.sso/Logout'
 
-from celery.schedules import crontab
-
 CELERYBEAT_SCHEDULE = {
     # Executes every day at 01:35 AM 
     "every-day-sync": {
         "task": "flowspec.tasks.check_sync",
-        "schedule": crontab(minute=35, hour=01),
+        "schedule": crontab(minute=01, hour=01),
         "args": (),
     },
 }

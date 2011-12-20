@@ -7,6 +7,7 @@ from flowspy.flowspec.models import *
 from ipaddr import *
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
+from django.conf import settings
 import datetime
 
 
@@ -43,12 +44,20 @@ class RouteForm(forms.ModelForm):
 
     def clean_destination(self):
         data = self.cleaned_data['destination']
+        error = None
         if data:
             try:
                 address = IPNetwork(data)
+                if address.prefixlen < settings.PREFIX_LENGTH:
+                    error = "Currently no prefix lengths < %s are allowed" %settings.PREFIX_LENGTH
+                    raise forms.ValidationError('error')
                 return self.cleaned_data["destination"]
             except Exception:
-                raise forms.ValidationError('Invalid network address format')
+                if error:
+                    error_text = error
+                else:
+                    error_text = 'Invalid network address format'
+                raise forms.ValidationError(error_text)
     
     def clean_expires(self):
         date = self.cleaned_data['expires']

@@ -6,9 +6,11 @@ from flowspec.tasks import *
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
 from accounts.models import UserProfile
+from flowspy.flowspec.forms import *
+
 
 class RouteAdmin(admin.ModelAdmin):
-    
+    form = RouteForm
     actions = ['deactivate']
     
     def deactivate(self, request, queryset):
@@ -16,6 +18,14 @@ class RouteAdmin(admin.ModelAdmin):
         response = batch_delete.delay(queryset, reason="ADMININACTIVE")
         self.message_user(request, "Added request %s to job que. Check in a while for result" % response)
     deactivate.short_description = "Remove selected routes from network"
+
+    def save_model(self, request, obj, form, change):
+        obj.status = "PENDING"
+        obj.save()
+        obj.commit_add()
+
+    def has_delete_permission(self, request, obj=None):
+        return False
 
     list_display = ('name', 'status', 'applier' , 'applier_peer', 'get_match', 'get_then', 'response', "expires", "comments")
 
@@ -28,6 +38,8 @@ class RouteAdmin(admin.ModelAdmin):
         
     ]
     
+
+
 class UserProfileInline(admin.StackedInline):
     model = UserProfile
     

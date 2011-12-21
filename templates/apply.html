@@ -25,6 +25,7 @@
 		$("#id_destinationport").css('width', '100px').attr('size', '5');
 		$('#id_then').attr("multiple", "");
 		$( "#id_expires" ).datepicker({ dateFormat: 'yy-mm-dd' , maxDate: '+10d', minDate: '+1d', changeMonth: false, changeYear: false }).datepicker( $.datepicker.regional[ "el" ] );
+		{% comment %}
 		$('#then_diag').dialog({
 			height: 220,
             width: 340,
@@ -56,7 +57,7 @@
 		}
 	}
 		});
-		
+		{% comment %}
 		$('#port_diag').dialog({
 			height: 220,
             width: 340,

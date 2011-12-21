@@ -9,7 +9,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from django.conf import settings
 import datetime
-
+from django.core.mail import mail_admins, mail_managers, send_mail
 
 
 class RouteForm(forms.ModelForm):
@@ -27,11 +27,21 @@ class RouteForm(forms.ModelForm):
         model = Route
     
     def clean_source(self):
+        user = User.objects.get(pk=self.data['applier'][0])
         data = self.cleaned_data['source']
         private_error = False
+        protected_error = False
         if data:
             try:
                 address = IPNetwork(data)
+                for net in settings.PROTECTED_SUBNETS:
+                    if address in IPNetwork(net):
+                        protected_error = True
+                        mail_body = "User %s:%s attempted to set %s as the source address in a firewall rule" %(user.username, user.email, data)
+                        send_mail(settings.EMAIL_SUBJECT_PREFIX + "Caught an attempt to set a protected IP/network as a source address",
+                              mail_body, settings.SERVER_EMAIL,
+                              [settings.NOC_MAIL], fail_silently=True)
+                        raise forms.ValidationError("Not allowed")
                 if address.is_private:
                     private_error = True
                     raise forms.ValidationError('Private addresses not allowed')
@@ -41,23 +51,36 @@ class RouteForm(forms.ModelForm):
                 error_text = 'Invalid network address format'
                 if private_error:
                     error_text = 'Private addresses not allowed'
+                if protected_error:
+                    error_text = 'You have no authority on this subnet'
                 raise forms.ValidationError(error_text)
 
     def clean_destination(self):
+        user = User.objects.get(pk=self.data['applier'][0])
         data = self.cleaned_data['destination']
         error = None
+        protected_error = False
         if data:
             try:
                 address = IPNetwork(data)
+                for net in settings.PROTECTED_SUBNETS:
+                    if address in IPNetwork(net):
+                        protected_error = True
+                        mail_body = "User %s:%s attempted to set %s as the destination address in a firewall rule" %(user.username, user.email, data)
+                        send_mail(settings.EMAIL_SUBJECT_PREFIX + "Caught an attempt to set a protected IP/network as the destination address",
+                              mail_body, settings.SERVER_EMAIL,
+                              [settings.NOC_MAIL], fail_silently=True)
+                        raise forms.ValidationError("Not allowed")
                 if address.prefixlen < settings.PREFIX_LENGTH:
                     error = "Currently no prefix lengths < %s are allowed" %settings.PREFIX_LENGTH
                     raise forms.ValidationError('error')
                 return self.cleaned_data["destination"]
             except Exception:
+                error_text = 'Invalid network address format'
                 if error:
                     error_text = error
-                else:
-                    error_text = 'Invalid network address format'
+                if protected_error:
+                    error_text = 'You have no authority on this subnet'
                 raise forms.ValidationError(error_text)
     
     def clean_expires(self):
@@ -82,7 +105,6 @@ class RouteForm(forms.ModelForm):
         networks = peer.networks.all()
         mynetwork = False
         route_pk_list = []
-        
         if destination:
             for network in networks:
                 net = IPNetwork(network.network)

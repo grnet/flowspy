@@ -75,6 +75,7 @@ class ThenAction(models.Model):
         return ret.rstrip(":")
     class Meta:
         db_table = u'then_action'
+        unique_together = ("action", "action_value")
 
 class Route(models.Model):
     name = models.SlugField(max_length=128)

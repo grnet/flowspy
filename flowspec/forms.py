@@ -145,11 +145,11 @@ class ThenPlainForm(forms.ModelForm):
         if action_value:
             try:
                 assert(int(action_value))
+                if int(action_value) < 50:
+                    raise forms.ValidationError('Rate-limiting cannot be < 50kbps')
                 return "%s" %self.cleaned_data["action_value"]
             except:
-                raise forms.ValidationError('Rate-limiting should be an integer')
-            if int(action_value) < 50:
-                raise forms.ValidationError('Rate-limiting cannot be < 50kbps')
+                raise forms.ValidationError('Rate-limiting should be an integer < 50')
         else:
             raise forms.ValidationError('Cannot be empty')
 
@@ -159,6 +159,7 @@ class ThenPlainForm(forms.ModelForm):
             raise forms.ValidationError('Cannot select something other than rate-limit')
         else:
             return self.cleaned_data["action"]
+    
 
 class PortPlainForm(forms.ModelForm):
 #    action = forms.CharField(initial='rate-limit')

@@ -78,6 +78,8 @@ def add_route(request):
          return HttpResponseRedirect(reverse("group-routes"))
     if request.method == "GET":
         form = RouteForm()
+        if not request.user.is_superuser:
+            form.fields['then'] = forms.ModelMultipleChoiceField(queryset=ThenAction.objects.filter(action__in=settings.UI_USER_THEN_ACTIONS).order_by('action'), required=True)
         return render_to_response('apply.html', {'form': form, 'applier': applier},
                                   context_instance=RequestContext(request))
 
@@ -153,6 +155,8 @@ def edit_route(request, route_slug):
         dictionary = model_to_dict(route_edit, fields=[], exclude=[])
         #form = RouteForm(instance=route_edit)
         form = RouteForm(dictionary)
+        if not request.user.is_superuser:
+            form.fields['then'] = forms.ModelMultipleChoiceField(queryset=ThenAction.objects.filter(action__in=settings.UI_USER_THEN_ACTIONS).order_by('action'), required=True)
         return render_to_response('apply.html', {'form': form, 'edit':True, 'applier': applier},
                                   context_instance=RequestContext(request))
 

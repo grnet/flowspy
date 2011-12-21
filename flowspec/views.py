@@ -17,6 +17,7 @@ from django.utils import simplejson
 from django.core.urlresolvers import reverse
 from django.contrib import messages
 from flowspy.accounts.models import *
+from ipaddr import *
 
 from django.contrib.auth import authenticate, login
 
@@ -89,6 +90,8 @@ def add_route(request):
             route=form.save(commit=False)
             route.applier = request.user
             route.status = "PENDING"
+            route.source = IPNetwork("%s/%s" %(IPNetwork(route.source).network.compressed, IPNetwork(route.source).prefixlen)).compressed
+            route.destination = IPNetwork("%s/%s" %(IPNetwork(route.destination).network.compressed, IPNetwork(route.destination).prefixlen)).compressed
             route.save()
             form.save_m2m()
             route.commit_add()
@@ -136,6 +139,8 @@ def edit_route(request, route_slug):
             route.name = route_original.name
             route.applier = request.user
             route.status = "PENDING"
+            route.source = IPNetwork("%s/%s" %(IPNetwork(route.source).network.compressed, IPNetwork(route.source).prefixlen)).compressed
+            route.destination = IPNetwork("%s/%s" %(IPNetwork(route.destination).network.compressed, IPNetwork(route.destination).prefixlen)).compressed
             route.save()
             form.save_m2m()
             route.commit_edit()

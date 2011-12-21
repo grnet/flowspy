@@ -27,7 +27,8 @@ class RouteForm(forms.ModelForm):
         model = Route
     
     def clean_source(self):
-        user = User.objects.get(pk=self.data['applier'][0])
+        user = User.objects.get(pk=self.data['applier'])
+        peer = user.get_profile().peer
         data = self.cleaned_data['source']
         private_error = False
         protected_error = False
@@ -37,7 +38,7 @@ class RouteForm(forms.ModelForm):
                 for net in settings.PROTECTED_SUBNETS:
                     if address in IPNetwork(net):
                         protected_error = True
-                        mail_body = "User %s:%s attempted to set %s as the source address in a firewall rule" %(user.username, user.email, data)
+                        mail_body = "User %s %s (%s) attempted to set %s as the source address in a firewall rule" %(user.username, user.email, peer.peer_name, data)
                         send_mail(settings.EMAIL_SUBJECT_PREFIX + "Caught an attempt to set a protected IP/network as a source address",
                               mail_body, settings.SERVER_EMAIL,
                               [settings.NOC_MAIL], fail_silently=True)
@@ -56,7 +57,8 @@ class RouteForm(forms.ModelForm):
                 raise forms.ValidationError(error_text)
 
     def clean_destination(self):
-        user = User.objects.get(pk=self.data['applier'][0])
+        user = User.objects.get(pk=self.data['applier'])
+        peer = user.get_profile().peer        
         data = self.cleaned_data['destination']
         error = None
         protected_error = False
@@ -66,7 +68,7 @@ class RouteForm(forms.ModelForm):
                 for net in settings.PROTECTED_SUBNETS:
                     if address in IPNetwork(net):
                         protected_error = True
-                        mail_body = "User %s:%s attempted to set %s as the destination address in a firewall rule" %(user.username, user.email, data)
+                        mail_body = "User %s %s (%s) attempted to set %s as the destination address in a firewall rule" %(user.username, user.email, peer.peer_name, data)
                         send_mail(settings.EMAIL_SUBJECT_PREFIX + "Caught an attempt to set a protected IP/network as the destination address",
                               mail_body, settings.SERVER_EMAIL,
                               [settings.NOC_MAIL], fail_silently=True)

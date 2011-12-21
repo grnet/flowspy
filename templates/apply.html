@@ -91,7 +91,7 @@
 	}
 		});
 		
-		
+		{% comment %}
 		$("#new_then_actions").button({
             icons: {
                 primary: "ui-icon-plusthick"
@@ -109,7 +109,7 @@
 				return false;
 			});
 			
-			
+			{% endcomment %}
 			$(".new_port").button({
             icons: {
                 primary: "ui-icon-plusthick"
@@ -303,10 +303,10 @@ th {
                         {{ form.then.label_tag }}
                     </th>
                     <td>
-                        {{ form.then }}&nbsp;&nbsp;
+                        {{ form.then }}{% comment %}&nbsp;&nbsp;
                         <button id="new_then_actions">
                             Rate-limit
-                        </button>
+                        </button>{% endcomment %}
                         <span class="error">{{ form.then.errors|join:", " }}</span>
                     </td>
                 </tr>

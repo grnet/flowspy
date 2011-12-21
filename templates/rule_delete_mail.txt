@@ -1,7 +1,7 @@
 A new rule removal job has spawned
 
 Peer: {{route.applier.get_profile.peer.peer_name}}
-User {{route.applier.username}} requested the removal of the following rule:
+User {{route.applier.username}} requested the removal of the following rule from address {{address}} :
 
 Match
 * Dst Addr:{{route.destination}}

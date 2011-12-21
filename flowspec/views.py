@@ -37,7 +37,7 @@ import os
 LOG_FILENAME = os.path.join(settings.LOG_FILE_LOCATION, 'celery_jobs.log')
 #FORMAT = '%(asctime)s %(levelname)s: %(message)s'
 #logging.basicConfig(format=FORMAT)
-formatter = logging.Formatter('%(asctime)s %(levelname)s: %(message)s')
+formatter = logging.Formatter('%(asctime)s %(levelname)s %(clientip)s %(user)s: %(message)s')
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -90,12 +90,14 @@ def add_route(request):
             route.save()
             form.save_m2m()
             route.commit_add()
+            requesters_address = request.META['HTTP_X_FORWARDED_FOR']
             mail_body = render_to_string("rule_add_mail.txt",
-                                             {"route": route})
+                                             {"route": route, "address": requesters_address})
             send_mail(settings.EMAIL_SUBJECT_PREFIX + "Rule %s creation request submitted by %s" %(route.name, route.applier.username),
                               mail_body, settings.SERVER_EMAIL,
                               get_peer_techc_mails(route.applier), fail_silently=True)
-            logger.info(mail_body)
+            d = { 'clientip' : "%s"%requesters_address, 'user' : route.applier.username }
+            logger.info(mail_body, extra=d)
             return HttpResponseRedirect(reverse("group-routes"))
         else:
             return render_to_response('apply.html', {'form': form, 'applier':applier},
@@ -135,13 +137,14 @@ def edit_route(request, route_slug):
             route.save()
             form.save_m2m()
             route.commit_edit()
+            requesters_address = request.META['HTTP_X_FORWARDED_FOR']
             mail_body = render_to_string("rule_edit_mail.txt",
-                                             {"route": route})
+                                             {"route": route, "address": requesters_address})
             send_mail(settings.EMAIL_SUBJECT_PREFIX + "Rule %s edit request submitted by %s" %(route.name, route.applier.username),
                               mail_body, settings.SERVER_EMAIL,
                               get_peer_techc_mails(route.applier), fail_silently=True)
-            logger.info(mail_body)
-
+            d = { 'clientip' : requesters_address, 'user' : route.applier.username }
+            logger.info(mail_body, extra=d)
             return HttpResponseRedirect(reverse("group-routes"))
         else:
             return render_to_response('apply.html', {'form': form, 'edit':True, 'applier': applier},
@@ -164,12 +167,14 @@ def delete_route(request, route_slug):
             route.status = "PENDING"
             route.save()
             route.commit_delete()
+            requesters_address = request.META['HTTP_X_FORWARDED_FOR']
             mail_body = render_to_string("rule_delete_mail.txt",
-                                             {"route": route})
+                                             {"route": route, "address": requesters_address})
             send_mail(settings.EMAIL_SUBJECT_PREFIX + "Rule %s removal request submitted by %s" %(route.name, route.applier.username),
                               mail_body, settings.SERVER_EMAIL,
-                             get_peer_techc_mails(route.applier), fail_silently=True)            
-            logger.info(mail_body)
+                             get_peer_techc_mails(route.applier), fail_silently=True)
+            d = { 'clientip' : requesters_address, 'user' : route.applier.username }
+            logger.info(mail_body, extra=d)            
         html = "<html><body>Done</body></html>"
         return HttpResponse(html)
     else:

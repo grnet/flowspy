@@ -24,8 +24,17 @@ class shibauthBackend:
 
         try:
             user = User.objects.get(username__exact=username)
+            user.email = mail
+            user.first_name = firstname
+            user.last_name = lastname
+#            if organization == settings.SHIB_ADMIN_DOMAIN:
+#                user.is_staff = True
+#                user.is_superuser = True
+            user.is_active = True
+            user.save()
         # The user did not exist. Create one with no privileges
         except:
+            
             user = User.objects.create_user(username, mail, None)
             user.first_name = firstname
             user.last_name = lastname
@@ -35,6 +44,7 @@ class shibauthBackend:
 #                user.is_staff = True
 #                user.is_superuser = True
             user.is_active = True
+            user.save()
         try:
             peer = Peer.objects.get(domain_name=organization)
             up = UserProfile.objects.get_or_create(user=user,peer=peer)

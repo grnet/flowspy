@@ -232,7 +232,6 @@ def user_login(request):
         user = authenticate(username=username, firstname=firstname, lastname=lastname, mail=mail, organization=organization, affiliation=affiliation)
         if user is not None:
             login(request, user)
-            update_user_attributes(user, firstname=firstname, lastname=lastname, mail=mail)
             return HttpResponseRedirect(reverse("group-routes"))
                 # Redirect to a success page.
                 # Return a 'disabled account' error message
@@ -268,12 +267,6 @@ def add_rate_limit(request):
         else:
             return render_to_response('add_rate_limit.html', {'form': form,},
                                       context_instance=RequestContext(request))
-            
-def update_user_attributes(user, firstname, lastname, mail):
-    user.first_name = firstname
-    user.last_name = lastname
-    user.email = mail
-    user.save()
 
 @login_required
 @never_cache

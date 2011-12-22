@@ -67,7 +67,7 @@ def delete(route, **kwargs):
     route.status = status
     route.response = response
     route.save()
-    subtask(announce).delay("[%s] Rule removal: %s%s- Result %s" %(route.applier, route.name, reason_text, response), route.applier)
+    subtask(announce).delay("[%s] Suspending rule : %s%s- Result %s" %(route.applier, route.name, reason_text, response), route.applier)
 
 # May not work in the first place... proxy is not aware of Route models
 @task

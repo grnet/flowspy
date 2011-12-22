@@ -136,13 +136,13 @@ class Route(models.Model):
    
     def commit_add(self, *args, **kwargs):
         peer = self.applier.get_profile().peer.domain_name
-        send_message("[%s] Adding route %s. Please wait..." %(self.applier.username, self.name), peer)
+        send_message("[%s] Adding rule %s. Please wait..." %(self.applier.username, self.name), peer)
         response = add.delay(self)
         logger.info("Got add job id: %s" %response)
         
     def commit_edit(self, *args, **kwargs):
         peer = self.applier.get_profile().peer.domain_name
-        send_message("[%s] Editing route %s. Please wait..." %(self.applier.username, self.name), peer)
+        send_message("[%s] Editing rule %s. Please wait..." %(self.applier.username, self.name), peer)
         response = edit.delay(self)
         logger.info("Got edit job id: %s" %response)
 
@@ -182,7 +182,7 @@ class Route(models.Model):
         for route in routes:
             if route.name == self.name:
                 found = True
-                logger.info('Found a matching route name')
+                logger.info('Found a matching rule name')
                 devicematch = route.match
                 try:
                     assert(self.destination)

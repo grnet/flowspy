@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
 from accounts.models import UserProfile
 from flowspy.flowspec.forms import *
-
+import datetime
 
 class RouteAdmin(admin.ModelAdmin):
     form = RouteForm
@@ -21,6 +21,7 @@ class RouteAdmin(admin.ModelAdmin):
 
     def save_model(self, request, obj, form, change):
         obj.status = "PENDING"
+        obj.expires = datetime.date.today()
         obj.save()
         obj.commit_add()
 

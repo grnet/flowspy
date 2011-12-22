@@ -282,12 +282,12 @@ function delete_route(route){
 		title = "{% ifequal route.status 'INACTIVE' %}Suspended by user{% else %}{% ifequal route.status 'ADMININACTIVE' %}Suspended by administrator{% else %}{% ifequal route.status 'EXPIRED' %}Suspended due to expiration{% else %}{% ifequal route.status 'OUTOFSYNC' %}Syncronization error. Configuration in device deffers from rule{% endifequal %}{% endifequal %}{% endifequal %}{% endifequal %}"{% endif %}>{% if route.status == 'EXPIRED' or route.status == 'ADMININACTIVE' or route.status == 'INACTIVE' %}SUSPENDED{% else %}{% if route.status == 'OUTOFSYNC' %}ERROR{% else %}{{route.status}}{% endif %}{% endif %}</span></td>
 	{% comment %}<td style="text-align: center;">{{ route.response }}</td>{% endcomment %}
 	<td style="text-align: center;">{{ route.applier }}</td>
-	<td style="text-align: center;"><span {% if route.days_to_expire %}
+	<td style="text-align: center;"><span {% if route.status == 'EXPIRED' or route.status == 'ADMININACTIVE' or route.status == 'INACTIVE' or route.status == 'OUTOFSYNC'%}{% else %}{% if route.days_to_expire %}
 		class="expiresclass" 
 		style="border-bottom:2px dashed red;" 
         title="Expires {% ifequal route.days_to_expire '0' %}today{% else%}in {{route.days_to_expire}} day{{ route.days_to_expire|pluralize }}{% endifequal %}"
-		{% endif %}>{{ route.expires }}</span></td>
-	<td style="text-align: center;">{{ route.response }}</td>
+		{% endif %}{% endif %}>{{ route.expires }}</span></td>
+	<td style="text-align: center;">{% if route.status == 'EXPIRED' %}Rule expired{% else %}{% if route.status == 'ADMININACTIVE' %}Suspended by administrator{% else %}{% if route.status == 'INACTIVE' %}Suspended by user{% else %}{{ route.response }}{% endif %}{% endif %}{% endif %}</td>
 	<td style="text-align: center; width:180px;">
 		{% ifequal route.status 'ACTIVE' %}
 		<a href="{% url edit-route route.name %}" class="edit_button" id="edit_button_{{route.pk}}">Edit</a> 

@@ -32,7 +32,7 @@ from flowspy.utils.decorators import shib_required
 from django.views.decorators.cache import never_cache
 from django.conf import settings
 from django.core.mail import mail_admins, mail_managers, send_mail
-
+import datetime
 import os
 
 LOG_FILENAME = os.path.join(settings.LOG_FILE_LOCATION, 'celery_jobs.log')
@@ -174,6 +174,7 @@ def delete_route(request, route_slug):
         requester_peer = request.user.get_profile().peer
         if applier_peer == requester_peer:
             route.status = "PENDING"
+            route.expires = datetime.date.today()
             route.save()
             route.commit_delete()
             requesters_address = request.META['HTTP_X_FORWARDED_FOR']

@@ -8,6 +8,7 @@ from django.contrib.auth.admin import UserAdmin
 from accounts.models import UserProfile
 from flowspy.flowspec.forms import *
 import datetime
+from django.conf import settings
 
 class RouteAdmin(admin.ModelAdmin):
     form = RouteForm
@@ -21,9 +22,11 @@ class RouteAdmin(admin.ModelAdmin):
 
     def save_model(self, request, obj, form, change):
         obj.status = "PENDING"
-        obj.expires = datetime.date.today()
         obj.save()
-        obj.commit_add()
+        if change:
+            obj.commit_edit()
+        else:
+            obj.commit_add()
 
     def has_delete_permission(self, request, obj=None):
         return False
@@ -35,6 +38,7 @@ class RouteAdmin(admin.ModelAdmin):
         ("Match",               {'fields': ['source', 'sourceport', 'destination', 'destinationport', 'port']}),
         ('Advanced Match Statements', {'fields': ['dscp', 'fragmenttype', 'icmpcode', 'icmptype', 'packetlength', 'protocol', 'tcpflag'], 'classes': ['collapse']}),
         ("Then",               {'fields': ['then' ]}),
+        ("Expires",               {'fields': ['expires' ]}),
         (None,               {'fields': ['comments',]}),
         
     ]

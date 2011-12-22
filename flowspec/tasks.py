@@ -6,6 +6,7 @@ import json
 from celery.task.http import *
 from flowspy.utils import beanstalkc
 from django.conf import settings
+import datetime
 
 import os
 
@@ -92,6 +93,7 @@ def batch_delete(routes, **kwargs):
         for route in routes:
             route.status = status
             route.response = response
+            route.expires = datetime.date.today()
             route.save()
             subtask(announce).delay("[%s] Rule removal: %s%s- Result %s" %(route.applier, route.name, reason_text, response), route.applier)
     else:

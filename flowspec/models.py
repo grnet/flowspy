@@ -275,7 +275,7 @@ class Route(models.Model):
     def get_match(self):
         ret = ''
         if self.destination:
-            ret = '%s Dst Addr:<strong>%s</strong><br/>' %(ret, self.destination)
+            ret = '%s Dst Addr:<strong>%s</strong> <br/>' %(ret, self.destination)
         if self.fragmenttype:
             ret = "%s Fragment Type:<strong>%s</strong><br/>" %(ret, self.fragmenttype)
         if self.icmpcode:
@@ -287,21 +287,21 @@ class Route(models.Model):
         if self.protocol:
             ret = "%s Protocol:<strong>%s</strong><br/>" %(ret, self.protocol)
         if self.source:
-            ret = "%s Src Addr:<strong>%s</strong><br/>" %(ret, self.source)
+            ret = "%s Src Addr:<strong>%s</strong> <br/>" %(ret, self.source)
         if self.tcpflag:
             ret = "%s TCP flag:<strong>%s</strong><br/>" %(ret, self.tcpflag)
         if self.port:
             for port in self.port.all():
-                    ret = ret + "Port:<strong>%s</strong><br/>" %(port)
+                    ret = ret + "Port:<strong>%s</strong> <br/>" %(port)
         if self.destinationport:
             for port in self.destinationport.all():
-                    ret = ret + "Dst Port:<strong>%s</strong><br/>" %(port)
+                    ret = ret + "Dst Port:<strong>%s</strong> <br/>" %(port)
         if self.sourceport:
             for port in self.sourceport.all():
-                    ret = ret +"Src Port:<strong>%s</strong><br/>" %(port)
+                    ret = ret +"Src Port:<strong>%s</strong> <br/>" %(port)
         if self.dscp:
             for dscp in self.dscp.all():
-                    ret = ret + "%s Port:<strong>%s</strong><br/>" %(ret, dscp)
+                    ret = ret + "%s Port:<strong>%s</strong> <br/>" %(ret, dscp)
         return ret.rstrip('<br/>')
         
     get_match.short_description = 'Match statement'

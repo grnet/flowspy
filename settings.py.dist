@@ -4,14 +4,12 @@ import os
 import djcelery
 djcelery.setup_loader()
 from celery.schedules import crontab
-
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
-    ('Admin', 'admin_mail@admin.ad'),
+    ('AdminName', 'adminmail@admin.com'),
 )
-
 
 here = lambda x: os.path.join(os.path.abspath(os.path.dirname(__file__)), x)
 
@@ -29,7 +27,7 @@ DATABASES = {
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
         'OPTIONS':  {
         "init_command": "SET storage_engine=INNODB",
-}
+        }
     }
 }
 
@@ -114,7 +112,7 @@ AUTHENTICATION_BACKENDS = (
 
 ROOT_URLCONF = 'flowspy.urls'
 
-STATIC_URL = '/home/leopoul/projects/flowspy/static'
+STATIC_URL = ''
 
 TEMPLATE_DIRS = (
     '/home/leopoul/projects/flowspy/templates/',
@@ -152,7 +150,6 @@ AUTH_PROFILE_MODULE = 'accounts.UserProfile'
 NETCONF_DEVICE = ""
 NETCONF_USER = ""
 NETCONF_PASS = ""
-
 ROUTES_FILTER = "<configuration><routing-options><flow/></routing-options></configuration>"
 ROUTE_FILTER = "<configuration><routing-options><flow><route><name>%s</name></route></flow></routing-options></configuration>"
 COMMIT_CONFIRMED_TIMEOUT = "120"
@@ -164,6 +161,7 @@ USE_X_FORWARDED_HOST = True
 BROKER_HOST = "localhost"
 BROKER_PORT = 11300
 POLLS_TUBE = 'polls'
+
 BROKER_VHOST = "/"
 CELERY_CONCURRENCY = 1
 
@@ -176,7 +174,7 @@ EMAIL_SUBJECT_PREFIX = "[FoD] "
 LOG_FILE_LOCATION = here("log")
 
 EXPIRATION_NOTIFY_DAYS = 4
-PREFIX_LENGTH = 32 
+PREFIX_LENGTH = 29 
 POLL_SESSION_UPDATE = 60.0
 
 BROKER_URL = "beanstalk://localhost:11300//"
@@ -184,6 +182,13 @@ BROKER_URL = "beanstalk://localhost:11300//"
 SHIB_AUTH_AFFILIATION = 'urn:mace:grnet.gr:pki:user'
 SHIB_ADMIN_DOMAIN = 'grnet.gr'
 SHIB_LOGOUT_URL = 'https://netdev.grnet.gr/Shibboleth.sso/Logout'
+
+HELPDESK_MAIL = ""
+NOC_MAIL = ""
+
+UI_USER_THEN_ACTIONS = ['discard', 'rate-limit']
+
+PROTECTED_SUBNETS = ['10.10.0.0/16']
 
 CELERYBEAT_SCHEDULE = {
     # Executes every day at 01:35 AM 

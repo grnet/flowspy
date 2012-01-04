@@ -65,7 +65,6 @@
 			autoOpen: false,
 			buttons: {
 		'Add': function() {
-			console.log($("#add_port_form").serialize());
 			$.ajax({
 			url:"{% url add-port %}", 
 			data:$("#add_port_form").serialize(),

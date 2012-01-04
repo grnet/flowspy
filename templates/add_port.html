@@ -1,6 +1,16 @@
+<script type="text/javascript">
+    $(document).ready(function(){
+        $("#add_port_form").unbind('submit');
+        $("#add_port_form").submit(function(){
+            $("#port_diag").parents('.ui-dialog').first().find('.ui-button').first().click();
+            return false;
+        });
+    });
+</script>
 <form id="add_port_form" method="POST">
 	{% csrf_token %}
 <table>
 <tr><th>Port</th><td>{{ form.port }}<span class="error" id='rl_error'>{{ form.port.errors|join:", " }}</span></td></tr>
 </table>
 </form>
+

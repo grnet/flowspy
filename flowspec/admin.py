@@ -5,10 +5,26 @@ from utils import proxy as PR
 from flowspec.tasks import *
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
-from accounts.models import UserProfile
+from flowspy.accounts.models import UserProfile
+from flowspy.peers.models import *
 from flowspy.flowspec.forms import *
 import datetime
 from django.conf import settings
+from django.forms import ModelForm
+from django.contrib.admin.widgets import FilteredSelectMultiple
+
+class PeerAdminForm(ModelForm):
+    networks=forms.ModelMultipleChoiceField(PeerRange.objects.all(),widget=
+            FilteredSelectMultiple("PeerRange",True), required=False)
+
+    class Meta:
+        model= Peer
+
+class PeerAdmin(admin.ModelAdmin):
+    form = PeerAdminForm
+
+class PeerTechcAdmin(admin.ModelAdmin):
+    list_display = ('get_peer_name', 'emails')
 
 class RouteAdmin(admin.ModelAdmin):
     form = RouteForm
@@ -71,6 +87,8 @@ admin.site.register(UserProfile)
 admin.site.register(ThenAction)
 #admin.site.register(ThenStatement)
 #admin.site.register(MatchStatement)
+admin.site.register(Peer, PeerAdmin)
+admin.site.register(PeerTechc, PeerTechcAdmin)
 admin.site.register(Route, RouteAdmin)
 admin.site.register(User, UserProfileAdmin)
 admin.site.disable_action('delete_selected')

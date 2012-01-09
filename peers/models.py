@@ -50,5 +50,8 @@ class PeerTechc(models.Model):
     def __unicode__(self):
         return "%s %s" %(self.peer_id.peer_name, self.emails)
 
+    def get_peer_name(self):
+        return "%s" %self.peer_id.peer_name
+
     class Meta:
         db_table="v_tech_c_peers"

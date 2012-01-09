@@ -307,13 +307,17 @@ def load_jscript(request, file):
 
 
 def get_peer_techc_mails(user):
-    user_mail = user.email
+    mail = []
+    additional_mail = []
+    techmails_list = []
+    user_mail = "%s" %user.email
+    user_mail = user_mail.split(';')
     techmails = user.get_profile().peer.techc()
-    additional_mail = "%s;%s" %(settings.HELPDESK_MAIL,settings.NOC_MAIL) 
     if techmails:
-        mail = "%s;%s" %(techmails, additional_mail)
-    else:
-        mail = additional_mail
-    mail = "%s;%s" %(user_mail, mail)
-    mail =  mail.split(';')
+        techmails_list = techmails.split(';')
+    if settings.NOTIFY_ADMIN_MAILS:
+        additional_mail = settings.NOTIFY_ADMIN_MAILS
+    mail.extend(user_mail)
+    mail.extend(additional_mail)
+    mail.extend(techmails_list)
     return mail

@@ -202,9 +202,11 @@ def user_profile(request):
 @never_cache
 def user_login(request):
     try:
-        error_username = None
-        error_orgname = None
-        error_affiliation = None
+        error_username = False
+        error_orgname = False
+        error_affiliation = False
+        error_mail = False
+        has_affiliation = False
         error = ''
         username = request.META['HTTP_EPPN']
         if not username:
@@ -220,13 +222,17 @@ def user_login(request):
             error_affiliation = True
         if not organization:
             error_orgname = True
+        if not mail:
+            error_mail = True
         if error_username:
-            error = "Your idP should release the HTTP_EPPN attribute towards this service\n"
+            error = "Your idP should release the HTTP_EPPN attribute towards this service<br>"
         if error_orgname:
-            error = error + "Your idP should release the HTTP_SHIB_HOMEORGANIZATION attribute towards this service\n"
+            error = error + "Your idP should release the HTTP_SHIB_HOMEORGANIZATION attribute towards this service<br>"
         if error_affiliation:
-            error = error + "Your idP should release an appropriate HTTP_SHIB_EP_ENTITLEMENT attribute towards this service"
-        if error_username or error_orgname or error_affiliation:
+            error = error + "Your idP should release an appropriate HTTP_SHIB_EP_ENTITLEMENT attribute towards this service<br>"
+        if error_mail:
+            error = error + "Your idP should release the HTTP_SHIB_INETORGPERSON_MAIL attribute towards this service"
+        if error_username or error_orgname or error_affiliation or error_mail:
             return render_to_response('error.html', {'error': error,},
                                   context_instance=RequestContext(request))
         user = authenticate(username=username, firstname=firstname, lastname=lastname, mail=mail, organization=organization, affiliation=affiliation)

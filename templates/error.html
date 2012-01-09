@@ -8,7 +8,27 @@
 <link rel="stylesheet" type="text/css" href="/static/css/base.css">
 <link rel="stylesheet" type="text/css" href="/static/css/smoothness/jquery-ui-1.8.13.custom.css">
 <script type="text/javascript" src="/static/js/jquery-ui-1.8.12.custom.min.js"></script>
+<script type="text/javascript" src="/static/js/jquery.tooltip.min.js"></script>
 
+<script type="text/javascript">
+$(document).ready(function(){
+	$(".relogin").tooltip({ position: "bottom center", opacity: 0.7});
+	});
+</script>
+<style type="text/css">
+
+    .tooltip {
+        display: none;
+        background: transparent url(/static/black_arrow_updown.png);
+        font-size: 12px;
+        height: 70px;
+        width: 160px;
+        padding: 25px;
+		padding-top: 30px;
+        color: #fff;
+    }
+
+</style>
 </head>
 
 
@@ -27,8 +47,9 @@
 						{% if user.is_authenticated %}
 						<span class="topmenuuser">{% trans "Welcome" %} <strong>{{user}}</strong></span>
 						{% endif %}
+						{% comment %}
 						<span {% if user.is_authenticated %}class="topmenuaction"{% else %}class="topmenuuser"{% endif %} >
-							<form action="{% url django.views.i18n.set_language %}" method="post" style="display:inline;" id="langform">
+								<form action="{% url django.views.i18n.set_language %}" method="post" style="display:inline;" id="langform">
 								{% csrf_token %}
 								<input name="next" type="hidden" value="{{ next }}" />
 								<input id="langsel" name="language" type="hidden" value="" />
@@ -36,6 +57,7 @@
 								{% endfor %}
 							</form>
 						</span>
+						{% endcomment %}
 						{% if user.is_authenticated %}
 						<span class="topmenuaction"><a href="{% url user-profile %}">{% trans "My profile" %}</a></span>
 {% if user.is_superuser %}
@@ -43,7 +65,7 @@
 {% endif %}
 						<span class="topmenuaction"><a href="{% url logout %}">{% trans "Logout" %}</a></span>
 						{% else %}
-						<span class="topmenuaction"><a href="{% url login %}">{% trans "Login" %}</a></span>
+						<span class="topmenuaction relogin" title="After clicking Retry Login, it is strongly suggested to close your browser and visit the page again"><a href="{% url logout %}">{% trans "Retry Login" %}</a></span>
 						{% endif %}
 					</div>
 					
@@ -57,16 +79,25 @@
 				
 				{% endblock %}
 				{% block content %}
-				A required shibboleth attribute was not released towards this service<br>
-				{% if error %}Details: {{error}}<br>{% endif %}
+				{% if error %}<h2>Error</h2>{% endif %}
+				<div>
+				<p>One or more required shibboleth attributes were not released towards this service</p>
+				<p style="color: red;">{% autoescape off %}{{error}}{% endautoescape %}</p>
+				<p>
 				Required shibboleth attributes:<br>
-				<strong>HTTP_EPPN</strong><br>
-				<strong>HTTP_SHIB_HOMEORGANIZATION</strong>
-				<br><br>
-				Optional Attributes:<br>
-				<strong>HTTP_SHIB_INETORGPERSON_GIVENNAME</strong><br>
-				<strong>HTTP_SHIB_PERSON_SURNAME</strong><br>
-				<strong>HTTP_SHIB_INETORGPERSON_MAIL</strong><br>
+				<ul>
+				<li>HTTP_EPPN</li>
+				<li>HTTP_SHIB_HOMEORGANIZATION</li>
+				<li>HTTP_SHIB_INETORGPERSON_MAIL</li>
+				<li>An appropriate HTTP_SHIB_EP_ENTITLEMENT</li>
+				</ul>
+				Optional Attributes:
+				<ul>
+				<li>HTTP_SHIB_INETORGPERSON_GIVENNAME</li>
+				<li>HTTP_SHIB_PERSON_SURNAME</li>
+				</ul>
+				</p>
+				</div>
 
 				{% endblock %}
 

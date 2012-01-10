@@ -14,6 +14,8 @@
 	<strong>Admin Networks:</strong> <br>
 	{% for network in peer.networks.all %}
 	{{network}}<br>
+	{% empty %}
+    <span style="color:red">Ooops! Seems you have no networks associated with your peer. Contact Helpdesk to resolve this issue.</span>
 	{% endfor %}
 
 </div>

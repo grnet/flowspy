@@ -31,7 +31,7 @@ from flowspy.utils.decorators import shib_required
 
 from django.views.decorators.cache import never_cache
 from django.conf import settings
-from django.core.mail import mail_admins, mail_managers, send_mail
+from django.core.mail.message import EmailMessage
 import datetime
 import os
 
@@ -98,9 +98,11 @@ def add_route(request):
             requesters_address = request.META['HTTP_X_FORWARDED_FOR']
             mail_body = render_to_string("rule_add_mail.txt",
                                              {"route": route, "address": requesters_address})
-            send_mail(settings.EMAIL_SUBJECT_PREFIX + "Rule %s creation request submitted by %s" %(route.name, route.applier.username),
-                              mail_body, settings.SERVER_EMAIL,
-                              get_peer_techc_mails(route.applier), fail_silently=True)
+            user_mail = "%s" %route.applier.email
+            user_mail = user_mail.split(';')
+            send_new_mail(settings.EMAIL_SUBJECT_PREFIX + "Rule %s creation request submitted by %s" %(route.name, route.applier.username),
+                              mail_body, settings.SERVER_EMAIL, user_mail,
+                              get_peer_techc_mails(route.applier))
             d = { 'clientip' : "%s"%requesters_address, 'user' : route.applier.username }
             logger.info(mail_body, extra=d)
             return HttpResponseRedirect(reverse("group-routes"))
@@ -147,9 +149,11 @@ def edit_route(request, route_slug):
             requesters_address = request.META['HTTP_X_FORWARDED_FOR']
             mail_body = render_to_string("rule_edit_mail.txt",
                                              {"route": route, "address": requesters_address})
-            send_mail(settings.EMAIL_SUBJECT_PREFIX + "Rule %s edit request submitted by %s" %(route.name, route.applier.username),
-                              mail_body, settings.SERVER_EMAIL,
-                              get_peer_techc_mails(route.applier), fail_silently=True)
+            user_mail = "%s" %route.applier.email
+            user_mail = user_mail.split(';')
+            send_new_mail(settings.EMAIL_SUBJECT_PREFIX + "Rule %s edit request submitted by %s" %(route.name, route.applier.username),
+                              mail_body, settings.SERVER_EMAIL, user_mail,
+                              get_peer_techc_mails(route.applier))
             d = { 'clientip' : requesters_address, 'user' : route.applier.username }
             logger.info(mail_body, extra=d)
             return HttpResponseRedirect(reverse("group-routes"))
@@ -180,9 +184,11 @@ def delete_route(request, route_slug):
             requesters_address = request.META['HTTP_X_FORWARDED_FOR']
             mail_body = render_to_string("rule_delete_mail.txt",
                                              {"route": route, "address": requesters_address})
-            send_mail(settings.EMAIL_SUBJECT_PREFIX + "Rule %s removal request submitted by %s" %(route.name, route.applier.username),
-                              mail_body, settings.SERVER_EMAIL,
-                             get_peer_techc_mails(route.applier), fail_silently=True)
+            user_mail = "%s" %route.applier.email
+            user_mail = user_mail.split(';')
+            send_new_mail(settings.EMAIL_SUBJECT_PREFIX + "Rule %s removal request submitted by %s" %(route.name, route.applier.username), 
+                              mail_body, settings.SERVER_EMAIL, user_mail,
+                             get_peer_techc_mails(route.applier))
             d = { 'clientip' : requesters_address, 'user' : route.applier.username }
             logger.info(mail_body, extra=d)            
         html = "<html><body>Done</body></html>"
@@ -317,7 +323,12 @@ def get_peer_techc_mails(user):
         techmails_list = techmails.split(';')
     if settings.NOTIFY_ADMIN_MAILS:
         additional_mail = settings.NOTIFY_ADMIN_MAILS
-    mail.extend(user_mail)
+#    mail.extend(user_mail)
     mail.extend(additional_mail)
     mail.extend(techmails_list)
     return mail
+
+
+def send_new_mail(subject, message, from_email, recipient_list, bcc_list):
+    return EmailMessage(subject, message, from_email, recipient_list, bcc_list).send()
+

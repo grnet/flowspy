@@ -15,7 +15,10 @@ class shibauthBackend:
         mail = kwargs.get('mail')
         affiliation = kwargs.get('affiliation')
         organization = kwargs.get('organization')
-        user = self._auth_user(username, firstname, lastname, mail, affiliation, organization)
+        try:
+            user = self._auth_user(username, firstname, lastname, mail, affiliation, organization)
+        except:
+            return None
         if not user:
             return None
         return user

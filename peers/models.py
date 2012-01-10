@@ -23,6 +23,8 @@ class Peer(models.Model):
         return self.peer_name
     class Meta:
         db_table = u'peer'
+        ordering = ['peer_name']
+
         
     def fill_networks(self):
         network_range = []

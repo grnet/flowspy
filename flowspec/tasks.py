@@ -25,7 +25,7 @@ handler.setFormatter(formatter)
 logger.addHandler(handler)
 
 
-@task
+@task(ignore_result=True)
 def add(route, callback=None):
     applier = PR.Applier(route_object=route)
     commit, response = applier.apply()
@@ -35,10 +35,10 @@ def add(route, callback=None):
         status = "ERROR"
     route.status = status
     route.response = response
-    subtask(announce).delay("[%s] Rule add: %s - Result: %s" %(route.applier, route.name, response), route.applier)
     route.save()
+    announce("[%s] Rule add: %s - Result: %s" %(route.applier, route.name, response), route.applier)
 
-@task
+@task(ignore_result=True)
 def edit(route, callback=None):
     applier = PR.Applier(route_object=route)
     commit, response = applier.apply(operation="replace")
@@ -49,11 +49,11 @@ def edit(route, callback=None):
     route.status = status
     route.response = response
     route.save()
-    subtask(announce).delay("[%s] Rule edit: %s - Result: %s"%(route.applier, route.name, response), route.applier)
+    announce("[%s] Rule edit: %s - Result: %s"%(route.applier, route.name, response), route.applier)
 
 
 
-@task
+@task(ignore_result=True)
 def delete(route, **kwargs):
     applier = PR.Applier(route_object=route)
     commit, response = applier.apply(operation="delete")
@@ -68,7 +68,7 @@ def delete(route, **kwargs):
     route.status = status
     route.response = response
     route.save()
-    subtask(announce).delay("[%s] Suspending rule : %s%s- Result %s" %(route.applier, route.name, reason_text, response), route.applier)
+    announce("[%s] Suspending rule : %s%s- Result %s" %(route.applier, route.name, reason_text, response), route.applier)
 
 # May not work in the first place... proxy is not aware of Route models
 @task
@@ -95,11 +95,11 @@ def batch_delete(routes, **kwargs):
             route.response = response
             route.expires = datetime.date.today()
             route.save()
-            subtask(announce).delay("[%s] Rule removal: %s%s- Result %s" %(route.applier, route.name, reason_text, response), route.applier)
+            announce("[%s] Rule removal: %s%s- Result %s" %(route.applier, route.name, reason_text, response), route.applier)
     else:
         return False
 
-@task
+#@task(ignore_result=True)
 def announce(messg, user):
     messg = str(messg)
 #    username = user.username

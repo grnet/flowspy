@@ -102,7 +102,10 @@ class Msgs(object):
             except:
                 user = None
                 return False
-            cursor[user] = self.user_cursor[user]
+            try:
+                cursor[user] = self.user_cursor[user]
+            except:
+                return HttpResponse(content='', mimetype=None, status=400)
                 
             try:
                 if not isinstance(self.user_cache[user], list):

@@ -4,7 +4,7 @@ import os
 import djcelery
 djcelery.setup_loader()
 from celery.schedules import crontab
-DEBUG = True
+DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
@@ -19,8 +19,8 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': '',                      # Or path to database file if using sqlite3.
+        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'flowspec',                      # Or path to database file if using sqlite3.
         'USER': '',                      # Not used with sqlite3.
         'PASSWORD': '',                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
@@ -103,6 +103,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.cache.FetchFromCacheMiddleware',
+    'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
 )
 
 AUTHENTICATION_BACKENDS = (
@@ -112,10 +113,10 @@ AUTHENTICATION_BACKENDS = (
 
 ROOT_URLCONF = 'flowspy.urls'
 
-STATIC_URL = ''
+STATIC_URL = '/path/to/static'
 
 TEMPLATE_DIRS = (
-    '/home/leopoul/projects/flowspy/templates/',
+    '/path/to/templates/',
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
@@ -128,6 +129,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.messages',
+    'django.contrib.flatpages',
     'flowspec',
     'poller',
 #    'south',
@@ -179,12 +181,12 @@ POLL_SESSION_UPDATE = 60.0
 
 BROKER_URL = "beanstalk://localhost:11300//"
 
-SHIB_AUTH_AFFILIATION = 'urn:mace:grnet.gr:pki:user'
+SHIB_AUTH_AFFILIATION = 'urn:mace'
 SHIB_ADMIN_DOMAIN = 'grnet.gr'
 SHIB_LOGOUT_URL = 'https://netdev.grnet.gr/Shibboleth.sso/Logout'
 
-HELPDESK_MAIL = ""
-NOC_MAIL = ""
+# BCC mail addresses
+NOTIFY_ADMIN_MAILS = ["admin@admin.com"]
 
 UI_USER_THEN_ACTIONS = ['discard', 'rate-limit']
 
@@ -198,3 +200,5 @@ CELERYBEAT_SCHEDULE = {
         "args": (),
     },
 }
+
+

@@ -3,3 +3,4 @@ settings.py
 celerybeat-schedule
 *.log
 celery_var/
+urls.py

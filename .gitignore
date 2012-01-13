@@ -2,3 +2,4 @@ settings.py
 *.pyc
 celerybeat-schedule
 *.log
+celery_var/

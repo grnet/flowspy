@@ -1,0 +1,15 @@
+CONFIG = {
+    'mode': 'django',
+    'working_dir': '/home/leopoul/projects/flowspy',
+   #'python': '/usr/bin/python',
+    'args': (
+        '--bind=127.0.0.1:8081',
+        '--workers=1',
+        '--timeout=360',
+        #'--keepalive=90',
+		'--worker-class=egg:gunicorn#gevent',
+		'--log-level=debug',
+		'--log-file=/var/www/fod.log',
+        'settings.py',
+    ),
+}

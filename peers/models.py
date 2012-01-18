@@ -28,13 +28,16 @@ class Peer(models.Model):
         
     def fill_networks(self):
         network_range = []
+        networks_list = []
         peer_as = "AS%s" %self.peer_as
         network_range = whois(peer_as)
         if network_range:
             for network_item in network_range:
                 range, created = PeerRange.objects.get_or_create(network=network_item.compressed)
-                if not range.network in self.networks.all():
-                    self.networks.add(range)
+                networks_list.append(range)
+#                if not range.network in self.networks.all():
+#                    self.networks.add(range)
+            self.networks = networks_list
             self.save()
 
     def techc(self):

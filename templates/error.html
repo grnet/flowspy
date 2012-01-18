@@ -81,8 +81,11 @@ $(document).ready(function(){
 				{% block content %}
 				{% if error %}<h2>Error</h2>{% endif %}
 				<div>
+				{% if missing_attributes %}
 				<p>One or more required shibboleth attributes were not released towards this service</p>
+				{% endif %}
 				<p style="color: red;">{% autoescape off %}{{error}}{% endautoescape %}</p>
+				{% if missing_attributes %}
 				<p>
 				Required shibboleth attributes:<br>
 				<ul>
@@ -97,6 +100,7 @@ $(document).ready(function(){
 				<li>HTTP_SHIB_PERSON_SURNAME</li>
 				</ul>
 				</p>
+				{% endif %}
 				</div>
 
 				{% endblock %}

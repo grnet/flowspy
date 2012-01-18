@@ -242,7 +242,7 @@ def user_login(request):
         if error_mail:
             error = error + "Your idP should release the HTTP_SHIB_INETORGPERSON_MAIL attribute towards this service"
         if error_username or error_orgname or error_affiliation or error_mail:
-            return render_to_response('error.html', {'error': error},
+            return render_to_response('error.html', {'error': error, "missing_attributes": True},
                                   context_instance=RequestContext(request))
         try:
             user = User.objects.get(username__exact=username)

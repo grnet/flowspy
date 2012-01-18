@@ -8,7 +8,6 @@ from flowspy.accounts.models import *
 
 class shibauthBackend:
     def authenticate(self, **kwargs):
-        
         username = kwargs.get('username')
         firstname = kwargs.get('firstname')
         lastname = kwargs.get('lastname')
@@ -33,7 +32,7 @@ class shibauthBackend:
 #            if organization == settings.SHIB_ADMIN_DOMAIN:
 #                user.is_staff = True
 #                user.is_superuser = True
-            user.is_active = True
+#            user.is_active = True
             user.save()
         # The user did not exist. Create one with no privileges
         except:
@@ -46,7 +45,7 @@ class shibauthBackend:
 #            if organization == settings.SHIB_ADMIN_DOMAIN:
 #                user.is_staff = True
 #                user.is_superuser = True
-            user.is_active = True
+            user.is_active = False
             user.save()
         try:
             peer = Peer.objects.get(domain_name=organization)

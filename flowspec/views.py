@@ -8,6 +8,8 @@ from django.core import urlresolvers
 from django.core import serializers
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
+from django.contrib.sites.models import Site
+from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect, HttpResponseForbidden, HttpResponse
 from django.shortcuts import get_object_or_404, render_to_response
 from django.core.context_processors import request
@@ -25,6 +27,7 @@ from django.forms.models import model_to_dict
 
 from flowspy.flowspec.forms import * 
 from flowspy.flowspec.models import *
+from registration.models import RegistrationProfile
 
 from copy import deepcopy
 from flowspy.utils.decorators import shib_required
@@ -239,25 +242,51 @@ def user_login(request):
         if error_mail:
             error = error + "Your idP should release the HTTP_SHIB_INETORGPERSON_MAIL attribute towards this service"
         if error_username or error_orgname or error_affiliation or error_mail:
-            return render_to_response('error.html', {'error': error,},
+            return render_to_response('error.html', {'error': error},
                                   context_instance=RequestContext(request))
+        try:
+            user = User.objects.get(username__exact=username)
+            user_exists = True
+        except:
+            user_exists = False
         user = authenticate(username=username, firstname=firstname, lastname=lastname, mail=mail, organization=organization, affiliation=affiliation)
         if user is not None:
-            login(request, user)
-            return HttpResponseRedirect(reverse("group-routes"))
-                # Redirect to a success page.
-                # Return a 'disabled account' error message
+            if not user_exists:
+                user_activation_notify(user)
+            if user.is_active:
+               login(request, user)
+               return HttpResponseRedirect(reverse("group-routes"))
+            else:
+                error = "User <strong>%s</strong> is not active yet. Administrators have been notified and will soon activate this account. <br>If your problem persists contact Helpdesk" %user.username
+                return render_to_response('error.html', {'error': error, 'inactive': True},
+                                  context_instance=RequestContext(request))
         else:
             error = "Something went wrong during user authentication. Contact your administrator"
             return render_to_response('error.html', {'error': error,},
                                   context_instance=RequestContext(request))
-    except Exception as e:
+    except Exception:
         error = "Invalid login procedure"
         return render_to_response('error.html', {'error': error,},
                                   context_instance=RequestContext(request))
         # Return an 'invalid login' error message.
 #    return HttpResponseRedirect(reverse("user-routes"))
 
+def user_activation_notify(user):
+    current_site = Site.objects.get_current()
+    subject = render_to_string('registration/activation_email_subject.txt',
+                                   { 'site': current_site })
+    # Email subject *must not* contain newlines
+    subject = ''.join(subject.splitlines())
+    registration_profile = RegistrationProfile.objects.create_profile(user)
+    message = render_to_string('registration/activation_email.txt',
+                                   { 'activation_key': registration_profile.activation_key,
+                                     'expiration_days': settings.ACCOUNT_ACTIVATION_DAYS,
+                                     'site': current_site,
+                                     'user': user })
+    send_new_mail(settings.EMAIL_SUBJECT_PREFIX + subject, 
+                              message, settings.SERVER_EMAIL,
+                             get_peer_techc_mails(user), [])
+    
 @login_required
 @never_cache
 def add_rate_limit(request):

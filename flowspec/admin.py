@@ -65,7 +65,22 @@ class UserProfileInline(admin.StackedInline):
     model = UserProfile
     
 class UserProfileAdmin(UserAdmin):
+    actions = ['deactivate', 'activate']
+    list_display = ('username', 'email', 'first_name' , 'last_name', 'is_staff', 'is_active','get_userprofile_peer')
     inlines = [UserProfileInline]
+
+    def deactivate(self, request, queryset):
+        queryset = queryset.update(is_active=False)
+    deactivate.short_description = "Deactivate Selected Users"
+
+    def activate(self, request, queryset):
+        queryset = queryset.update(is_active=True)
+    activate.short_description = "Activate Selected Users"
+
+    def get_userprofile_peer(self, instance):
+        # instance is User instance
+        return instance.get_profile().peer
+    get_userprofile_peer.short_description = "User Peer"
 #    fields = ('name', 'applier', 'expires')
 
     #def formfield_for_dbfield(self, db_field, **kwargs):

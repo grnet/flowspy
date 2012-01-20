@@ -41,7 +41,7 @@ class RouteForm(forms.ModelForm):
                         mail_body = "User %s %s (%s) attempted to set %s as the source address in a firewall rule" %(user.username, user.email, peer.peer_name, data)
                         send_mail(settings.EMAIL_SUBJECT_PREFIX + "Caught an attempt to set a protected IP/network as a source address",
                               mail_body, settings.SERVER_EMAIL,
-                              [settings.NOC_MAIL], fail_silently=True)
+                              settings.NOTIFY_ADMIN_MAILS, fail_silently=True)
                         raise forms.ValidationError("Not allowed")
                 if address.is_private:
                     private_error = True
@@ -71,7 +71,7 @@ class RouteForm(forms.ModelForm):
                         mail_body = "User %s %s (%s) attempted to set %s as the destination address in a firewall rule" %(user.username, user.email, peer.peer_name, data)
                         send_mail(settings.EMAIL_SUBJECT_PREFIX + "Caught an attempt to set a protected IP/network as the destination address",
                               mail_body, settings.SERVER_EMAIL,
-                              [settings.NOC_MAIL], fail_silently=True)
+                              settings.NOTIFY_ADMIN_MAILS, fail_silently=True)
                         raise forms.ValidationError("Not allowed")
                 if address.prefixlen < settings.PREFIX_LENGTH:
                     error = "Currently no prefix lengths < %s are allowed" %settings.PREFIX_LENGTH

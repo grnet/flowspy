@@ -48,6 +48,7 @@ $(document).ready(function(){
         width: 800,
         modal: true,
         autoOpen: false,
+		overlay: { opacity: 0.5, background: 'black'},
         close: function(){
             update_val = $("#hid_mid").val();
             if (update_val == 'UPDATED') {
@@ -56,7 +57,8 @@ $(document).ready(function(){
             }
         }
     });
-    
+    $('#console').parent().css('opacity', 0.9);
+	$('#console').parent().css('filter', 'alpha(opacity=90)');
     var oTable = $('#routes_table').dataTable({
         "bJQueryUI": true,
         "aoColumns": [{

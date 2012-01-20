@@ -257,7 +257,7 @@ def user_login(request):
                login(request, user)
                return HttpResponseRedirect(reverse("group-routes"))
             else:
-                error = "User <strong>%s</strong> is not active yet. Administrators have been notified and will soon activate this account. <br>If your problem persists contact Helpdesk" %user.username
+                error = "User account <strong>%s</strong> is pending activation. Administrators have been notified and will activate this account within the next days. <br>If this account has remained inactive for a long time contact your technical coordinator or GRNET Helpdesk" %user.username
                 return render_to_response('error.html', {'error': error, 'inactive': True},
                                   context_instance=RequestContext(request))
         else:

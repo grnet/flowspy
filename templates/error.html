@@ -79,12 +79,12 @@ $(document).ready(function(){
 				
 				{% endblock %}
 				{% block content %}
-				{% if error %}<h2>Error</h2>{% endif %}
+				{% if error %}{% if inactive %}<h2>Activation Pending</h2>{% else %}<h2>Error</h2>{% endif %}{% endif %}
 				<div>
 				{% if missing_attributes %}
 				<p>One or more required shibboleth attributes were not released towards this service</p>
 				{% endif %}
-				<p style="color: red;">{% autoescape off %}{{error}}{% endautoescape %}</p>
+				<p {% if not inactive %}style="color: red;"{% endif %}>{% autoescape off %}{{error}}{% endautoescape %}</p>
 				{% if missing_attributes %}
 				<p>
 				Required shibboleth attributes:<br>

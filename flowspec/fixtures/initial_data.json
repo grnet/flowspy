@@ -1,0 +1,34 @@
+[
+    {
+        "pk": 3, 
+        "model": "flowspec.thenaction", 
+        "fields": {
+            "action": "discard", 
+            "action_value": ""
+        }
+    }, 
+    {
+        "pk": 27, 
+        "model": "flowspec.thenaction", 
+        "fields": {
+            "action": "rate-limit", 
+            "action_value": "10000k"
+        }
+    }, 
+    {
+        "pk": 4, 
+        "model": "flowspec.thenaction", 
+        "fields": {
+            "action": "rate-limit", 
+            "action_value": "1000k"
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "flowspec.thenaction", 
+        "fields": {
+            "action": "rate-limit", 
+            "action_value": "100k"
+        }
+    }
+]

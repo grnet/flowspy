@@ -5,7 +5,6 @@ from utils import proxy as PR
 from flowspec.tasks import *
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
-from flowspy.accounts.models import UserProfile
 from flowspy.peers.models import *
 from flowspy.flowspec.forms import *
 import datetime
@@ -76,7 +75,6 @@ class UserProfileAdmin(UserAdmin):
 admin.site.unregister(User)
 admin.site.register(MatchPort)
 admin.site.register(MatchDscp)
-admin.site.register(UserProfile)
 admin.site.register(ThenAction)
 admin.site.register(Route, RouteAdmin)
 admin.site.register(User, UserProfileAdmin)

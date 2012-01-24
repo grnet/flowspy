@@ -9,6 +9,7 @@ class PeerRange(models.Model):
         return self.network
     class Meta:
         db_table = u'peer_range'
+        ordering = ['network']
 
 # Create your models here.
 class Peer(models.Model):

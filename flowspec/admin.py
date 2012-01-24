@@ -10,21 +10,6 @@ from flowspy.peers.models import *
 from flowspy.flowspec.forms import *
 import datetime
 from django.conf import settings
-from django.forms import ModelForm
-from django.contrib.admin.widgets import FilteredSelectMultiple
-
-class PeerAdminForm(ModelForm):
-    networks=forms.ModelMultipleChoiceField(PeerRange.objects.all(),widget=
-            FilteredSelectMultiple("PeerRange",True), required=False)
-
-    class Meta:
-        model= Peer
-
-class PeerAdmin(admin.ModelAdmin):
-    form = PeerAdminForm
-
-class PeerTechcAdmin(admin.ModelAdmin):
-    list_display = ('get_peer_name', 'emails')
 
 class RouteAdmin(admin.ModelAdmin):
     form = RouteForm
@@ -66,7 +51,7 @@ class UserProfileInline(admin.StackedInline):
     
 class UserProfileAdmin(UserAdmin):
     actions = ['deactivate', 'activate']
-    list_display = ('username', 'email', 'first_name' , 'last_name', 'is_staff', 'is_active','get_userprofile_peer')
+    list_display = ('username', 'email', 'first_name' , 'last_name', 'is_staff', 'is_active', 'is_superuser', 'get_userprofile_peer')
     inlines = [UserProfileInline]
 
     def deactivate(self, request, queryset):
@@ -88,22 +73,11 @@ class UserProfileAdmin(UserAdmin):
     #        kwargs['widget'] = PasswordInput
     #    return db_field.formfield(**kwargs)
 
-#admin.site.register(MatchAddress)
 admin.site.unregister(User)
 admin.site.register(MatchPort)
 admin.site.register(MatchDscp)
 admin.site.register(UserProfile)
-#admin.site.register(MatchFragmentType)
-#admin.site.register(MatchIcmpCode)
-#admin.site.register(MatchIcmpType)
-#admin.site.register(MatchPacketLength)
-#admin.site.register(MatchProtocol)
-#admin.site.register(MatchTcpFlag)
 admin.site.register(ThenAction)
-#admin.site.register(ThenStatement)
-#admin.site.register(MatchStatement)
-admin.site.register(Peer, PeerAdmin)
-admin.site.register(PeerTechc, PeerTechcAdmin)
 admin.site.register(Route, RouteAdmin)
 admin.site.register(User, UserProfileAdmin)
 admin.site.disable_action('delete_selected')

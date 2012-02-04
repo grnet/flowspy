@@ -184,6 +184,7 @@ def delete_route(request, route_slug):
         if applier_peer == requester_peer:
             route.status = "PENDING"
             route.expires = datetime.date.today()
+            route.applier = request.user
             route.save()
             route.commit_delete()
             requesters_address = request.META['HTTP_X_FORWARDED_FOR']

@@ -4,7 +4,7 @@ from celery.task.sets import subtask
 import logging
 import json
 from celery.task.http import *
-from flowspy.utils import beanstalkc
+import beanstalkc
 from django.conf import settings
 import datetime
 

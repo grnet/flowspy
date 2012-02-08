@@ -16,7 +16,7 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 
 
-from flowspy.utils import beanstalkc
+import beanstalkc
 
 import logging
 

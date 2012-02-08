@@ -11,7 +11,7 @@ import logging
 from flowspec.tasks import *
 from time import sleep
 
-from flowspy.utils import beanstalkc
+import beanstalkc
 from flowspy.utils.randomizer import id_generator as id_gen
 
 

@@ -1,4 +1,5 @@
 from django.conf.urls.defaults import *
+from django.views.generic.simple import direct_to_template
 from django.conf import settings
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -24,8 +25,15 @@ urlpatterns = patterns('',
     (r'^fod/admin/doc/', include('django.contrib.admindocs.urls')),
     url(r'^fod/load_js/(?P<file>[\w\s\d_-]+)/$', 'flowspy.flowspec.views.load_jscript', name="load-js"), 
 
+    url(r'^fod/accounts/activate/(?P<activation_key>\w+)/$', 'accounts.views.activate', name='activate_account'),
+    url(r'^fod/activate/complete/$',
+                           direct_to_template,
+                           { 'template': 'registration/activation_complete.html' },
+                           name='registration_activation_complete'),
+
     # Uncomment the next line to enable the admin:
     (r'^fod/admin/', include(admin.site.urls)),
+
 )
 
 

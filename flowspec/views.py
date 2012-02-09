@@ -15,7 +15,6 @@ from django.shortcuts import get_object_or_404, render_to_response
 from django.core.context_processors import request
 from django.template.context import RequestContext
 from django.template.loader import get_template, render_to_string
-from django.utils import simplejson
 from django.core.urlresolvers import reverse
 from django.contrib import messages
 from flowspy.accounts.models import *
@@ -313,7 +312,7 @@ def add_rate_limit(request):
             response_data = {}
             response_data['pk'] = "%s" %then.pk
             response_data['value'] = "%s:%s" %(then.action, then.action_value)
-            return HttpResponse(simplejson.dumps(response_data), mimetype='application/json')
+            return HttpResponse(json.dumps(response_data), mimetype='application/json')
         else:
             return render_to_response('add_rate_limit.html', {'form': form,},
                                       context_instance=RequestContext(request))
@@ -333,7 +332,7 @@ def add_port(request):
             response_data = {}
             response_data['value'] = "%s" %port.pk
             response_data['text'] = "%s" %port.port
-            return HttpResponse(simplejson.dumps(response_data), mimetype='application/json')
+            return HttpResponse(json.dumps(response_data), mimetype='application/json')
         else:
             return render_to_response('add_port.html', {'form': form,},
                                       context_instance=RequestContext(request))

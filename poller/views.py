@@ -4,7 +4,6 @@ from gevent.pool import Pool
 import json
 
 import uuid
-import simplejson
 import datetime
 from django.shortcuts import render_to_response
 from django.template.loader import render_to_string
@@ -34,7 +33,7 @@ def create_message(body, user):
 
 def json_response(value, **kwargs):
     kwargs.setdefault('content_type', 'text/javascript; charset=UTF-8')
-    return HttpResponse(simplejson.dumps(value), **kwargs)
+    return HttpResponse(json.dumps(value), **kwargs)
 
 class Msgs(object):
     cache_size = 500

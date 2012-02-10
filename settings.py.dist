@@ -184,7 +184,7 @@ BROKER_URL = "beanstalk://localhost:11300//"
 
 SHIB_AUTH_ENTITLEMENT = 'urn:mace'
 SHIB_ADMIN_DOMAIN = 'grnet.gr'
-SHIB_LOGOUT_URL = 'https://netdev.grnet.gr/Shibboleth.sso/Logout'
+SHIB_LOGOUT_URL = 'https://example.com/Shibboleth.sso/Logout'
 
 # BCC mail addresses
 NOTIFY_ADMIN_MAILS = ["admin@admin.com"]

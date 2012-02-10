@@ -201,6 +201,8 @@ CELERYBEAT_SCHEDULE = {
         "args": (),
     },
 }
-
+# whois
+PRIMARY_WHOIS = 'whois.grnet.gr'
+ALTERNATE_WHOIS = 'whois.ripe.net'
 
 ACCOUNT_ACTIVATION_DAYS = 7

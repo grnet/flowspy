@@ -1,9 +1,7 @@
 import socket
 from ipaddr import *
 import re
-
-RIPEWHOIS = 'whois.ripe.net'
-GRNETWHOIS = 'whois.grnet.gr'
+import settings
 
 def query(query, hostname, flags):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -38,7 +36,7 @@ def query(query, hostname, flags):
     return final_routes
 
 def whois(queryas):
-    routes = query(queryas,GRNETWHOIS, None)
+    routes = query(queryas,settings.PRIMARY_WHOIS, None)
     if not routes:
-        routes = query(queryas,RIPEWHOIS, None)
+        routes = query(queryas,settings.ALTERNATE_WHOIS, None)
     return routes

@@ -355,9 +355,10 @@ def get_peer_techc_mails(user):
     techmails_list = []
     user_mail = "%s" %user.email
     user_mail = user_mail.split(';')
-    techmails = user.get_profile().peer.techc()
+    techmails = user.get_profile().peer.techc_emails.all()
     if techmails:
-        techmails_list = techmails.split(';')
+        for techmail in techmails:
+            techmails_list.append(techmail.email)
     if settings.NOTIFY_ADMIN_MAILS:
         additional_mail = settings.NOTIFY_ADMIN_MAILS
 #    mail.extend(user_mail)

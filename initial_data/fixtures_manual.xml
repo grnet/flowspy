@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <django-objects version="1.0">
     <object pk="1" model="sites.site">
-        <field type="CharField" name="domain">netdev.grnet.gr</field>
-        <field type="CharField" name="name">netdev.grnet.gr</field>
+        <field type="CharField" name="domain">example.com</field>
+        <field type="CharField" name="name">example.com</field>
     </object>
     <object pk="2" model="flatpages.flatpage">
         <field type="CharField" name="url">/fod/about/info/</field>

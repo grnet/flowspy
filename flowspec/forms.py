@@ -123,7 +123,7 @@ class RouteForm(forms.ModelForm):
         if destinationports and not destination:
             raise forms.ValidationError('Once destination port is matched, destination has to be filled as well. Either deselect destination port or fill destination address')
         if not (source or sourceports or ports or destination or destinationports):
-            raise forms.ValidationError('Fill at least a Route Match Condition')
+            raise forms.ValidationError('Fill at least a Rule Match Condition')
         if not user.is_superuser and then[0].action not in settings.UI_USER_THEN_ACTIONS:
             raise forms.ValidationError('This action "%s" is not permitted' %(then[0].action))
         existing_routes = Route.objects.exclude(status='EXPIRED').exclude(status='PENDING').exclude(status='ERROR').exclude(status='ADMININACTIVE')

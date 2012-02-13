@@ -1,7 +1,8 @@
+{% load tofqdn %}
 A new rule creation job has spawned
 
 Peer: {{route.applier.get_profile.peer.peer_name}}
-User {{route.applier.username}} requested the application of the following rule from address {{address}} :
+User {{route.applier.username}} requested the application of the following rule from address {{address}} {% if address|tofqdn %}({{address|tofqdn}}){% endif %}:
 
 Match
 * Dst Addr:{{route.destination}}

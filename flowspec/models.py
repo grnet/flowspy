@@ -81,7 +81,7 @@ class ThenAction(models.Model):
 class Route(models.Model):
     name = models.SlugField(max_length=128)
     applier = models.ForeignKey(User, blank=True, null=True)
-    source = models.CharField(max_length=32, blank=True, null=True, help_text=u"Network address. Use address/CIDR notation", verbose_name="Source Address")
+    source = models.CharField(max_length=32, help_text=u"Network address. Use address/CIDR notation", verbose_name="Source Address")
     sourceport = models.ManyToManyField(MatchPort, blank=True, null=True, related_name="matchSourcePort", verbose_name="Source Port")
     destination = models.CharField(max_length=32, help_text=u"Network address. Use address/CIDR notation", verbose_name="Destination Address")
     destinationport = models.ManyToManyField(MatchPort, blank=True, null=True, related_name="matchDestinationPort", verbose_name="Destination Port")

@@ -238,7 +238,7 @@ form.update textarea {
 }
 
 textarea#id_comments {
-	width: 80%;
+	/*width: 80%;*/
 }
 
 .hidden {

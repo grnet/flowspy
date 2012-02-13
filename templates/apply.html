@@ -155,197 +155,252 @@ th {
 	font-style: italic;
 
 }
+div.roundbox, #portsacc, #id_comments{
+    background-color: #F4F4F4;
+    border: 1px solid #FFFFFF;
+    border-radius: 5px 5px 5px 5px;
+    box-shadow: 0 0 3px #AAAAAA;
+    clear: both;
+    float: left;
+    margin: 5px 0 5px 80px;
+    padding: 10px;
+    width: 620px;
+}
+#rule_form_wrapper{
+    margin: 15px auto;
+    position: relative;
+    text-align: center;
+    width: 800px;
+}
+
+#rule_form_container input:not([type="submit"]), #rule_form_container select {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border: 1px solid #DDDDDD;
+    border-radius: 3px 3px 3px 3px;
+    float: left;
+    font-family: "Century Gothic",Helvetica,sans-serif;
+    font-size: 13px;
+    outline: medium none;
+    padding: 5px;
+    width: 180px;
+}
+
+#id_comments {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border: 1px solid #DDDDDD;
+    border-radius: 3px 3px 3px 3px;
+    float: left;
+    font-family: "Century Gothic",Helvetica,sans-serif;
+    font-size: 13px;
+    outline: medium none;
+    padding: 5px;
+   	width: 622px;
+}
+
+#rule_form_container{
+    background-color: #F9F9F9;
+    border: 2px solid #FFFFFF;
+    border-radius: 10px 10px 10px 10px;
+    box-shadow: 0 0 3px #AAAAAA;
+    overflow: hidden;
+    width: 800px;
+	}
+#rule_form_container div label {
+    color: #666666;
+    float: left;
+    font-family: "Century Gothic",Helvetica,sans-serif;
+    font-size: 15px;
+    font-weight: bold;
+    line-height: 26px;
+    margin-right: 15px;
+    text-align: right;
+    text-shadow: 1px 1px 1px #FFFFFF;
+    width: 180px;
+}
+#rule_form_container p.submit {
+    background: none repeat scroll 0 0 transparent;
+    border: medium none;
+    box-shadow: none;
+}
+
 </style>
-<div align="center">
+<div align="center" id="rule_form_wrapper">
     {% if edit %}<h3>{% trans "Edit rule" %}: {{form.data.name}}</h3>
     {% else %}<h3>{% trans "Apply for a new rule" %}</h3>
     {% endif %}
     <form method="POST">
-        {% csrf_token %}
-        {% load unescape %}
-        {% if form.non_field_errors %}
-        <p class="error">
-            {{ form.non_field_errors|unescape}}
-        </p>
-        {% endif %}
-        <fieldset {%  if edit %}  style="display:none;" {%  endif %}>
-            <legend>
-                {% trans "Rule Basic Info" %}
-            </legend>
-            <table>
-                <tr>
-                    <th>
-                        {{ form.name.label_tag }}
-                    </th>
-                    <td>
-                        {{ form.name }}<span class="error">{{ form.name.errors|join:", " }}</span>
-                    </td>
-                </tr>
-                <tr class="help">
-                    <td>
-                    </td>
-                    <td>
+        <div id="rule_form_container">
+            {% csrf_token %}
+            {% load unescape %}
+            {% if form.non_field_errors %}
+            <p class="error">
+                {{ form.non_field_errors|unescape}}
+            </p>
+            {% endif %}
+            <fieldset {%  if edit %}  style="display:none;" {%  endif %}>
+                <legend>
+                    {% trans "Rule Basic Info" %}
+                </legend>
+                <div class="roundbox">
+                    {{ form.name.label_tag }}{{ form.name }}
+                    <br>
+                    {% if form.name.errors %}
+                    <br>
+                    <p class="error" style="clear:both;">
+                        {{ form.name.errors|join:", " }}
+                    </p>
+                    {% endif %}
+                    <br>
+                    <p style="clear:both;">
                         A unique identifier will be added as a name_suffix
-                    </td>
-                </tr>
-            </table>
-        </fieldset>
-        <fieldset>
-            <legend>
-                {% trans "Rule Match Conditions" %}
-            </legend>
-            <table>
+                    </p>
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend>
+                    {% trans "Rule Match Conditions" %}
+                </legend>
                 <input type="hidden" id="id_applier" name="applier" value="{{applier}}"/>
-                <tr>
-                    <th>
-                        {{ form.source.label_tag }}
-                    </th>
-                    <td>
-                        {{ form.source }}<span class="error">{{ form.source.errors|join:", " }}</span>
-                    </td>
-                </tr>
-                <tr class="help">
-                    <td>
-                    </td>
-                    <td>
+                <div class="roundbox">
+                    {{ form.source.label_tag }}{{ form.source }}<img src="/static/threat_source.png"/> {% if form.source.errors %}
+                    <br>
+                    <p class="error" style="clear:both;">
+                        {{ form.source.errors|join:", " }}
+                    </p>
+                    {% endif %}
+                    <br>
+                    <p style="clear:both;">
                         {{ form.source.help_text }}
-                    </td>
-                </tr>
-                <tr>
-                    <th>
-                        {{ form.destination.label_tag }}
-                    </th>
-                    <td>
-                        {{ form.destination }}<span class="error">{{ form.destination.errors|join:", " }}</span>
-                    </td>
-                </tr>
-                <tr class="help">
-                    <td>
-                    </td>
-                    <td>
+                    </p>
+                </div>
+                <div class="roundbox">
+                    {{ form.destination.label_tag }}{{ form.destination }}<img src="/static/secure_destination.png"/> {% if form.destination.errors %}
+                    <br>
+                    <p class="error" style="clear:both;">
+                        {{ form.destination.errors|join:", " }}
+                    </p>
+                    {% endif %}
+                    <br>
+                    <p style="clear:both;">
                         {{ form.destination.help_text }}
-                    </td>
-                </tr>
-            </table>
-            <div id='portsacc' style="width: 500px;">
-            <h3 style="padding: 0.5em 0.5em 0.5em 0.7em;">Advanced Settings (Ports)</h3>
-            <div class='accord_wrapper' style="height: 452px !important;">
-                Select source/destination port(s), or select common port(s) for both source/destination
-                <table>
-                <tr>
-                    <th>
-                        {{ form.sourceport.label_tag }}
-                    </th>
-                    <td>
-                        {{ form.sourceport }}&nbsp;&nbsp;
-                        <button class="new_port">
-                            Port
-                        </button>
-                        <span class="error">{{ form.sourceport.errors|join:", " }}</span>
-                    </td>
-                </tr>
-                <tr class="help">
-                    <td>
-                    </td>
-                    <td>
-                        {{ form.sourceport.help_text }}
-                    </td>
-                </tr>
-                <tr>
-                    <th>
-                        {{ form.destinationport.label_tag }}
-                    </th>
-                    <td>
-                        {{ form.destinationport }}&nbsp;&nbsp;
-                        <button class="new_port">
-                            Port
-                        </button>
-                        <span class="error">{{ form.destinationport.errors|join:", " }}</span>
-                    </td>
-                </tr>
-                <tr class="help">
-                    <td>
-                    </td>
-                    <td>
-                        {{ form.destinationport.help_text }}
-                    </td>
-                </tr>
-                <tr>
-                    <th>
-                        {{ form.port.label_tag }}
-                    </th>
-                    <td>
-                        {{ form.port }}&nbsp;&nbsp;
-                        <button class="new_port">
-                            Port
-                        </button>
-                        <span class="error">{{ form.port.errors|join:", " }}</span>
-                    </td>
-                </tr>
-                <tr class="help">
-                    <td>
-                    </td>
-                    <td>
-                        {{ form.port.help_text }}
-                    </td>
-                </tr>
+                    </p>
+                </div>
+                <div id='portsacc'>
+                <h3 style="padding: 0.5em 0.5em 0.5em 0.7em;">Advanced Settings (Ports)</h3>
+                <div class='accord_wrapper' style="height: 452px !important;">
+                    Select source/destination port(s), or select common port(s) for both source/destination
+                    <table>
+                    <tr>
+                        <th>
+                            {{ form.sourceport.label_tag }}
+                        </th>
+                        <td>
+                            {{ form.sourceport }}&nbsp;&nbsp;
+                            <button class="new_port">
+                                Port
+                            </button>
+                            <span class="error">{{ form.sourceport.errors|join:", " }}</span>
+                        </td>
+                    </tr>
+                    <tr class="help">
+                        <td>
+                        </td>
+                        <td>
+                            {{ form.sourceport.help_text }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            {{ form.destinationport.label_tag }}
+                        </th>
+                        <td>
+                            {{ form.destinationport }}&nbsp;&nbsp;
+                            <button class="new_port">
+                                Port
+                            </button>
+                            <span class="error">{{ form.destinationport.errors|join:", " }}</span>
+                        </td>
+                    </tr>
+                    <tr class="help">
+                        <td>
+                        </td>
+                        <td>
+                            {{ form.destinationport.help_text }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            {{ form.port.label_tag }}
+                        </th>
+                        <td>
+                            {{ form.port }}&nbsp;&nbsp;
+                            <button class="new_port">
+                                Port
+                            </button>
+                            <span class="error">{{ form.port.errors|join:", " }}</span>
+                        </td>
+                    </tr>
+                    <tr class="help">
+                        <td>
+                        </td>
+                        <td>
+                            {{ form.port.help_text }}
+                        </td>
+                    </tr>
+                </div>
+                </table>
             </div>
-            </table>
+            </fieldset>
+            <fieldset>
+                <legend>
+                    {% trans "Rule Actions" %}
+                </legend>
+                <div class="roundbox">
+                    {{ form.then.label_tag }}{{ form.then }}{% comment %}&nbsp;&nbsp;
+                    <button id="new_then_actions">
+                        Rate-limit
+                    </button>{% endcomment %}
+                    {% if form.then.errors %}
+                    <p class="error">
+                        {{ form.then.errors|join:", " }}
+                    </p>
+                    {% endif %}
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend>
+                    {% trans "Expiration" %}
+                </legend>
+                <div class="roundbox">
+                    {{ form.expires.label_tag }}{{ form.expires }}
+                    {% if form.expires.errors %}
+                    <br>
+                    <p class="error">
+                        {{ form.expires.errors|join:", " }}
+                    </p>
+                    {% endif %}
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend>
+                    {% trans "Use/Comments" %}
+                </legend>
+                {% blocktrans %}
+                <p class="roundbox">
+                    Give a short description of the intended use of this rule, that justifies the parameter selection above. Feel free to include any additional comments.
+                </p>
+                {% endblocktrans %}
+                <p>
+                    {{ form.comments }}
+                    {% if form.errors %}
+                    <br/>
+                    <span class="error">{{ form.comments.errors|join:", " }}</span>{% endif %}
+                </p>
+            </fieldset>
+            <p>
+                <input type="submit" id="applybutton" value="{% trans "Apply" %}" />
+            </p>
         </div>
-        </fieldset>
-        <fieldset>
-            <legend>
-                {% trans "Rule Actions" %}
-            </legend>
-            <table>
-                <tr>
-                    <th>
-                        {{ form.then.label_tag }}
-                    </th>
-                    <td>
-                        {{ form.then }}{% comment %}&nbsp;&nbsp;
-                        <button id="new_then_actions">
-                            Rate-limit
-                        </button>{% endcomment %}
-                        <span class="error">{{ form.then.errors|join:", " }}</span>
-                    </td>
-                </tr>
-            </table>
-        </fieldset>
-        <fieldset>
-            <legend>
-                {% trans "Expiration" %}
-            </legend>
-            <table>
-                <tr>
-                    <th>
-                        {{ form.expires.label_tag }}
-                    </th>
-                    <td>
-                        {{ form.expires }}<span class="error">{{ form.expires.errors|join:", " }}</span>
-                    </td>
-                </tr>
-            </table>
-        </fieldset>
-        <fieldset>
-            <legend>
-                {% trans "Use/Comments" %}
-            </legend>
-            {% blocktrans %}
-            <p>
-                Give a short description of the intended use of this rule, that justifies the parameter selection above. Feel free to include any additional comments.
-            </p>
-            {% endblocktrans %}
-            <p>
-                {{ form.comments }}
-                {% if form.errors %}
-                <br/>
-                <span class="error">{{ form.comments.errors|join:", " }}</span>{% endif %}
-            </p>
-        </fieldset>
-        <p>
-            <input type="submit" id="applybutton" value="{% trans "Apply" %}" />
-        </p>
     </form>
 </div>
 <div id="then_diag" title="Add new rate-limit value">

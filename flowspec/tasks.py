@@ -7,7 +7,12 @@ from celery.task.http import *
 import beanstalkc
 from django.conf import settings
 import datetime
-
+from flowspy.flowspec.models import *
+from django.core.mail import send_mail
+from flowspy.flowspec.models import *
+from django.template.loader import render_to_string
+from django.contrib.sites.models import Site
+from django.core.urlresolvers import reverse
 import os
 
 
@@ -132,6 +137,37 @@ def check_sync(route_name=None, selected_routes = []):
             if route.status != 'EXPIRED':
                 route.check_sync()
 
+@task(ignore_result=True)
+def notify_expired():
+    logger.info('Initializing expiration notification')
+    routes = Route.objects.all()
+    for route in routes:
+        if route.status not in ['EXPIRED', 'ADMININACTIVE', 'INACTIVE', 'ERROR']:
+            expiration_days = (route.expires - datetime.date.today()).days
+            if expiration_days < settings.EXPIRATION_NOTIFY_DAYS:
+                try:
+                    fqdn = Site.objects.get_current().domain
+                    admin_url = "https://%s%s" % \
+                    (fqdn,
+                     "/fod/edit/%s"%route.name)
+                    mail_body = render_to_string("rule_expiration.txt",
+                                             {"route": route, 'expiration_days':expiration_days, 'url':admin_url})
+                    days_num = ' days'
+                    expiration_days_text = "%s %s" %('in',expiration_days)
+                    if expiration_days == 0:
+                        days_num = ' today'
+                        expiration_days_text = ''
+                    if expiration_days == 1:
+                        days_num = ' day'
+                    logger.info('Route %s expires %s%s. Notifying %s (%s)' %(route.name, expiration_days_text, days_num, route.applier.username, route.applier.email))
+                    send_mail(settings.EMAIL_SUBJECT_PREFIX + "Rule %s expires %s%s" %
+                              (route.name,expiration_days_text, days_num),
+                              mail_body, settings.SERVER_EMAIL,
+                              [route.applier.email])
+                except Exception as e:
+                    logger.info("Exception: %s"%e)
+                    pass
+    logger.info('Expiration notification process finished')
 
 #def delete(route):
 #    

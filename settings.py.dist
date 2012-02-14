@@ -193,11 +193,15 @@ UI_USER_THEN_ACTIONS = ['discard', 'rate-limit']
 
 PROTECTED_SUBNETS = ['10.10.0.0/16']
 
-CELERYBEAT_SCHEDULE = {
-    # Executes every day at 01:35 AM 
+CELERYBEAT_SCHEDULE = { 
     "every-day-sync": {
         "task": "flowspec.tasks.check_sync",
         "schedule": crontab(minute=01, hour=01),
+        "args": (),
+    },
+    "notify-expired": {
+        "task": "flowspec.tasks.notify_expired",
+        "schedule": crontab(minute=01, hour=02),
         "args": (),
     },
 }

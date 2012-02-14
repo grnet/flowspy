@@ -7,11 +7,8 @@ from celery.task.http import *
 import beanstalkc
 from django.conf import settings
 import datetime
-from flowspy.flowspec.models import *
 from django.core.mail import send_mail
-from flowspy.flowspec.models import *
 from django.template.loader import render_to_string
-from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
 import os
 
@@ -139,6 +136,8 @@ def check_sync(route_name=None, selected_routes = []):
 
 @task(ignore_result=True)
 def notify_expired():
+    from flowspy.flowspec.models import *
+    from django.contrib.sites.models import Site
     logger.info('Initializing expiration notification')
     routes = Route.objects.all()
     for route in routes:

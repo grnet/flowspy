@@ -30,5 +30,27 @@
             "action": "rate-limit", 
             "action_value": "100k"
         }
+    },
+    {
+        "pk": 1,
+        "model": "flowspec.matchprotocol",
+        "fields": {
+            "protocol": "icmp"
+        }
+    },
+    {
+        "pk": 2,
+        "model": "flowspec.matchprotocol",
+        "fields": {
+            "protocol": "tcp"
+        }
+    },
+    {
+        "pk": 3,
+        "model": "flowspec.matchprotocol",
+        "fields": {
+            "protocol": "udp"
+        }
     }
+
 ]

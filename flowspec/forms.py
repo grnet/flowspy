@@ -102,6 +102,7 @@ class RouteForm(forms.ModelForm):
         then = self.cleaned_data.get('then', None)
         destination = self.cleaned_data.get('destination', None)
         destinationports = self.cleaned_data.get('destinationport', None)
+        protocols = self.cleaned_data.get('protocol', None)
         user = self.cleaned_data.get('applier', None)
         peer = user.get_profile().peer
         networks = peer.networks.all()
@@ -126,13 +127,21 @@ class RouteForm(forms.ModelForm):
             raise forms.ValidationError('Fill at least a Rule Match Condition')
         if not user.is_superuser and then[0].action not in settings.UI_USER_THEN_ACTIONS:
             raise forms.ValidationError('This action "%s" is not permitted' %(then[0].action))
-        existing_routes = Route.objects.exclude(status='EXPIRED').exclude(status='PENDING').exclude(status='ERROR').exclude(status='ADMININACTIVE')
+        existing_routes = Route.objects.exclude(status='EXPIRED').exclude(status='ERROR').exclude(status='ADMININACTIVE')
         existing_routes = existing_routes.filter(applier__userprofile__peer=peer)
         if source:
             source = IPNetwork(source).compressed
             existing_routes = existing_routes.filter(source=source)
         else:
             existing_routes = existing_routes.filter(source=None)
+        if protocols:
+            route_pk_list=get_matchingprotocol_route_pks(protocols, existing_routes)
+            if route_pk_list:
+                existing_routes = existing_routes.filter(pk__in=route_pk_list)
+            else:
+                existing_routes = existing_routes.filter(protocol=None)
+        else:
+            existing_routes = existing_routes.filter(protocol=None)
         if sourceports:
             route_pk_list=get_matchingport_route_pks(sourceports, existing_routes)
             if route_pk_list:
@@ -151,7 +160,6 @@ class RouteForm(forms.ModelForm):
                 existing_routes = existing_routes.filter(pk__in=route_pk_list)              
         else:
             existing_routes = existing_routes.filter(port=None)
-        
         for route in existing_routes:
             if name != route.name:
                 existing_url = reverse('edit-route', args=[route.name])
@@ -213,5 +221,14 @@ def get_matchingport_route_pks(portlist, routes):
     for route in routes:
         rsp = value_list_to_list(route.destinationport.all().values_list('port').order_by('port'))
         if rsp and rsp == ports_value_list:
+            route_pk_list.append(route.pk)
+    return route_pk_list
+
+def get_matchingprotocol_route_pks(protocolist, routes):
+    route_pk_list = []
+    protocols_value_list = value_list_to_list(protocolist.values_list('protocol').order_by('protocol'))
+    for route in routes:
+        rsp = value_list_to_list(route.protocol.all().values_list('protocol').order_by('protocol'))
+        if rsp and rsp == protocols_value_list:
             route_pk_list.append(route.pk)
     return route_pk_list

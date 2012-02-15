@@ -263,17 +263,6 @@ class Route(models.Model):
                         logger.info('Icmp type fields do not match')
                 except:
                     pass
-                try:
-                    assert(self.protocol)
-                    assert(devicematch['protocol'][0])
-                    if self.protocol == devicematch['protocol'][0]:
-                        found = found and True
-                        logger.info('Found a matching protocol')
-                    else:
-                        found = False
-                        logger.info('Protocol fields do not match')
-                except:
-                    pass
                 if found and self.status != "ACTIVE":
                     logger.error('Rule is applied on device but appears as offline')
                     self.status = "ACTIVE"

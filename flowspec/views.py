@@ -85,6 +85,7 @@ def add_route(request):
         form = RouteForm()
         if not request.user.is_superuser:
             form.fields['then'] = forms.ModelMultipleChoiceField(queryset=ThenAction.objects.filter(action__in=settings.UI_USER_THEN_ACTIONS).order_by('action'), required=True)
+            form.fields['protocol'] = forms.ModelMultipleChoiceField(queryset=MatchProtocol.objects.filter(protocol__in=settings.UI_USER_PROTOCOLS).order_by('protocol'), required=False)
         return render_to_response('apply.html', {'form': form, 'applier': applier},
                                   context_instance=RequestContext(request))
 
@@ -170,6 +171,7 @@ def edit_route(request, route_slug):
         form = RouteForm(dictionary)
         if not request.user.is_superuser:
             form.fields['then'] = forms.ModelMultipleChoiceField(queryset=ThenAction.objects.filter(action__in=settings.UI_USER_THEN_ACTIONS).order_by('action'), required=True)
+            form.fields['protocol'] = forms.ModelMultipleChoiceField(queryset=MatchProtocol.objects.filter(protocol__in=settings.UI_USER_PROTOCOLS).order_by('protocol'), required=False)
         return render_to_response('apply.html', {'form': form, 'edit':True, 'applier': applier},
                                   context_instance=RequestContext(request))
 

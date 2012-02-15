@@ -132,7 +132,7 @@ INSTALLED_APPS = (
     'django.contrib.flatpages',
     'flowspec',
     'poller',
-#    'south',
+    'south',
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
@@ -190,6 +190,7 @@ SHIB_LOGOUT_URL = 'https://example.com/Shibboleth.sso/Logout'
 NOTIFY_ADMIN_MAILS = ["admin@admin.com"]
 
 UI_USER_THEN_ACTIONS = ['discard', 'rate-limit']
+UI_USER_PROTOCOLS = ['icmp', 'tcp', 'udp']
 
 PROTECTED_SUBNETS = ['10.10.0.0/16']
 

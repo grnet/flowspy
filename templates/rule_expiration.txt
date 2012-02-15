@@ -3,9 +3,8 @@ Rule {{route.name}} expires {% ifequal expiration_days 0 %}today{% else%}in {{ex
 Match
 * Dst Addr:{{route.destination}}
 * Src Addr: {{route.source}}
-* Ports:{% for port in route.ports.all %}
-  {{ port }}{% if not forloop.last %}, {% endif %}
-{% endfor %}
+* Protocol:{% for protocol in route.protocol.all %}{{ protocol }}{% if not forloop.last %}, {% endif %}{% endfor %}
+* Ports:{% for port in route.ports.all %}{{ port }}{% if not forloop.last %}, {% endif %}{% endfor %}
 * Source Ports:{% for port in route.sourceport.all %}{{ port }}{% if not forloop.last %}, {% endif %}{% endfor %}
 * Destination Ports:{% for port in route.destinationport.all %}{{ port }}{% if not forloop.last %}, {% endif %}{% endfor %}
 

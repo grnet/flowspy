@@ -285,6 +285,14 @@ div.roundbox, #portsacc, #id_comments{
                         {{ form.destination.help_text }}
                     </p>
                 </div>
+				<div class="roundbox">
+                    {{ form.protocol.label_tag }}{{ form.protocol }}{% if form.protocol.errors %}
+                    <br>
+                    <p class="error" style="clear:both;">
+                        {{ form.protocol.errors|join:", " }}
+                    </p>
+                    {% endif %}
+                </div>
                 <div id='portsacc'>
                 <h3 style="padding: 0.5em 0.5em 0.5em 0.7em;">Advanced Settings (Ports)</h3>
                 <div class='accord_wrapper' style="height: 452px !important;">

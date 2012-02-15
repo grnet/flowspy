@@ -74,6 +74,7 @@ class UserProfileAdmin(UserAdmin):
 
 admin.site.unregister(User)
 admin.site.register(MatchPort)
+admin.site.register(MatchProtocol)
 admin.site.register(MatchDscp)
 admin.site.register(ThenAction)
 admin.site.register(Route, RouteAdmin)

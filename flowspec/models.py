@@ -8,12 +8,12 @@ from utils import proxy as PR
 from ipaddr import *
 import datetime
 import logging
-from flowspec.tasks import *
 from time import sleep
 
 import beanstalkc
 from flowspy.utils.randomizer import id_generator as id_gen
 
+from flowspec.tasks import *
 
 FORMAT = '%(asctime)s %(levelname)s: %(message)s'
 logging.basicConfig(format=FORMAT)
@@ -37,6 +37,23 @@ THEN_CHOICES = (
     ("routing-instance", "Routing Instance"),
     ("rate-limit", "Rate limit"),
     ("sample", "Sample")                
+)
+
+MATCH_PROTOCOL = (
+    ("ah", "ah"),
+    ("egp", "egp"),
+    ("esp", "esp"),
+    ("gre", "gre"),
+    ("icmp", "icmp"),
+    ("icmp6", "icmp6"),
+    ("igmp", "igmp"),
+    ("ipip", "ipip"),
+    ("ospf", "ospf"),
+    ("pim", "pim"),
+    ("rsvp", "rsvp"),
+    ("sctp", "sctp"),
+    ("tcp", "tcp"),
+    ("udp", "udp"),
 )
 
 ROUTE_STATES = (
@@ -66,6 +83,13 @@ class MatchDscp(models.Model):
     class Meta:
         db_table = u'match_dscp'
 
+class MatchProtocol(models.Model):
+    protocol = models.CharField(max_length=24, unique=True)
+    def __unicode__(self):
+        return self.protocol
+    class Meta:
+        db_table = u'match_protocol'
+
    
 class ThenAction(models.Model):
     action = models.CharField(max_length=60, choices=THEN_CHOICES, verbose_name="Action")
@@ -91,7 +115,7 @@ class Route(models.Model):
     icmpcode = models.CharField(max_length=32, blank=True, null=True, verbose_name="ICMP Code")
     icmptype = models.CharField(max_length=32, blank=True, null=True, verbose_name="ICMP Type")
     packetlength = models.IntegerField(blank=True, null=True, verbose_name="Packet Length")
-    protocol = models.CharField(max_length=32, blank=True, null=True, verbose_name="Protocol")
+    protocol = models.ManyToManyField(MatchProtocol, blank=True, null=True, verbose_name="Protocol")
     tcpflag = models.CharField(max_length=128, blank=True, null=True, verbose_name="TCP flag")
     then = models.ManyToManyField(ThenAction, verbose_name="Then")
     filed = models.DateTimeField(auto_now_add=True)
@@ -284,8 +308,6 @@ class Route(models.Model):
             ret = "%s ICMP Type:<strong>%s</strong><br/>" %(ret, self.icmptype)
         if self.packetlength:
             ret = "%s Packet Length:<strong>%s</strong><br/>" %(ret, self.packetlength)
-        if self.protocol:
-            ret = "%s Protocol:<strong>%s</strong><br/>" %(ret, self.protocol)
         if self.source:
             ret = "%s Src Addr:<strong>%s</strong> <br/>" %(ret, self.source)
         if self.tcpflag:
@@ -293,6 +315,9 @@ class Route(models.Model):
         if self.port:
             for port in self.port.all():
                     ret = ret + "Port:<strong>%s</strong> <br/>" %(port)
+        if self.protocol:
+            for protocol in self.protocol.all():
+                    ret = ret + "Protocol:<strong>%s</strong> <br/>" %(protocol)
         if self.destinationport:
             for port in self.destinationport.all():
                     ret = ret + "Dst Port:<strong>%s</strong> <br/>" %(port)

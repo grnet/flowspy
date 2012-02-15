@@ -92,8 +92,12 @@ class Applier(object):
                 route.match['source'].append(route_obj.source)
             if route_obj.destination:
                 route.match['destination'].append(route_obj.destination)
-            if route_obj.protocol:
-                route.match['protocol'].append(route_obj.protocol)
+            try:
+                if route_obj.protocol:
+                    for protocol in route_obj.protocol.all():
+                        route.match['protocol'].append(protocol.protocol)
+            except:
+                pass
             try:
                 if route_obj.port:
                     for port in route_obj.port.all():

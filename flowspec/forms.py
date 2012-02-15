@@ -42,10 +42,10 @@ class RouteForm(forms.ModelForm):
                         send_mail(settings.EMAIL_SUBJECT_PREFIX + "Caught an attempt to set a protected IP/network as a source address",
                               mail_body, settings.SERVER_EMAIL,
                               settings.NOTIFY_ADMIN_MAILS, fail_silently=True)
-                        raise forms.ValidationError("Not allowed")
+                        raise Exception
                 if address.is_private:
                     private_error = True
-                    raise forms.ValidationError('Private addresses not allowed')
+                    raise Exception
                 else:
                     return self.cleaned_data["source"]
             except Exception:
@@ -58,7 +58,7 @@ class RouteForm(forms.ModelForm):
 
     def clean_destination(self):
         user = User.objects.get(pk=self.data['applier'])
-        peer = user.get_profile().peer        
+        peer = user.get_profile().peer
         data = self.cleaned_data['destination']
         error = None
         protected_error = False
@@ -72,10 +72,10 @@ class RouteForm(forms.ModelForm):
                         send_mail(settings.EMAIL_SUBJECT_PREFIX + "Caught an attempt to set a protected IP/network as the destination address",
                               mail_body, settings.SERVER_EMAIL,
                               settings.NOTIFY_ADMIN_MAILS, fail_silently=True)
-                        raise forms.ValidationError("Not allowed")
+                        raise Exception
                 if address.prefixlen < settings.PREFIX_LENGTH:
                     error = "Currently no prefix lengths < %s are allowed" %settings.PREFIX_LENGTH
-                    raise forms.ValidationError('error')
+                    raise Exception
                 return self.cleaned_data["destination"]
             except Exception:
                 error_text = 'Invalid network address format'
@@ -95,6 +95,8 @@ class RouteForm(forms.ModelForm):
                 raise forms.ValidationError('Invalid date range')
 
     def clean(self):
+        if self.errors:
+             raise forms.ValidationError('Errors in form. Please review and fix them')
         name = self.cleaned_data.get('name', None)
         source = self.cleaned_data.get('source', None)
         sourceports = self.cleaned_data.get('sourceport', None)

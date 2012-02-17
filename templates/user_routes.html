@@ -215,6 +215,7 @@ function delete_route(route){
 {% endblock %}
 {% block title %}{% trans "My rules" %}{% endblock %}
 {% block content %}
+{% csrf_token %}
 <div style="float:left">
 	<h3 style="margin-top: 0px;">{% trans "My rules" %}</h3>
 </div>

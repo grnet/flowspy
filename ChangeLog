@@ -1,4 +1,10 @@
 ===========
+0.8.2 RELEASE
+Bug Fix release
+Fixes:
+	- Fixed bug with csrf cookie not being set while logged in for the first time 
+
+===========
 0.8.1 RELEASE
 This is the latest alpha release operating on production network
 Changes:

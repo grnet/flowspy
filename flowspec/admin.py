@@ -10,6 +10,8 @@ from flowspy.flowspec.forms import *
 import datetime
 from django.conf import settings
 
+from flowspy.monkey_patch.forms import UserCreationForm, UserChangeForm
+
 class RouteAdmin(admin.ModelAdmin):
     form = RouteForm
     actions = ['deactivate']
@@ -49,6 +51,8 @@ class UserProfileInline(admin.StackedInline):
     model = UserProfile
     
 class UserProfileAdmin(UserAdmin):
+    add_form = UserCreationForm
+    form = UserChangeForm
     actions = ['deactivate', 'activate']
     list_display = ('username', 'email', 'first_name' , 'last_name', 'is_staff', 'is_active', 'is_superuser', 'get_userprofile_peer')
     inlines = [UserProfileInline]

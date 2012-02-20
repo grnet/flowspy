@@ -1,4 +1,10 @@
 ===========
+0.8.3 RELEASE
+Feature enhancement release
+Fixes:
+	- User/username length monkey patching now works with admin forms as well  
+
+===========
 0.8.2 RELEASE
 Bug Fix release
 Fixes:

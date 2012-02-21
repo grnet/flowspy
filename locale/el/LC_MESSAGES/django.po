@@ -1,0 +1,346 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Leonidas Poulopoulos <leopoul@grnet.gr>, 2012.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-02-20 19:14+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Leonidas Poulopoulos <leopoul@grnet.gr>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms:  nplurals=2; plural=(n != 1);\n"
+
+#: settings.py:49
+msgid "Greek"
+msgstr "Ελληνικά"
+
+#: settings.py:50
+msgid "English"
+msgstr "Αγγλικά"
+
+#: accounts/views.py:22
+#, python-format
+msgid "%sUser account activated"
+msgstr ""
+
+#: monkey_patch/forms.py:11
+#, python-format
+msgid ""
+"Required, %s characters or fewer. Only letters, numbers, and characters such "
+"as @.+_- are allowed."
+msgstr ""
+
+#: monkey_patch/models.py:11
+#, python-format
+msgid ""
+"Required, %s characters or fewer. Only letters, numbers, and @, ., +, -, or "
+"_ characters."
+msgstr ""
+
+#: templates/application_list.html:3
+msgid "Application submitted"
+msgstr ""
+
+#: templates/application_list.html:7
+msgid "Pending applications"
+msgstr ""
+
+#: templates/application_list.html:9 templates/application_list.html.py:18
+msgid "Hostname"
+msgstr ""
+
+#: templates/application_list.html:9 templates/application_list.html.py:18
+msgid "User"
+msgstr ""
+
+#: templates/application_list.html:9 templates/application_list.html.py:18
+msgid "Memory"
+msgstr ""
+
+#: templates/application_list.html:9 templates/application_list.html.py:18
+msgid "vCPUs"
+msgstr ""
+
+#: templates/application_list.html:9 templates/application_list.html.py:18
+#: templates/review.html:72
+msgid "Network"
+msgstr ""
+
+#: templates/application_list.html:9 templates/application_list.html.py:18
+msgid "Filed"
+msgstr ""
+
+#: templates/application_list.html:16
+msgid "Completed applications"
+msgstr ""
+
+#: templates/apply.html:6
+msgid "Edit Rule"
+msgstr "Επεξεργασία φίλτρου"
+
+#: templates/apply.html:8
+msgid "Create new Rule"
+msgstr "Δημιουργία νέου Φίλτρου"
+
+#: templates/apply.html:14 templates/apply.html.py:228
+msgid "Edit rule"
+msgstr "Επεξεργασία φίλτρου"
+
+#: templates/apply.html:16
+msgid "Create rule"
+msgstr "Δημιουργία φίλτρου"
+
+#: templates/apply.html:229
+msgid "Apply for a new rule"
+msgstr "Αίτηση δημιουργίας νέου φίλτρου"
+
+#: templates/apply.html:242
+msgid "Rule Basic Info"
+msgstr "Βασικές Πληροφορίες Φίλτρου"
+
+#: templates/apply.html:261
+msgid "Rule Match Conditions"
+msgstr "Όροι ταύτισης"
+
+#: templates/apply.html:364
+msgid "Rule Actions"
+msgstr "Ενέργειες Φίλτρου"
+
+#: templates/apply.html:380
+msgid "Expiration"
+msgstr "Λήξη"
+
+#: templates/apply.html:394
+msgid "Use/Comments"
+msgstr "Χρήση/Σχόλια"
+
+#: templates/apply.html:396
+msgid ""
+"\n"
+"                <p class=\"roundbox\">\n"
+"                    Give a short description of the intended use of this "
+"rule, that justifies the parameter selection above. Feel free to include any "
+"additional comments.\n"
+"                </p>\n"
+"                "
+msgstr ""
+
+#: templates/apply.html:409
+msgid "Apply"
+msgstr "Εφαρμογή"
+
+#: templates/base.html:40 templates/error.html:48 templates/welcome.html:7
+msgid "Welcome"
+msgstr "Καλωσήρθατε"
+
+#: templates/base.html:54 templates/error.html:62 templates/profile.html:4
+#: templates/profile.html.py:6
+msgid "My profile"
+msgstr "Το προφίλ μου"
+
+#: templates/base.html:56 templates/error.html:64
+msgid "Admin"
+msgstr "Διαχειριστής"
+
+#: templates/base.html:58 templates/error.html:66
+msgid "Logout"
+msgstr "Έξοδος"
+
+#: templates/base.html:60
+msgid "Shibboleth Login"
+msgstr "Είσοδος με Shibboleth"
+
+#: templates/base.html:68 templates/user_routes.html:216
+#: templates/user_routes.html.py:220
+msgid "My rules"
+msgstr "Τα φίλτρα μου"
+
+#: templates/base.html:86 templates/error.html:111
+msgid ""
+"If you have any questions or need help, contact GRNET Helpdesk at <a "
+"href='mailto:helpdesk@grnet.gr'>helpdesk@grnet.gr</a> or 800-11-47638."
+msgstr ""
+
+#: templates/base.html:88 templates/error.html:113
+msgid "GRNET"
+msgstr "ΕΔΕΤ"
+
+#: templates/base.html:88 templates/error.html:113
+msgid "Info"
+msgstr "Πληροφορίες"
+
+#: templates/base.html:88 templates/error.html:113
+msgid "Service Terms"
+msgstr "Όροι Χρήσης"
+
+#: templates/error.html:68
+msgid "Retry Login"
+msgstr "Επανάληψη Εισόδου"
+
+#: templates/error.html:76
+msgid "My routes"
+msgstr "Τα φίλτρα μου"
+
+#: templates/review.html:3 templates/review.html.py:27
+msgid "Review application"
+msgstr ""
+
+#: templates/review.html:27
+msgid "by"
+msgstr ""
+
+#: templates/review.html:28
+msgid "Submitted"
+msgstr ""
+
+#: templates/review.html:33 templates/review.html.py:91
+msgid "Instance information"
+msgstr ""
+
+#: templates/review.html:47 templates/review.html.py:105
+msgid "Administrative contact"
+msgstr ""
+
+#: templates/review.html:49 templates/review.html.py:107
+#: templates/user_routes.html:257
+msgid "Name"
+msgstr ""
+
+#: templates/review.html:50 templates/review.html.py:108
+msgid "Email"
+msgstr ""
+
+#: templates/review.html:51 templates/review.html.py:109
+msgid "Phone"
+msgstr ""
+
+#: templates/review.html:57 templates/review.html.py:115
+msgid "Comments"
+msgstr ""
+
+#: templates/review.html:64 templates/review.html.py:122
+msgid "Placement"
+msgstr ""
+
+#: templates/review.html:67
+msgid "The user has requested explicit network placement on"
+msgstr ""
+
+#: templates/review.html:71
+msgid ""
+"Choose either a network, or a cluster from the quick list to use the "
+"cluster's default network."
+msgstr ""
+
+#: templates/review.html:80
+msgid "Decision"
+msgstr ""
+
+#: templates/review.html:81
+msgid "Comments to the user"
+msgstr ""
+
+#: templates/review.html:123
+msgid "The instance has been placed on"
+msgstr ""
+
+#: templates/user_keys.html:86
+msgid ""
+"Upload your SSH public keys and have them automatically installed on all "
+"newly-created instances. Keys must be in OpenSSH format, either RSA, or DSA, "
+"with or without a trailing comment."
+msgstr ""
+
+#: templates/user_keys.html:90
+msgid "Fingerprint"
+msgstr ""
+
+#: templates/user_keys.html:90
+msgid "Comment"
+msgstr ""
+
+#: templates/user_keys.html:92
+msgid "Delete"
+msgstr ""
+
+#: templates/user_keys.html:96
+msgid "Add new key"
+msgstr ""
+
+#: templates/user_keys.html:106
+msgid "Add key"
+msgstr ""
+
+#: templates/user_routes.html:96
+msgid "Display"
+msgstr "Προβολή"
+
+#: templates/user_routes.html:96
+msgid "All"
+msgstr "Όλα"
+
+#: templates/user_routes.html:258
+msgid "Match"
+msgstr "Όροι"
+
+#: templates/user_routes.html:259
+msgid "Then"
+msgstr "Ενέργειες"
+
+#: templates/user_routes.html:260
+msgid "Status"
+msgstr "Κατάσταση"
+
+#: templates/user_routes.html:261
+msgid "Details"
+msgstr "Λεπτομέρειες"
+
+#: templates/user_routes.html:262
+msgid "Applier"
+msgstr "Χρήστης"
+
+#: templates/user_routes.html:263
+msgid "Expires"
+msgstr "Λήγει"
+
+#: templates/user_routes.html:264
+msgid "Response"
+msgstr "Απόκριση Συσκευής"
+
+#: templates/user_routes.html:265
+msgid "Actions"
+msgstr "Ενέργειες"
+
+#: templates/welcome.html:3
+msgid "Login"
+msgstr "Είσοδος"
+
+#: templates/registration/activate.html:3
+#: templates/registration/activation_complete.html:3
+#: templates/registration/activation_complete.html:7
+msgid "Activation Complete"
+msgstr "Ολοκλήρωση ενεργοποίησης"
+
+#: templates/registration/activate.html:7
+msgid "Activation Status"
+msgstr ""
+
+#: templates/registration/activate.html:9
+msgid "succesfully activated"
+msgstr ""
+
+#: templates/registration/activate.html:11
+msgid "The user has probably been already activated."
+msgstr ""
+
+#: templates/registration/activation_complete.html:8
+msgid "The user will be notified about his/her account activation"
+msgstr ""

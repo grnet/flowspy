@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block extrahead %}
+
+
+<style type="text/css">
+	#console {
+		background: none repeat scroll 0 0 #36102a !important;
+		color: #edeae8 !important;
+		font-family: monospace !important;
+	}
+	.message {
+		font-family: monospace !important;
+	}
+	.tooltip {
+	display:none;
+	background:transparent url(/static/black_arrow.png);
+	font-size:12px;
+	height:70px;
+	width:160px;
+	padding:25px;
+	color:#fff;	
+}
+	
+</style>
+{% endblock %}
+{% block title %}{% trans "Terms of Service" %}{% endblock %}
+{% block breadcrumbs %}:: {% trans "Terms of Service" %}{% endblock %}
+{% block content %}
+{% csrf_token %}
+<div>
+
+    <p>
+        <em>Τελευταία Ενημέρωση: 9 Ιανουαρίου 2011. </em>
+    </p>
+
+Η υπηρεσία FoD παρέχεται από την ΕΔΕΤ Α.Ε. προς την ακαδημαϊκή και ερευνητική κοινότητα και η χρήση της υπηρεσίας οφείλει να γίνεται μόνο για την προώθηση ακαδημαϊκών, εκπαιδευτικών και ερευνητικών σκοπών.
+Οι παρακάτω όροι εφαρμόζονται από όλους τους χρήστες της υπηρεσίας. Οι παρόντες όροι χρήσης, όπως κάθε φορά ισχύουν και τροποποιούνται, αποτελούν τη σύμβαση μεταξύ των χρηστών της υπηρεσίας και της ΕΔΕΤ Α.Ε. Για τη χρήση της υπηρεσίας είναι απαραίτητη η αποδοχή των παρακάτω όρων.
+    <h3>Δυνητικοί Χρήστες</h3>
+Η υπηρεσία απευθύνεται στα Κέντρα Δικτύων (ή σε αντίστοιχες δομές) των εγκεκριμένων από το ΔΣ <a href="http://www.noc.grnet.gr/node/35" target="_blank">φορέων</a> της ΕΔΕΤ Α.Ε που συμμετέχουν στην ομοσπονδιακή ταυτοποίηση με τη χρήση Shibboleth. Η υπηρεσία παρέχεται προκειμένου να περιοριστούν δικτυακές επιθέσεις που στοχεύουν στον εξοπλισμό των φορέων. Η είσοδος και χρήση της υπηρεσίας προϋποθέτη την ορθή διαμόρφωση συγκεκριμένων ιδιοτήτων του Shibboleth.
+</div>
+{% endblock %}

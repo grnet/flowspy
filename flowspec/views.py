@@ -369,6 +369,11 @@ def get_peer_techc_mails(user):
     mail.extend(techmails_list)
     return mail
 
+def gettos(request):
+    return render_to_response('gettos.html', context_instance=RequestContext(request))
+
+def getinfo(request):
+    return render_to_response('getinfo.html', context_instance=RequestContext(request))
 
 def send_new_mail(subject, message, from_email, recipient_list, bcc_list):
     return EmailMessage(subject, message, from_email, recipient_list, bcc_list).send()

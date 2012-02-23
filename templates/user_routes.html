@@ -16,7 +16,7 @@ $(document).ready(function(){
         modal: true,
         autoOpen: false,
         buttons: {
-            'Suspend': function(){
+            '{% trans "Suspend" %}': function(){
                 route = $('#route_to_delete').text();
                 route_url_id = '#del_route_' + route;
                 url = $(route_url_id).attr('href');
@@ -29,7 +29,7 @@ $(document).ready(function(){
                     }
                 });
             },
-            Cancel: function(){
+            '{% trans "Cancel" %}': function(){
                 $('#dialog').dialog('close');
             },
         
@@ -92,10 +92,24 @@ $(document).ready(function(){
             "bSortable": false
         }],
         "aaSorting": [[0, 'desc']],
-        "oLanguage": {
-            "sLengthMenu": '{% trans "Display" %} <select><option value="25">25</option><option value="50">50</option><option value="-1">{% trans "All" %}</option></select> rules'
-        },
         "iDisplayLength": 25,
+        "oLanguage": {
+        	"sLengthMenu": '{% trans "Display" %} <select><option value="25">25</option><option value="50">50</option><option value="-1">{% trans "All" %}</option></select> {% trans "rules" %}',
+            "sProcessing":   "Processing...",
+            "sZeroRecords": '{% trans "No records to display" %}',
+            "sInfo":         "Showing _START_ to _END_ of _TOTAL_ entries",
+            "sInfoEmpty":    "{% trans "Showing 0 to 0 of 0 entries" %}",
+            "sInfoFiltered": "(filtered from _MAX_ total entries)",
+            "sInfoPostFix":  "",
+            "sSearch":       '{% trans "Search:" %}',
+            "sUrl":          "",
+            "oPaginate": {
+                "sFirst":    '{% trans "First" %}',
+                "sPrevious": '{% trans "Previous" %}',
+                "sNext":     '{% trans "Next" %}',
+                "sLast":     '{% trans "Last" %}'
+            }
+        }
     });
     
     oTable.fnDraw();
@@ -220,7 +234,7 @@ function delete_route(route){
 	<h3 style="margin-top: 0px;">{% trans "My rules" %}</h3>
 </div>
 <div class='button_place' style="float:right">
-	<button id="consolebutton">Console</button> <a href="{% url add-route %}" id="routebutton">Add Rule</a>
+	<button id="consolebutton">{% trans "Console" %}</button> <a href="{% url add-route %}" id="routebutton">{% trans "Add Rule" %}</a>
 </div>
 <br><br>
 
@@ -290,18 +304,18 @@ function delete_route(route){
 		style="border-bottom:2px dashed red;" 
         title="Expires {% ifequal route.days_to_expire '0' %}today{% else%}in {{route.days_to_expire}} day{{ route.days_to_expire|pluralize }}{% endifequal %}"
 		{% endif %}{% endif %}>{{ route.expires }}</span></td>
-	<td style="text-align: center;">{% if route.status == 'EXPIRED' %}Rule expired{% else %}{% if route.status == 'ADMININACTIVE' %}Suspended by administrator{% else %}{% if route.status == 'INACTIVE' %}Suspended by user{% else %}{{ route.response }}{% endif %}{% endif %}{% endif %}</td>
+	<td style="text-align: center;">{% if route.status == 'EXPIRED' %}{% trans "Rule expired" %}{% else %}{% if route.status == 'ADMININACTIVE' %}{% trans "Suspended by administrator" %}{% else %}{% if route.status == 'INACTIVE' %}{% trans "Suspended by user" %}{% else %}{{ route.response }}{% endif %}{% endif %}{% endif %}</td>
 	<td style="text-align: center; width:180px;">
 		{% ifequal route.status 'ACTIVE' %}
-		<a href="{% url edit-route route.name %}" class="edit_button" id="edit_button_{{route.pk}}">Edit</a> 
-		<button class="del_button" id="{{route.name}}" onclick="javascript:delete_route(this.id)">Suspend</button>
+		<a href="{% url edit-route route.name %}" class="edit_button" id="edit_button_{{route.pk}}">{% trans "Edit" %}</a> 
+		<button class="del_button" id="{{route.name}}" onclick="javascript:delete_route(this.id)">{% trans "Suspend" %}</button>
 		<a href="{% url delete-route route.name %}" style="display:none" id="del_route_{{route.name}}"></a>
 		{% else %}
 		{% if route.status == 'EXPIRED' or route.status == 'ADMININACTIVE' or route.status == 'INACTIVE' %}
-		<a href="{% url edit-route route.name %}" class="edit_button" id="edit_button_{{route.pk}}">Reactivate</a>
+		<a href="{% url edit-route route.name %}" class="edit_button" id="edit_button_{{route.pk}}">{% trans "Reactivate" %}</a>
 		{% else %}
 		{% ifequal route.status 'OUTOFSYNC' %}
-		<a href="{% url edit-route route.name %}" class="edit_button" id="edit_button_{{route.pk}}">ReSync</a>
+		<a href="{% url edit-route route.name %}" class="edit_button" id="edit_button_{{route.pk}}">{% trans "ReSync" %}</a>
 		{% else %}
 		-
 		{% endifequal %}
@@ -315,11 +329,11 @@ function delete_route(route){
 </table>
 
 <div id="dialog" title="Suspend Rule">
-		<p>You are about to suspend rule <strong><span id="route_to_delete"></span></strong></p>
-		<p>Suspending the rule will automatically remove the configuration from the network and mark this rule as inactive.</p>
-		<p>Are you sure you want to proceed?</p>
+		<p>{% blocktrans %}You are about to suspend rule{% endblocktrans %} <strong><span id="route_to_delete"></span></strong></p>
+		<p>{% blocktrans %}Suspending the rule will automatically remove the configuration from the network and mark this rule as inactive.{% endblocktrans %}</p>
+		<p>{% blocktrans %}Are you sure you want to proceed?{% endblocktrans %}</p>
 </div>
-<div id="console" title="Console">
+<div id="console" title="{% trans "Console" %}">
 					{% include "poll.html" %}
 </div>
 {% endblock %}

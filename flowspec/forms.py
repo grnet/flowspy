@@ -49,11 +49,11 @@ class RouteForm(forms.ModelForm):
                 else:
                     return self.cleaned_data["source"]
             except Exception:
-                error_text = 'Invalid network address format'
+                error_text = _('Invalid network address format')
                 if private_error:
-                    error_text = 'Private addresses not allowed'
+                    error_text = _('Private addresses not allowed')
                 if protected_error:
-                    error_text = 'You have no authority on this subnet'
+                    error_text = _('You have no authority on this subnet')
                 raise forms.ValidationError(error_text)
 
     def clean_destination(self):
@@ -74,15 +74,15 @@ class RouteForm(forms.ModelForm):
                               settings.NOTIFY_ADMIN_MAILS, fail_silently=True)
                         raise Exception
                 if address.prefixlen < settings.PREFIX_LENGTH:
-                    error = "Currently no prefix lengths < %s are allowed" %settings.PREFIX_LENGTH
+                    error = _("Currently no prefix lengths < %s are allowed") %settings.PREFIX_LENGTH
                     raise Exception
                 return self.cleaned_data["destination"]
             except Exception:
-                error_text = 'Invalid network address format'
+                error_text = _('Invalid network address format')
                 if error:
                     error_text = error
                 if protected_error:
-                    error_text = 'You have no authority on this subnet'
+                    error_text = _('You have no authority on this subnet')
                 raise forms.ValidationError(error_text)
     
     def clean_expires(self):
@@ -96,7 +96,7 @@ class RouteForm(forms.ModelForm):
 
     def clean(self):
         if self.errors:
-             raise forms.ValidationError('Errors in form. Please review and fix them')
+             raise forms.ValidationError(_('Errors in form. Please review and fix them'))
         name = self.cleaned_data.get('name', None)
         source = self.cleaned_data.get('source', None)
         sourceports = self.cleaned_data.get('sourceport', None)
@@ -116,19 +116,19 @@ class RouteForm(forms.ModelForm):
                 if IPNetwork(destination) in net:
                     mynetwork = True
             if not mynetwork:
-                 raise forms.ValidationError('Destination address/network should belong to your administrative address space. Check My Profile to review your networks')
+                 raise forms.ValidationError(_('Destination address/network should belong to your administrative address space. Check My Profile to review your networks'))
         if (sourceports and ports):
-            raise forms.ValidationError('Cannot create rule for source ports and ports at the same time. Select either ports or source ports')
+            raise forms.ValidationError(_('Cannot create rule for source ports and ports at the same time. Select either ports or source ports'))
         if (destinationports and ports):
-            raise forms.ValidationError('Cannot create rule for destination ports and ports at the same time. Select either ports or destination ports')
+            raise forms.ValidationError(_('Cannot create rule for destination ports and ports at the same time. Select either ports or destination ports'))
         if sourceports and not source:
-            raise forms.ValidationError('Once source port is matched, source has to be filled as well. Either deselect source port or fill source address')
+            raise forms.ValidationError(_('Once source port is matched, source has to be filled as well. Either deselect source port or fill source address'))
         if destinationports and not destination:
-            raise forms.ValidationError('Once destination port is matched, destination has to be filled as well. Either deselect destination port or fill destination address')
+            raise forms.ValidationError(_('Once destination port is matched, destination has to be filled as well. Either deselect destination port or fill destination address'))
         if not (source or sourceports or ports or destination or destinationports):
-            raise forms.ValidationError('Fill at least a Rule Match Condition')
+            raise forms.ValidationError(_('Fill at least a Rule Match Condition'))
         if not user.is_superuser and then[0].action not in settings.UI_USER_THEN_ACTIONS:
-            raise forms.ValidationError('This action "%s" is not permitted' %(then[0].action))
+            raise forms.ValidationError(_('This action "%s" is not permitted') %(then[0].action))
         existing_routes = Route.objects.exclude(status='EXPIRED').exclude(status='ERROR').exclude(status='ADMININACTIVE')
         existing_routes = existing_routes.filter(applier__userprofile__peer=peer)
         if source:
@@ -180,17 +180,17 @@ class ThenPlainForm(forms.ModelForm):
             try:
                 assert(int(action_value))
                 if int(action_value) < 50:
-                    raise forms.ValidationError('Rate-limiting cannot be < 50kbps')
+                    raise forms.ValidationError(_('Rate-limiting cannot be < 50kbps'))
                 return "%s" %self.cleaned_data["action_value"]
             except:
-                raise forms.ValidationError('Rate-limiting should be an integer < 50')
+                raise forms.ValidationError(_('Rate-limiting should be an integer < 50'))
         else:
-            raise forms.ValidationError('Cannot be empty')
+            raise forms.ValidationError(_('Cannot be empty'))
 
     def clean_action(self):
         action = self.cleaned_data['action']
         if action != 'rate-limit':
-            raise forms.ValidationError('Cannot select something other than rate-limit')
+            raise forms.ValidationError(_('Cannot select something other than rate-limit'))
         else:
             return self.cleaned_data["action"]
     
@@ -207,9 +207,9 @@ class PortPlainForm(forms.ModelForm):
                 assert(int(port))
                 return "%s" %self.cleaned_data["port"]
             except:
-                raise forms.ValidationError('Port should be an integer')
+                raise forms.ValidationError(_('Port should be an integer'))
         else:
-            raise forms.ValidationError('Cannot be empty')
+            raise forms.ValidationError(_('Cannot be empty'))
 
 def value_list_to_list(valuelist):
     vl = []

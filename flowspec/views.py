@@ -15,6 +15,7 @@ from django.shortcuts import get_object_or_404, render_to_response
 from django.core.context_processors import request
 from django.template.context import RequestContext
 from django.template.loader import get_template, render_to_string
+from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
 from django.contrib import messages
 from flowspy.accounts.models import *
@@ -79,7 +80,7 @@ def add_route(request):
     applier_peer_networks = request.user.get_profile().peer.networks.all()
     if not applier_peer_networks:
          messages.add_message(request, messages.WARNING,
-                             "Insufficient rights on administrative networks. Cannot add rule. Contact your administrator")
+                             _("Insufficient rights on administrative networks. Cannot add rule. Contact your administrator"))
          return HttpResponseRedirect(reverse("group-routes"))
     if request.method == "GET":
         form = RouteForm()
@@ -124,7 +125,7 @@ def edit_route(request, route_slug):
     route_edit_applier_peer = route_edit.applier.get_profile().peer
     if applier_peer != route_edit_applier_peer:
         messages.add_message(request, messages.WARNING,
-                             "Insufficient rights to edit rule %s" %(route_slug))
+                             _("Insufficient rights to edit rule %s") %(route_slug))
         return HttpResponseRedirect(reverse("group-routes"))
 #    if route_edit.status == "ADMININACTIVE" :
 #        messages.add_message(request, messages.WARNING,
@@ -136,7 +137,7 @@ def edit_route(request, route_slug):
 #        return HttpResponseRedirect(reverse("group-routes"))
     if route_edit.status == "PENDING" :
         messages.add_message(request, messages.WARNING,
-                             "Cannot edit a pending rule: %s." %(route_slug))
+                             _("Cannot edit a pending rule: %s.") %(route_slug))
         return HttpResponseRedirect(reverse("group-routes"))
     route_original = deepcopy(route_edit)
     if request.POST:
@@ -238,13 +239,13 @@ def user_login(request):
         if not mail:
             error_mail = True
         if error_username:
-            error = "Your idP should release the HTTP_EPPN attribute towards this service<br>"
+            error = _("Your idP should release the HTTP_EPPN attribute towards this service<br>")
         if error_orgname:
-            error = error + "Your idP should release the HTTP_SHIB_HOMEORGANIZATION attribute towards this service<br>"
+            error = error + _("Your idP should release the HTTP_SHIB_HOMEORGANIZATION attribute towards this service<br>")
         if error_entitlement:
-            error = error + "Your idP should release an appropriate HTTP_SHIB_EP_ENTITLEMENT attribute towards this service<br>"
+            error = error + _("Your idP should release an appropriate HTTP_SHIB_EP_ENTITLEMENT attribute towards this service<br>")
         if error_mail:
-            error = error + "Your idP should release the HTTP_SHIB_INETORGPERSON_MAIL attribute towards this service"
+            error = error + _("Your idP should release the HTTP_SHIB_INETORGPERSON_MAIL attribute towards this service")
         if error_username or error_orgname or error_entitlement or error_mail:
             return render_to_response('error.html', {'error': error, "missing_attributes": True},
                                   context_instance=RequestContext(request))
@@ -259,7 +260,7 @@ def user_login(request):
                 peer = Peer.objects.get(domain_name=organization)
                 up = UserProfile.objects.get_or_create(user=user,peer=peer)
             except:
-                error = "Your organization's domain name does not match our peers' domain names<br>Please contact Helpdesk to resolve this issue"
+                error = _("Your organization's domain name does not match our peers' domain names<br>Please contact Helpdesk to resolve this issue")
                 return render_to_response('error.html', {'error': error})
             if not user_exists:
                 user_activation_notify(user)
@@ -267,15 +268,15 @@ def user_login(request):
                login(request, user)
                return HttpResponseRedirect(reverse("group-routes"))
             else:
-                error = "User account <strong>%s</strong> is pending activation. Administrators have been notified and will activate this account within the next days. <br>If this account has remained inactive for a long time contact your technical coordinator or GRNET Helpdesk" %user.username
+                error = _("User account <strong>%s</strong> is pending activation. Administrators have been notified and will activate this account within the next days. <br>If this account has remained inactive for a long time contact your technical coordinator or GRNET Helpdesk") %user.username
                 return render_to_response('error.html', {'error': error, 'inactive': True},
                                   context_instance=RequestContext(request))
         else:
-            error = "Something went wrong during user authentication. Contact your administrator"
+            error = _("Something went wrong during user authentication. Contact your administrator")
             return render_to_response('error.html', {'error': error,},
                                   context_instance=RequestContext(request))
     except Exception:
-        error = "Invalid login procedure"
+        error = _("Invalid login procedure")
         return render_to_response('error.html', {'error': error,},
                                   context_instance=RequestContext(request))
         # Return an 'invalid login' error message.

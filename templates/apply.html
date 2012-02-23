@@ -32,7 +32,7 @@
 			modal: true,
 			autoOpen: false,
 			buttons: {
-		'Add': function() {
+		'{% trans "Add" %}': function() {
 			console.log($("#add_rl_form").serialize());
 			$.ajax({
 			url:"{% url add-rate-limit %}", 
@@ -52,7 +52,7 @@
 				}
 				});
 		},
-		Cancel: function() {
+		'{% trans "Cancel" %}': function() {
 			$('#then_diag').dialog('close');
 		}
 	}
@@ -64,7 +64,7 @@
 			modal: true,
 			autoOpen: false,
 			buttons: {
-		'Add': function() {
+		'{% trans "Add" %}': function() {
 			$.ajax({
 			url:"{% url add-port %}", 
 			data:$("#add_port_form").serialize(),
@@ -85,7 +85,7 @@
 				}
 				});
 		},
-		Cancel: function() {
+		'{% trans "Cancel" %}': function() {
 			$('#port_diag').dialog('close');
 		}
 	}
@@ -294,9 +294,9 @@ div.roundbox, #portsacc, #id_comments{
                     {% endif %}
                 </div>
                 <div id='portsacc'>
-                <h3 style="padding: 0.5em 0.5em 0.5em 0.7em;">Advanced Settings (Ports)</h3>
+                <h3 style="padding: 0.5em 0.5em 0.5em 0.7em;">{% trans "Advanced Settings (Ports)" %}</h3>
                 <div class='accord_wrapper' style="height: 452px !important;">
-                    Select source/destination port(s), or select common port(s) for both source/destination
+                    {% trans "Select source/destination port(s), or select common port(s) for both source/destination" %}
                     <table>
                     <tr>
                         <th>
@@ -305,7 +305,7 @@ div.roundbox, #portsacc, #id_comments{
                         <td>
                             {{ form.sourceport }}&nbsp;&nbsp;
                             <button class="new_port">
-                                Port
+                                {% trans "Port" %}
                             </button>
                             <span class="error">{{ form.sourceport.errors|join:", " }}</span>
                         </td>
@@ -324,7 +324,7 @@ div.roundbox, #portsacc, #id_comments{
                         <td>
                             {{ form.destinationport }}&nbsp;&nbsp;
                             <button class="new_port">
-                                Port
+                                {% trans "Port" %}
                             </button>
                             <span class="error">{{ form.destinationport.errors|join:", " }}</span>
                         </td>
@@ -343,7 +343,7 @@ div.roundbox, #portsacc, #id_comments{
                         <td>
                             {{ form.port }}&nbsp;&nbsp;
                             <button class="new_port">
-                                Port
+                                {% trans "Port" %}
                             </button>
                             <span class="error">{{ form.port.errors|join:", " }}</span>
                         </td>
@@ -412,7 +412,7 @@ div.roundbox, #portsacc, #id_comments{
 </div>
 <div id="then_diag" title="Add new rate-limit value">
 </div>
-<div id="port_diag" title="Add new port">
+<div id="port_diag" title="{% trans "Add new port" %}">
 </div>
 
 {% endblock %}

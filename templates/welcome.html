@@ -5,17 +5,16 @@
 {% block content %}
 <div id="welcome">
 <h3>{% trans "Welcome" %}</h3>
-<p>Welcome to GRNET's FoD service.</p>
-<p>If you are new to the service, take some time to read the service description <a href="/fod/about/info/">here</a>.</p>
-<p>If you have properly set your Shibboleth attributes, you can login using the link on the right</p>
-<p>For troubleshooting info and remarks do not hesitate to contact GRNET's Helpdesk.</p>
-</p>
+<p>{% blocktrans %}Welcome to GRNET's FoD service.{% endblocktrans %}</p>
+<p>{% blocktrans %}If you are new to the service, take some time to read the service description{% endblocktrans %} <a href="/fod/about/info/">{% trans "here" %}</a>.</p>
+<p>{% blocktrans %}If you have properly set your Shibboleth attributes, you can login using the link on the right{% endblocktrans %}</p>
+<p>{% blocktrans %}For troubleshooting info and remarks do not hesitate to contact GRNET's Helpdesk.{% endblocktrans %}</p>
 </div>
 
 <div id="loginform">
 					<a href="{% url login %}">
 					<img src="/static/shib_login.png" style="border:none;">
-					<p>Shibboleth Login</p>
+					<p>{% trans "Shibboleth Login" %}</p>
 				</a>
 </div>
 {% endblock %}

@@ -1,5 +1,5 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# Translation file for FoD application.
+# Copyright (C) 2012
 # This file is distributed under the same license as the PACKAGE package.
 # Leonidas Poulopoulos <leopoul@grnet.gr>, 2012.
 #
@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-20 19:14+0200\n"
+"POT-Creation-Date: 2012-02-23 11:58+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Leonidas Poulopoulos <leopoul@grnet.gr>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms:  nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: settings.py:49
 msgid "Greek"
@@ -30,6 +30,68 @@ msgstr "Αγγλικά"
 #, python-format
 msgid "%sUser account activated"
 msgstr ""
+
+#: flowspec/models.py:107 templates/review.html:49
+#: templates/review.html.py:107 templates/user_routes.html:257
+msgid "Name"
+msgstr "Όνομα"
+
+#: flowspec/models.py:109 flowspec/models.py:111
+msgid "Network address. Use address/CIDR notation"
+msgstr "Διεύθυνση δικτύου/υποδικτύου. Χρησιμοποιήστε σύνταξη διεύθυνσης/CIDR"
+
+#: flowspec/models.py:109
+msgid "Source Address"
+msgstr "Διεύθυνση Πηγής"
+
+#: flowspec/models.py:110
+msgid "Source Port"
+msgstr "Πόρτα Πηγής"
+
+#: flowspec/models.py:111
+msgid "Destination Address"
+msgstr "Διεύθυνση Προορισμού"
+
+#: flowspec/models.py:112
+msgid "Destination Port"
+msgstr "Πόρτα Προορισμού"
+
+#: flowspec/models.py:113
+msgid "Port"
+msgstr "Πόρτα"
+
+#: flowspec/models.py:119
+msgid "Protocol"
+msgstr "Πρωτόκολλο"
+
+#: flowspec/models.py:121 templates/user_routes.html:259
+msgid "Then"
+msgstr "Ενέργειες"
+
+#: flowspec/models.py:124 templates/user_routes.html:260
+msgid "Status"
+msgstr "Κατάσταση"
+
+#: flowspec/models.py:127 templates/user_routes.html:263
+msgid "Expires"
+msgstr "Λήγει"
+
+#: flowspec/models.py:128 templates/user_routes.html:264
+msgid "Response"
+msgstr "Απόκριση Συσκευής"
+
+#: flowspec/models.py:129 templates/review.html:57
+#: templates/review.html.py:115
+msgid "Comments"
+msgstr "Σχόλια"
+
+#: flowspec/models.py:154
+msgid "Invalid network address format at Destination Field"
+msgstr "Λανθασμένη μορφή διεύθυνσης δικυου στο πεδίο Προορισμός"
+
+#: flowspec/models.py:160
+msgid "Invalid network address format at Source Field"
+msgstr "Λανθασμένη μορφή διεύθυνσης δικυου στο πεδίο Πηγή"
 
 #: monkey_patch/forms.py:11
 #, python-format
@@ -122,18 +184,13 @@ msgstr "Λήξη"
 msgid "Use/Comments"
 msgstr "Χρήση/Σχόλια"
 
-#: templates/apply.html:396
+#: templates/apply.html:397
 msgid ""
-"\n"
-"                <p class=\"roundbox\">\n"
-"                    Give a short description of the intended use of this "
-"rule, that justifies the parameter selection above. Feel free to include any "
-"additional comments.\n"
-"                </p>\n"
-"                "
+"Give a short description of the intended use of this rule, that justifies "
+"the parameter selection above. Feel free to include any additional comments."
 msgstr ""
 
-#: templates/apply.html:409
+#: templates/apply.html:408
 msgid "Apply"
 msgstr "Εφαρμογή"
 
@@ -154,7 +211,7 @@ msgstr "Διαχειριστής"
 msgid "Logout"
 msgstr "Έξοδος"
 
-#: templates/base.html:60
+#: templates/base.html:60 templates/welcome.html:17
 msgid "Shibboleth Login"
 msgstr "Είσοδος με Shibboleth"
 
@@ -209,21 +266,12 @@ msgstr ""
 msgid "Administrative contact"
 msgstr ""
 
-#: templates/review.html:49 templates/review.html.py:107
-#: templates/user_routes.html:257
-msgid "Name"
-msgstr ""
-
 #: templates/review.html:50 templates/review.html.py:108
 msgid "Email"
 msgstr ""
 
 #: templates/review.html:51 templates/review.html.py:109
 msgid "Phone"
-msgstr ""
-
-#: templates/review.html:57 templates/review.html.py:115
-msgid "Comments"
 msgstr ""
 
 #: templates/review.html:64 templates/review.html.py:122
@@ -291,14 +339,6 @@ msgstr "Όλα"
 msgid "Match"
 msgstr "Όροι"
 
-#: templates/user_routes.html:259
-msgid "Then"
-msgstr "Ενέργειες"
-
-#: templates/user_routes.html:260
-msgid "Status"
-msgstr "Κατάσταση"
-
 #: templates/user_routes.html:261
 msgid "Details"
 msgstr "Λεπτομέρειες"
@@ -307,14 +347,6 @@ msgstr "Λεπτομέρειες"
 msgid "Applier"
 msgstr "Χρήστης"
 
-#: templates/user_routes.html:263
-msgid "Expires"
-msgstr "Λήγει"
-
-#: templates/user_routes.html:264
-msgid "Response"
-msgstr "Απόκριση Συσκευής"
-
 #: templates/user_routes.html:265
 msgid "Actions"
 msgstr "Ενέργειες"
@@ -322,6 +354,37 @@ msgstr "Ενέργειες"
 #: templates/welcome.html:3
 msgid "Login"
 msgstr "Είσοδος"
+
+#: templates/welcome.html:8
+msgid "Welcome to GRNET's FoD service."
+msgstr "Καλωσήρθατε στην υπηρεσία FoD του ΕΔΕΤ."
+
+#: templates/welcome.html:9
+msgid ""
+"If you are new to the service, take some time to read the service description"
+msgstr ""
+"Εάν χρησιμοποιείτε την υπηρεσία για πρώτη φορά, αφιερώστε λίγο χρόνο στην "
+"ανάγνωση της περιγραφής της υπηρεσίας"
+
+#: templates/welcome.html:9
+msgid "here"
+msgstr "εδώ"
+
+#: templates/welcome.html:10
+msgid ""
+"If you have properly set your Shibboleth attributes, you can login using the "
+"link on the right"
+msgstr ""
+"Έαν έχετε ορίσει ορθά τις απαιτούμενες παραμέτρους του Shibboleth, μπορείτε "
+"να εισέλθετε επιλέγοντας το σύνδεσμο στα δεξιά"
+
+#: templates/welcome.html:11
+msgid ""
+"For troubleshooting info and remarks do not hesitate to contact GRNET's "
+"Helpdesk."
+msgstr ""
+"Για αντιμετώπιση σφαλμάτων και πληροφορίες, επικοινωνήστε με το Helpdesk του "
+"ΕΔΕΤ"
 
 #: templates/registration/activate.html:3
 #: templates/registration/activation_complete.html:3
@@ -339,8 +402,8 @@ msgstr ""
 
 #: templates/registration/activate.html:11
 msgid "The user has probably been already activated."
-msgstr ""
+msgstr "Ο χρήστης έχει ήδη ενεργοποιηθεί"
 
 #: templates/registration/activation_complete.html:8
 msgid "The user will be notified about his/her account activation"
-msgstr ""
+msgstr "Ο χρήστης θα ενημερωθεί για την ενεργοποίηση του λογαριασμού"

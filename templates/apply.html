@@ -393,11 +393,10 @@ div.roundbox, #portsacc, #id_comments{
                 <legend>
                     {% trans "Use/Comments" %}
                 </legend>
-                {% blocktrans %}
                 <p class="roundbox">
-                    Give a short description of the intended use of this rule, that justifies the parameter selection above. Feel free to include any additional comments.
+                    {% blocktrans %}Give a short description of the intended use of this rule, that justifies the parameter selection above. Feel free to include any additional comments.{% endblocktrans %}
                 </p>
-                {% endblocktrans %}
+                
                 <p>
                     {{ form.comments }}
                     {% if form.errors %}

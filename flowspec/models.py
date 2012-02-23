@@ -4,6 +4,7 @@
 from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import User
+from django.utils.translation import ugettext_lazy as _
 from utils import proxy as PR
 from ipaddr import *
 import datetime
@@ -103,29 +104,29 @@ class ThenAction(models.Model):
         unique_together = ("action", "action_value")
 
 class Route(models.Model):
-    name = models.SlugField(max_length=128)
+    name = models.SlugField(max_length=128, verbose_name=_("Name"))
     applier = models.ForeignKey(User, blank=True, null=True)
-    source = models.CharField(max_length=32, help_text=u"Network address. Use address/CIDR notation", verbose_name="Source Address")
-    sourceport = models.ManyToManyField(MatchPort, blank=True, null=True, related_name="matchSourcePort", verbose_name="Source Port")
-    destination = models.CharField(max_length=32, help_text=u"Network address. Use address/CIDR notation", verbose_name="Destination Address")
-    destinationport = models.ManyToManyField(MatchPort, blank=True, null=True, related_name="matchDestinationPort", verbose_name="Destination Port")
-    port = models.ManyToManyField(MatchPort, blank=True, null=True, related_name="matchPort", verbose_name="Port" )
+    source = models.CharField(max_length=32, help_text=_("Network address. Use address/CIDR notation"), verbose_name=_("Source Address"))
+    sourceport = models.ManyToManyField(MatchPort, blank=True, null=True, related_name="matchSourcePort", verbose_name=_("Source Port"))
+    destination = models.CharField(max_length=32, help_text=_("Network address. Use address/CIDR notation"), verbose_name=_("Destination Address"))
+    destinationport = models.ManyToManyField(MatchPort, blank=True, null=True, related_name="matchDestinationPort", verbose_name=_("Destination Port"))
+    port = models.ManyToManyField(MatchPort, blank=True, null=True, related_name="matchPort", verbose_name=_("Port"))
     dscp = models.ManyToManyField(MatchDscp, blank=True, null=True, verbose_name="DSCP")
     fragmenttype = models.CharField(max_length=20, choices=FRAGMENT_CODES, blank=True, null=True, verbose_name="Fragment Type")
     icmpcode = models.CharField(max_length=32, blank=True, null=True, verbose_name="ICMP Code")
     icmptype = models.CharField(max_length=32, blank=True, null=True, verbose_name="ICMP Type")
     packetlength = models.IntegerField(blank=True, null=True, verbose_name="Packet Length")
-    protocol = models.ManyToManyField(MatchProtocol, blank=True, null=True, verbose_name="Protocol")
+    protocol = models.ManyToManyField(MatchProtocol, blank=True, null=True, verbose_name=_("Protocol"))
     tcpflag = models.CharField(max_length=128, blank=True, null=True, verbose_name="TCP flag")
-    then = models.ManyToManyField(ThenAction, verbose_name="Then")
+    then = models.ManyToManyField(ThenAction, verbose_name=_("Then"))
     filed = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
-    status = models.CharField(max_length=20, choices=ROUTE_STATES, blank=True, null=True, verbose_name="Status", default="PENDING")
+    status = models.CharField(max_length=20, choices=ROUTE_STATES, blank=True, null=True, verbose_name=_("Status"), default="PENDING")
 #    is_online = models.BooleanField(default=False)
 #    is_active = models.BooleanField(default=False)
-    expires = models.DateField(default=days_offset)
-    response = models.CharField(max_length=512, blank=True, null=True)
-    comments = models.TextField(null=True, blank=True, verbose_name="Comments")
+    expires = models.DateField(default=days_offset, verbose_name=_("Expires"))
+    response = models.CharField(max_length=512, blank=True, null=True, verbose_name=_("Response"))
+    comments = models.TextField(null=True, blank=True, verbose_name=_("Comments"))
 
     
     def __unicode__(self):
@@ -150,13 +151,13 @@ class Route(models.Model):
                 address = IPNetwork(self.destination)
                 self.destination = address.exploded
             except Exception:
-                raise ValidationError('Invalid network address format at Destination Field')
+                raise ValidationError(_('Invalid network address format at Destination Field'))
         if self.source:
             try:
                 address = IPNetwork(self.source)
                 self.source = address.exploded
             except Exception:
-                raise ValidationError('Invalid network address format at Source Field')
+                raise ValidationError(_('Invalid network address format at Source Field'))
    
     def commit_add(self, *args, **kwargs):
         peer = self.applier.get_profile().peer.domain_name

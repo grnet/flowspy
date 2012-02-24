@@ -64,25 +64,25 @@ msgstr ""
 msgid ""
 "Cannot create rule for source ports and ports at the same time. Select "
 "either ports or source ports"
-msgstr ""
+msgstr "Δεν μπορεί να δημιουργηθεί φίλτρο για source ports και ports ταυτόχρονα. Επιλέξτε είτε ports είτε source ports"
 
 #: flowspec/forms.py:123
 msgid ""
 "Cannot create rule for destination ports and ports at the same time. Select "
 "either ports or destination ports"
-msgstr ""
+msgstr "Δεν μπορεί να δημιουργηθεί φίλτρο για destination ports και ports ταυτόχρονα. Επιλέξτε είτε ports είτε destination ports"
 
 #: flowspec/forms.py:125
 msgid ""
 "Once source port is matched, source has to be filled as well. Either "
 "deselect source port or fill source address"
-msgstr ""
+msgstr "Εφόσον έχετε επιλέξει source port, το πεδίο source πρέπει να συμπληρωθεί. Είτε απο-επιλέξτε το πεδίο source port είτε συμπληρώστε μια διεύθυνση στο source"
 
 #: flowspec/forms.py:127
 msgid ""
 "Once destination port is matched, destination has to be filled as well. "
 "Either deselect destination port or fill destination address"
-msgstr ""
+msgstr "Εφόσον έχετε επιλέξει destination port, το πεδίο destination πρέπει να συμπληρωθεί. Είτε απο-επιλέξτε το πεδίο destination port είτε συμπληρώστε μια διεύθυνση στο destination"
 
 #: flowspec/forms.py:129
 msgid "Fill at least a Rule Match Condition"
@@ -128,24 +128,24 @@ msgstr "Διεύθυνση δικτύου/υποδικτύου. Χρησιμοπ
 
 #: flowspec/models.py:110
 msgid "Source Address"
-msgstr "Διεύθυνση Πηγής"
+msgstr ""
 
 #: flowspec/models.py:111
 msgid "Source Port"
-msgstr "Port Πηγής"
+msgstr ""
 
 #: flowspec/models.py:112
 msgid "Destination Address"
-msgstr "Διεύθυνση Προορισμού"
+msgstr ""
 
 #: flowspec/models.py:113
 msgid "Destination Port"
-msgstr "Port Προορισμού"
+msgstr ""
 
 #: flowspec/models.py:114 templates/add_port.html:14 templates/apply.html:308
 #: templates/apply.html.py:327 templates/apply.html:346
 msgid "Port"
-msgstr "Port"
+msgstr ""
 
 #: flowspec/models.py:120
 msgid "Protocol"
@@ -180,7 +180,7 @@ msgstr "Λανθασμένη μορφή διεύθυνσης δικυου στο
 msgid ""
 "Insufficient rights on administrative networks. Cannot add rule. Contact "
 "your administrator"
-msgstr ""
+msgstr "Μη επαρκή δικαιώματα στα διαχειριστικά δίκτυα. Η προσθήκη φίλτρων δεν είναι εφικτή. Επικοινωνήστε με το διαχειριστή σας"
 
 #: flowspec/views.py:128
 #, python-format

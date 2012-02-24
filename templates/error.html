@@ -29,6 +29,14 @@ $(document).ready(function(){
     }
 
 </style>
+<script type="text/javascript">
+
+  	function setlang(lang){
+		$("#langsel").val(lang);
+		$("#langform").submit();
+	}
+
+</script>
 </head>
 
 
@@ -40,14 +48,13 @@ $(document).ready(function(){
 					<img class="logoimg" src="/static/grnet_logo.png">
 				</a>
 				<div id="title">
-					<a href="/">Firewall on Demand</a>
+					<a href="{% url group-routes %}">Firewall on Demand</a>
 				</div>
 				<div class="loginform">
 					<div id="formcontent">
 						{% if user.is_authenticated %}
 						<span class="topmenuuser">{% trans "Welcome" %} <strong>{{user}}</strong></span>
 						{% endif %}
-						{% comment %}
 						<span {% if user.is_authenticated %}class="topmenuaction"{% else %}class="topmenuuser"{% endif %} >
 								<form action="{% url django.views.i18n.set_language %}" method="post" style="display:inline;" id="langform">
 								{% csrf_token %}
@@ -57,7 +64,6 @@ $(document).ready(function(){
 								{% endfor %}
 							</form>
 						</span>
-						{% endcomment %}
 						{% if user.is_authenticated %}
 						<span class="topmenuaction"><a href="{% url user-profile %}">{% trans "My profile" %}</a></span>
 {% if user.is_superuser %}

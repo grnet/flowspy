@@ -30,40 +30,40 @@
 {% csrf_token %}
 <div>
 
-    <h5>Εισαγωγή</h5>
-Η υπηρεσία FoD (Firewall on Demand) παρέχει στην εκπαιδευτική και ακαδημαϊκή κοινότητα τη δυνατότητα για προστασία έναντι δικτυακών επιθέσεων που στοχέυουν στο δικτυακό εξοπλισμό που διαχειρίζονται.
+    <h5>{% trans "Intro" %}</h5>
+{% blocktrans %}Firewall on Demand service provides potential users (educational and academic community) the option to protect their networking equipment against network attacks and threats.
 
-Ειδικότερα, η υπηρεσία απευθύνεται στα NOC των ιδρυμάτων‐φορέων του δικτύου ΕΔΕΤ που έχουν ανάγκες για βραχυπρόθεσμη προστασία έναντι δικτυακών επιθέσεων με προορισμό τον εξοπλισμό που διαχειρίζονται.
+In particular, the service is targeted at network operators of GRNET's institutions who have needs for short-term protection against network attacks with destination, equipment they operate.
+To ensure the integrity of the service and in order to prevent the service being a source of attacks, the authentication of users is done via Shibboleth. The authorisation is based on a combination of Shibboleth attributes with the address space that each organization manages.
+The software chosen to implement the service is solely based on open source.
+Requests or clarifications concerning the operation of the service should be submitted to GRNET Helpdesk via phone at 800-11-47638 or via e-mail to helpdesk-at-grnet.gr.
 
-Για τη διασφάλιση της ακεραιότητας της υπηρεσίας και προκειμένου αυτή να μην αποτελέσει πηγή επιθέσεων, το authentication των χρηστων πραγματοποιείται με τη χρήση Shibboleth. Το authorisation βασίζεται σε ένα συνδυασμό συγκεκριμένων attributes του Shibboleth με το address space που κάθε φορέας διαχειρίζεται.
 
-Το λογισμικό που επιλέχθηκε για την υλοποίηση της υπηρεσίας βασίζεται αποκλειστικά σε ανοιχτό κώδικα.
-
-Αιτήματα ή διευκρινίσεις που αφορούν στη λειτουργία της υπηρεσίας θα πρέπει να υποβάλλονται στο helpdesk του ΕΔΕΤ, τηλεφωνικά στο 800‐11‐47638 ή μέσω e‐mail στο helpdesk -στο- grnet.gr.
-<h5>Συμμετοχή</h5>
-Η συμμετοχή στην υπηρεσία προϋποθέτη την ορθή διαμόρφωση συγκεκριμένων Shibboleth attributes:
+{% endblocktrans %}
+<h5>{% trans "Joining the service" %}</h5>
+{% blocktrans %}Joining the service requires the appropriate configuration of certain Shibboleth attributes{% endblocktrans %}:
 				<ul>
 				<li>HTTP_EPPN</li>
 				<li>HTTP_SHIB_HOMEORGANIZATION</li>
 				<li>HTTP_SHIB_INETORGPERSON_MAIL</li>
-				<li>Ένα κατάλληλο HTTP_SHIB_EP_ENTITLEMENT το οποίο παρέχεται από το Helpdesk</li>
+				<li>{% blocktrans %}An appropriate HTTP_SHIB_EP_ENTITLEMENT which is provided by GRNET Helpdesk{% endblocktrans %}</li>
 				</ul>
-				Προεραιτικά:
+				{% trans "Optionally" %}:
 				<ul>
 				<li>HTTP_SHIB_INETORGPERSON_GIVENNAME</li>
 				<li>HTTP_SHIB_PERSON_SURNAME</li>
 				</ul>
-<h5>Χρήση</h5>
+<h5>{% trans "Use" %}</h5>
 
-Η υπηρεσία δίνει τη δυνατότητα στους χρήστες να περιορίσουν ενεργές επιθέσεις που στοχεύουν στο δικτυακό τους εξοπλισμό. Βασίζεται στη δημιουργία δυναμικών φίλτρων firewall οι οποίοι εφαρμόζονται στο δίκτυο με τη χρήση του διαχειριστικού πρωτοκόλλου netconf και διαδίδονται στις συμβατές (Juniper) διτκυακές συσκευές του δικτύου κορμού της ΕΔΕΤ μέσω του BGP flowspec NLRI.
+{% blocktrans %}The service enables users to mitigate active attacks aimed at their network equipment. 
+It is based on the creation of dynamic firewall filters that are applied to the network using the management protocol NETCONF and are propagated to compatible (Juniper) backbone network devices via BGP flowspec NLRI.
+In order to properly complete the application for a new filter is essential that the destination address belongs to the user's administrative network. Currently attacks are limited per /29 subnet.
+Requests for new filters are applied directly to the network and therefore users should pay extra attention in their request. Filters that have been applied to the network are removed after their expiry date, and users can activate then again by selecting the corresponding option. 
+Moreover, users are given the option for early deactivation of their requests.
+{% endblocktrans %}
 
-Για την ορθή συμπλήρωση της αίτησης ενός νέου φίλτρου είναι απαραίτητο η διεύθυνση προορισμού να ανήκει στο δίκτυο διαχείρισης του φορέα από τον οποίο προέρχεται ο χρήστης. Στην παρούσα φάση περιορίζονται επιθέσεις ανά /29 υποδίκτυα.
-
-Τα αιτήματα για νέα φίλτρα εφαρμόζονται άμεσα στο δίκτυο και ως εκ τούτου θα πρέπει να δίνται ιδιαίτερη προσοχή κατά την αίτησή τους. Τα φίλτρα που έχουν εφαρμοσθεί στο δίκτυο αφαιρούνται μετά το πέρας της ημερομηνίας λήξης τους, ενώ οι χρήστες μπορούν να τα ενεργοποιήσουν ξανά μέσω της αντίστοιχης επιλογής. Παράλληλα, δίνεται η δυνατότητα για απενεργοποίηση αιτημάτων πριν τη λήξη τους κατά τη βούληση του χρήστη
-
-<h5>Ασφάλεια</h5>
-Για λόγους ασφαλείας, η υποβολή αιτημάτων καταγράφεται ενημερώνοντας τους διαχειριστές της υπηρεσίας.
-
-Οι διαχιριστές της υπηρεσίας μπορούν ανά πάσα στιγμή να αφαιρέσουν ενεργά αιτήματα από το δίκτυο, εάν κάτι τέτοιο κριθεί αναγκαίο
+<h5>{% trans "Security" %}</h5>
+{% blocktrans %}For security reasons, the submission of requests is monitored by the administrators of the service.
+The service administrators may at any time remove active requests from the network, if this is deemed necessary{% endblocktrans %}
 </div>
 {% endblock %}

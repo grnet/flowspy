@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-23 16:03+0200\n"
+"POT-Creation-Date: 2012-02-24 10:25+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Leonidas Poulopoulos <leopoul@grnet.gr>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -410,7 +410,8 @@ msgstr ""
 msgid "GRNET"
 msgstr "ΕΔΕΤ"
 
-#: templates/base.html:88 templates/error.html:113
+#: templates/base.html:88 templates/error.html:113 templates/getinfo.html:27
+#: templates/getinfo.html.py:28
 msgid "Info"
 msgstr "Πληροφορίες"
 
@@ -425,6 +426,127 @@ msgstr "Επανάληψη Εισόδου"
 #: templates/error.html:76
 msgid "My routes"
 msgstr "Τα φίλτρα μου"
+
+#: templates/getinfo.html:33
+msgid "Intro"
+msgstr ""
+
+#: templates/getinfo.html:34
+msgid ""
+"Firewall on Demand service provides potential users (educational and "
+"academic community) the option to protect their networking equipment against "
+"network attacks and threats.\n"
+"\n"
+"In particular, the service is targeted at network operators of GRNET's "
+"institutions who have needs for short-term protection against network "
+"attacks with destination, equipment they operate.\n"
+"To ensure the integrity of the service and in order to prevent the service "
+"being a source of attacks, the authentication of users is done via "
+"Shibboleth. The authorisation is based on a combination of Shibboleth "
+"attributes with the address space that each organization manages.\n"
+"The software chosen to implement the service is solely based on open "
+"source.\n"
+"Requests or clarifications concerning the operation of the service should be "
+"submitted to GRNET Helpdesk via phone at 800-11-47638 or via e-mail to "
+"helpdesk-at-grnet.gr.\n"
+"\n"
+"\n"
+msgstr ""
+"Η υπηρεσία FoD (Firewall on Demand) παρέχει στην εκπαιδευτική και ακαδημαϊκή κοινότητα τη δυνατότητα για προστασία έναντι δικτυακών επιθέσεων που στοχέυουν στο δικτυακό εξοπλισμό που διαχειρίζονται.\n"
+"Ειδικότερα, η υπηρεσία απευθύνεται στα NOC των ιδρυμάτων‐φορέων του δικτύου ΕΔΕΤ που έχουν ανάγκες για βραχυπρόθεσμη προστασία έναντι δικτυακών επιθέσεων με προορισμό τον εξοπλισμό που διαχειρίζονται.\n"
+"Για τη διασφάλιση της ακεραιότητας της υπηρεσίας και προκειμένου αυτή να μην αποτελέσει πηγή επιθέσεων, το authentication των χρηστων πραγματοποιείται με τη χρήση Shibboleth. Το authorisation βασίζεται σε ένα συνδυασμό συγκεκριμένων attributes του Shibboleth με το address space που κάθε φορέας διαχειρίζεται.\n"
+"Το λογισμικό που επιλέχθηκε για την υλοποίηση της υπηρεσίας βασίζεται αποκλειστικά σε ανοιχτό κώδικα.\n"
+"Αιτήματα ή διευκρινίσεις που αφορούν στη λειτουργία της υπηρεσίας θα πρέπει να υποβάλλονται στο helpdesk του ΕΔΕΤ, τηλεφωνικά στο 800‐11‐47638 ή μέσω e‐mail στο helpdesk -στο- grnet.gr.\n"
+
+#: templates/getinfo.html:43
+msgid "Joining the service"
+msgstr "Συμμετοχή"
+
+#: templates/getinfo.html:44
+msgid ""
+"Joining the service requires the appropriate configuration of certain "
+"Shibboleth attributes"
+msgstr "Η συμμετοχή στην υπηρεσία προϋποθέτη την ορθή διαμόρφωση συγκεκριμένων Shibboleth attributes"
+
+#: templates/getinfo.html:49
+msgid ""
+"An appropriate HTTP_SHIB_EP_ENTITLEMENT which is provided by GRNET Helpdesk"
+msgstr "Ένα κατάλληλο HTTP_SHIB_EP_ENTITLEMENT το οποίο παρέχεται από το Helpdesk"
+
+#: templates/getinfo.html:51
+msgid "Optionally"
+msgstr "Προεραιτικά"
+
+#: templates/getinfo.html:56
+msgid "Use"
+msgstr "Χρήση"
+
+#: templates/getinfo.html:58
+msgid ""
+"The service enables users to mitigate active attacks aimed at their network "
+"equipment. \n"
+"It is based on the creation of dynamic firewall filters that are applied to "
+"the network using the management protocol NETCONF and are propagated to "
+"compatible (Juniper) backbone network devices via BGP flowspec NLRI.\n"
+"In order to properly complete the application for a new filter is essential "
+"that the destination address belongs to the user's administrative network. "
+"Currently attacks are limited per /29 subnet.\n"
+"Requests for new filters are applied directly to the network and therefore "
+"users should pay extra attention in their request. Filters that have been "
+"applied to the network are removed after their expiry date, and users can "
+"activate then again by selecting the corresponding option. \n"
+"Moreover, users are given the option for early deactivation of their "
+"requests.\n"
+msgstr ""
+"Η υπηρεσία δίνει τη δυνατότητα στους χρήστες να περιορίσουν ενεργές επιθέσεις που στοχεύουν στο δικτυακό τους εξοπλισμό. Βασίζεται στη δημιουργία δυναμικών φίλτρων firewall οι οποίοι εφαρμόζονται στο δίκτυο με τη χρήση του διαχειριστικού πρωτοκόλλου netconf και διαδίδονται στις συμβατές (Juniper) διτκυακές συσκευές του δικτύου κορμού της ΕΔΕΤ μέσω του BGP flowspec NLRI.\n"
+"Για την ορθή συμπλήρωση της αίτησης ενός νέου φίλτρου είναι απαραίτητο η διεύθυνση προορισμού να ανήκει στο δίκτυο διαχείρισης του φορέα από τον οποίο προέρχεται ο χρήστης. Στην παρούσα φάση περιορίζονται επιθέσεις ανά /29 υποδίκτυα.\n"
+"Τα αιτήματα για νέα φίλτρα εφαρμόζονται άμεσα στο δίκτυο και ως εκ τούτου θα πρέπει να δίνται ιδιαίτερη προσοχή κατά την αίτησή τους. Τα φίλτρα που έχουν εφαρμοσθεί στο δίκτυο αφαιρούνται μετά το πέρας της ημερομηνίας λήξης τους, ενώ οι χρήστες μπορούν να τα ενεργοποιήσουν ξανά μέσω της αντίστοιχης επιλογής. Παράλληλα, δίνεται η δυνατότητα για απενεργοποίηση αιτημάτων πριν τη λήξη τους κατά τη βούληση του χρήστη\n"
+
+#: templates/getinfo.html:65
+msgid "Security"
+msgstr "Ασφάλεια"
+
+#: templates/getinfo.html:66
+msgid ""
+"For security reasons, the submission of requests is monitored by the "
+"administrators of the service.\n"
+"The service administrators may at any time remove active requests from the "
+"network, if this is deemed necessary"
+msgstr ""
+"Για λόγους ασφαλείας, η υποβολή αιτημάτων καταγράφεται ενημερώνοντας τους διαχειριστές της υπηρεσίας.\n"
+"Οι διαχιριστές της υπηρεσίας μπορούν ανά πάσα στιγμή να αφαιρέσουν ενεργά αιτήματα από το δίκτυο, εάν κάτι τέτοιο κριθεί αναγκαίο"
+
+#: templates/gettos.html:27 templates/gettos.html.py:28
+msgid "Terms of Service"
+msgstr "Όροι χρήσης της υπηρεσίας Firewall on Demand"
+
+#: templates/gettos.html:33
+msgid ""
+"The FoD service is provided by GRNET to the academic and research community "
+"and the use of the service should only be done to promote academic, "
+"educational and research purposes.\n"
+"The following terms apply to all users of the service. These terms of use, "
+"as applicable, and each time amended, constitute the contract between the "
+"service users and GRNET.\n"
+"To use the service, users are required to accept the following terms."
+msgstr ""
+"Η υπηρεσία FoD παρέχεται από την ΕΔΕΤ Α.Ε. προς την ακαδημαϊκή και ερευνητική κοινότητα και η χρήση της υπηρεσίας οφείλει να γίνεται μόνο για την προώθηση ακαδημαϊκών, εκπαιδευτικών και ερευνητικών σκοπών.\n"
+"Οι παρακάτω όροι εφαρμόζονται από όλους τους χρήστες της υπηρεσίας. Οι παρόντες όροι χρήσης, όπως κάθε φορά ισχύουν και τροποποιούνται, αποτελούν τη σύμβαση μεταξύ των χρηστών της υπηρεσίας και της ΕΔΕΤ Α.Ε. Για τη χρήση της υπηρεσίας είναι απαραίτητη η αποδοχή των παρακάτω όρων."
+
+#: templates/gettos.html:36
+msgid "Potential Users"
+msgstr "Δυνητικοί Χρήστες"
+
+#: templates/gettos.html:37
+msgid ""
+"The service is targeted at the Network Operation Centers (or similar "
+"structures) approved by the board of GRNET SA, participating in the federal "
+"identification using Shibboleth. The service is provided to mitigate network "
+"attacks aimed at network equipment. The entrance and use of the service "
+"requires proper configuration and release of specific Shibboleth attributes."
+msgstr ""
+"Η υπηρεσία απευθύνεται στα Κέντρα Δικτύων (ή σε αντίστοιχες δομές) των εγκεκριμένων από το ΔΣ <a href='http://www.noc.grnet.gr/node/35' target='_blank'>φορέων</a> της ΕΔΕΤ Α.Ε που συμμετέχουν στην ομοσπονδιακή ταυτοποίηση με τη χρήση Shibboleth. Η υπηρεσία παρέχεται προκειμένου να περιοριστούν δικτυακές επιθέσεις που στοχεύουν στον εξοπλισμό των φορέων. Η είσοδος και χρήση της υπηρεσίας προϋποθέτη την ορθή διαμόρφωση συγκεκριμένων ιδιοτήτων του Shibboleth."
+
 
 #: templates/profile.html:9
 msgid "My data"

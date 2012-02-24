@@ -6,7 +6,7 @@
 <div id="welcome">
 <h3>{% trans "Welcome" %}</h3>
 <p>{% blocktrans %}Welcome to GRNET's FoD service.{% endblocktrans %}</p>
-<p>{% blocktrans %}If you are new to the service, take some time to read the service description{% endblocktrans %} <a href="/fod/about/info/">{% trans "here" %}</a>.</p>
+<p>{% blocktrans %}If you are new to the service, take some time to read the service description{% endblocktrans %} <a href="{% url getinfo %}">{% trans "here" %}</a>.</p>
 <p>{% blocktrans %}If you have properly set your Shibboleth attributes, you can login using the link on the right{% endblocktrans %}</p>
 <p>{% blocktrans %}For troubleshooting info and remarks do not hesitate to contact GRNET's Helpdesk.{% endblocktrans %}</p>
 </div>

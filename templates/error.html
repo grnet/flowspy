@@ -1,7 +1,7 @@
 {% load i18n %}
 <html>
 <head>
-<title>{% if error %}{% if inactive %}Activation Pending{% else %}Error{% endif %}{% endif %}</title>
+<title>{% if error %}{% if inactive %}{% trans "Activation Pending" %}{% else %}{% trans "Error" %}{% endif %}{% endif %}</title>
 <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
 <META HTTP-EQUIV="Expires" CONTENT="-1">
 <script src="/static/js/jquery.min.js" type="text/javascript"></script>
@@ -65,7 +65,7 @@ $(document).ready(function(){
 {% endif %}
 						<span class="topmenuaction"><a href="{% url logout %}">{% trans "Logout" %}</a></span>
 						{% else %}
-						<span class="topmenuaction relogin" title="After clicking Retry Login, it is strongly suggested to close your browser and visit the page again"><a href="{% url logout %}">{% trans "Retry Login" %}</a></span>
+						<span class="topmenuaction relogin" title='{% trans "After clicking Retry Login, it is strongly suggested to close your browser and visit the page again" %}'><a href="{% url logout %}">{% trans "Retry Login" %}</a></span>
 						{% endif %}
 					</div>
 					
@@ -79,22 +79,22 @@ $(document).ready(function(){
 				
 				{% endblock %}
 				{% block content %}
-				{% if error %}{% if inactive %}<h2>Activation Pending</h2>{% else %}<h2>Error</h2>{% endif %}{% endif %}
+				{% if error %}{% if inactive %}<h2>{% trans "Activation Pending" %}</h2>{% else %}<h2>{% trans "Error" %}</h2>{% endif %}{% endif %}
 				<div>
 				{% if missing_attributes %}
-				<p>One or more required shibboleth attributes were not released towards this service</p>
+				<p>{% trans "One or more required shibboleth attributes were not released towards this service" %}</p>
 				{% endif %}
 				<p {% if not inactive %}style="color: red;"{% endif %}>{% autoescape off %}{{error}}{% endautoescape %}</p>
 				{% if missing_attributes %}
 				<p>
-				Required shibboleth attributes:<br>
+				{% trans "Required shibboleth attributes" %}:<br>
 				<ul>
 				<li>HTTP_EPPN</li>
 				<li>HTTP_SHIB_HOMEORGANIZATION</li>
 				<li>HTTP_SHIB_INETORGPERSON_MAIL</li>
 				<li>An appropriate HTTP_SHIB_EP_ENTITLEMENT</li>
 				</ul>
-				Optional Attributes:
+				{% trans "Optional" %}:
 				<ul>
 				<li>HTTP_SHIB_INETORGPERSON_GIVENNAME</li>
 				<li>HTTP_SHIB_PERSON_SURNAME</li>

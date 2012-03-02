@@ -63,12 +63,16 @@ def welcome(request):
 @never_cache
 def group_routes(request):
     group_routes = []
-    peer = request.user.get_profile().peer
+    try:
+        peer = request.user.get_profile().peer
+    except UserProfile.DoesNotExist:
+        error = "User <strong>%s</strong> does not belong to any peer or organization. It is not possible to create new firewall rules.<br>Please contact Helpdesk to resolve this issue" % request.user.username
+        return render_to_response('error.html', {'error': error})
     if peer:
        peer_members = UserProfile.objects.filter(peer=peer)
        users = [prof.user for prof in peer_members]
        group_routes = Route.objects.filter(applier__in=users)
-    return render_to_response('user_routes.html', {'routes': group_routes},
+       return render_to_response('user_routes.html', {'routes': group_routes},
                               context_instance=RequestContext(request))
 
 
@@ -207,8 +211,11 @@ def delete_route(request, route_slug):
 @never_cache
 def user_profile(request):
     user = request.user
-    peer = request.user.get_profile().peer
-    
+    try:
+        peer = request.user.get_profile().peer
+    except UserProfile.DoesNotExist:
+        error = "User <strong>%s</strong> does not belong to any peer or organization. It is not possible to create new firewall rules.<br>Please contact Helpdesk to resolve this issue" % user.username
+        return render_to_response('error.html', {'error': error})
     return render_to_response('profile.html', {'user': user, 'peer':peer},
                                   context_instance=RequestContext(request))
 
@@ -250,10 +257,14 @@ def user_login(request):
                                   context_instance=RequestContext(request))
         try:
             user = User.objects.get(username__exact=username)
+            user.email = mail
+            user.first_name = firstname
+            user.last_name = lastname
+            user.save()
             user_exists = True
         except:
             user_exists = False
-        user = authenticate(username=username, firstname=firstname, lastname=lastname, mail=mail)
+        user = authenticate(username=username, firstname=firstname, lastname=lastname, mail=mail, authsource='shibboleth')
         if user is not None:
             try:
                 peer = Peer.objects.get(domain_name=organization)

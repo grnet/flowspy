@@ -10,6 +10,9 @@ class shibauthBackend:
         firstname = kwargs.get('firstname')
         lastname = kwargs.get('lastname')
         mail = kwargs.get('mail')
+        authsource = kwargs.get('authsource')
+        if authsource != 'shibboleth':
+            return None
         try:
             user = self._auth_user(username, firstname, lastname, mail)
         except:
@@ -22,10 +25,6 @@ class shibauthBackend:
 
         try:
             user = User.objects.get(username__exact=username)
-            user.email = mail
-            user.first_name = firstname
-            user.last_name = lastname
-            user.save()
         # The user did not exist. Create one with no privileges
         except: 
             user = User.objects.create_user(username, mail, None)

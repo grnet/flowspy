@@ -1,4 +1,12 @@
 ===========
+0.8.4 RELEASE
+Vulnerability prevention/bug fixes release
+Fixes:
+	- Fixed a bug where the shib auth backend erased non-shibboleth users info
+	- Added an authsource variable to prevent authentication backend overlapping
+	- Added exception handling for non-Shibboleth users that do not belong to a peer
+
+===========
 0.8.3 RELEASE
 Feature enhancement release
 Fixes:

@@ -4,6 +4,7 @@ from django.utils.translation import ugettext as _
 from django.utils.translation import ugettext_lazy
 from django.template.defaultfilters import filesizeformat
 from flowspy.flowspec.models import *
+from flowspy.peers.models import *
 from ipaddr import *
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
@@ -108,6 +109,8 @@ class RouteForm(forms.ModelForm):
         user = self.cleaned_data.get('applier', None)
         peer = user.get_profile().peer
         networks = peer.networks.all()
+        if user.is_superuser:
+            networks = PeerRange.objects.filter(peer__in=Peer.objects.all()).distinct()
         mynetwork = False
         route_pk_list = []
         if destination:

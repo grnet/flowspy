@@ -145,26 +145,33 @@ def edit_route(request, route_slug):
     route_original = deepcopy(route_edit)
     if request.POST:
         form = RouteForm(request.POST, instance = route_edit)
+        critical_changed_values = ['source', 'destination', 'sourceport', 'destinationport', 'port', 'protocol', 'then']
         if form.is_valid():
+            changed_data = form.changed_data
             route=form.save(commit=False)
             route.name = route_original.name
+            route.status = route_original.status
+            route.response = route_original.response
             route.applier = request.user
-            route.status = "PENDING"
-            route.source = IPNetwork("%s/%s" %(IPNetwork(route.source).network.compressed, IPNetwork(route.source).prefixlen)).compressed
-            route.destination = IPNetwork("%s/%s" %(IPNetwork(route.destination).network.compressed, IPNetwork(route.destination).prefixlen)).compressed
+            if bool(set(changed_data) & set(critical_changed_values)) or (not route_original.status == 'ACTIVE'):
+                route.status = "PENDING"
+                route.response = "Committing..."
+                route.source = IPNetwork("%s/%s" %(IPNetwork(route.source).network.compressed, IPNetwork(route.source).prefixlen)).compressed
+                route.destination = IPNetwork("%s/%s" %(IPNetwork(route.destination).network.compressed, IPNetwork(route.destination).prefixlen)).compressed
             route.save()
-            form.save_m2m()
-            route.commit_edit()
-            requesters_address = request.META['HTTP_X_FORWARDED_FOR']
-            mail_body = render_to_string("rule_edit_mail.txt",
+            if bool(set(changed_data) & set(critical_changed_values)) or (not route_original.status == 'ACTIVE'):
+                form.save_m2m()
+                route.commit_edit()
+                requesters_address = request.META['HTTP_X_FORWARDED_FOR']
+                mail_body = render_to_string("rule_edit_mail.txt",
                                              {"route": route, "address": requesters_address})
-            user_mail = "%s" %route.applier.email
-            user_mail = user_mail.split(';')
-            send_new_mail(settings.EMAIL_SUBJECT_PREFIX + "Rule %s edit request submitted by %s" %(route.name, route.applier.username),
+                user_mail = "%s" %route.applier.email
+                user_mail = user_mail.split(';')
+                send_new_mail(settings.EMAIL_SUBJECT_PREFIX + "Rule %s edit request submitted by %s" %(route.name, route.applier.username),
                               mail_body, settings.SERVER_EMAIL, user_mail,
                               get_peer_techc_mails(route.applier))
-            d = { 'clientip' : requesters_address, 'user' : route.applier.username }
-            logger.info(mail_body, extra=d)
+                d = { 'clientip' : requesters_address, 'user' : route.applier.username }
+                logger.info(mail_body, extra=d)
             return HttpResponseRedirect(reverse("group-routes"))
         else:
             return render_to_response('apply.html', {'form': form, 'edit':True, 'applier': applier},
@@ -190,6 +197,7 @@ def delete_route(request, route_slug):
             route.status = "PENDING"
             route.expires = datetime.date.today()
             route.applier = request.user
+            route.response = "Suspending..."
             route.save()
             route.commit_delete()
             requesters_address = request.META['HTTP_X_FORWARDED_FOR']
@@ -213,10 +221,13 @@ def user_profile(request):
     user = request.user
     try:
         peer = request.user.get_profile().peer
+        peers = Peer.objects.filter(pk=peer.pk)
+        if user.is_superuser:
+            peers = Peer.objects.all()
     except UserProfile.DoesNotExist:
         error = "User <strong>%s</strong> does not belong to any peer or organization. It is not possible to create new firewall rules.<br>Please contact Helpdesk to resolve this issue" % user.username
         return render_to_response('error.html', {'error': error})
-    return render_to_response('profile.html', {'user': user, 'peer':peer},
+    return render_to_response('profile.html', {'user': user, 'peers':peers},
                                   context_instance=RequestContext(request))
 
 @never_cache

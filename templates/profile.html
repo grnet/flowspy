@@ -6,18 +6,27 @@
 <h3>{% trans "My profile" %}</h3>
 
 <div id="profile">
-	My data:<br>
 	<strong>First name:</strong> {{user.first_name}} <br>
 	<strong>Last name:</strong> {{user.last_name}} <br>
 	<strong>Email:</strong> {{user.email}}<br>
-	<strong>Organization:</strong> {{peer}} <br>
-	<strong>Admin Networks:</strong> <br>
-	{% for network in peer.networks.all %}
-	{{network}}<br>
-	{% empty %}
-    <span style="color:red">Ooops! Seems you have no networks associated with your peer. Contact Helpdesk to resolve this issue.</span>
+	<br>
+	<strong>My Networks:</strong><br>
+	<table class="display">
+	<tr>
+	<th class="ui-state-default">Organization</th><th class="ui-state-default">Networks</th>
+	</tr>
+	{% for peer in peers %}
+		<tr class="gradeC {% if forloop.counter|divisibleby:2 %}even{% else %}odd{% endif %}">
+		<td>{{peer}} </td>
+		<td>
+		{% for network in peer.networks.all %}
+		{{network}}<br>
+		{% empty %}
+	    <span style="color:red">Ooops! Seems you have no networks associated with this peer. Contact Helpdesk to resolve this issue.</span>
+		{% endfor %}
+		</td></tr>
 	{% endfor %}
-
+	</table>
 </div>
 
 

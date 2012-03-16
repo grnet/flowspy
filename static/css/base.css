@@ -45,7 +45,7 @@ a:hover {
 }
 
 #main {
-    background: url("/static/background_grnet.png") repeat-x scroll 0 0 #FFFFFF;
+    background: url("/static/background.png") repeat-x scroll 0 0 #FFFFFF;
     padding: 0;
     margin: 0;
 }

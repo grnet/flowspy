@@ -26,7 +26,14 @@ class RouteForm(forms.ModelForm):
 
     class Meta:
         model = Route
-    
+
+    def clean_applier(self):
+        applier = self.cleaned_data['applier']
+        if applier:
+            return self.cleaned_data["applier"]
+        else:
+            raise forms.ValidationError('This field is required.')
+
     def clean_source(self):
         user = User.objects.get(pk=self.data['applier'])
         peer = user.get_profile().peer
@@ -107,9 +114,14 @@ class RouteForm(forms.ModelForm):
         destinationports = self.cleaned_data.get('destinationport', None)
         protocols = self.cleaned_data.get('protocol', None)
         user = self.cleaned_data.get('applier', None)
+        try:
+            issuperuser = self.data['issuperuser']
+            su = User.objects.get(username=issuperuser)
+        except:
+            issuperuser = None
         peer = user.get_profile().peer
         networks = peer.networks.all()
-        if user.is_superuser:
+        if issuperuser:
             networks = PeerRange.objects.filter(peer__in=Peer.objects.all()).distinct()
         mynetwork = False
         route_pk_list = []
@@ -119,7 +131,7 @@ class RouteForm(forms.ModelForm):
                 if IPNetwork(destination) in net:
                     mynetwork = True
             if not mynetwork:
-                 raise forms.ValidationError('Destination address/network should belong to your administrative address space. Check My Profile to review your networks')
+                raise forms.ValidationError('Destination address/network should belong to your administrative address space. Check My Profile to review your networks')
         if (sourceports and ports):
             raise forms.ValidationError('Cannot create rule for source ports and ports at the same time. Select either ports or source ports')
         if (destinationports and ports):

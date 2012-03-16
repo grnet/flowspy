@@ -72,6 +72,8 @@ def group_routes(request):
        peer_members = UserProfile.objects.filter(peer=peer)
        users = [prof.user for prof in peer_members]
        group_routes = Route.objects.filter(applier__in=users)
+       if request.user.is_superuser:
+           group_routes = Route.objects.all()
        return render_to_response('user_routes.html', {'routes': group_routes},
                               context_instance=RequestContext(request))
 
@@ -86,7 +88,7 @@ def add_route(request):
                              "Insufficient rights on administrative networks. Cannot add rule. Contact your administrator")
          return HttpResponseRedirect(reverse("group-routes"))
     if request.method == "GET":
-        form = RouteForm()
+        form = RouteForm(initial={'applier': applier})
         if not request.user.is_superuser:
             form.fields['then'] = forms.ModelMultipleChoiceField(queryset=ThenAction.objects.filter(action__in=settings.UI_USER_THEN_ACTIONS).order_by('action'), required=True)
             form.fields['protocol'] = forms.ModelMultipleChoiceField(queryset=MatchProtocol.objects.filter(protocol__in=settings.UI_USER_PROTOCOLS).order_by('protocol'), required=False)
@@ -94,10 +96,19 @@ def add_route(request):
                                   context_instance=RequestContext(request))
 
     else:
-        form = RouteForm(request.POST)
+        request_data = request.POST.copy()
+        if request.user.is_superuser:
+            request_data['issuperuser'] = request.user.username
+        else:
+            try:
+                del requset_data['issuperuser']
+            except:
+                pass
+        form = RouteForm(request_data)
         if form.is_valid():
             route=form.save(commit=False)
-            route.applier = request.user
+            if not request.user.is_superuser:
+                route.applier = request.user
             route.status = "PENDING"
             route.source = IPNetwork("%s/%s" %(IPNetwork(route.source).network.compressed, IPNetwork(route.source).prefixlen)).compressed
             route.destination = IPNetwork("%s/%s" %(IPNetwork(route.destination).network.compressed, IPNetwork(route.destination).prefixlen)).compressed
@@ -116,6 +127,9 @@ def add_route(request):
             logger.info(mail_body, extra=d)
             return HttpResponseRedirect(reverse("group-routes"))
         else:
+            if not request.user.is_superuser:
+                form.fields['then'] = forms.ModelMultipleChoiceField(queryset=ThenAction.objects.filter(action__in=settings.UI_USER_THEN_ACTIONS).order_by('action'), required=True)
+                form.fields['protocol'] = forms.ModelMultipleChoiceField(queryset=MatchProtocol.objects.filter(protocol__in=settings.UI_USER_PROTOCOLS).order_by('protocol'), required=False)
             return render_to_response('apply.html', {'form': form, 'applier':applier},
                                       context_instance=RequestContext(request))
 
@@ -126,7 +140,7 @@ def edit_route(request, route_slug):
     applier_peer = request.user.get_profile().peer
     route_edit = get_object_or_404(Route, name=route_slug)
     route_edit_applier_peer = route_edit.applier.get_profile().peer
-    if applier_peer != route_edit_applier_peer:
+    if applier_peer != route_edit_applier_peer and (not request.user.is_superuser):
         messages.add_message(request, messages.WARNING,
                              "Insufficient rights to edit rule %s" %(route_slug))
         return HttpResponseRedirect(reverse("group-routes"))
@@ -144,7 +158,15 @@ def edit_route(request, route_slug):
         return HttpResponseRedirect(reverse("group-routes"))
     route_original = deepcopy(route_edit)
     if request.POST:
-        form = RouteForm(request.POST, instance = route_edit)
+        request_data = request.POST.copy()
+        if request.user.is_superuser:
+            request_data['issuperuser'] = request.user.username
+        else:
+            try:
+                del request_data['issuperuser']
+            except:
+                pass
+        form = RouteForm(request_data, instance = route_edit)
         critical_changed_values = ['source', 'destination', 'sourceport', 'destinationport', 'port', 'protocol', 'then']
         if form.is_valid():
             changed_data = form.changed_data
@@ -152,10 +174,11 @@ def edit_route(request, route_slug):
             route.name = route_original.name
             route.status = route_original.status
             route.response = route_original.response
-            route.applier = request.user
+            if not request.user.is_superuser:
+                route.applier = request.user
             if bool(set(changed_data) & set(critical_changed_values)) or (not route_original.status == 'ACTIVE'):
                 route.status = "PENDING"
-                route.response = "Committing..."
+                route.response = "Applying..."
                 route.source = IPNetwork("%s/%s" %(IPNetwork(route.source).network.compressed, IPNetwork(route.source).prefixlen)).compressed
                 route.destination = IPNetwork("%s/%s" %(IPNetwork(route.destination).network.compressed, IPNetwork(route.destination).prefixlen)).compressed
             route.save()
@@ -174,11 +197,22 @@ def edit_route(request, route_slug):
                 logger.info(mail_body, extra=d)
             return HttpResponseRedirect(reverse("group-routes"))
         else:
+            if not request.user.is_superuser:
+                form.fields['then'] = forms.ModelMultipleChoiceField(queryset=ThenAction.objects.filter(action__in=settings.UI_USER_THEN_ACTIONS).order_by('action'), required=True)
+                form.fields['protocol'] = forms.ModelMultipleChoiceField(queryset=MatchProtocol.objects.filter(protocol__in=settings.UI_USER_PROTOCOLS).order_by('protocol'), required=False)
             return render_to_response('apply.html', {'form': form, 'edit':True, 'applier': applier},
                                       context_instance=RequestContext(request))
     else:
+        if (not route_original.status == 'ACTIVE'):
+            route_edit.expires = datetime.date.today() + datetime.timedelta(days = settings.EXPIRATION_DAYS_OFFSET)
         dictionary = model_to_dict(route_edit, fields=[], exclude=[])
-        #form = RouteForm(instance=route_edit)
+        if request.user.is_superuser:
+            dictionary['issuperuser'] = request.user.username
+        else:
+            try:
+                del dictionary['issuperuser']
+            except:
+                pass
         form = RouteForm(dictionary)
         if not request.user.is_superuser:
             form.fields['then'] = forms.ModelMultipleChoiceField(queryset=ThenAction.objects.filter(action__in=settings.UI_USER_THEN_ACTIONS).order_by('action'), required=True)
@@ -193,10 +227,11 @@ def delete_route(request, route_slug):
         route = get_object_or_404(Route, name=route_slug)
         applier_peer = route.applier.get_profile().peer
         requester_peer = request.user.get_profile().peer
-        if applier_peer == requester_peer:
+        if applier_peer == requester_peer or request.user.is_superuser:
             route.status = "PENDING"
             route.expires = datetime.date.today()
-            route.applier = request.user
+            if not request.user.is_superuser:
+                route.applier = request.user
             route.response = "Suspending..."
             route.save()
             route.commit_delete()
@@ -209,7 +244,7 @@ def delete_route(request, route_slug):
                               mail_body, settings.SERVER_EMAIL, user_mail,
                              get_peer_techc_mails(route.applier))
             d = { 'clientip' : requesters_address, 'user' : route.applier.username }
-            logger.info(mail_body, extra=d)            
+            logger.info(mail_body, extra=d)
         html = "<html><body>Done</body></html>"
         return HttpResponse(html)
     else:

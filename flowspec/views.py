@@ -100,6 +100,7 @@ def add_route(request):
         if request.user.is_superuser:
             request_data['issuperuser'] = request.user.username
         else:
+            request_data['applier'] = applier
             try:
                 del requset_data['issuperuser']
             except:
@@ -110,6 +111,7 @@ def add_route(request):
             if not request.user.is_superuser:
                 route.applier = request.user
             route.status = "PENDING"
+            route.response = "Applying..."
             route.source = IPNetwork("%s/%s" %(IPNetwork(route.source).network.compressed, IPNetwork(route.source).prefixlen)).compressed
             route.destination = IPNetwork("%s/%s" %(IPNetwork(route.destination).network.compressed, IPNetwork(route.destination).prefixlen)).compressed
             route.save()
@@ -162,6 +164,7 @@ def edit_route(request, route_slug):
         if request.user.is_superuser:
             request_data['issuperuser'] = request.user.username
         else:
+            request_data['applier'] = applier
             try:
                 del request_data['issuperuser']
             except:

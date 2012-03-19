@@ -73,7 +73,19 @@ In settings.py set the following according to your configuration:
 * PRIMARY_WHOIS
 * ALTERNATE_WHOIS
 
-4.2 Installation
+4.2 Branding
+
+4.2.1 Logos
+
+Inside the static folder you will find two empty png files: logo.dist.png (172x80) and shib_login.dist.png (98x80).
+Edit those two with your favourite image processing software and save them as logo.png and shib_login.png under the same folder. Image sizes are optimized to operate without any
+other code changes. In case you want to incorporate images of different sizes you have to fine tune css and/or html as well.
+
+4.2.2 Footer
+
+Under the templates folder (templates), you can alter the footer.html file to include your own footer messages, badges, etc.
+
+4.3 Installation
 
 * Run:
 	./manage.py syncdb

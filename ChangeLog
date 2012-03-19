@@ -1,4 +1,15 @@
 ===========
+0.8.5 RELEASE
+Feature enhancement release/Minor UI fixes/Cleanup
+Fixes:
+	- Changed javascript order to prevent unformated content in datatables
+	- Un-needed files cleanup
+	- Error template is now based on base.html template
+Enhancements:
+	- Administrator privileges apply on UI as well
+	- Enhanced application security
+
+===========
 0.8.4 RELEASE
 Vulnerability prevention/bug fixes release
 Fixes:

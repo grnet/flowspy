@@ -111,7 +111,7 @@ def add_route(request):
             if not request.user.is_superuser:
                 route.applier = request.user
             route.status = "PENDING"
-            route.response = "Applying..."
+            route.response = "Applying"
             route.source = IPNetwork("%s/%s" %(IPNetwork(route.source).network.compressed, IPNetwork(route.source).prefixlen)).compressed
             route.destination = IPNetwork("%s/%s" %(IPNetwork(route.destination).network.compressed, IPNetwork(route.destination).prefixlen)).compressed
             route.save()
@@ -181,7 +181,7 @@ def edit_route(request, route_slug):
                 route.applier = request.user
             if bool(set(changed_data) & set(critical_changed_values)) or (not route_original.status == 'ACTIVE'):
                 route.status = "PENDING"
-                route.response = "Applying..."
+                route.response = "Applying"
                 route.source = IPNetwork("%s/%s" %(IPNetwork(route.source).network.compressed, IPNetwork(route.source).prefixlen)).compressed
                 route.destination = IPNetwork("%s/%s" %(IPNetwork(route.destination).network.compressed, IPNetwork(route.destination).prefixlen)).compressed
             route.save()
@@ -235,7 +235,7 @@ def delete_route(request, route_slug):
             route.expires = datetime.date.today()
             if not request.user.is_superuser:
                 route.applier = request.user
-            route.response = "Suspending..."
+            route.response = "Suspending"
             route.save()
             route.commit_delete()
             requesters_address = request.META['HTTP_X_FORWARDED_FOR']

@@ -123,8 +123,9 @@ def check_sync(route_name=None, selected_routes = []):
         routes = routes.filter(name=route_name)
     for route in routes:
         if route.has_expired() and (route.status != 'EXPIRED' and route.status != 'ADMININACTIVE' and route.status != 'INACTIVE'):
-            logger.info('Expiring route %s' %route.name)
-            subtask(delete).delay(route, reason="EXPIRED")
+            if route.status != 'ERROR':
+                logger.info('Expiring %s route %s' %(route.status, route.name))
+                subtask(delete).delay(route, reason="EXPIRED")
 #        elif route.has_expired() and (route.status == 'ADMININACTIVE' or route.status == 'INACTIVE'):
 #            route.status = 'EXPIRED'
 #            route.response = 'Rule Expired'

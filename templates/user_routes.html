@@ -290,7 +290,11 @@ function delete_route(route){
 		{% ifequal route.status 'OUTOFSYNC' %}
 		<a href="{% url edit-route route.name %}" class="edit_button" id="edit_button_{{route.pk}}">ReSync</a>
 		{% else %}
+		{% ifequal route.status 'ERROR' %}
+		<a href="{% url edit-route route.name %}" class="edit_button" id="edit_button_{{route.pk}}">Fix it!</a>
+		{% else %}
 		-
+		{% endifequal %}
 		{% endifequal %}
 		{% endif %}
 		{% endifequal %}

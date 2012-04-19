@@ -1,4 +1,12 @@
 ===========
+0.8.6 RELEASE
+Minor UI enhancements/Bug fix
+Fixes:
+	- Fixed issue where rules in ERROR state would cause check_sync to check them
+Enhancements:
+	- Added small dots to ongoing response field to indicate activity
+
+===========
 0.8.5 RELEASE
 Feature enhancement release/Minor UI fixes/Cleanup
 Fixes:

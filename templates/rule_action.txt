@@ -1,0 +1,24 @@
+{% load tofqdn %}{% ifequal action 'expires' %}Rule {{route.name}} expires {% ifequal expiration_days 0 %}today{% else%}in {{expiration_days}} day{{ expiration_days|pluralize }}{% endifequal %}{% else %}A new rule {{action}} job has spawned
+
+Peer: {{route.applier.get_profile.peer.peer_name}}
+User {{route.applier.username}} requested the {{action}} of the following rule from address {{address}} {% if address|tofqdn %}({{address|tofqdn}}){% endif %}:
+
+Rule name: {{route.name}}{% endifequal %}
+
+Match Statements:
+* Source Address: {{route.source}}
+* Destination Address: {{route.destination}}
+* Protocol: {% if route.protocol.all %}{% for protocol in route.protocol.all %}{{ protocol }}{% if not forloop.last %}, {% endif %}{% endfor %}{% else %}any{% endif %}
+* Ports: {% if route.sourceport.all or route.destinationport.all %}Defined by source/destination ports{% else %}{% if route.port.all %}{% for port in route.port.all %}{{ port }}{% if not forloop.last %}, {% endif %}{% endfor %}{% else %}any{% endif %}{% endif %}
+* Source Ports: {% if route.port.all %}same as ports{% else %}{% if route.sourceport.all %}{% for port in route.sourceport.all %}{{ port }}{% if not forloop.last %}, {% endif %}{% endfor %}{% else %}any{% endif %}{% endif %}
+* Destination Ports: {% if route.port.all %}same as ports{% else %}{% if route.destinationport.all %}{% for port in route.destinationport.all %}{{ port }}{% if not forloop.last %}, {% endif %}{% endfor %}{% else %}any{% endif %}{% endif %}
+
+Then Actions:
+* Action:{% for then in route.then.all %}{{ then }}{% if not forloop.last %}, {% endif %}{% endfor %}
+
+Comments: {% if route.comments %}{{route.comments}}{% else %}-{% endif %}
+
+Expires: {% ifequal action 'removal' %}Now, removal requested{%else%}{{route.expires}}{% endifequal %}
+
+Rule url: {{url}}
+

@@ -118,8 +118,10 @@ def add_route(request):
             form.save_m2m()
             route.commit_add()
             requesters_address = request.META['HTTP_X_FORWARDED_FOR']
-            mail_body = render_to_string("rule_add_mail.txt",
-                                             {"route": route, "address": requesters_address})
+            fqdn = Site.objects.get_current().domain
+            admin_url = "https://%s%s" % (fqdn, "/fod/edit/%s"%route.name)
+            mail_body = render_to_string("rule_action.txt",
+                                             {"route": route, "address": requesters_address, "action": "creation", "url": admin_url})
             user_mail = "%s" %route.applier.email
             user_mail = user_mail.split(';')
             send_new_mail(settings.EMAIL_SUBJECT_PREFIX + "Rule %s creation request submitted by %s" %(route.name, route.applier.username),
@@ -189,8 +191,10 @@ def edit_route(request, route_slug):
                 form.save_m2m()
                 route.commit_edit()
                 requesters_address = request.META['HTTP_X_FORWARDED_FOR']
-                mail_body = render_to_string("rule_edit_mail.txt",
-                                             {"route": route, "address": requesters_address})
+                fqdn = Site.objects.get_current().domain
+                admin_url = "https://%s%s" % (fqdn, "/fod/edit/%s"%route.name)
+                mail_body = render_to_string("rule_action.txt",
+                                             {"route": route, "address": requesters_address, "action": "edit", "url": admin_url})
                 user_mail = "%s" %route.applier.email
                 user_mail = user_mail.split(';')
                 send_new_mail(settings.EMAIL_SUBJECT_PREFIX + "Rule %s edit request submitted by %s" %(route.name, route.applier.username),
@@ -239,8 +243,10 @@ def delete_route(request, route_slug):
             route.save()
             route.commit_delete()
             requesters_address = request.META['HTTP_X_FORWARDED_FOR']
-            mail_body = render_to_string("rule_delete_mail.txt",
-                                             {"route": route, "address": requesters_address})
+            fqdn = Site.objects.get_current().domain
+            admin_url = "https://%s%s" % (fqdn, "/fod/edit/%s"%route.name)
+            mail_body = render_to_string("rule_action.txt",
+                                             {"route": route, "address": requesters_address, "action": "removal", "url": admin_url})
             user_mail = "%s" %route.applier.email
             user_mail = user_mail.split(';')
             send_new_mail(settings.EMAIL_SUBJECT_PREFIX + "Rule %s removal request submitted by %s" %(route.name, route.applier.username), 

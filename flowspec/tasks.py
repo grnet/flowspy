@@ -150,8 +150,8 @@ def notify_expired():
                     admin_url = "https://%s%s" % \
                     (fqdn,
                      "/fod/edit/%s"%route.name)
-                    mail_body = render_to_string("rule_expiration.txt",
-                                             {"route": route, 'expiration_days':expiration_days, 'url':admin_url})
+                    mail_body = render_to_string("rule_action.txt",
+                                             {"route": route, 'expiration_days':expiration_days, 'action':'expires', 'url':admin_url})
                     days_num = ' days'
                     expiration_days_text = "%s %s" %('in',expiration_days)
                     if expiration_days == 0:

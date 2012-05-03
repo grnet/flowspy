@@ -4,6 +4,7 @@ from django.utils.translation import ugettext as _
 from django.utils.translation import ugettext_lazy
 from django.template.defaultfilters import filesizeformat
 from flowspy.flowspec.models import *
+from flowspy.peers.models import *
 from ipaddr import *
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
@@ -25,7 +26,14 @@ class RouteForm(forms.ModelForm):
 
     class Meta:
         model = Route
-    
+
+    def clean_applier(self):
+        applier = self.cleaned_data['applier']
+        if applier:
+            return self.cleaned_data["applier"]
+        else:
+            raise forms.ValidationError('This field is required.')
+
     def clean_source(self):
         user = User.objects.get(pk=self.data['applier'])
         peer = user.get_profile().peer
@@ -106,8 +114,15 @@ class RouteForm(forms.ModelForm):
         destinationports = self.cleaned_data.get('destinationport', None)
         protocols = self.cleaned_data.get('protocol', None)
         user = self.cleaned_data.get('applier', None)
+        try:
+            issuperuser = self.data['issuperuser']
+            su = User.objects.get(username=issuperuser)
+        except:
+            issuperuser = None
         peer = user.get_profile().peer
         networks = peer.networks.all()
+        if issuperuser:
+            networks = PeerRange.objects.filter(peer__in=Peer.objects.all()).distinct()
         mynetwork = False
         route_pk_list = []
         if destination:
@@ -116,7 +131,7 @@ class RouteForm(forms.ModelForm):
                 if IPNetwork(destination) in net:
                     mynetwork = True
             if not mynetwork:
-                 raise forms.ValidationError(_('Destination address/network should belong to your administrative address space. Check My Profile to review your networks'))
+                raise forms.ValidationError(_('Destination address/network should belong to your administrative address space. Check My Profile to review your networks'))
         if (sourceports and ports):
             raise forms.ValidationError(_('Cannot create rule for source ports and ports at the same time. Select either ports or source ports'))
         if (destinationports and ports):
@@ -129,7 +144,7 @@ class RouteForm(forms.ModelForm):
             raise forms.ValidationError(_('Fill at least a Rule Match Condition'))
         if not user.is_superuser and then[0].action not in settings.UI_USER_THEN_ACTIONS:
             raise forms.ValidationError(_('This action "%s" is not permitted') %(then[0].action))
-        existing_routes = Route.objects.exclude(status='EXPIRED').exclude(status='ERROR').exclude(status='ADMININACTIVE')
+        existing_routes = Route.objects.all()
         existing_routes = existing_routes.filter(applier__userprofile__peer=peer)
         if source:
             source = IPNetwork(source).compressed

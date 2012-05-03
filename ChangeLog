@@ -1,4 +1,39 @@
 ===========
+0.8.7 RELEASE
+Minor enhancements
+
+Enhancements:
+	- Merged all mail txt files into one
+	- Added all routes in form cleaning (initially, EXPIRED, ADMININACTIVE and ERROR were excluded)
+
+===========
+0.8.6 RELEASE
+Minor UI enhancements/Bug fix
+Fixes:
+	- Fixed issue where rules in ERROR state would cause check_sync to check them
+Enhancements:
+	- Added small dots to ongoing response field to indicate activity
+
+===========
+0.8.5 RELEASE
+Feature enhancement release/Minor UI fixes/Cleanup
+Fixes:
+	- Changed javascript order to prevent unformated content in datatables
+	- Un-needed files cleanup
+	- Error template is now based on base.html template
+Enhancements:
+	- Administrator privileges apply on UI as well
+	- Enhanced application security
+
+===========
+0.8.4 RELEASE
+Vulnerability prevention/bug fixes release
+Fixes:
+	- Fixed a bug where the shib auth backend erased non-shibboleth users info
+	- Added an authsource variable to prevent authentication backend overlapping
+	- Added exception handling for non-Shibboleth users that do not belong to a peer
+
+===========
 0.8.3 RELEASE
 Feature enhancement release
 Fixes:

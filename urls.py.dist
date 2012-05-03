@@ -19,6 +19,8 @@ urlpatterns = patterns('',
     url(r'^fod/delete/(?P<route_slug>[\w\-]+)/$', 'flowspy.flowspec.views.delete_route', name="delete-route"),
     url(r'^fod/login/?', 'flowspy.flowspec.views.user_login', name="login"),
     url(r'^fod/welcome/?', 'flowspy.flowspec.views.welcome', name="welcome"),
+    url(r'^fod/info/?', 'flowspy.flowspec.views.getinfo', name="getinfo"),
+    url(r'^fod/tos/?', 'flowspy.flowspec.views.gettos', name="gettos"),
     url(r'^fod/logout/?', 'flowspy.flowspec.views.user_logout', name="logout"),
     (r'^fod/setlang/?$', 'django.views.i18n.set_language'),
     # Uncomment the admin/doc line below to enable admin documentation:

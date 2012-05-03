@@ -256,11 +256,29 @@ div.roundbox, #portsacc, #id_comments{
                     </p>
                 </div>
             </fieldset>
+            {% if user.is_superuser %}
+            <fieldset>
+                <legend>
+                    {% trans "Admin Options" %}
+                </legend>
+                 <div class="roundbox">
+                    {{ form.applier.label_tag }}{{ form.applier }}
+                    <br>
+                    {% if form.applier.errors %}
+                    <br>
+                    <p class="error" style="clear:both;">
+                        {{ form.applier.errors|join:", " }}
+                    </p>
+                    {% endif %}
+                </div>
+                </fieldset>
+                {% else %}
+                 <input type="hidden" id="id_applier" name="applier" value="{{applier}}"/>
+                {% endif %}
             <fieldset>
                 <legend>
                     {% trans "Rule Match Conditions" %}
                 </legend>
-                <input type="hidden" id="id_applier" name="applier" value="{{applier}}"/>
                 <div class="roundbox">
                     {{ form.source.label_tag }}{{ form.source }}<img src="/static/threat_source.png"/> {% if form.source.errors %}
                     <br>

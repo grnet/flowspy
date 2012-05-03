@@ -2,6 +2,7 @@
 {% load i18n %}
 
 {% block title %}{% trans "My profile" %}{% endblock %}
+{% block breadcrumbs %}:: {% trans "My profile" %}{% endblock %}
 {% block content %}
 <h3>{% trans "My profile" %}</h3>
 
@@ -10,16 +11,25 @@
 	<strong>{% trans "First name" %}:</strong> {{user.first_name}} <br>
 	<strong>{% trans "Last name" %}:</strong> {{user.last_name}} <br>
 	<strong>{% trans "Email" %}:</strong> {{user.email}}<br>
-	<strong>{% trans "Organization" %}:</strong> {{peer}} <br>
-	<strong>{% trans "Admin Networks" %}:</strong> <br>
-	{% for network in peer.networks.all %}
-	{{network}}<br>
-	{% empty %}
-    <span style="color:red">{% blocktrans %}Ooops! Seems you have no networks associated with your peer. Contact Helpdesk to resolve this issue.{% endblocktrans %}</span>
+	<br>
+	<strong>{% trans "My Networks" %}:</strong><br>
+	<table class="display">
+	<tr>
+	<th class="ui-state-default">{% trans "Organization" %}</th><th class="ui-state-default">{% trans "Networks" %}</th>
+	</tr>
+	{% for peer in peers %}
+		<tr class="gradeC {% if forloop.counter|divisibleby:2 %}even{% else %}odd{% endif %}">
+		<td>{{peer}} </td>
+		<td>
+		{% for network in peer.networks.all %}
+		{{network}}<br>
+		{% empty %}
+	    <span style="color:red">{% blocktrans %}Ooops! Seems you have no networks associated with your peer. Contact Helpdesk to resolve this issue.{% endblocktrans %}</span>
+		{% endfor %}
+		</td></tr>
 	{% endfor %}
-
+	</table>
 </div>
 
-
-
 {% endblock %}
+

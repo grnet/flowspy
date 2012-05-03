@@ -123,8 +123,9 @@ def check_sync(route_name=None, selected_routes = []):
         routes = routes.filter(name=route_name)
     for route in routes:
         if route.has_expired() and (route.status != 'EXPIRED' and route.status != 'ADMININACTIVE' and route.status != 'INACTIVE'):
-            logger.info('Expiring route %s' %route.name)
-            subtask(delete).delay(route, reason="EXPIRED")
+            if route.status != 'ERROR':
+                logger.info('Expiring %s route %s' %(route.status, route.name))
+                subtask(delete).delay(route, reason="EXPIRED")
 #        elif route.has_expired() and (route.status == 'ADMININACTIVE' or route.status == 'INACTIVE'):
 #            route.status = 'EXPIRED'
 #            route.response = 'Rule Expired'
@@ -149,8 +150,8 @@ def notify_expired():
                     admin_url = "https://%s%s" % \
                     (fqdn,
                      "/fod/edit/%s"%route.name)
-                    mail_body = render_to_string("rule_expiration.txt",
-                                             {"route": route, 'expiration_days':expiration_days, 'url':admin_url})
+                    mail_body = render_to_string("rule_action.txt",
+                                             {"route": route, 'expiration_days':expiration_days, 'action':'expires', 'url':admin_url})
                     days_num = ' days'
                     expiration_days_text = "%s %s" %('in',expiration_days)
                     if expiration_days == 0:

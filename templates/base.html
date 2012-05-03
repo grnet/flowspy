@@ -29,13 +29,14 @@
 	<div id="main">
 			<div id="header">
 				<a class="grnetlogo" href="{% url group-routes %}">
-					<img class="logoimg" src="/static/grnet_logo.png">
+					<img class="logoimg" src="/static/logo.png">
 				</a>
 				<div id="title">
 					<a href="{% url group-routes %}">Firewall on Demand</a>
 				</div>
 				<div class="loginform">
 					<div id="formcontent">
+					{% block menublock %}
 						{% if user.is_authenticated %}
 						<span class="topmenuuser">{% trans "Welcome" %} <strong>{{user}}</strong></span>
 						{% endif %}
@@ -59,6 +60,7 @@
 						{% else %}
 						<span class="topmenuaction"><a href="{% url login %}">{% trans "Shibboleth Login" %}</a></span>
 						{% endif %}
+						{% endblock %}
 					</div>
 					
 				</div>
@@ -80,13 +82,9 @@
 				{% endblock %}
 
 			</div>
-			
-			<div id="footer">
-			{% if user.is_authenticated %}
-			{% trans "If you have any questions or need help, contact GRNET Helpdesk at <a href='mailto:helpdesk@grnet.gr'>helpdesk@grnet.gr</a> or 800-11-47638." %}<br />
-			{% endif %}
-			<a href="http://www.grnet.gr">{% trans "GRNET" %} NOC</a> | <a href="{% url getinfo %}">{% trans "Info" %}</a> | <a href="{% url gettos %}">{% trans "Service Terms" %}</a>
-			</div>
+			{% block footerblock %}
+				{% include "footer.html" %}
+			{% endblock %}
 	</div>
 </body>
 </html>

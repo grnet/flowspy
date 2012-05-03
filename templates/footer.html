@@ -1,0 +1,8 @@
+{% load i18n %}
+<div id="footer">
+	{% if user.is_authenticated %}
+	{% trans "If you have any questions or need help, contact GRNET Helpdesk at <a href='mailto:helpdesk@grnet.gr'>helpdesk@grnet.gr</a> or 800-11-47638." %}<br />
+	{% endif %}
+	<a href="http://www.grnet.gr">{% trans "GRNET" %} NOC</a> | <a href="{% url getinfo %}">{% trans "Info" %}</a> | <a href="{% url gettos %}">{% trans "Service Terms" %}</a>
+	<p style="text-align: center;"><img width="46" height="40" border="0" class="image image-img_assist_custom-46x40 " src="http://noc.grnet.gr/sites/default/files/images/image_PSSYGK.img_assist_custom-46x40.png" alt="Flag ΨΣ" title="Flag ΨΣ"> <img width="49" height="40" border="0" class="image image-img_assist_custom-49x40 " src="http://noc.grnet.gr/sites/default/files/images/image_EEflag.img_assist_custom-49x40.png" alt="EU flag" title="EU flag"> <img width="90" height="40" border="0" class="image image-img_assist_custom-90x40 " src="http://noc.grnet.gr/sites/default/files/images/image_YPDBMTH.img_assist_custom-90x40.png" alt="Flag ΥΠΔΒΜΘ" title="Flag ΥΠΔΒΜΘ"><img width="67" height="40" border="0" class="image image-img_assist_custom-67x40 " src="http://noc.grnet.gr/sites/default/files/images/image_ESPA.img_assist_custom-67x40.png" alt="ESPA" title="ESPA"></p>
+</div>

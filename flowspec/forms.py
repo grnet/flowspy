@@ -144,7 +144,7 @@ class RouteForm(forms.ModelForm):
             raise forms.ValidationError('Fill at least a Rule Match Condition')
         if not user.is_superuser and then[0].action not in settings.UI_USER_THEN_ACTIONS:
             raise forms.ValidationError('This action "%s" is not permitted' %(then[0].action))
-        existing_routes = Route.objects.exclude(status='EXPIRED').exclude(status='ERROR').exclude(status='ADMININACTIVE')
+        existing_routes = Route.objects.all()
         existing_routes = existing_routes.filter(applier__userprofile__peer=peer)
         if source:
             source = IPNetwork(source).compressed

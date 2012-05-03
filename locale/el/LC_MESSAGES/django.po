@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-03 11:07+0300\n"
+"POT-Creation-Date: 2012-05-03 11:40+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Leonidas Poulopoulos <leopoul@grnet.gr>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -692,17 +692,25 @@ msgstr "Χρήστης"
 msgid "Actions"
 msgstr "Ενέργειες"
 
-#: templates/user_routes.html:294
-msgid "Rule expired"
-msgstr "Λήξη Φίλτρου"
+#: templates/user_routes.html:286 templates/user_routes.html.py:294
+msgid "Suspended by user"
+msgstr "Απενεργοποιήθηκε από το χρήστη"
 
-#: templates/user_routes.html:294
+#: templates/user_routes.html:286 templates/user_routes.html.py:294
 msgid "Suspended by administrator"
 msgstr "Απενεργοποιήθηκε από το διαχειριστή"
 
+#: templates/user_routes.html:286
+msgid "Suspended due to expiration"
+msgstr "Απενεργοποιήθηκε λόγω λήξης"
+
+#: templates/user_routes.html:286
+msgid "Syncronization error. Configuration in device deffers from rule"
+msgstr "Σφάλμα συγχρονισμού. Διαφορά διαμόρφωσης από συσκευή"
+
 #: templates/user_routes.html:294
-msgid "Suspended by user"
-msgstr "Απενεργοποιήθηκε από το χρήστη"
+msgid "Rule expired"
+msgstr "Λήξη Φίλτρου"
 
 #: templates/user_routes.html:297
 msgid "Edit"
@@ -719,6 +727,10 @@ msgstr ""
 #: templates/user_routes.html:308
 msgid "Fix it!"
 msgstr "Επιδιόρθωση"
+
+#: templates/user_routes.html:322
+msgid "Suspend Rule"
+msgstr "Κατάργηση Φίλτρου"
 
 #: templates/user_routes.html:323
 msgid "You are about to suspend rule"
@@ -793,12 +805,3 @@ msgstr "Ο χρήστης έχει ήδη ενεργοποιηθεί"
 msgid "The user will be notified about his/her account activation"
 msgstr "Ο χρήστης θα ενημερωθεί για την ενεργοποίηση του λογαριασμού"
 
-#~ msgid ""
-#~ "After clicking Retry Login, it is strongly suggested to close your "
-#~ "browser and visit the page again"
-#~ msgstr ""
-#~ "Αφού επιλέξετε Επανάληψη Εισόδου, προτείνουμε να κλείσετε την εφαρμογή "
-#~ "περιήγησης και να επισκεφθέιτε τη σελίδα ξανά"
-
-#~ msgid "My routes"
-#~ msgstr "Τα φίλτρα μου"

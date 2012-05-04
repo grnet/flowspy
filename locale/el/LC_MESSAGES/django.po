@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-03 11:40+0300\n"
+"POT-Creation-Date: 2012-05-04 12:44+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Leonidas Poulopoulos <leopoul@grnet.gr>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -591,34 +591,30 @@ msgstr ""
 "ιδιοτήτων του Shibboleth."
 
 #: templates/profile.html:10
-msgid "My data"
-msgstr "Τα στοιχεία μου"
-
-#: templates/profile.html:11
 msgid "First name"
 msgstr "Όνομα"
 
-#: templates/profile.html:12
+#: templates/profile.html:11
 msgid "Last name"
 msgstr "Επώνυμο"
 
-#: templates/profile.html:13
+#: templates/profile.html:12
 msgid "Email"
 msgstr ""
 
-#: templates/profile.html:15
+#: templates/profile.html:14
 msgid "My Networks"
 msgstr "Τα Δίκτυά μου"
 
-#: templates/profile.html:18
+#: templates/profile.html:17
 msgid "Organization"
 msgstr "Φορέας"
 
-#: templates/profile.html:18
+#: templates/profile.html:17
 msgid "Networks"
 msgstr "Δίκτυα"
 
-#: templates/profile.html:27
+#: templates/profile.html:26
 msgid ""
 "Ooops! Seems you have no networks associated with your peer. Contact "
 "Helpdesk to resolve this issue."
@@ -805,3 +801,5 @@ msgstr "Ο χρήστης έχει ήδη ενεργοποιηθεί"
 msgid "The user will be notified about his/her account activation"
 msgstr "Ο χρήστης θα ενημερωθεί για την ενεργοποίηση του λογαριασμού"
 
+#~ msgid "My data"
+#~ msgstr "Τα στοιχεία μου"

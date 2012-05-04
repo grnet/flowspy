@@ -68,7 +68,7 @@ def group_routes(request):
         peer = request.user.get_profile().peer
     except UserProfile.DoesNotExist:
         error = "User <strong>%s</strong> does not belong to any peer or organization. It is not possible to create new firewall rules.<br>Please contact Helpdesk to resolve this issue" % request.user.username
-        return render_to_response('error.html', {'error': error})
+        return render_to_response('error.html', {'error': error}, context_instance=RequestContext(request))
     if peer:
        peer_members = UserProfile.objects.filter(peer=peer)
        users = [prof.user for prof in peer_members]
@@ -271,7 +271,7 @@ def user_profile(request):
             peers = Peer.objects.all()
     except UserProfile.DoesNotExist:
         error = "User <strong>%s</strong> does not belong to any peer or organization. It is not possible to create new firewall rules.<br>Please contact Helpdesk to resolve this issue" % user.username
-        return render_to_response('error.html', {'error': error})
+        return render_to_response('error.html', {'error': error}, context_instance=RequestContext(request))
     return render_to_response('profile.html', {'user': user, 'peers':peers},
                                   context_instance=RequestContext(request))
 
@@ -327,7 +327,7 @@ def user_login(request):
                 up = UserProfile.objects.get_or_create(user=user,peer=peer)
             except:
                 error = _("Your organization's domain name does not match our peers' domain names<br>Please contact Helpdesk to resolve this issue")
-                return render_to_response('error.html', {'error': error})
+                return render_to_response('error.html', {'error': error}, context_instance=RequestContext(request))
             if not user_exists:
                 user_activation_notify(user)
             if user.is_active:

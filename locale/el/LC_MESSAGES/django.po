@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-04 12:44+0300\n"
+"POT-Creation-Date: 2012-05-04 14:25+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Leonidas Poulopoulos <leopoul@grnet.gr>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -237,7 +237,7 @@ msgid ""
 "Your organization's domain name does not match our peers' domain "
 "names<br>Please contact Helpdesk to resolve this issue"
 msgstr ""
-"Το domain name του οργανισμού σας δε βρέθηκε στ βάση φορέων μας.<br>Παρακαλώ "
+"Το domain name του οργανισμού σας δε βρέθηκε στη βάση φορέων μας.<br>Παρακαλώ "
 "επικοινωνήστε με το Helpdesk για τη διευθέτηση του προβλήματος"
 
 #: flowspec/views.py:337
@@ -356,55 +356,61 @@ msgstr "Εφαρμογή"
 msgid "Add new port"
 msgstr "Νέα port"
 
-#: templates/base.html:41 templates/error.html:39 templates/welcome.html:7
+#: templates/base.html:41 templates/welcome.html:7
 msgid "Welcome"
 msgstr "Καλωσήρθατε"
 
-#: templates/base.html:55 templates/error.html:42 templates/profile.html:4
-#: templates/profile.html.py:5 templates/profile.html:7
+#: templates/base.html:55 templates/profile.html:4 templates/profile.html.py:5
+#: templates/profile.html:7
 msgid "My profile"
 msgstr "Το προφίλ μου"
 
-#: templates/base.html:57 templates/error.html:44
+#: templates/base.html:57
 msgid "Admin"
 msgstr "Διαχειριστής"
 
-#: templates/base.html:59 templates/error.html:46
+#: templates/base.html:59
 msgid "Logout"
 msgstr "Έξοδος"
 
-#: templates/base.html:61 templates/welcome.html:17
+#: templates/base.html:62
+msgid ""
+"After clicking Retry Login, it is strongly suggested to close your browser "
+"and visit the page again"
+msgstr "Αφού επιλέξετε Επανάληψη Εισόδου κλείστε τον browser σας και επισκεφθείτε ξανά τη σελίδα"
+
+#: templates/base.html:62
+msgid "Retry Login"
+msgstr "Επανάληψη Εισόδου"
+
+#: templates/base.html:64 templates/welcome.html:17
 msgid "Shibboleth Login"
 msgstr "Είσοδος με Shibboleth"
 
-#: templates/base.html:70 templates/user_routes.html:225
+#: templates/base.html:74 templates/user_routes.html:225
 #: templates/user_routes.html.py:229
 msgid "My rules"
 msgstr "Τα φίλτρα μου"
 
-#: templates/error.html:4 templates/error.html.py:53
+#: templates/error.html:4 templates/error.html.py:30
 msgid "Activation Pending"
 msgstr "Απαιτείται Ενεργοποίηση"
 
-#: templates/error.html:4 templates/error.html.py:53
+#: templates/error.html:4 templates/error.html.py:30
 msgid "Error"
 msgstr "Σφάλμα"
 
-#: templates/error.html:48
-msgid "Retry Login"
-msgstr "Επανάληψη Εισόδου"
-
-#: templates/error.html:56
+#: templates/error.html:33
 msgid ""
 "One or more required shibboleth attributes were not released towards this "
 "service"
 msgstr "Ένα ή περισσότερα Shibboleth attributes δεν προωθήθηκαν στην υπηρεσία"
 
-#: templates/error.html:61
+#: templates/error.html:38
 msgid "Required shibboleth attributes"
 msgstr "Απαιτούμενα Shibboleth attributes "
 
-#: templates/error.html:68
+#: templates/error.html:45
 msgid "Optional"
 msgstr "Προεραιτικά"
 
@@ -801,5 +807,3 @@ msgstr "Ο χρήστης έχει ήδη ενεργοποιηθεί"
 msgid "The user will be notified about his/her account activation"
 msgstr "Ο χρήστης θα ενημερωθεί για την ενεργοποίηση του λογαριασμού"
 
-#~ msgid "My data"
-#~ msgstr "Τα στοιχεία μου"

@@ -23,30 +23,7 @@
 	    }
 
 </style>
-<script type="text/javascript">
 
-  	function setlang(lang){
-		$("#langsel").val(lang);
-		$("#langform").submit();
-	}
-
-</script>
-{% endblock %}
-
-
-{% block menublock %}
-	{% if user.is_authenticated %}
-		<span class="topmenuuser">{% trans "Welcome" %} <strong>{{user}}</strong></span>
-	{% endif %}
-	{% if user.is_authenticated %}
-	<span class="topmenuaction"><a href="{% url user-profile %}">{% trans "My profile" %}</a></span>
-	{% if user.is_superuser %}
-		<span class="topmenuaction"><a href="{% url admin:index %}">{% trans "Admin" %}</a></span>
-	{% endif %}
-	<span class="topmenuaction"><a href="{% url logout %}">{% trans "Logout" %}</a></span>
-	{% else %}
-	<span class="topmenuaction relogin" title="After clicking Retry Login, it is strongly suggested to close your browser and visit the page again"><a href="{% url logout %}">{% trans "Retry Login" %}</a></span>
-	{% endif %}
 {% endblock %}
 
 {% block content %}

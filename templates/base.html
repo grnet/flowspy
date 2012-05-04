@@ -40,7 +40,7 @@
 						{% if user.is_authenticated %}
 						<span class="topmenuuser">{% trans "Welcome" %} <strong>{{user}}</strong></span>
 						{% endif %}
-
+						
 						<span {% if user.is_authenticated %}class="topmenuaction"{% else %}class="topmenuuser"{% endif %} >
 							<form action="{% url django.views.i18n.set_language %}" method="post" style="display:inline;" id="langform">
 								{% csrf_token %}
@@ -58,7 +58,11 @@
 						{% endif %}
 						<span class="topmenuaction"><a href="{% url logout %}">{% trans "Logout" %}</a></span>
 						{% else %}
+						{% if error %}
+						<span class="topmenuaction relogin" title="{% trans 'After clicking Retry Login, it is strongly suggested to close your browser and visit the page again' %}"><a href="{% url logout %}">{% trans "Retry Login" %}</a></span>
+						{% else %}
 						<span class="topmenuaction"><a href="{% url login %}">{% trans "Shibboleth Login" %}</a></span>
+						{% endif %}
 						{% endif %}
 						{% endblock %}
 					</div>

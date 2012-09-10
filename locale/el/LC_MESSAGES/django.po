@@ -33,7 +33,7 @@ msgstr "%s Ενεργοποιήθηκε ο λογαριασμός του χρή�
 
 #: flowspec/forms.py:60 flowspec/forms.py:89
 msgid "Invalid network address format"
-msgstr "Λανθασμένη μορφή διεύθυνσης δικυου στο πεδίο Πηγή"
+msgstr "Λανθασμένη μορφή διεύθυνσης δικτύου στο πεδίο Πηγή"
 
 #: flowspec/forms.py:62
 msgid "Private addresses not allowed"

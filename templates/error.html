@@ -27,8 +27,9 @@
 {% endblock %}
 
 {% block content %}
-	{% if error %}{% if inactive %}<h2>{% trans "Activation Pending" %}</h2>{% else %}<h2>{% trans "Error" %}</h2>{% endif %}{% endif %}
-	<div>
+	{% if error %}{% if inactive %}<h3 class="muted">{% trans "Activation Pending" %}</h3>{% else %}<h3 class="muted">{% trans "Error" %}</h3>{% endif %}{% endif %}
+	<div class="container"><div class="row">
+	<div class="span8">
 	{% if missing_attributes %}
 	<p>{% trans "One or more required shibboleth attributes were not released towards this service" %}</p>
 	{% endif %}
@@ -49,5 +50,7 @@
 	</ul>
 	</p>
 	{% endif %}
+	</div>
+	</div>
 	</div>
 {% endblock %}

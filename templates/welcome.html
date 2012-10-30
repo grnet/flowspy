@@ -3,18 +3,25 @@
 {% block title %}{% trans "Login" %}{% endblock %}
 {% block brcrmb_container %}{% endblock %}
 {% block content %}
-<div id="welcome">
-<h3>{% trans "Welcome" %}</h3>
+<div class="row">
+<div class="span6">
+<h3 class="muted">{% trans "Welcome" %}</h3>
 <p>{% blocktrans %}Welcome to GRNET's FoD service.{% endblocktrans %}</p>
 <p>{% blocktrans %}If you are new to the service, take some time to read the service description{% endblocktrans %} <a href="{% url getinfo %}">{% trans "here" %}</a>.</p>
 <p>{% blocktrans %}If you have properly set your Shibboleth attributes, you can login using the link on the right{% endblocktrans %}</p>
 <p>{% blocktrans %}For troubleshooting info and remarks do not hesitate to contact GRNET's Helpdesk.{% endblocktrans %}</p>
 </div>
 
-<div id="loginform">
+<div class="span6" id="loginform">
+
+<div style="text-align: center;">
 					<a href="{% url login %}">
 					<img src="/fodstatic/shib_login.png" style="border:none;">
 					<p>{% trans "Shibboleth Login" %}</p>
 				</a>
+	
 </div>
+</div>
+</div>
+
 {% endblock %}

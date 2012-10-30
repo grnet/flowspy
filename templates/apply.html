@@ -182,6 +182,8 @@
     {% if edit %}<h4>{% trans "Edit rule" %}: {{form.data.name}}</h4>
     {% else %}<h4>{% trans "Apply for a new rule" %}</h4>
     {% endif %}
+    <hr>
+    <br>
     <form method="POST" class="form-horizontal">
         
             {% csrf_token %}

@@ -162,7 +162,6 @@ $(document).ready(function(){
 	if (reg_exp == '') {
             reg_exp = '|'
         }
-	console.log(reg_exp.slice(0, -1))
     oTable.fnFilter(reg_exp.slice(0, -1), 4, true);
     
     
@@ -182,7 +181,6 @@ $(document).ready(function(){
             reg_exp = '|'
         }
         oTable.fnFilter(reg_exp.slice(0, -1), 4, regex=true);
-        console.log(reg_exp.slice(0, -1))
         return false;
     });
 

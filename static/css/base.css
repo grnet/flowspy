@@ -1,5 +1,17 @@
 body {
     font-size: 13px;
+    background-image: url("/fodstatic/img/bg2.gif");
+    background-attachment: fixed;
+    background-color: #131516;
+    background-position: left 40px;
+    background-repeat: repeat;
+}
+
+.navbar .brand {
+    max-height: 40px;
+    overflow: visible;
+    padding-bottom: 0;
+    padding-top: 0;
 }
 label, input, button, select, textarea {
     font-size: 13px;
@@ -42,6 +54,18 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
     font-size: 13px;
 }
 
+.navbar .nav > li > span {
+	display: block;
+    float: none;
+    padding: 10px 1px;
+    text-shadow: 0 1px 0 #FFFFFF;
+}
+
+#content.container{
+	border: 1px solid grey; 
+	padding: 90px 10px 10px; 
+	background: white;"
+}
 #routes_table{
 	font-size: 12px;	
 }
@@ -141,11 +165,7 @@ a:hover {
 	background: url("/fodstatic/rule.png") no-repeat scroll 0 50% transparent;
 }
 
-body {
-	padding-bottom: 2em;
-	background: white;
-	margin: 0;
-}
+
 
 #content3 {
 	width: 990px;
@@ -605,11 +625,7 @@ div.box {
 	width: 45%;
 }
 
-#loginform {
-	margin-left: 50%;
-	text-align: center;
-	border-left: 1px solid #aaa;
-}
+
 
 #loginform table {
 	margin-left: auto;

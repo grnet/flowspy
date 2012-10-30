@@ -5,7 +5,7 @@
 <title>GRNET's FoD :: {% block title %}{% endblock %} </title>
 <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
 <META HTTP-EQUIV="expires" CONTENT="Wed, 26 Feb 1997 08:21:57 GMT">
-
+<link REL="SHORTCUT ICON" HREF="/fodstatic/favicon.ico">  
 <script src="/fodstatic/js/jquery.min.js" type="text/javascript"></script>
 <script src="/fodstatic/js/jquery_csrf_protect.js" type="text/javascript"></script>
 <link rel="stylesheet" type="text/css" href="/fodstatic/css/bootstrap.css">
@@ -29,7 +29,7 @@
 
 
 <body>
-	<div id="main">
+	{% comment %}
 			<div id="header">
 				<a class="grnetlogo" href="{% url group-routes %}">
 					<img class="logoimg" src="/fodstatic/logo.png">
@@ -72,6 +72,62 @@
 					
 				</div>
 			</div>
+			{% endcomment %}
+			<div class="navbar navbar-fixed-top">
+
+				<div class="navbar-inner">
+				    <div class="container">
+				       
+				    {% block topmenu %}
+				    <a class="brand" href="{% url group-routes %}"><img src="/fodstatic/fod_logo.png" /></a>
+				    <ul class="nav">
+				    {% if user.is_authenticated %}
+				    
+				        <li>
+				            <a href="{% url user-profile %}">{% trans "My profile" %}</a>
+				        </li>
+				    {% if user.is_superuser %}
+						<li {% block hometop %}{% endblock %}>
+							<a href="{% url admin:index %}">{% trans "Admin" %}</a>
+						</li>
+						{% endif %}
+				    {% else %}
+				        <li {% block faqtop %}{% endblock %}>
+				            
+				        </li>
+				    {% endif %}
+				      <li class="dropdown">
+				            <a href="#" class="dropdown-toggle" data-toggle="dropdown">{% trans "Language" %}: {% for lang in LANGUAGES %}{% ifequal LANGUAGE_CODE lang.0 %}{% trans lang.1 %}{% endifequal %}{% endfor %}<b class="caret"></b></a>
+				            <ul class="dropdown-menu">
+				            <form action="{% url django.views.i18n.set_language %}" method="post" style="display:inline;" id="langform">
+												{% csrf_token %}
+												<input name="next" type="hidden" value="{{ next }}" />
+												<input id="langsel" name="language" type="hidden" value="" />
+											</form>
+				            	{% for lang in LANGUAGES %}
+				                <li>
+				                    <a class="select_lang" href="#" onclick="setlang('{{ lang.0 }}'); return false;" title="{{lang.1}}">{% trans lang.1 %}{% ifequal LANGUAGE_CODE lang.0 %}  <i class="icon-ok"></i>{% endifequal %}</a>
+				                </li>
+				              {% endfor %}
+				            </ul>
+				        </li>
+				
+				    </ul>
+				    {% endblock %}
+				    <ul class="nav pull-right">
+				         {% if user.is_authenticated %}
+				         <li><span><strong>{{user}}</strong></span></li>
+				        <li>
+				        	<a href="{% url logout %}">{% trans "Logout" %}</a>
+				        </li>
+				        {% else %}
+				        <li><a href="{% url login %}">{% trans "Shibboleth Login" %}</a></li>
+				        {% endif %}
+				    </ul>
+				        
+				    </div>    
+				</div>
+			</div>
 			<div id="content" class="container">
 				{% block brcrmb_container %}
 				<ul class="breadcrumb">{% if user.is_authenticated %}<li><a href="{% url group-routes %}">{% trans "My rules" %}</a></li>{% endif %}
@@ -92,6 +148,6 @@
 			{% block footerblock %}
 				{% include "footer.html" %}
 			{% endblock %}
-	</div>
+	
 </body>
 </html>

@@ -223,12 +223,13 @@ function delete_route(route){
 
 <div class="span10">
 <div class='button_place' style="float:right">
-	<button id="consolebutton" class="btn btn-inverse">
+	<button id="consolebutton" class="btn btn-small btn-inverse">
 		<i class="icon-tasks icon-white" style="align:left;"></i>{% trans "Console" %}</button>
-		<a href="{% url add-route %}" id="routebutton" class="btn btn-inverse"><i class="icon-plus-sign icon-white"></i>{% trans "Add Rule" %}</a>
+		<a href="{% url add-route %}" id="routebutton" class="btn btn-small btn-inverse"><i class="icon-plus-sign icon-white"></i>{% trans "Add Rule" %}</a>
 </div>
 </div>
 </div>
+<hr>
 <div class="row-fluid" style="padding-top:30px;">
 
 <div id='itoggle' class="span12" style="text-align:center;">
@@ -299,7 +300,7 @@ function delete_route(route){
 	<td style="text-align: center; width:180px;">
 		{% ifequal route.status 'ACTIVE' %}
 		<a href="{% url edit-route route.name %}" class="edit_button btn btn-small" id="edit_button_{{route.pk}}">{% trans "Edit" %}</a> 
-		<button class="del_button btn btn-danger btn-small" id="{{route.name}}" onclick="javascript:delete_route(this.id)">{% trans "Suspend" %}</button>
+		<button class="del_button btn btn-small" id="{{route.name}}" onclick="javascript:delete_route(this.id)">{% trans "Suspend" %}</button>
 		<a href="{% url delete-route route.name %}" style="display:none" id="del_route_{{route.name}}" class="btn btn btn-danger btn-small"></a>
 		{% else %}
 		{% if route.status == 'EXPIRED' or route.status == 'ADMININACTIVE' or route.status == 'INACTIVE' %}

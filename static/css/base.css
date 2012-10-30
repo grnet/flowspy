@@ -1,3 +1,40 @@
+body {
+    font-size: 13px;
+}
+label, input, button, select, textarea {
+    font-size: 13px;
+}
+legend {
+
+    font-size: 14px;
+	line-height: 20px;
+    margin-bottom: 0;
+}
+.form-horizontal .control-group {
+    margin-bottom: 10px;
+}
+legend + .control-group {
+    margin-top: 10px;
+}
+.side-menu > li > a {
+    border: 1px solid #E5E5E5;
+    display: block;
+    margin: 0 0 -1px;
+    padding: 8px 14px;
+}
+.breadcrumb{
+	background-color: white;
+}
+select, textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input {
+    font-size: 13px;
+}
+.side-menu > li:first-child > a {
+    border-radius: 6px 6px 0 0;
+}
+.btn {
+    font-size: 13px;
+}
+
 #routes_table{
 	font-size: 12px;	
 }

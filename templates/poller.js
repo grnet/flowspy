@@ -187,7 +187,7 @@ var updater = {
 
 function blink(selector){
 	$(selector).animate({ color: "red" }, 500, function(){
-	$(this).animate({ color: "#555555" }, 500, function(){
+	$(this).animate({ color: "white" }, 500, function(){
 	blink(this);
 	});
 	});

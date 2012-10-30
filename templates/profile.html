@@ -2,22 +2,46 @@
 {% load i18n %}
 
 {% block title %}{% trans "My profile" %}{% endblock %}
-{% block breadcrumbs %}:: {% trans "My profile" %}{% endblock %}
+{% block breadcrumbs %} <li class="active"><span class="divider">/</span>{% trans "My profile" %}</li>{% endblock %}
 {% block content %}
-<h3>{% trans "My profile" %}</h3>
-
+<h4>{% trans "My profile" %}</h4>
+<br>
 <div id="profile">
-	<strong>{% trans "First name" %}:</strong> {{user.first_name}} <br>
-	<strong>{% trans "Last name" %}:</strong> {{user.last_name}} <br>
-	<strong>{% trans "Email" %}:</strong> {{user.email}}<br>
-	<br>
-	<strong>{% trans "My Networks" %}:</strong><br>
-	<table class="display">
+    <div class="row">
+    	<div class="span2"><strong>{% trans "Username" %}:</strong></div>
+    	<div class="span8">{{user.username}}</div>
+    </div>
+    <div class="row">
+    	<div class="span2"><strong>Rest API Key:</strong></div>
+    	<div class="span8"><span id="apikey">{{apikey.key}}</span></div>
+    </div>
+    <div class="row">
+    	<div class="span2"><strong>{% trans "First name" %}:</strong></div>
+    	<div class="span8">{{user.first_name}}</div>
+    </div>
+    <div class="row">
+    	<div class="span2"><strong>{% trans "Last name" %}:</strong></div>
+    	<div class="span8">{{user.last_name}}</div>
+    </div>
+    <div class="row">
+    	<div class="span2"><strong>{% trans "Email" %}:</strong></div>
+    	<div class="span8">{{user.email}}</div>
+    </div>
+    </div>
+    <br>
+    <div>
+    <div class="row">
+    	<div class="span2"><strong>{% trans "My Networks" %}:</strong></div>
+    	<div class="span8"></div>
+    </div>
+	<table class="table table-striped table-bordered">
+	<thead>
 	<tr>
-	<th class="ui-state-default">{% trans "Organization" %}</th><th class="ui-state-default">{% trans "Networks" %}</th>
+	<th>{% trans "Organization" %}</th><th>{% trans "Networks" %}</th>
 	</tr>
+	</thead>
 	{% for peer in peers %}
-		<tr class="gradeC {% if forloop.counter|divisibleby:2 %}even{% else %}odd{% endif %}">
+		<tr>
 		<td>{{peer}} </td>
 		<td>
 		{% for network in peer.networks.all %}
@@ -31,4 +55,6 @@
 </div>
 
 {% endblock %}
+
+
 

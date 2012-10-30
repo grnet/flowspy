@@ -8,10 +8,19 @@
         });
     });
 </script>
-<form id="add_port_form" method="POST">
-	{% csrf_token %}
-<table>
-<tr><th>{% trans "Port" %}</th><td>{{ form.port }}<span class="error" id='rl_error'>{{ form.port.errors|join:", " }}</span></td></tr>
-</table>
-</form>
+
+
+    <form id="add_port_form" method="POST"  class="form-horizontal">
+    {% csrf_token %}
+		<div class="control-group {% if form.port.errors %} error {% endif %}">
+		<label class="control-label" for="inputEmail">Port</label>
+		<div class="control">{{ form.port }}
+		{% if form.port.errors %}
+		<span class="help-block">{{ form.port.errors|join:", " }}</span>
+		{% endif %}
+		</div>
+		</div>
+    </form>
+
+
 

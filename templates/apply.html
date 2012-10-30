@@ -233,7 +233,7 @@
                 </legend>
                 <div class="control-group {% if form.source.errors %} error {% endif %}">
 	                <label class="control-label" for="id_source">{% trans "Source Address" %}</label>
-                    <div class="controls">{{ form.source }}&nbsp;<img src="/static/threat_source.png" style="height: 30px;"/>
+                    <div class="controls">{{ form.source }}&nbsp;<img src="/fodstatic/threat_source.png" style="height: 30px;"/>
                     {% if form.source.errors %}
                     <span class="help-inline">
                         {{ form.source.errors|join:", " }}
@@ -247,7 +247,7 @@
                 <div class="control-group {% if form.destination.errors %} error {% endif %}">
 	                <label class="control-label" for="id_destination">{% trans "Destination Address" %}</label>
                     <div class="controls">
-					{{ form.destination }}&nbsp;<img src="/static/secure_destination.png" style="height: 30px;"/>
+					{{ form.destination }}&nbsp;<img src="/fodstatic/secure_destination.png" style="height: 30px;"/>
 					{% if form.destination.errors %}
                     <span class="help-inline">
                         {{ form.destination.errors|join:", " }}

@@ -11,7 +11,7 @@ div#itoggle label.itoggle span{
 	width: 93px;
 	height: 27px;
 /*	margin-bottom: 20px; */
-	background: url(/static/itoggle.png) left bottom no-repeat;
+	background: url(/fodstatic/itoggle.png) left bottom no-repeat;
 	cursor:pointer;
 	text-indent:-5000px;
 	}

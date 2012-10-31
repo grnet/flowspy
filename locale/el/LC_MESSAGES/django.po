@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-30 18:53+0200\n"
+"POT-Creation-Date: 2012-10-31 14:55+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Leonidas Poulopoulos <leopoul@grnet.gr>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -124,7 +124,7 @@ msgid "Port should be an integer"
 msgstr "Η port θα πρέπει να είναι ένας ακέραιος αριθμός"
 
 #: flowspec/models.py:107 templates/apply.html:201
-#: templates/user_routes.html:248
+#: templates/user_routes.html:250
 msgid "Name"
 msgstr "Όνομα"
 
@@ -158,20 +158,20 @@ msgid "Protocol"
 msgstr "Πρωτόκολλο"
 
 #: flowspec/models.py:121 templates/apply.html:345
-#: templates/user_routes.html:250
+#: templates/user_routes.html:252
 msgid "Then"
 msgstr "Ενέργειες"
 
-#: flowspec/models.py:124 templates/user_routes.html:251
+#: flowspec/models.py:124 templates/user_routes.html:253
 msgid "Status"
 msgstr "Κατάσταση"
 
 #: flowspec/models.py:127 templates/apply.html:366
-#: templates/user_routes.html:254
+#: templates/user_routes.html:256
 msgid "Expires"
 msgstr "Λήγει"
 
-#: flowspec/models.py:128 templates/user_routes.html:255
+#: flowspec/models.py:128 templates/user_routes.html:257
 msgid "Response"
 msgstr "Απόκριση Δικτύου"
 
@@ -319,7 +319,7 @@ msgstr "Βασικές Πληροφορίες Φίλτρου"
 msgid "Admin Options"
 msgstr "Επιλογές Διαχείρισης"
 
-#: templates/apply.html:219 templates/user_routes.html:253
+#: templates/apply.html:219 templates/user_routes.html:255
 msgid "Applier"
 msgstr "Χρήστης"
 
@@ -384,7 +384,7 @@ msgstr "Διαχειριστής"
 msgid "Logout"
 msgstr "Έξοδος"
 
-#: templates/base.html:65
+#: templates/base.html:65 templates/base.html.py:129
 msgid ""
 "After clicking Retry Login, it is strongly suggested to close your browser "
 "and visit the page again"
@@ -392,11 +392,12 @@ msgstr ""
 "Αφού επιλέξετε Επανάληψη Εισόδου κλείστε τον browser σας και επισκεφθείτε "
 "ξανά τη σελίδα"
 
-#: templates/base.html:65
+#: templates/base.html:65 templates/base.html.py:129
 msgid "Retry Login"
 msgstr "Επανάληψη Εισόδου"
 
-#: templates/base.html:67 templates/base.html.py:124 templates/welcome.html:20
+#: templates/base.html:67 templates/base.html.py:126 templates/base.html:132
+#: templates/welcome.html:21
 msgid "Shibboleth Login"
 msgstr "Είσοδος με Shibboleth"
 
@@ -404,30 +405,30 @@ msgstr "Είσοδος με Shibboleth"
 msgid "Language"
 msgstr "Γλώσσα"
 
-#: templates/base.html:133 templates/user_routes.html:212
-#: templates/user_routes.html.py:218
+#: templates/base.html:142 templates/user_routes.html:214
+#: templates/user_routes.html.py:220
 msgid "My rules"
 msgstr "Τα φίλτρα μου"
 
-#: templates/error.html:4 templates/error.html.py:30
+#: templates/error.html:4 templates/error.html.py:23
 msgid "Activation Pending"
 msgstr "Απαιτείται Ενεργοποίηση"
 
-#: templates/error.html:4 templates/error.html.py:30
+#: templates/error.html:4 templates/error.html.py:23
 msgid "Error"
 msgstr "Σφάλμα"
 
-#: templates/error.html:34
+#: templates/error.html:28
 msgid ""
 "One or more required shibboleth attributes were not released towards this "
 "service"
 msgstr "Ένα ή περισσότερα Shibboleth attributes δεν προωθήθηκαν στην υπηρεσία"
 
-#: templates/error.html:39
+#: templates/error.html:33
 msgid "Required shibboleth attributes"
 msgstr "Απαιτούμενα Shibboleth attributes "
 
-#: templates/error.html:46
+#: templates/error.html:40
 msgid "Optional"
 msgstr "Προεραιτικά"
 
@@ -444,174 +445,13 @@ msgstr ""
 msgid "GRNET"
 msgstr "ΕΔΕΤ"
 
-#: templates/footer.html:8 templates/getinfo.html:27
-#: templates/getinfo.html.py:28
+#: templates/footer.html:8
 msgid "Info"
 msgstr "Πληροφορίες"
 
 #: templates/footer.html:8
 msgid "Service Terms"
 msgstr "Όροι Χρήσης"
-
-#: templates/getinfo.html:33
-msgid "Intro"
-msgstr "Εισαγωγή"
-
-#: templates/getinfo.html:34
-msgid ""
-"Firewall on Demand service provides potential users (educational and "
-"academic community) the option to protect their networking equipment against "
-"network attacks and threats.\n"
-"\n"
-"In particular, the service is targeted at network operators of GRNET's "
-"institutions who have needs for short-term protection against network "
-"attacks with destination, equipment they operate.\n"
-"To ensure the integrity of the service and in order to prevent the service "
-"being a source of attacks, the authentication of users is done via "
-"Shibboleth. The authorisation is based on a combination of Shibboleth "
-"attributes with the address space that each organization manages.\n"
-"The software chosen to implement the service is solely based on open "
-"source.\n"
-"Requests or clarifications concerning the operation of the service should be "
-"submitted to GRNET Helpdesk via phone at 800-11-47638 or via e-mail to "
-"helpdesk-at-grnet.gr.\n"
-"\n"
-"\n"
-msgstr ""
-"Η υπηρεσία FoD (Firewall on Demand) παρέχει στην εκπαιδευτική και ακαδημαϊκή "
-"κοινότητα τη δυνατότητα για προστασία έναντι δικτυακών επιθέσεων που "
-"στοχέυουν στο δικτυακό εξοπλισμό που διαχειρίζονται.\n"
-"Ειδικότερα, η υπηρεσία απευθύνεται στα NOC των ιδρυμάτων‐φορέων του δικτύου "
-"ΕΔΕΤ που έχουν ανάγκες για βραχυπρόθεσμη προστασία έναντι δικτυακών "
-"επιθέσεων με προορισμό τον εξοπλισμό που διαχειρίζονται.\n"
-"Για τη διασφάλιση της ακεραιότητας της υπηρεσίας και προκειμένου αυτή να μην "
-"αποτελέσει πηγή επιθέσεων, το authentication των χρηστων πραγματοποιείται με "
-"τη χρήση Shibboleth. Το authorisation βασίζεται σε ένα συνδυασμό "
-"συγκεκριμένων attributes του Shibboleth με το address space που κάθε φορέας "
-"διαχειρίζεται.\n"
-"Το λογισμικό που επιλέχθηκε για την υλοποίηση της υπηρεσίας βασίζεται "
-"αποκλειστικά σε ανοιχτό κώδικα.\n"
-"Αιτήματα ή διευκρινίσεις που αφορούν στη λειτουργία της υπηρεσίας θα πρέπει "
-"να υποβάλλονται στο helpdesk του ΕΔΕΤ, τηλεφωνικά στο 800‐11‐47638 ή μέσω e‐"
-"mail στο helpdesk -στο- grnet.gr.\n"
-
-#: templates/getinfo.html:43
-msgid "Joining the service"
-msgstr "Συμμετοχή"
-
-#: templates/getinfo.html:44
-msgid ""
-"Joining the service requires the appropriate configuration of certain "
-"Shibboleth attributes"
-msgstr ""
-"Η συμμετοχή στην υπηρεσία προϋποθέτη την ορθή διαμόρφωση συγκεκριμένων "
-"Shibboleth attributes"
-
-#: templates/getinfo.html:49
-msgid ""
-"An appropriate HTTP_SHIB_EP_ENTITLEMENT which is provided by GRNET Helpdesk"
-msgstr ""
-"Ένα κατάλληλο HTTP_SHIB_EP_ENTITLEMENT το οποίο παρέχεται από το Helpdesk"
-
-#: templates/getinfo.html:51
-msgid "Optionally"
-msgstr "Προεραιτικά"
-
-#: templates/getinfo.html:56
-msgid "Use"
-msgstr "Χρήση"
-
-#: templates/getinfo.html:58
-msgid ""
-"The service enables users to mitigate active attacks aimed at their network "
-"equipment. \n"
-"It is based on the creation of dynamic firewall filters that are applied to "
-"the network using the management protocol NETCONF and are propagated to "
-"compatible (Juniper) backbone network devices via BGP flowspec NLRI.\n"
-"In order to properly complete the application for a new filter is essential "
-"that the destination address belongs to the user's administrative network. "
-"Currently attacks are limited per /29 subnet.\n"
-"Requests for new filters are applied directly to the network and therefore "
-"users should pay extra attention in their request. Filters that have been "
-"applied to the network are removed after their expiry date, and users can "
-"activate then again by selecting the corresponding option. \n"
-"Moreover, users are given the option for early deactivation of their "
-"requests.\n"
-msgstr ""
-"Η υπηρεσία δίνει τη δυνατότητα στους χρήστες να περιορίσουν ενεργές "
-"επιθέσεις που στοχεύουν στο δικτυακό τους εξοπλισμό. Βασίζεται στη "
-"δημιουργία δυναμικών φίλτρων firewall οι οποίοι εφαρμόζονται στο δίκτυο με "
-"τη χρήση του διαχειριστικού πρωτοκόλλου netconf και διαδίδονται στις "
-"συμβατές (Juniper) διτκυακές συσκευές του δικτύου κορμού της ΕΔΕΤ μέσω του "
-"BGP flowspec NLRI.\n"
-"Για την ορθή συμπλήρωση της αίτησης ενός νέου φίλτρου είναι απαραίτητο η "
-"διεύθυνση προορισμού να ανήκει στο δίκτυο διαχείρισης του φορέα από τον "
-"οποίο προέρχεται ο χρήστης. Στην παρούσα φάση περιορίζονται επιθέσεις "
-"ανά /29 υποδίκτυα.\n"
-"Τα αιτήματα για νέα φίλτρα εφαρμόζονται άμεσα στο δίκτυο και ως εκ τούτου θα "
-"πρέπει να δίνται ιδιαίτερη προσοχή κατά την αίτησή τους. Τα φίλτρα που έχουν "
-"εφαρμοσθεί στο δίκτυο αφαιρούνται μετά το πέρας της ημερομηνίας λήξης τους, "
-"ενώ οι χρήστες μπορούν να τα ενεργοποιήσουν ξανά μέσω της αντίστοιχης "
-"επιλογής. Παράλληλα, δίνεται η δυνατότητα για απενεργοποίηση αιτημάτων πριν "
-"τη λήξη τους κατά τη βούληση του χρήστη\n"
-
-#: templates/getinfo.html:65
-msgid "Security"
-msgstr "Ασφάλεια"
-
-#: templates/getinfo.html:66
-msgid ""
-"For security reasons, the submission of requests is monitored by the "
-"administrators of the service.\n"
-"The service administrators may at any time remove active requests from the "
-"network, if this is deemed necessary"
-msgstr ""
-"Για λόγους ασφαλείας, η υποβολή αιτημάτων καταγράφεται ενημερώνοντας τους "
-"διαχειριστές της υπηρεσίας.\n"
-"Οι διαχιριστές της υπηρεσίας μπορούν ανά πάσα στιγμή να αφαιρέσουν ενεργά "
-"αιτήματα από το δίκτυο, εάν κάτι τέτοιο κριθεί αναγκαίο"
-
-#: templates/gettos.html:27 templates/gettos.html.py:28
-msgid "Terms of Service"
-msgstr "Όροι χρήσης της υπηρεσίας Firewall on Demand"
-
-#: templates/gettos.html:33
-msgid ""
-"The FoD service is provided by GRNET to the academic and research community "
-"and the use of the service should only be done to promote academic, "
-"educational and research purposes.\n"
-"The following terms apply to all users of the service. These terms of use, "
-"as applicable, and each time amended, constitute the contract between the "
-"service users and GRNET.\n"
-"To use the service, users are required to accept the following terms."
-msgstr ""
-"Η υπηρεσία FoD παρέχεται από την ΕΔΕΤ Α.Ε. προς την ακαδημαϊκή και "
-"ερευνητική κοινότητα και η χρήση της υπηρεσίας οφείλει να γίνεται μόνο για "
-"την προώθηση ακαδημαϊκών, εκπαιδευτικών και ερευνητικών σκοπών.\n"
-"Οι παρακάτω όροι εφαρμόζονται από όλους τους χρήστες της υπηρεσίας. Οι "
-"παρόντες όροι χρήσης, όπως κάθε φορά ισχύουν και τροποποιούνται, αποτελούν "
-"τη σύμβαση μεταξύ των χρηστών της υπηρεσίας και της ΕΔΕΤ Α.Ε. Για τη χρήση "
-"της υπηρεσίας είναι απαραίτητη η αποδοχή των παρακάτω όρων."
-
-#: templates/gettos.html:36
-msgid "Potential Users"
-msgstr "Δυνητικοί Χρήστες"
-
-#: templates/gettos.html:37
-msgid ""
-"The service is targeted at the Network Operation Centers (or similar "
-"structures) approved by the board of GRNET SA, participating in the federal "
-"identification using Shibboleth. The service is provided to mitigate network "
-"attacks aimed at network equipment. The entrance and use of the service "
-"requires proper configuration and release of specific Shibboleth attributes."
-msgstr ""
-"Η υπηρεσία απευθύνεται στα Κέντρα Δικτύων (ή σε αντίστοιχες δομές) των "
-"εγκεκριμένων από το ΔΣ <a href='http://www.noc.grnet.gr/node/35' "
-"target='_blank'>φορέων</a> της ΕΔΕΤ Α.Ε που συμμετέχουν στην ομοσπονδιακή "
-"ταυτοποίηση με τη χρήση Shibboleth. Η υπηρεσία παρέχεται προκειμένου να "
-"περιοριστούν δικτυακές επιθέσεις που στοχεύουν στον εξοπλισμό των φορέων. Η "
-"είσοδος και χρήση της υπηρεσίας προϋποθέτη την ορθή διαμόρφωση συγκεκριμένων "
-"ιδιοτήτων του Shibboleth."
 
 #: templates/profile.html:11
 msgid "Username"
@@ -647,7 +487,7 @@ msgid ""
 "Helpdesk to resolve this issue."
 msgstr ""
 
-#: templates/user_routes.html:21 templates/user_routes.html.py:301
+#: templates/user_routes.html:21 templates/user_routes.html.py:314
 msgid "Suspend"
 msgstr "Κατάργηση"
 
@@ -691,71 +531,71 @@ msgstr "Επόμενη"
 msgid "Last"
 msgstr "Τελευταία"
 
-#: templates/user_routes.html:225 templates/user_routes.html.py:329
+#: templates/user_routes.html:227 templates/user_routes.html.py:342
 msgid "Console"
 msgstr "Κονσόλα"
 
-#: templates/user_routes.html:226
+#: templates/user_routes.html:228
 msgid "Add Rule"
 msgstr "Δημιουργία φίλτρου"
 
-#: templates/user_routes.html:249
+#: templates/user_routes.html:251
 msgid "Match"
 msgstr "Όροι"
 
-#: templates/user_routes.html:252
+#: templates/user_routes.html:254
 msgid "Details"
 msgstr "Λεπτομέρειες"
 
-#: templates/user_routes.html:256
+#: templates/user_routes.html:258
 msgid "Actions"
 msgstr "Ενέργειες"
 
-#: templates/user_routes.html:273 templates/user_routes.html.py:297
+#: templates/user_routes.html:295 templates/user_routes.html.py:309
 msgid "Suspended by user"
 msgstr "Απενεργοποιήθηκε από το χρήστη"
 
-#: templates/user_routes.html:276 templates/user_routes.html.py:297
+#: templates/user_routes.html:298 templates/user_routes.html.py:309
 msgid "Suspended by administrator"
 msgstr "Απενεργοποιήθηκε από το διαχειριστή"
 
-#: templates/user_routes.html:279
+#: templates/user_routes.html:301
 msgid "Suspended due to expiration"
 msgstr "Απενεργοποιήθηκε λόγω λήξης"
 
-#: templates/user_routes.html:282
+#: templates/user_routes.html:304
 msgid "Syncronization error. Configuration in device deffers from rule"
 msgstr "Σφάλμα συγχρονισμού. Διαφορά διαμόρφωσης από συσκευή"
 
-#: templates/user_routes.html:297
+#: templates/user_routes.html:309
 msgid "Rule expired"
 msgstr "Λήξη Φίλτρου"
 
-#: templates/user_routes.html:300
+#: templates/user_routes.html:313
 msgid "Edit"
 msgstr "Επεξεργασία"
 
-#: templates/user_routes.html:305
+#: templates/user_routes.html:318
 msgid "Reactivate"
 msgstr "Ενεργοποίηση"
 
-#: templates/user_routes.html:308
+#: templates/user_routes.html:321
 msgid "ReSync"
 msgstr ""
 
-#: templates/user_routes.html:311
+#: templates/user_routes.html:324
 msgid "Fix it!"
 msgstr "Επιδιόρθωση"
 
-#: templates/user_routes.html:324
+#: templates/user_routes.html:337
 msgid "Suspend Rule"
 msgstr "Κατάργηση Φίλτρου"
 
-#: templates/user_routes.html:325
+#: templates/user_routes.html:338
 msgid "You are about to suspend rule"
 msgstr "Πρόκειται να απενεργοποιήσετε το φίλτρο"
 
-#: templates/user_routes.html:326
+#: templates/user_routes.html:339
 msgid ""
 "Suspending the rule will automatically remove the configuration from the "
 "network and mark this rule as inactive."
@@ -763,7 +603,7 @@ msgstr ""
 "Η απενεργοποίηση του φίλτρου θα προκαλέσει την αυτόματη αφαίρεση της "
 "συγκρότησης από το δίκτυο."
 
-#: templates/user_routes.html:327
+#: templates/user_routes.html:340
 msgid "Are you sure you want to proceed?"
 msgstr "Είστε βέβαιοι ότι επιθυμείτε να συνεχίσετε;"
 
@@ -771,22 +611,22 @@ msgstr "Είστε βέβαιοι ότι επιθυμείτε να συνεχί�
 msgid "Login"
 msgstr "Είσοδος"
 
-#: templates/welcome.html:9
+#: templates/welcome.html:10
 msgid "Welcome to GRNET's FoD service."
 msgstr "Καλωσήρθατε στην υπηρεσία FoD του ΕΔΕΤ."
 
-#: templates/welcome.html:10
+#: templates/welcome.html:11
 msgid ""
 "If you are new to the service, take some time to read the service description"
 msgstr ""
 "Εάν χρησιμοποιείτε την υπηρεσία για πρώτη φορά, αφιερώστε λίγο χρόνο στην "
 "ανάγνωση της περιγραφής της υπηρεσίας"
 
-#: templates/welcome.html:10
+#: templates/welcome.html:11
 msgid "here"
 msgstr "εδώ"
 
-#: templates/welcome.html:11
+#: templates/welcome.html:12
 msgid ""
 "If you have properly set your Shibboleth attributes, you can login using the "
 "link on the right"
@@ -794,7 +634,7 @@ msgstr ""
 "Έαν έχετε ορίσει ορθά τις απαιτούμενες παραμέτρους του Shibboleth, μπορείτε "
 "να εισέλθετε επιλέγοντας το σύνδεσμο στα δεξιά"
 
-#: templates/welcome.html:12
+#: templates/welcome.html:13
 msgid ""
 "For troubleshooting info and remarks do not hesitate to contact GRNET's "
 "Helpdesk."
@@ -805,21 +645,171 @@ msgstr ""
 #: templates/registration/activate.html:3
 #: templates/registration/activation_complete.html:3
 #: templates/registration/activation_complete.html:7
+#: templates/registration/activation_complete.html:21
 msgid "Activation Complete"
 msgstr "Ολοκλήρωση ενεργοποίησης"
 
-#: templates/registration/activate.html:7
+#: templates/registration/activate.html:14
 msgid "Activation Status"
 msgstr "Κατάσταση Ενεργοποίησης"
 
-#: templates/registration/activate.html:9
+#: templates/registration/activate.html:19
 msgid "succesfully activated"
 msgstr "ενεργοποιήθηκε επιτυχώς"
 
-#: templates/registration/activate.html:11
+#: templates/registration/activate.html:21
 msgid "The user has probably been already activated."
 msgstr "Ο χρήστης έχει ήδη ενεργοποιηθεί"
 
 #: templates/registration/activation_complete.html:8
+#: templates/registration/activation_complete.html:23
 msgid "The user will be notified about his/her account activation"
 msgstr "Ο χρήστης θα ενημερωθεί για την ενεργοποίηση του λογαριασμού"
+
+#~ msgid "Intro"
+#~ msgstr "Εισαγωγή"
+
+#~ msgid ""
+#~ "Firewall on Demand service provides potential users (educational and "
+#~ "academic community) the option to protect their networking equipment "
+#~ "against network attacks and threats.\n"
+#~ "\n"
+#~ "In particular, the service is targeted at network operators of GRNET's "
+#~ "institutions who have needs for short-term protection against network "
+#~ "attacks with destination, equipment they operate.\n"
+#~ "To ensure the integrity of the service and in order to prevent the "
+#~ "service being a source of attacks, the authentication of users is done "
+#~ "via Shibboleth. The authorisation is based on a combination of Shibboleth "
+#~ "attributes with the address space that each organization manages.\n"
+#~ "The software chosen to implement the service is solely based on open "
+#~ "source.\n"
+#~ "Requests or clarifications concerning the operation of the service should "
+#~ "be submitted to GRNET Helpdesk via phone at 800-11-47638 or via e-mail to "
+#~ "helpdesk-at-grnet.gr.\n"
+#~ "\n"
+#~ "\n"
+#~ msgstr ""
+#~ "Η υπηρεσία FoD (Firewall on Demand) παρέχει στην εκπαιδευτική και "
+#~ "ακαδημαϊκή κοινότητα τη δυνατότητα για προστασία έναντι δικτυακών "
+#~ "επιθέσεων που στοχέυουν στο δικτυακό εξοπλισμό που διαχειρίζονται.\n"
+#~ "Ειδικότερα, η υπηρεσία απευθύνεται στα NOC των ιδρυμάτων‐φορέων του "
+#~ "δικτύου ΕΔΕΤ που έχουν ανάγκες για βραχυπρόθεσμη προστασία έναντι "
+#~ "δικτυακών επιθέσεων με προορισμό τον εξοπλισμό που διαχειρίζονται.\n"
+#~ "Για τη διασφάλιση της ακεραιότητας της υπηρεσίας και προκειμένου αυτή να "
+#~ "μην αποτελέσει πηγή επιθέσεων, το authentication των χρηστων "
+#~ "πραγματοποιείται με τη χρήση Shibboleth. Το authorisation βασίζεται σε "
+#~ "ένα συνδυασμό συγκεκριμένων attributes του Shibboleth με το address space "
+#~ "που κάθε φορέας διαχειρίζεται.\n"
+#~ "Το λογισμικό που επιλέχθηκε για την υλοποίηση της υπηρεσίας βασίζεται "
+#~ "αποκλειστικά σε ανοιχτό κώδικα.\n"
+#~ "Αιτήματα ή διευκρινίσεις που αφορούν στη λειτουργία της υπηρεσίας θα "
+#~ "πρέπει να υποβάλλονται στο helpdesk του ΕΔΕΤ, τηλεφωνικά στο 800‐11‐47638 "
+#~ "ή μέσω e‐mail στο helpdesk -στο- grnet.gr.\n"
+
+#~ msgid "Joining the service"
+#~ msgstr "Συμμετοχή"
+
+#~ msgid ""
+#~ "Joining the service requires the appropriate configuration of certain "
+#~ "Shibboleth attributes"
+#~ msgstr ""
+#~ "Η συμμετοχή στην υπηρεσία προϋποθέτη την ορθή διαμόρφωση συγκεκριμένων "
+#~ "Shibboleth attributes"
+
+#~ msgid ""
+#~ "An appropriate HTTP_SHIB_EP_ENTITLEMENT which is provided by GRNET "
+#~ "Helpdesk"
+#~ msgstr ""
+#~ "Ένα κατάλληλο HTTP_SHIB_EP_ENTITLEMENT το οποίο παρέχεται από το Helpdesk"
+
+#~ msgid "Optionally"
+#~ msgstr "Προεραιτικά"
+
+#~ msgid "Use"
+#~ msgstr "Χρήση"
+
+#~ msgid ""
+#~ "The service enables users to mitigate active attacks aimed at their "
+#~ "network equipment. \n"
+#~ "It is based on the creation of dynamic firewall filters that are applied "
+#~ "to the network using the management protocol NETCONF and are propagated "
+#~ "to compatible (Juniper) backbone network devices via BGP flowspec NLRI.\n"
+#~ "In order to properly complete the application for a new filter is "
+#~ "essential that the destination address belongs to the user's "
+#~ "administrative network. Currently attacks are limited per /29 subnet.\n"
+#~ "Requests for new filters are applied directly to the network and "
+#~ "therefore users should pay extra attention in their request. Filters that "
+#~ "have been applied to the network are removed after their expiry date, and "
+#~ "users can activate then again by selecting the corresponding option. \n"
+#~ "Moreover, users are given the option for early deactivation of their "
+#~ "requests.\n"
+#~ msgstr ""
+#~ "Η υπηρεσία δίνει τη δυνατότητα στους χρήστες να περιορίσουν ενεργές "
+#~ "επιθέσεις που στοχεύουν στο δικτυακό τους εξοπλισμό. Βασίζεται στη "
+#~ "δημιουργία δυναμικών φίλτρων firewall οι οποίοι εφαρμόζονται στο δίκτυο "
+#~ "με τη χρήση του διαχειριστικού πρωτοκόλλου netconf και διαδίδονται στις "
+#~ "συμβατές (Juniper) διτκυακές συσκευές του δικτύου κορμού της ΕΔΕΤ μέσω "
+#~ "του BGP flowspec NLRI.\n"
+#~ "Για την ορθή συμπλήρωση της αίτησης ενός νέου φίλτρου είναι απαραίτητο η "
+#~ "διεύθυνση προορισμού να ανήκει στο δίκτυο διαχείρισης του φορέα από τον "
+#~ "οποίο προέρχεται ο χρήστης. Στην παρούσα φάση περιορίζονται επιθέσεις "
+#~ "ανά /29 υποδίκτυα.\n"
+#~ "Τα αιτήματα για νέα φίλτρα εφαρμόζονται άμεσα στο δίκτυο και ως εκ τούτου "
+#~ "θα πρέπει να δίνται ιδιαίτερη προσοχή κατά την αίτησή τους. Τα φίλτρα που "
+#~ "έχουν εφαρμοσθεί στο δίκτυο αφαιρούνται μετά το πέρας της ημερομηνίας "
+#~ "λήξης τους, ενώ οι χρήστες μπορούν να τα ενεργοποιήσουν ξανά μέσω της "
+#~ "αντίστοιχης επιλογής. Παράλληλα, δίνεται η δυνατότητα για απενεργοποίηση "
+#~ "αιτημάτων πριν τη λήξη τους κατά τη βούληση του χρήστη\n"
+
+#~ msgid "Security"
+#~ msgstr "Ασφάλεια"
+
+#~ msgid ""
+#~ "For security reasons, the submission of requests is monitored by the "
+#~ "administrators of the service.\n"
+#~ "The service administrators may at any time remove active requests from "
+#~ "the network, if this is deemed necessary"
+#~ msgstr ""
+#~ "Για λόγους ασφαλείας, η υποβολή αιτημάτων καταγράφεται ενημερώνοντας τους "
+#~ "διαχειριστές της υπηρεσίας.\n"
+#~ "Οι διαχιριστές της υπηρεσίας μπορούν ανά πάσα στιγμή να αφαιρέσουν ενεργά "
+#~ "αιτήματα από το δίκτυο, εάν κάτι τέτοιο κριθεί αναγκαίο"
+
+#~ msgid "Terms of Service"
+#~ msgstr "Όροι χρήσης της υπηρεσίας Firewall on Demand"
+
+#~ msgid ""
+#~ "The FoD service is provided by GRNET to the academic and research "
+#~ "community and the use of the service should only be done to promote "
+#~ "academic, educational and research purposes.\n"
+#~ "The following terms apply to all users of the service. These terms of "
+#~ "use, as applicable, and each time amended, constitute the contract "
+#~ "between the service users and GRNET.\n"
+#~ "To use the service, users are required to accept the following terms."
+#~ msgstr ""
+#~ "Η υπηρεσία FoD παρέχεται από την ΕΔΕΤ Α.Ε. προς την ακαδημαϊκή και "
+#~ "ερευνητική κοινότητα και η χρήση της υπηρεσίας οφείλει να γίνεται μόνο "
+#~ "για την προώθηση ακαδημαϊκών, εκπαιδευτικών και ερευνητικών σκοπών.\n"
+#~ "Οι παρακάτω όροι εφαρμόζονται από όλους τους χρήστες της υπηρεσίας. Οι "
+#~ "παρόντες όροι χρήσης, όπως κάθε φορά ισχύουν και τροποποιούνται, "
+#~ "αποτελούν τη σύμβαση μεταξύ των χρηστών της υπηρεσίας και της ΕΔΕΤ Α.Ε. "
+#~ "Για τη χρήση της υπηρεσίας είναι απαραίτητη η αποδοχή των παρακάτω όρων."
+
+#~ msgid "Potential Users"
+#~ msgstr "Δυνητικοί Χρήστες"
+
+#~ msgid ""
+#~ "The service is targeted at the Network Operation Centers (or similar "
+#~ "structures) approved by the board of GRNET SA, participating in the "
+#~ "federal identification using Shibboleth. The service is provided to "
+#~ "mitigate network attacks aimed at network equipment. The entrance and use "
+#~ "of the service requires proper configuration and release of specific "
+#~ "Shibboleth attributes."
+#~ msgstr ""
+#~ "Η υπηρεσία απευθύνεται στα Κέντρα Δικτύων (ή σε αντίστοιχες δομές) των "
+#~ "εγκεκριμένων από το ΔΣ <a href='http://www.noc.grnet.gr/node/35' "
+#~ "target='_blank'>φορέων</a> της ΕΔΕΤ Α.Ε που συμμετέχουν στην ομοσπονδιακή "
+#~ "ταυτοποίηση με τη χρήση Shibboleth. Η υπηρεσία παρέχεται προκειμένου να "
+#~ "περιοριστούν δικτυακές επιθέσεις που στοχεύουν στον εξοπλισμό των φορέων. "
+#~ "Η είσοδος και χρήση της υπηρεσίας προϋποθέτη την ορθή διαμόρφωση "
+#~ "συγκεκριμένων ιδιοτήτων του Shibboleth."

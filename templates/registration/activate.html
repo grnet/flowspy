@@ -2,13 +2,30 @@
 {% load i18n %}
 {% block title %}{% trans "Activation Complete" %}{% endblock %}
 {% block brcrmb_container %}{% endblock %}
-{% block content %}
-<div align="center" id="registration">
-    <h3>{% trans "Activation Status" %}</h3>
-{% if account %}
-    <p>{{account}} {% trans "succesfully activated" %}</p>
-{% else %}
-    <p>{% trans "The user has probably been already activated." %}</p>
-{% endif %}
-</div>
-{% endblock %}
+    {% block content %}
+	<div class="container-fluid">
+      <div class="row-fluid">
+        <div class="span2">
+        </div><!--/span-->
+
+		<div class="span10">
+			<div class="row-fluid">
+				<!--/span-->
+				<h3 class='muted'>{% trans "Activation Status" %}</h3>
+				<hr><br>
+					
+					<div class="span10 alert {% if account %}alert-success{% else %}alert-info{% endif %}">
+					{% if account %}
+					    {{account}} {% trans "succesfully activated" %}
+					{% else %}
+					    {% trans "The user has probably been already activated." %}
+					{% endif %}
+					</div>
+				<!--/span-->
+			</div><!--/row-->
+		</div><!--/span-->
+
+        </div><!--/span-->
+    </div><!--/.fluid-container-->
+	{% endblock %}
+

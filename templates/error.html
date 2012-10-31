@@ -6,51 +6,49 @@
 {% block extrahead %}
 	<script type="text/javascript">
 	$(document).ready(function(){
-		$(".relogin").tooltip({ position: "bottom center", opacity: 0.7});
+		$("#ttip").tooltip();
 		});
 	</script>
-	<style type="text/css">
-
-	    .tooltip {
-	        display: none;
-	        background: transparent url(/fodstatic/black_arrow_updown.png);
-	        font-size: 12px;
-	        height: 70px;
-	        width: 160px;
-	        padding: 25px;
-			padding-top: 30px;
-	        color: #fff;
-	    }
-
-</style>
-
 {% endblock %}
 
-{% block content %}
-	{% if error %}{% if inactive %}<h3 class="muted">{% trans "Activation Pending" %}</h3>{% else %}<h3 class="muted">{% trans "Error" %}</h3>{% endif %}{% endif %}
-	<div class="container"><div class="row">
-	<div class="span8">
-	{% if missing_attributes %}
-	<p>{% trans "One or more required shibboleth attributes were not released towards this service" %}</p>
-	{% endif %}
-	<p {% if not inactive %}style="color: red;"{% endif %}>{% autoescape off %}{{error}}{% endautoescape %}</p>
-	{% if missing_attributes %}
-	<p>
-	{% trans "Required shibboleth attributes" %}:<br>
-	<ul>
-	<li>HTTP_EPPN</li>
-	<li>HTTP_SHIB_HOMEORGANIZATION</li>
-	<li>HTTP_SHIB_INETORGPERSON_MAIL</li>
-	<li>An appropriate HTTP_SHIB_EP_ENTITLEMENT</li>
-	</ul>
-	{% trans "Optional" %}:
-	<ul>
-	<li>HTTP_SHIB_INETORGPERSON_GIVENNAME</li>
-	<li>HTTP_SHIB_PERSON_SURNAME</li>
-	</ul>
-	</p>
-	{% endif %}
-	</div>
-	</div>
-	</div>
-{% endblock %}
+    {% block content %}
+	<div class="container-fluid">
+      <div class="row-fluid">
+        <div class="span2">
+        </div><!--/span-->
+
+		<div class="span10">
+			<div class="row-fluid">
+				<!--/span-->
+				{% if error %}{% if inactive %}<h3 class="muted">{% trans "Activation Pending" %}</h3>{% else %}<h3 class="muted">{% trans "Error" %}</h3>{% endif %}{% endif %}
+				<hr><br>
+					
+					<div class="span10 alert {% if missing_attributes %}alert-error{% else %}alert-info{% endif %}">
+					{% if missing_attributes %}
+						<p>{% trans "One or more required shibboleth attributes were not released towards this service" %}</p>
+						{% endif %}
+						<p>{% autoescape off %}{{error}}{% endautoescape %}</p>
+						{% if missing_attributes %}
+						<p>
+						{% trans "Required shibboleth attributes" %}:<br>
+						<ul>
+						<li>HTTP_EPPN</li>
+						<li>HTTP_SHIB_HOMEORGANIZATION</li>
+						<li>HTTP_SHIB_INETORGPERSON_MAIL</li>
+						<li>An appropriate HTTP_SHIB_EP_ENTITLEMENT</li>
+						</ul>
+						{% trans "Optional" %}:
+						<ul>
+						<li>HTTP_SHIB_INETORGPERSON_GIVENNAME</li>
+						<li>HTTP_SHIB_PERSON_SURNAME</li>
+						</ul>
+						</p>
+						{% endif %}
+					</div>
+				<!--/span-->
+			</div><!--/row-->
+		</div><!--/span-->
+
+        </div><!--/span-->
+    </div><!--/.fluid-container-->
+	{% endblock %}

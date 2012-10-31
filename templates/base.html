@@ -121,7 +121,16 @@
 				        	<a href="{% url logout %}">{% trans "Logout" %}</a>
 				        </li>
 				        {% else %}
+				        {% if error %}
+				        	{% if inactive %}
+				        		<li><a href="{% url login %}">{% trans "Shibboleth Login" %}</a></li>
+				        	{% else %}
+						<li>
+							<a id='ttip' data-placement="bottom" rel="tooltip" href="{% url logout %}" data-original-title="{% trans 'After clicking Retry Login, it is strongly suggested to close your browser and visit the page again' %}">{% trans "Retry Login" %}</a>
+						</li>{% endif %}
+						{% else %}						
 				        <li><a href="{% url login %}">{% trans "Shibboleth Login" %}</a></li>
+				        {% endif %}
 				        {% endif %}
 				    </ul>
 				        

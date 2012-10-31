@@ -1,9 +1,44 @@
 {% extends "base.html" %}
+
 {% load i18n %}
+    {% block title %}{{ flatpage.title }}{% endblock %}
+    {% block breadcrumbs %}:: {% trans flatpage.title %}{% endblock %}
+              
+    {% block extrahead %}
+    <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+	<META HTTP-EQUIV="Expires" CONTENT="-1">
+    <style type="text/css">
+      
+      .headtitle {font-family: "Franklin Gothic Demi", "Franklin Gothic", "ITC Franklin Gothic", Arial, sans-serif; letter-spacing: -1px; }
+    </style>
+    <script type="text/javascript" src="/fodstatic/js/jquery.min.js"></script>
+ 
+<script type="text/javascript">
 
-{% block title %}{{ flatpage.title }}{% endblock %}
-{% block breadcrumbs %}:: {% trans flatpage.title %}{% endblock %}
+        function setlang(lang) {
+                $("#langsel").val(lang);
+                var form = $("#langform");
+                $.ajax({
+        			url: form.attr('action'), 
+        			data: form.serialize(),
+        			type: "POST",
+        			cache: false,
+        			success:function(data){
+        					window.location.href=location.href + "../" + lang + "/";
+        				}
+                });
+                
+        }
+</script>
+    
 
-{% block content %}
-{{ flatpage.content|linebreaks }}
 {% endblock %}
+
+		{% block content %}
+			<h4 class='muted'>{{ flatpage.title }}</h4>
+			<hr>
+			<div class="span9">
+			{{ flatpage.content|linebreaks }}
+			</div>
+		{% endblock %}
+

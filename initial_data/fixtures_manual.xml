@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<django-objects version="1.0">
+    <object pk="2" model="flatpages.flatpage">
+        <field type="CharField" name="url">/fod/info/el/</field>
+        <field type="CharField" name="title">Πληροφορίες</field>
+        <field type="TextField" name="content">&lt;h5&gt;Πληροφορίες&lt;/h5&gt;
+
+Η υπηρεσία FoD (Firewall on Demand) παρέχει στην εκπαιδευτική και ακαδημαϊκή κοινότητα τη δυνατότητα για προστασία έναντι δικτυακών επιθέσεων που στοχέυουν στο δικτυακό εξοπλισμό που διαχειρίζονται.
+
+Ειδικότερα, η υπηρεσία απευθύνεται στα NOC των ιδρυμάτων‐φορέων του δικτύου ΕΔΕΤ που έχουν ανάγκες για βραχυπρόθεσμη προστασία έναντι δικτυακών επιθέσεων με προορισμό τον εξοπλισμό που διαχειρίζονται.
+
+Για τη διασφάλιση της ακεραιότητας της υπηρεσίας και προκειμένου αυτή να μην αποτελέσει πηγή επιθέσεων, το authentication των χρηστων πραγματοποιείται με τη χρήση Shibboleth. Το authorisation βασίζεται σε ένα συνδυασμό συγκεκριμένων attributes του Shibboleth με το address space που κάθε φορέας διαχειρίζεται. Το λογισμικό που επιλέχθηκε για την υλοποίηση της υπηρεσίας βασίζεται αποκλειστικά σε ανοιχτό κώδικα.
+
+Αιτήματα ή διευκρινίσεις που αφορούν στη λειτουργία της υπηρεσίας θα πρέπει να υποβάλλονται στο helpdesk του ΕΔΕΤ, τηλεφωνικά στο 800‐11‐47638 ή μέσω e‐mail στο helpdesk -στο- grnet.gr.
+
+&lt;h5&gt;Συμμετοχή&lt;/h5&gt;
+
+Η συμμετοχή στην υπηρεσία προϋποθέτη την ορθή διαμόρφωση συγκεκριμένων Shibboleth attributes:&lt;ul&gt;&lt;li&gt;HTTP_EPPN&lt;/li&gt;&lt;li&gt;HTTP_SHIB_HOMEORGANIZATION&lt;/li&gt;&lt;li&gt;HTTP_SHIB_INETORGPERSON_MAIL&lt;/li&gt;&lt;li&gt;Ένα κατάλληλο HTTP_SHIB_EP_ENTITLEMENT το οποίο παρέχεται από το Helpdesk&lt;/li&gt;&lt;/ul&gt;
+Προεραιτικά:
+&lt;ul&gt;&lt;li&gt;HTTP_SHIB_INETORGPERSON_GIVENNAME&lt;/li&gt;&lt;li&gt;HTTP_SHIB_PERSON_SURNAME&lt;/li&gt;&lt;/ul&gt;
+
+&lt;h5&gt;Χρήση&lt;/h5&gt;
+
+Η υπηρεσία δίνει τη δυνατότητα στους χρήστες να περιορίσουν ενεργές επιθέσεις που στοχεύουν στο δικτυακό τους εξοπλισμό. Βασίζεται στη δημιουργία δυναμικών φίλτρων firewall οι οποίοι εφαρμόζονται στο δίκτυο με τη χρήση του διαχειριστικού πρωτοκόλλου netconf και διαδίδονται στις συμβατές (Juniper) διτκυακές συσκευές του δικτύου κορμού της ΕΔΕΤ μέσω του BGP flowspec NLRI.
+
+Για την ορθή συμπλήρωση της αίτησης ενός νέου φίλτρου είναι απαραίτητο η διεύθυνση προορισμού να ανήκει στο δίκτυο διαχείρισης του φορέα από τον οποίο προέρχεται ο χρήστης. Στην παρούσα φάση περιορίζονται επιθέσεις ανά /29 υποδίκτυα.
+
+Τα αιτήματα για νέα φίλτρα εφαρμόζονται άμεσα στο δίκτυο και ως εκ τούτου θα πρέπει να δίνται ιδιαίτερη προσοχή κατά την αίτησή τους. Τα φίλτρα που έχουν εφαρμοσθεί στο δίκτυο αφαιρούνται μετά το πέρας της ημερομηνίας λήξης τους, 
+ενώ οι χρήστες μπορούν να τα ενεργοποιήσουν ξανά μέσω της αντίστοιχης επιλογής. Παράλληλα, δίνεται η δυνατότητα για απενεργοποίηση αιτημάτων πριν τη λήξη τους κατά τη βούληση του χρήστη.
+
+&lt;h5&gt;Ασφάλεια&lt;/h5&gt;
+Για λόγους ασφαλείας, η υποβολή αιτημάτων καταγράφεται ενημερώνοντας τους διαχειριστές της υπηρεσίας. Οι διαχιριστές της υπηρεσίας μπορούν ανά πάσα στιγμή να αφαιρέσουν ενεργά αιτήματα από το δίκτυο, εάν κάτι τέτοιο κριθεί αναγκαίο.
+</field>
+        <field type="BooleanField" name="enable_comments">False</field>
+        <field type="CharField" name="template_name"></field>
+        <field type="BooleanField" name="registration_required">False</field>
+        <field to="sites.site" name="sites" rel="ManyToManyRel"><object pk="1"></object></field>
+    </object>
+    <object pk="1" model="flatpages.flatpage">
+        <field type="CharField" name="url">/fod/info/en/</field>
+        <field type="CharField" name="title">Info</field>
+        <field type="TextField" name="content">&lt;h5&gt;Intro&lt;/h5&gt;
+
+Firewall on Demand service provides potential users (educational and academic community) the option to protect their networking equipment against network attacks and threats.
+
+In particular, the service is targeted at network operators of GRNET's institutions who have needs for short-term protection against network attacks with destination, equipment they operate.
+To ensure the integrity of the service and in order to prevent the service being a source of attacks, the authentication of users is done via Shibboleth. The authorisation is based on a combination of Shibboleth attributes with the address space that each organization manages.
+The software chosen to implement the service is solely based on open source.
+Requests or clarifications concerning the operation of the service should be submitted to GRNET Helpdesk via phone at 800-11-47638 or via e-mail to helpdesk-at-grnet.gr.
+
+&lt;h5&gt;Joining the service&lt;/h5&gt;
+
+Joining the service requires the appropriate configuration of certain Shibboleth attributes:&lt;ul&gt;&lt;li&gt;HTTP_EPPN&lt;/li&gt;&lt;li&gt;HTTP_SHIB_HOMEORGANIZATION&lt;/li&gt;&lt;li&gt;HTTP_SHIB_INETORGPERSON_MAIL&lt;/li&gt;&lt;li&gt;An appropriate HTTP_SHIB_EP_ENTITLEMENT which is provided by GRNET Helpdesk&lt;/li&gt;&lt;/ul&gt;
+Optionally:
+&lt;ul&gt;&lt;li&gt;HTTP_SHIB_INETORGPERSON_GIVENNAME&lt;/li&gt;&lt;li&gt;HTTP_SHIB_PERSON_SURNAME&lt;/li&gt;&lt;/ul&gt;
+
+&lt;h5&gt;Use&lt;/h5&gt;
+
+The service enables users to mitigate active attacks aimed at their network equipment. 
+It is based on the creation of dynamic firewall filters that are applied to the network using the management protocol NETCONF and are propagated to compatible (Juniper) backbone network devices via BGP flowspec NLRI.
+In order to properly complete the application for a new filter is essential that the destination address belongs to the user's administrative network. Currently attacks are limited per /29 subnet.
+Requests for new filters are applied directly to the network and therefore users should pay extra attention in their request. Filters that have been applied to the network are removed after their expiry date, and users can activate then again by selecting the corresponding option. 
+Moreover, users are given the option for early deactivation of their requests.
+
+&lt;h5&gt;Security&lt;/h5&gt;
+
+For security reasons, the submission of requests is monitored by the administrators of the service.
+The service administrators may at any time remove active requests from the network, if this is deemed necessary</field>
+        <field type="BooleanField" name="enable_comments">False</field>
+        <field type="CharField" name="template_name"></field>
+        <field type="BooleanField" name="registration_required">False</field>
+        <field to="sites.site" name="sites" rel="ManyToManyRel"><object pk="1"></object></field>
+    </object>
+    <object pk="4" model="flatpages.flatpage">
+        <field type="CharField" name="url">/fod/tos/el/</field>
+        <field type="CharField" name="title">Όροι χρήσης</field>
+        <field type="TextField" name="content">&lt;h5&gt;Όροι χρήσης της υπηρεσίας Firewall on Demand&lt;/h5&gt;
+
+Η υπηρεσία FoD παρέχεται από την ΕΔΕΤ Α.Ε. προς την ακαδημαϊκή και ερευνητική κοινότητα και η χρήση της υπηρεσίας οφείλει να γίνεται μόνο για την προώθηση ακαδημαϊκών, εκπαιδευτικών και ερευνητικών σκοπών.
+Οι παρακάτω όροι εφαρμόζονται από όλους τους χρήστες της υπηρεσίας. Οι παρόντες όροι χρήσης, όπως κάθε φορά ισχύουν και τροποποιούνται, αποτελούν τη σύμβαση μεταξύ των χρηστών της υπηρεσίας και της ΕΔΕΤ Α.Ε. Για τη χρήση της υπηρεσίας είναι απαραίτητη η αποδοχή των παρακάτω όρων.
+
+&lt;h5&gt;Δυνητικοί Χρήστες&lt;/h5&gt;
+
+Η υπηρεσία απευθύνεται στα Κέντρα Δικτύων (ή σε αντίστοιχες δομές) των εγκεκριμένων από το ΔΣ &lt;a href='http://www.noc.grnet.gr/node/35' target='_blank'&gt;φορέων&lt;/a&gt; της ΕΔΕΤ Α.Ε που συμμετέχουν στην ομοσπονδιακή ταυτοποίηση με τη χρήση Shibboleth.
+Η υπηρεσία παρέχεται προκειμένου να περιοριστούν δικτυακές επιθέσεις που στοχεύουν στον εξοπλισμό των φορέων. Η είσοδος και χρήση της υπηρεσίας προϋποθέτη την ορθή διαμόρφωση συγκεκριμένων ιδιοτήτων του Shibboleth.
+</field>
+        <field type="BooleanField" name="enable_comments">False</field>
+        <field type="CharField" name="template_name"></field>
+        <field type="BooleanField" name="registration_required">False</field>
+        <field to="sites.site" name="sites" rel="ManyToManyRel"><object pk="1"></object></field>
+    </object>
+    <object pk="3" model="flatpages.flatpage">
+        <field type="CharField" name="url">/fod/tos/en/</field>
+        <field type="CharField" name="title">Terms of Service</field>
+        <field type="TextField" name="content">&lt;h5&gt;Terms of Service&lt;/h5&gt;
+
+The FoD service is provided by GRNET to the academic and research community and the use of the service should only be done to promote academic, educational and research purposes. The following terms apply to all users of the service. These terms of use, as applicable, and each time amended, constitute the contract between the service users and GRNET. To use the service, users are required to accept the following terms.
+
+&lt;h5&gt;Potential Users&lt;/h5&gt;
+
+The service is targeted at the Network Operation Centers (or similar structures) approved by the board of GRNET SA, participating in the federal identification using Shibboleth. The service is provided to mitigate network attacks aimed at network equipment. The entrance and use of the service requires proper configuration and release of specific Shibboleth attributes.</field>
+        <field type="BooleanField" name="enable_comments">False</field>
+        <field type="CharField" name="template_name"></field>
+        <field type="BooleanField" name="registration_required">False</field>
+        <field to="sites.site" name="sites" rel="ManyToManyRel"><object pk="1"></object></field>
+    </object>
+</django-objects>

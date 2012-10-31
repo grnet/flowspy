@@ -8,3 +8,24 @@
 <p>{% trans "The user will be notified about his/her account activation" %}</p>
 </div>
 {% endblock %}
+
+    {% block content %}
+	<div class="container-fluid">
+      <div class="row-fluid">
+        <div class="span2">
+        </div><!--/span-->
+
+		<div class="span10">
+			<div class="row-fluid">
+				<!--/span-->
+				<h3>{% trans "Activation Complete" %}</h3>
+					<hr>
+					{% trans "The user will be notified about his/her account activation" %}
+					</div>
+				<!--/span-->
+			</div><!--/row-->
+		</div><!--/span-->
+
+        </div><!--/span-->
+    </div><!--/.fluid-container-->
+	{% endblock %}

@@ -1,5 +1,6 @@
-# Django settings for flowspy project.
-
+# Django settings for grnet project.
+# -*- coding: utf-8 -*- vim:encoding=utf-8:
+# vim: tabstop=4:shiftwidth=4:softtabstop=4:expandtab
 import os
 import djcelery
 djcelery.setup_loader()
@@ -51,7 +52,7 @@ LANGUAGES = (
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'en'
 
 SITE_ID = 1
 
@@ -104,6 +105,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.cache.FetchFromCacheMiddleware',
+    'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
 )
 
 AUTHENTICATION_BACKENDS = (
@@ -129,6 +131,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.messages',
+    'django.contrib.flatpages',
     'flowspec',
     'poller',
     'south',

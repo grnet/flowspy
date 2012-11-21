@@ -4,7 +4,7 @@
 {% block brcrmb_container %}{% endblock %}
 {% block content %}
 <div class="row">
-<div class="span6">
+<div class="span6 well">
 <h3 class="muted">{% trans "Welcome" %}</h3>
 <hr>
 <p>{% blocktrans %}Welcome to GRNET's FoD service.{% endblocktrans %}</p>
@@ -13,7 +13,7 @@
 <p>{% blocktrans %}For troubleshooting info and remarks do not hesitate to contact GRNET's Helpdesk.{% endblocktrans %}</p>
 </div>
 
-<div class="span6" id="loginform">
+<div class="span5" id="loginform">
 
 <div style="text-align: center;">
 					<a href="{% url login %}">

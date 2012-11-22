@@ -5,6 +5,7 @@ from django.utils.translation import ugettext_lazy
 from django.template.defaultfilters import filesizeformat
 from flowspy.flowspec.models import *
 from flowspy.peers.models import *
+from flowspy.accounts.models import *
 from ipaddr import *
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
@@ -12,6 +13,9 @@ from django.conf import settings
 import datetime
 from django.core.mail import mail_admins, mail_managers, send_mail
 
+class UserProfileForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
 
 class RouteForm(forms.ModelForm):
 #    name = forms.CharField(help_text=ugettext_lazy("A unique route name,"

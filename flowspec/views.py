@@ -291,20 +291,20 @@ def user_login(request):
         lastname = lookupShibAttr(settings.SHIB_LASTNAME, request.META)
         mail = lookupShibAttr(settings.SHIB_MAIL, request.META)
         entitlement = lookupShibAttr(settings.SHIB_ENTITLEMENT, request.META)
-        organization = request.META['HTTP_SHIB_HOMEORGANIZATION']
+        #organization = request.META['HTTP_SHIB_HOMEORGANIZATION']
         
         if settings.SHIB_AUTH_ENTITLEMENT in entitlement.split(";"):
             has_entitlement = True
         if not has_entitlement:
             error_entitlement = True
-        if not organization:
-            error_orgname = True
+#        if not organization:
+#            error_orgname = True
         if not mail:
             error_mail = True
         if error_username:
             error = _("Your idP should release the HTTP_EPPN attribute towards this service<br>")
-        if error_orgname:
-            error = error + _("Your idP should release the HTTP_SHIB_HOMEORGANIZATION attribute towards this service<br>")
+#        if error_orgname:
+#            error = error + _("Your idP should release the HTTP_SHIB_HOMEORGANIZATION attribute towards this service<br>")
         if error_entitlement:
             error = error + _("Your idP should release an appropriate HTTP_SHIB_EP_ENTITLEMENT attribute towards this service<br>")
         if error_mail:
@@ -324,11 +324,14 @@ def user_login(request):
         user = authenticate(username=username, firstname=firstname, lastname=lastname, mail=mail, authsource='shibboleth')
         if user is not None:
             try:
-                peer = Peer.objects.get(domain_name=organization)
-                up = UserProfile.objects.get_or_create(user=user,peer=peer)
+                peer = user.get_profile().peer
+#                peer = Peer.objects.get(domain_name=organization)
+#                up = UserProfile.objects.get_or_create(user=user,peer=peer)
             except:
-                error = _("Your organization's domain name does not match our peers' domain names<br>Please contact Helpdesk to resolve this issue")
-                return render_to_response('error.html', {'error': error}, context_instance=RequestContext(request))
+                form = UserProfileForm()
+                form.fields['user'] = forms.ModelChoiceField(queryset=User.objects.filter(pk=user.pk), empty_label=None)
+                form.fields['peer'] = forms.ModelChoiceField(queryset=Peer.objects.all(), empty_label=None)
+                return render_to_response('registration/select_institution.html', {'form': form}, context_instance=RequestContext(request))
             if not user_exists:
                 user_activation_notify(user)
             if user.is_active:
@@ -406,6 +409,31 @@ def add_port(request):
         else:
             return render_to_response('add_port.html', {'form': form,},
                                       context_instance=RequestContext(request))
+
+@never_cache
+def selectinst(request):
+    if request.method == 'POST':
+        request_data = request.POST.copy()
+        user = request_data['user']
+        try:
+            existingProfile = UserProfile.objects.get(user=user)
+            error = _("Violation warning: User account is already associated with an institution.The event has been logged and our administrators will be notified about it")
+            return render_to_response('error.html', {'error': error, 'inactive': True},
+                                  context_instance=RequestContext(request))
+        except UserProfile.DoesNotExist:
+            pass
+            
+        form = UserProfileForm(request_data)
+        if form.is_valid():
+            userprofile = form.save()
+            user_activation_notify(userprofile.user)
+            error = _("User account <strong>%s</strong> is pending activation. Administrators have been notified and will activate this account within the next days. <br>If this account has remained inactive for a long time contact your technical coordinator or GRNET Helpdesk") %userprofile.user.username
+            return render_to_response('error.html', {'error': error, 'inactive': True},
+                                  context_instance=RequestContext(request))
+        else:
+            form.fields['user'] = forms.ModelChoiceField(queryset=User.objects.filter(pk=user.pk), empty_label=None)
+            form.fields['institution'] = forms.ModelChoiceField(queryset=Peer.objects.all(), empty_label=None)
+            return render_to_response('registration/select_institution.html', {'form': form}, context_instance=RequestContext(request))
 
 @login_required
 @never_cache

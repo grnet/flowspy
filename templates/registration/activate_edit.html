@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load i18n %}
+   
+   
+       {% block content %}
+	<div class="container-fluid">
+      <div class="row-fluid">
+        <div class="span2">
+        </div><!--/span-->
+
+		<div class="span10">
+			<div class="row-fluid">
+				<!--/span-->
+				<h3 class="muted">{% trans "Activate User" %}</h3>
+				<hr>
+					<div class="span10">
+						<form method="POST" class="form-horizontal">
+						    {% csrf_token %}
+						    {% if form.non_field_errors %}
+						    <p class="error">
+						        {{ form.non_field_errors}}
+						    </p>
+						    {% endif %}
+						        <div class="control-group {% if form.user.errors %} error {% endif %}">
+						        <label class="control-label" for="id_user"><b>{% trans "User" %}</b></label>
+						        <div class="controls">
+						            {{ form.user }}
+						            {% if form.user.errors %} <span class="help-inline"> {{ form.user.errors|join:", " }} </span>
+						            {% endif %} <span class="help-block"> {{ form.user.help_text }}</span>
+						        </div>
+						    </div>
+						    <div class="control-group {% if form.peer.errors %} error {% endif %}">
+						        <label class="control-label" for="id_peer"><b>{% trans "Institution" %}</b></label>
+						        <div class="controls">
+						            {{ form.peer }}
+						            {% if form.peer.errors %} <span class="help-inline"> {{ form.peer.errors|join:", " }} </span>
+						            {% endif %} <span class="help-block"> {{ form.peer.help_text }}</span>
+						        </div>
+						    </div>
+						
+						    <div class="control-group">
+						        <div class="controls">
+						            <button type="submit" id="applybutton" value="Apply" class="btn btn-primary"/>
+						            {% trans "Activate" %}</button>
+						        </div>
+						    </div>
+						</form>
+					</div>
+				<!--/span-->
+			</div><!--/row-->
+		</div><!--/span-->
+
+        </div><!--/span-->
+    </div><!--/.fluid-container-->
+	{% endblock %}
+   
+   

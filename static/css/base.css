@@ -35,9 +35,7 @@ legend + .control-group {
     margin: 0 0 -1px;
     padding: 8px 14px;
 }
-.breadcrumb{
-	background-color: white;
-}
+
 .ui-widget {
     font-size: 12px;
 }

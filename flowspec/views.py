@@ -287,11 +287,12 @@ def user_login(request):
         username = request.META['HTTP_EPPN']
         if not username:
             error_username = True
-        firstname = request.META['HTTP_SHIB_INETORGPERSON_GIVENNAME']
-        lastname = request.META['HTTP_SHIB_PERSON_SURNAME']
-        mail = request.META['HTTP_SHIB_INETORGPERSON_MAIL']
+        firstname = lookupShibAttr(settings.SHIB_FIRSTNAME, request.META)
+        lastname = lookupShibAttr(settings.SHIB_LASTNAME, request.META)
+        mail = lookupShibAttr(settings.SHIB_MAIL, request.META)
+        entitlement = lookupShibAttr(settings.SHIB_ENTITLEMENT, request.META)
         organization = request.META['HTTP_SHIB_HOMEORGANIZATION']
-        entitlement = request.META['HTTP_SHIB_EP_ENTITLEMENT']
+        
         if settings.SHIB_AUTH_ENTITLEMENT in entitlement.split(";"):
             has_entitlement = True
         if not has_entitlement:
@@ -341,8 +342,8 @@ def user_login(request):
             error = _("Something went wrong during user authentication. Contact your administrator")
             return render_to_response('error.html', {'error': error,},
                                   context_instance=RequestContext(request))
-    except Exception:
-        error = _("Invalid login procedure")
+    except Exception as e:
+        error = _("Invalid login procedure. Error: %s" %e)
         return render_to_response('error.html', {'error': error,},
                                   context_instance=RequestContext(request))
         # Return an 'invalid login' error message.
@@ -438,3 +439,9 @@ def get_peer_techc_mails(user):
 def send_new_mail(subject, message, from_email, recipient_list, bcc_list):
     return EmailMessage(subject, message, from_email, recipient_list, bcc_list).send()
 
+
+def lookupShibAttr(attrmap, requestMeta):
+    for attr in attrmap:
+        if attr in requestMeta:
+            return requestMeta[attr]
+    return ''

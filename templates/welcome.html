@@ -2,27 +2,30 @@
 {% load i18n %}
 {% block title %}{% trans "Login" %}{% endblock %}
 {% block brcrmb_container %}{% endblock %}
-{% block content %}
-<div class="row">
-<div class="span6 well">
-<h3 class="muted">{% trans "Welcome" %}</h3>
-<hr>
-<p>{% blocktrans %}Welcome to GRNET's FoD service.{% endblocktrans %}</p>
-<p>{% blocktrans %}If you are new to the service, take some time to read the service description{% endblocktrans %} <a href="/fod/info/{{LANGUAGE_CODE}}/">{% trans "here" %}</a>.</p>
-<p>{% blocktrans %}If you have properly set your Shibboleth attributes, you can login using the link on the right{% endblocktrans %}</p>
-<p>{% blocktrans %}For troubleshooting info and remarks do not hesitate to contact GRNET's Helpdesk.{% endblocktrans %}</p>
-</div>
-
-<div class="span5" id="loginform">
-
-<div style="text-align: center;">
+			{% block contentplaceholder %}
+			<div id="content" class="container">
+				<div class="hero-unit" style="text-align:center"><h2>GRNET - Firewall on Demand</h2>
+				<p><img src="/fodstatic/img/fod_footer_logo.png" /></p>
+				<p>{% blocktrans %}Welcome to GRNET's FoD service.{% endblocktrans %}</p>
+				</div>
+				<div class="row-fluid">
+				<div class="span4 well"><h3>{% trans "What" %}?</h3><hr>
+				<p>{% blocktrans %}If you are new to the service, take some time to read the{% endblocktrans %} <a href="/fod/info/{{LANGUAGE_CODE}}/">{% trans "Service Description" %}</a></p>
+				<p>{% blocktrans %}Before asking why? take some time to look at the{% endblocktrans %} <a href="/fod/tos/{{LANGUAGE_CODE}}/">{% trans "Service Terms" %}</a></p>
+				</div>
+				<div class="span4 well"><h3>{% trans "How" %}?</h3><hr>
+				<p>{% blocktrans %}If you have properly set your Shibboleth attributes, you may proceed{% endblocktrans %}</p>
+				<div style="text-align: center;">
 					<a href="{% url login %}">
 					<img src="/fodstatic/shib_login.png" style="border:none;">
 					<p>{% trans "Shibboleth Login" %}</p>
 				</a>
 	
 </div>
-</div>
+				</div>
+				<div class="span4 well"><h3>{% trans "Help" %}?</h3><hr>
+				{% blocktrans %}For troubleshooting info and remarks do not hesitate to contact GRNET's Helpdesk.{% endblocktrans %}</div>
 </div>
 
-{% endblock %}
+			</div>
+			{% endblock %}

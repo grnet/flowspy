@@ -2,8 +2,12 @@
 
 {% load i18n %}
     {% block title %}{{ flatpage.title }}{% endblock %}
-    {% block breadcrumbs %}:: {% trans flatpage.title %}{% endblock %}
-              
+     {% block breadcrumbs %}
+ <li class="active"><span class="divider">/</span>
+	
+	{% trans flatpage.title %}
+</li>
+{% endblock %}
     {% block extrahead %}
     <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
 	<META HTTP-EQUIV="Expires" CONTENT="-1">

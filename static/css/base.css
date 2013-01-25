@@ -1,13 +1,17 @@
 body {
     font-size: 13px;
-    background-image: url("/fodstatic/img/bg2.gif");
-    background-attachment: fixed;
-    background-color: #131516;
-    background-position: left 40px;
-    background-repeat: repeat;
+    /*background-image: url("/fodstatic/img/bg2.gif");*/
+    
     padding-bottom: 10px;
 }
 
+.footer {
+    background-color: #F5F5F5;
+    border-top: 1px solid #E5E5E5;
+    margin-top: 30px;
+    padding: 30px 0;
+    text-align: center;
+}
 .navbar .brand {
     max-height: 40px;
     overflow: visible;
@@ -17,10 +21,11 @@ body {
 label, input, button, select, textarea {
     font-size: 13px;
 }
-legend {
 
-    font-size: 14px;
-	line-height: 20px;
+legend {
+    font-size: 13px;
+    font-weight: bold;
+    line-height: 20px;
     margin-bottom: 0;
 }
 .form-horizontal .control-group {
@@ -45,10 +50,10 @@ hr {
 
 #footcontainer{
 	text-align: center; 
-	background-color: white; 
+	/*background-color: white;*/ 
 	margin-top: 5px;
-	padding: 5px 10px 0 10px;
-	border: 1px solid grey;
+	/*padding: 5px 10px 0 10px;*/
+	/*border: 1px solid grey;*/
 }
 
 select, textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input {
@@ -68,11 +73,11 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
     text-shadow: 0 1px 0 #FFFFFF;
 }
 
-#content.container{
+/*#content.container{
 	border: 1px solid grey; 
 	padding: 90px 10px 10px; 
 	background: white;"
-}
+}*/
 #routes_table{
 	font-size: 12px;	
 }

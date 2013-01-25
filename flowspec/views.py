@@ -322,6 +322,7 @@ def user_login(request):
         except:
             user_exists = False
         user = authenticate(username=username, firstname=firstname, lastname=lastname, mail=mail, authsource='shibboleth')
+        
         if user is not None:
             try:
                 peer = user.get_profile().peer
@@ -345,7 +346,7 @@ def user_login(request):
             error = _("Something went wrong during user authentication. Contact your administrator")
             return render_to_response('error.html', {'error': error,},
                                   context_instance=RequestContext(request))
-    except Exception as e:
+    except User.DoesNotExist as e:
         error = _("Invalid login procedure. Error: %s" %e)
         return render_to_response('error.html', {'error': error,},
                                   context_instance=RequestContext(request))

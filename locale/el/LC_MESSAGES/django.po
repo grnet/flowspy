@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-31 14:55+0200\n"
+"POT-Creation-Date: 2013-01-25 17:53+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Leonidas Poulopoulos <leopoul@grnet.gr>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -26,33 +26,33 @@ msgstr "Ελληνικά"
 msgid "English"
 msgstr "Αγγλικά"
 
-#: accounts/views.py:22
+#: accounts/views.py:74
 #, python-format
 msgid "%sUser account activated"
 msgstr "%s Ενεργοποιήθηκε ο λογαριασμός του χρήστη"
 
-#: flowspec/forms.py:60 flowspec/forms.py:89
+#: flowspec/forms.py:64 flowspec/forms.py:93
 msgid "Invalid network address format"
 msgstr "Λανθασμένη μορφή διεύθυνσης δικτύου στο πεδίο Πηγή"
 
-#: flowspec/forms.py:62
+#: flowspec/forms.py:66
 msgid "Private addresses not allowed"
 msgstr "Δεν επιτρέπονται οι private διευθύνσεις"
 
-#: flowspec/forms.py:64 flowspec/forms.py:93
+#: flowspec/forms.py:68 flowspec/forms.py:97
 msgid "You have no authority on this subnet"
 msgstr "Δεν έχετε δικαιώματα σε αυτό το υποδίκτυο"
 
-#: flowspec/forms.py:85
+#: flowspec/forms.py:89
 #, python-format
 msgid "Currently no prefix lengths < %s are allowed"
 msgstr "Προς το παρόν δεν επιτρέπονται υποδίκτυα <%s"
 
-#: flowspec/forms.py:107
+#: flowspec/forms.py:111
 msgid "Errors in form. Please review and fix them"
 msgstr "Σφάλματα στη φόρμα. Παρακαλώ διορθώστε τα"
 
-#: flowspec/forms.py:134
+#: flowspec/forms.py:138
 msgid ""
 "Destination address/network should belong to your administrative address "
 "space. Check My Profile to review your networks"
@@ -60,7 +60,7 @@ msgstr ""
 "Η διεύθυνση προορισμού πρέπει να ανήκει στα διαχειριστικά σας δίκτυα. "
 "Επισκεφθείτε 'Το Προφίλ μου' για την προβολή των διαχειριστικών σας δικτύων"
 
-#: flowspec/forms.py:136
+#: flowspec/forms.py:140
 msgid ""
 "Cannot create rule for source ports and ports at the same time. Select "
 "either ports or source ports"
@@ -68,7 +68,7 @@ msgstr ""
 "Δεν μπορεί να δημιουργηθεί φίλτρο για source ports και ports ταυτόχρονα. "
 "Επιλέξτε είτε ports είτε source ports"
 
-#: flowspec/forms.py:138
+#: flowspec/forms.py:142
 msgid ""
 "Cannot create rule for destination ports and ports at the same time. Select "
 "either ports or destination ports"
@@ -76,7 +76,7 @@ msgstr ""
 "Δεν μπορεί να δημιουργηθεί φίλτρο για destination ports και ports "
 "ταυτόχρονα. Επιλέξτε είτε ports είτε destination ports"
 
-#: flowspec/forms.py:140
+#: flowspec/forms.py:144
 msgid ""
 "Once source port is matched, source has to be filled as well. Either "
 "deselect source port or fill source address"
@@ -85,7 +85,7 @@ msgstr ""
 "Είτε απο-επιλέξτε το πεδίο source port είτε συμπληρώστε μια διεύθυνση στο "
 "source"
 
-#: flowspec/forms.py:142
+#: flowspec/forms.py:146
 msgid ""
 "Once destination port is matched, destination has to be filled as well. "
 "Either deselect destination port or fill destination address"
@@ -94,32 +94,32 @@ msgstr ""
 "συμπληρωθεί. Είτε απο-επιλέξτε το πεδίο destination port είτε συμπληρώστε "
 "μια διεύθυνση στο destination"
 
-#: flowspec/forms.py:144
+#: flowspec/forms.py:148
 msgid "Fill at least a Rule Match Condition"
 msgstr "Συμπληρώστε τουλάχιστον έναν όρο ταύτισης"
 
-#: flowspec/forms.py:146
+#: flowspec/forms.py:150
 #, python-format
 msgid "This action \"%s\" is not permitted"
 msgstr "Η ενέργεια %s δεν επιτρέπεται"
 
-#: flowspec/forms.py:198
+#: flowspec/forms.py:202
 msgid "Rate-limiting cannot be < 50kbps"
 msgstr ""
 
-#: flowspec/forms.py:201
+#: flowspec/forms.py:205
 msgid "Rate-limiting should be an integer < 50"
 msgstr ""
 
-#: flowspec/forms.py:203 flowspec/forms.py:227
+#: flowspec/forms.py:207 flowspec/forms.py:231
 msgid "Cannot be empty"
 msgstr "Το πεδίο δεν μπορεί να είναι κενό"
 
-#: flowspec/forms.py:208
+#: flowspec/forms.py:212
 msgid "Cannot select something other than rate-limit"
 msgstr ""
 
-#: flowspec/forms.py:225
+#: flowspec/forms.py:229
 msgid "Port should be an integer"
 msgstr "Η port θα πρέπει να είναι ένας ακέραιος αριθμός"
 
@@ -205,21 +205,13 @@ msgstr "Μη επαρκή δικαιώματα για την επεξεργασ�
 msgid "Cannot edit a pending rule: %s."
 msgstr "Δεν είναι δυνατή η επεξεργασία ενός φίλτρου (%s) σε κατάσταση pending "
 
-#: flowspec/views.py:304
+#: flowspec/views.py:305
 msgid ""
 "Your idP should release the HTTP_EPPN attribute towards this service<br>"
 msgstr ""
 "Ο idP σας θα πρέπει να παρέχει την HTTP_EPPN παράμετερο στην υπηρεσία<br>"
 
-#: flowspec/views.py:306
-msgid ""
-"Your idP should release the HTTP_SHIB_HOMEORGANIZATION attribute towards "
-"this service<br>"
-msgstr ""
-"Ο idP σας θα πρέπει να παρέχει την HTTP_SHIB_HOMEORGANIZATION παράμετερο "
-"στην υπηρεσία<br>"
-
-#: flowspec/views.py:308
+#: flowspec/views.py:309
 msgid ""
 "Your idP should release an appropriate HTTP_SHIB_EP_ENTITLEMENT attribute "
 "towards this service<br>"
@@ -227,7 +219,7 @@ msgstr ""
 "Ο idP σας θα πρέπει να παρέχει την HTTP_SHIB_EP_ENTITLEMENT παράμετερο στην "
 "υπηρεσία<br>"
 
-#: flowspec/views.py:310
+#: flowspec/views.py:311
 msgid ""
 "Your idP should release the HTTP_SHIB_INETORGPERSON_MAIL attribute towards "
 "this service"
@@ -235,15 +227,7 @@ msgstr ""
 "Ο idP σας θα πρέπει να παρέχει την HTTP_SHIB_INETORGPERSON_MAIL παράμετερο "
 "στην υπηρεσία<br>"
 
-#: flowspec/views.py:329
-msgid ""
-"Your organization's domain name does not match our peers' domain "
-"names<br>Please contact Helpdesk to resolve this issue"
-msgstr ""
-"Το domain name του οργανισμού σας δε βρέθηκε στη βάση φορέων μας."
-"<br>Παρακαλώ επικοινωνήστε με το Helpdesk για τη διευθέτηση του προβλήματος"
-
-#: flowspec/views.py:337
+#: flowspec/views.py:342 flowspec/views.py:431
 #, python-format
 msgid ""
 "User account <strong>%s</strong> is pending activation. Administrators have "
@@ -257,16 +241,23 @@ msgstr ""
 "ενεργοποιηθεί για μεγάλο χρονικό διάστημα, επικοινωνήστε με τον τεχνικό σας "
 "υπέυθυνο ή το Helpdesk του ΕΔΕΤ."
 
-#: flowspec/views.py:341
+#: flowspec/views.py:346
 msgid ""
 "Something went wrong during user authentication. Contact your administrator"
 msgstr ""
 "Παρουσιάστηκε ένα σφάλμα κατά την είσοδο του χρήστη. Επικοινωνήστε με το "
 "διαχειριστή σας"
 
-#: flowspec/views.py:345
-msgid "Invalid login procedure"
-msgstr "Εσφαλμένη διαδικασία εισόδου"
+#: flowspec/views.py:350
+#, python-format
+msgid "Invalid login procedure. Error: %s"
+msgstr "Εσφαλμένη διαδικασία εισόδου. Σφάλμα: %s"
+
+#: flowspec/views.py:421
+msgid ""
+"Violation warning: User account is already associated with an institution."
+"The event has been logged and our administrators will be notified about it"
+msgstr ""
 
 #: monkey_patch/forms.py:11
 #, python-format
@@ -359,7 +350,7 @@ msgid ""
 "the parameter selection above. Feel free to include any additional comments."
 msgstr ""
 
-#: templates/apply.html:398
+#: templates/apply.html:398 templates/registration/select_institution.html:37
 msgid "Apply"
 msgstr "Εφαρμογή"
 
@@ -367,24 +358,24 @@ msgstr "Εφαρμογή"
 msgid "Add new port"
 msgstr "Νέα port"
 
-#: templates/base.html:44 templates/welcome.html:8
+#: templates/base.html:59 templates/base.html.py:158
 msgid "Welcome"
 msgstr "Καλωσήρθατε"
 
-#: templates/base.html:58 templates/base.html.py:87 templates/profile.html:4
+#: templates/base.html:73 templates/base.html.py:102 templates/profile.html:4
 #: templates/profile.html.py:5 templates/profile.html:7
 msgid "My profile"
 msgstr "Το προφίλ μου"
 
-#: templates/base.html:60 templates/base.html.py:91
+#: templates/base.html:75 templates/base.html.py:106
 msgid "Admin"
 msgstr "Διαχειριστής"
 
-#: templates/base.html:62 templates/base.html.py:121
+#: templates/base.html:77 templates/base.html.py:136
 msgid "Logout"
 msgstr "Έξοδος"
 
-#: templates/base.html:65 templates/base.html.py:129
+#: templates/base.html:80 templates/base.html.py:144
 msgid ""
 "After clicking Retry Login, it is strongly suggested to close your browser "
 "and visit the page again"
@@ -392,20 +383,20 @@ msgstr ""
 "Αφού επιλέξετε Επανάληψη Εισόδου κλείστε τον browser σας και επισκεφθείτε "
 "ξανά τη σελίδα"
 
-#: templates/base.html:65 templates/base.html.py:129
+#: templates/base.html:80 templates/base.html.py:144
 msgid "Retry Login"
 msgstr "Επανάληψη Εισόδου"
 
-#: templates/base.html:67 templates/base.html.py:126 templates/base.html:132
+#: templates/base.html:82 templates/base.html.py:141 templates/base.html:147
 #: templates/welcome.html:21
 msgid "Shibboleth Login"
 msgstr "Είσοδος με Shibboleth"
 
-#: templates/base.html:100
+#: templates/base.html:115
 msgid "Language"
 msgstr "Γλώσσα"
 
-#: templates/base.html:142 templates/user_routes.html:214
+#: templates/base.html:158 templates/user_routes.html:214
 #: templates/user_routes.html.py:220
 msgid "My rules"
 msgstr "Τα φίλτρα μου"
@@ -432,7 +423,7 @@ msgstr "Απαιτούμενα Shibboleth attributes "
 msgid "Optional"
 msgstr "Προεραιτικά"
 
-#: templates/footer.html:6
+#: templates/footer.html:7
 msgid ""
 "If you have any questions or need help, contact GRNET Helpdesk at <a "
 "href='mailto:helpdesk@grnet.gr'>helpdesk@grnet.gr</a> or 800-11-47638."
@@ -441,15 +432,15 @@ msgstr ""
 "ΕΔΕΤ στο <a href='mailto:helpdesk@grnet.gr'>helpdesk@grnet.gr</a> ή "
 "τηλεφωνικά στο 800-11-47638."
 
-#: templates/footer.html:8
+#: templates/footer.html:9
 msgid "GRNET"
 msgstr "ΕΔΕΤ"
 
-#: templates/footer.html:8
+#: templates/footer.html:9
 msgid "Info"
 msgstr "Πληροφορίες"
 
-#: templates/footer.html:8
+#: templates/footer.html:9 templates/welcome.html:14
 msgid "Service Terms"
 msgstr "Όροι Χρήσης"
 
@@ -611,30 +602,41 @@ msgstr "Είστε βέβαιοι ότι επιθυμείτε να συνεχί�
 msgid "Login"
 msgstr "Είσοδος"
 
-#: templates/welcome.html:10
+#: templates/welcome.html:9
 msgid "Welcome to GRNET's FoD service."
 msgstr "Καλωσήρθατε στην υπηρεσία FoD του ΕΔΕΤ."
 
-#: templates/welcome.html:11
-msgid ""
-"If you are new to the service, take some time to read the service description"
-msgstr ""
-"Εάν χρησιμοποιείτε την υπηρεσία για πρώτη φορά, αφιερώστε λίγο χρόνο στην "
-"ανάγνωση της περιγραφής της υπηρεσίας"
-
-#: templates/welcome.html:11
-msgid "here"
-msgstr "εδώ"
-
 #: templates/welcome.html:12
-msgid ""
-"If you have properly set your Shibboleth attributes, you can login using the "
-"link on the right"
-msgstr ""
-"Έαν έχετε ορίσει ορθά τις απαιτούμενες παραμέτρους του Shibboleth, μπορείτε "
-"να εισέλθετε επιλέγοντας το σύνδεσμο στα δεξιά"
+msgid "What"
+msgstr "Τι"
 
 #: templates/welcome.html:13
+msgid "If you are new to the service, take some time to read the"
+msgstr "Εάν χρησιμοποιείτε την υπηρεσία για πρώτη φορά, δείτε την"
+
+#: templates/welcome.html:13
+msgid "Service Description"
+msgstr "Περιγραφή της Υπηρεσίας"
+
+#: templates/welcome.html:14
+msgid "Before asking why? take some time to look at the"
+msgstr "Πριν ρωτήσετε γιατί; διαβάστε την ενότητα"
+
+#: templates/welcome.html:16
+msgid "How"
+msgstr "Πως"
+
+#: templates/welcome.html:17
+msgid "If you have properly set your Shibboleth attributes, you may proceed"
+msgstr ""
+"Έαν έχετε ορίσει ορθά τις απαιτούμενες παραμέτρους του Shibboleth, μπορείτε "
+"να συνεχίσετε"
+
+#: templates/welcome.html:26
+msgid "Help"
+msgstr "Βοήθεια"
+
+#: templates/welcome.html:27
 msgid ""
 "For troubleshooting info and remarks do not hesitate to contact GRNET's "
 "Helpdesk."
@@ -661,10 +663,56 @@ msgstr "ενεργοποιήθηκε επιτυχώς"
 msgid "The user has probably been already activated."
 msgstr "Ο χρήστης έχει ήδη ενεργοποιηθεί"
 
+#: templates/registration/activate_edit.html:14
+msgid "Activate User"
+msgstr "Ενεργοποίηση Χρήστη"
+
+#: templates/registration/activate_edit.html:25
+msgid "User"
+msgstr ""
+
+#: templates/registration/activate_edit.html:33
+#: templates/registration/select_institution.html:25
+msgid "Institution"
+msgstr ""
+
+#: templates/registration/activate_edit.html:44
+msgid "Activate"
+msgstr "Ενεργοποίηση"
+
 #: templates/registration/activation_complete.html:8
 #: templates/registration/activation_complete.html:23
 msgid "The user will be notified about his/her account activation"
 msgstr "Ο χρήστης θα ενημερωθεί για την ενεργοποίηση του λογαριασμού"
+
+#: templates/registration/select_institution.html:14
+msgid "Select your institution"
+msgstr ""
+
+#~ msgid ""
+#~ "If you are new to the service, take some time to read the service "
+#~ "description"
+#~ msgstr ""
+#~ "Εάν χρησιμοποιείτε την υπηρεσία για πρώτη φορά, αφιερώστε λίγο χρόνο στην "
+#~ "ανάγνωση της περιγραφής της υπηρεσίας"
+
+#~ msgid "here"
+#~ msgstr "εδώ"
+
+#~ msgid ""
+#~ "Your idP should release the HTTP_SHIB_HOMEORGANIZATION attribute towards "
+#~ "this service<br>"
+#~ msgstr ""
+#~ "Ο idP σας θα πρέπει να παρέχει την HTTP_SHIB_HOMEORGANIZATION παράμετερο "
+#~ "στην υπηρεσία<br>"
+
+#~ msgid ""
+#~ "Your organization's domain name does not match our peers' domain "
+#~ "names<br>Please contact Helpdesk to resolve this issue"
+#~ msgstr ""
+#~ "Το domain name του οργανισμού σας δε βρέθηκε στη βάση φορέων μας."
+#~ "<br>Παρακαλώ επικοινωνήστε με το Helpdesk για τη διευθέτηση του "
+#~ "προβλήματος"
 
 #~ msgid "Intro"
 #~ msgstr "Εισαγωγή"

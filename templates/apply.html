@@ -23,6 +23,12 @@
 	$(document).ready( function(){
 		
 		
+		$('#setFromAll').click(function(){
+			$("#id_source").val('0.0.0.0/32');
+			return false;
+		});
+		
+		
 		$('#id_then').attr("multiple", "");
 		$( "#id_expires" ).datepicker({ dateFormat: 'yy-mm-dd' , maxDate: '+10d', minDate: '+1d', changeMonth: false, changeYear: false }).datepicker( $.datepicker.regional[ "el" ] );
 		{% comment %}
@@ -198,7 +204,7 @@
                     {% trans "Rule Basic Info" %}
                 </legend>
                 <div class="control-group  {% if form.name.errors %} error {% endif %}">
-	                <label class="control-label" for="id_name">{% trans "Name" %}</label>
+	                <label class="control-label" for="id_name"><b>{% trans "Name" %}</b></label>
                     <div class="controls">
                     {{ form.name }}
                     {% if form.name.errors %}
@@ -216,7 +222,7 @@
                     {% trans "Admin Options" %}
                 </legend>
                   <div class="control-group">
-	                <label class="control-label" for="id_applier">{% trans "Applier" %}</label>
+	                <label class="control-label" for="id_applier"><b>{% trans "Applier" %}</b></label>
                    <div class="controls">{{ form.applier }}</div>
                     {% if form.applier.errors %}
                     <br>
@@ -234,8 +240,8 @@
                     {% trans "Rule Match Conditions" %}
                 </legend>
                 <div class="control-group {% if form.source.errors %} error {% endif %}">
-	                <label class="control-label" for="id_source">{% trans "Source Address" %}</label>
-                    <div class="controls">{{ form.source }}&nbsp;<img src="/fodstatic/threat_source.png" style="height: 30px;"/>
+	                <label class="control-label" for="id_source"><b>{% trans "Source Address" %}</b></label>
+                    <div class="controls">{{ form.source }}&nbsp;<img src="/fodstatic/threat_source.png" style="height: 30px;"/>&nbsp;&nbsp;<a class="btn btn-small btn-info" id="setFromAll" href="#">Any</a>
                     {% if form.source.errors %}
                     <span class="help-inline">
                         {{ form.source.errors|join:", " }}
@@ -247,7 +253,7 @@
 
                 </div>
                 <div class="control-group {% if form.destination.errors %} error {% endif %}">
-	                <label class="control-label" for="id_destination">{% trans "Destination Address" %}</label>
+	                <label class="control-label" for="id_destination"><b>{% trans "Destination Address" %}</b></label>
                     <div class="controls">
 					{{ form.destination }}&nbsp;<img src="/fodstatic/secure_destination.png" style="height: 30px;"/>
 					{% if form.destination.errors %}
@@ -342,7 +348,7 @@
                     {% trans "Rule Actions" %}
                 </legend>
                 <div class="control-group {% if form.then.errors %} error {% endif %}">
-	                <label class="control-label" for="id_then">{% trans "Then" %}</label>
+	                <label class="control-label" for="id_then"><b>{% trans "Then" %}</b></label>
                     <div class="controls">{{ form.then }}
                     {% if form.then.errors %}
                     <span class="help-inline">

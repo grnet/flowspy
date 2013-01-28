@@ -24,7 +24,7 @@ urlpatterns = patterns('',
     # Uncomment the admin/doc line below to enable admin documentation:
     (r'^fod/admin/doc/', include('django.contrib.admindocs.urls')),
     url(r'^fod/load_js/(?P<file>[\w\s\d_-]+)/$', 'flowspy.flowspec.views.load_jscript', name="load-js"), 
-
+	url(r'^fod/selectinst/?$', 'flowspy.flowspec.views.selectinst', name="selectinst"),
     url(r'^fod/accounts/activate/(?P<activation_key>\w+)/$', 'accounts.views.activate', name='activate_account'),
     url(r'^fod/activate/complete/$',
                            direct_to_template,
@@ -33,7 +33,7 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
     (r'^fod/admin/', include(admin.site.urls)),
-
+	(r'^tinymce/', include('tinymce.urls')),
 )
 
 

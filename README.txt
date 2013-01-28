@@ -16,6 +16,7 @@
 * python-nxpy
 * python-lxml
 * python-ipaddr
+* python-django-tinymce
 * apache2
 * apache2-mod-proxy
 * apache2-mod-rewrite
@@ -40,7 +41,6 @@ Components roles:
 * Shibboleth authentication
     - Required shibboleth attributes:
         - HTTP_EPPN
-        - HTTP_SHIB_HOMEORGANIZATION
         - HTTP_SHIB_INETORGPERSON_MAIL
         - An appropriate HTTP_SHIB_EP_ENTITLEMENT
     - Optional Attributes:

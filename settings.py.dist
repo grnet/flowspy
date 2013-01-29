@@ -222,7 +222,7 @@ SHIB_FIRSTNAME = ['HTTP_SHIB_INETORGPERSON_GIVENNAME']
 SHIB_LASTNAME = ['HTTP_SHIB_PERSON_SURNAME']
 SHIB_ENTITLEMENT = ['HTTP_SHIB_EP_ENTITLEMENT']
 
-TINYMCE_JS_URL = '/static/js/tinymce/tiny_mce.js'
+TINYMCE_JS_URL = '/fodstatic/js/tinymce/tiny_mce.js'
 
 TINYMCE_DEFAULT_CONFIG = {
     'extended_valid_elements' :  'iframe[src|width|height|name|align]',

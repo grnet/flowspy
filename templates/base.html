@@ -98,9 +98,15 @@ body {
 				    <ul class="nav">
 				    {% if user.is_authenticated %}
 				    
+				    {% if user.get_profile.peer %}
 				        <li>
 				            <a href="{% url user-profile %}">{% trans "My profile" %}</a>
 				        </li>
+				    {% endif %}
+				        
+				    {% if perms.accounts.overview %}<li>
+                            <a href="{% url overview %}">{% trans "Overview" %}</a>
+                        </li>{% endif %}
 				    {% if user.is_superuser %}
 						<li {% block hometop %}{% endblock %}>
 							<a href="{% url admin:index %}">{% trans "Admin" %}</a>

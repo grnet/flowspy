@@ -1,0 +1,54 @@
+{% extends "base.html" %} 
+{% load i18n %}
+{% block title %}{% trans "Overview Login" %}{% endblock %}
+
+    {% block content %}
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <div class="span2">
+        </div><!--/span-->
+
+        <div class="span10">
+            <div class="row-fluid">
+                <!--/span-->
+                <h3 class="muted">{% trans "Overview Login" %}</h3>
+                <hr>
+                    
+                    <form class="form-horizontal" method="post"
+                            action="{% url altlogin %}">
+    
+                            {% if form.non_field_errors %} {% for err in form.non_field_errors %}
+                            <div class="control-group error ">
+                                <div class="controls error">
+                                    <span style="color: #B94A48;">{{err}}</span>
+                                </div>
+                            </div>
+                            {% endfor %} {% endif %} {% csrf_token %}
+                            <div class="control-group {% if form.username.errors %} error {% endif %}">
+                                <label class="control-label" for="id_username">Username</label>
+                                <div class="controls">
+                                    {{ form.username }} {% if form.username.errors %} <span class="help-inline"> {{ form.username.errors|join:", "}} </span> {% endif %}
+                                </div>
+                            </div>
+                            <div class="control-group {% if form.password.errors %} error {% endif %}">
+                                <label class="control-label" for="id_password">Password</label>
+                                <div class="controls">
+                                    {{ form.password }} {% if form.password.errors %} <span
+                                        class="help-inline"> {{ form.password.errors|join:", "}} </span> {% endif %}
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <div class="controls">
+                                    <button type="submit" class="btn">Sign in</button>
+                                    <input type="hidden" name="next" value="{% url overview %}" />
+                                </div>
+                            </div>
+                        </form>
+                <!--/span-->
+            </div><!--/row-->
+        </div><!--/span-->
+
+        </div><!--/span-->
+    </div><!--/.fluid-container-->
+    {% endblock %}
+

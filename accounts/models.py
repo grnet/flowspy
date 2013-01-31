@@ -7,6 +7,12 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User)
     peer = models.ForeignKey(Peer)
     
+    class Meta:
+        permissions = (
+                ("overview", "Can see registered users and rules"),
+            )
+
+    
     def __unicode__(self):
         return "%s:%s" %(self.user.username, self.peer.peer_name)
 

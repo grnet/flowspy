@@ -436,6 +436,22 @@ def selectinst(request):
             form.fields['institution'] = forms.ModelChoiceField(queryset=Peer.objects.all(), empty_label=None)
             return render_to_response('registration/select_institution.html', {'form': form}, context_instance=RequestContext(request))
 
+@never_cache
+def overview(request):
+    user = request.user
+    if user.is_authenticated():
+        if user.has_perm('accounts.overview'):
+            users = User.objects.all()
+            group_routes = Route.objects.all()
+            return render_to_response('overview/index.html', {'users': users, 'routes': group_routes},
+                                  context_instance=RequestContext(request))
+        else:
+            violation=True
+            return render_to_response('overview/index.html', {'violation': violation},
+                                  context_instance=RequestContext(request))
+    else:
+        return HttpResponseRedirect(reverse("altlogin"))
+
 @login_required
 @never_cache
 def user_logout(request):
@@ -471,6 +487,7 @@ def send_new_mail(subject, message, from_email, recipient_list, bcc_list):
 
 def lookupShibAttr(attrmap, requestMeta):
     for attr in attrmap:
-        if (attr in requestMeta) & (len(requestMeta[attr]) > 0):
-            return requestMeta[attr]
+        if (attr in requestMeta.keys()):
+            if len(requestMeta[attr]) > 0:
+                return requestMeta[attr]
     return ''

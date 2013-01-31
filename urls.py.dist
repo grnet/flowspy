@@ -34,6 +34,10 @@ urlpatterns = patterns('',
     # Uncomment the next line to enable the admin:
     (r'^fod/admin/', include(admin.site.urls)),
 	(r'^tinymce/', include('tinymce.urls')),
+	
+	    
+    url(r'^fod/altlogin/?', 'django.contrib.auth.views.login', {'template_name': 'overview/login.html'}, name="altlogin"),
+    url(r'^fod/overview/?$', 'flowspy.flowspec.views.overview', name="overview"),
 )
 
 

@@ -100,3 +100,7 @@ Under the templates folder (templates), you can alter the footer.html file to in
 * Modify flatpages to suit your needs 
 * Once Apache proxying and shibboleth modules are properly setup, login to the tool. If shibboleth SP is properly setup you should see a user pending activation message and an activation email should arrive at the NOTIFY_ADMIN_MAILS accounts. 
 
+5. UPDATING:
+* from 0.9.1 to 0.9.2:
+ - Check diff between urls
+ - run ./manage.py migrate accounts (data migration for perms)

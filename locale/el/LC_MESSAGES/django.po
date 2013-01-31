@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-25 18:20+0200\n"
+"POT-Creation-Date: 2013-01-30 02:39+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Leonidas Poulopoulos <leopoul@grnet.gr>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -123,8 +123,9 @@ msgstr ""
 msgid "Port should be an integer"
 msgstr "Η port θα πρέπει να είναι ένας ακέραιος αριθμός"
 
-#: flowspec/models.py:107 templates/apply.html:201
-#: templates/user_routes.html:250
+#: flowspec/models.py:107 templates/apply.html:207
+#: templates/user_routes.html:250 templates/overview/index.html:158
+#: templates/overview/index.html.py:183
 msgid "Name"
 msgstr "Όνομα"
 
@@ -132,50 +133,52 @@ msgstr "Όνομα"
 msgid "Network address. Use address/CIDR notation"
 msgstr "Διεύθυνση δικτύου/υποδικτύου. Χρησιμοποιήστε σύνταξη διεύθυνσης/CIDR"
 
-#: flowspec/models.py:109 templates/apply.html:237
+#: flowspec/models.py:109 templates/apply.html:243
 msgid "Source Address"
 msgstr "Διεύθυνση Πηγής"
 
-#: flowspec/models.py:110 templates/apply.html:287
+#: flowspec/models.py:110 templates/apply.html:293
 msgid "Source Port"
 msgstr "Port Πηγής"
 
-#: flowspec/models.py:111 templates/apply.html:250
+#: flowspec/models.py:111 templates/apply.html:256
 msgid "Destination Address"
 msgstr "Διεύθυνση Προορισμού"
 
-#: flowspec/models.py:112 templates/apply.html:302
+#: flowspec/models.py:112 templates/apply.html:308
 msgid "Destination Port"
 msgstr "Port Προορισμού"
 
-#: flowspec/models.py:113 templates/apply.html:292 templates/apply.html.py:307
-#: templates/apply.html:317 templates/apply.html.py:322
+#: flowspec/models.py:113 templates/apply.html:298 templates/apply.html.py:313
+#: templates/apply.html:323 templates/apply.html.py:328
 msgid "Port"
 msgstr ""
 
-#: flowspec/models.py:119 templates/apply.html:263
+#: flowspec/models.py:119 templates/apply.html:269
 msgid "Protocol"
 msgstr "Πρωτόκολλο"
 
-#: flowspec/models.py:121 templates/apply.html:345
-#: templates/user_routes.html:252
+#: flowspec/models.py:121 templates/apply.html:351
+#: templates/user_routes.html:252 templates/overview/index.html:185
 msgid "Then"
 msgstr "Ενέργειες"
 
 #: flowspec/models.py:124 templates/user_routes.html:253
+#: templates/overview/index.html:159 templates/overview/index.html.py:186
 msgid "Status"
 msgstr "Κατάσταση"
 
-#: flowspec/models.py:127 templates/apply.html:366
-#: templates/user_routes.html:256
+#: flowspec/models.py:127 templates/apply.html:372
+#: templates/user_routes.html:256 templates/overview/index.html:189
 msgid "Expires"
 msgstr "Λήγει"
 
 #: flowspec/models.py:128 templates/user_routes.html:257
+#: templates/overview/index.html:190
 msgid "Response"
 msgstr "Απόκριση Δικτύου"
 
-#: flowspec/models.py:129 templates/apply.html:382
+#: flowspec/models.py:129 templates/apply.html:388
 msgid "Comments"
 msgstr "Σχόλια"
 
@@ -281,7 +284,7 @@ msgstr "Επεξεργασία φίλτρου"
 msgid "Create new Rule"
 msgstr "Δημιουργία νέου Φίλτρου"
 
-#: templates/apply.html:15 templates/apply.html.py:182
+#: templates/apply.html:15 templates/apply.html.py:188
 msgid "Edit rule"
 msgstr "Επεξεργασία φίλτρου"
 
@@ -289,93 +292,94 @@ msgstr "Επεξεργασία φίλτρου"
 msgid "Create rule"
 msgstr "Δημιουργία φίλτρου"
 
-#: templates/apply.html:35 templates/apply.html.py:67
+#: templates/apply.html:41 templates/apply.html.py:73
 msgid "Add"
 msgstr "Προσθήκη"
 
-#: templates/apply.html:55 templates/apply.html.py:95
+#: templates/apply.html:61 templates/apply.html.py:101
 #: templates/user_routes.html:34
 msgid "Cancel"
 msgstr "Άκυρο"
 
-#: templates/apply.html:183
+#: templates/apply.html:189
 msgid "Apply for a new rule"
 msgstr "Αίτηση δημιουργίας νέου φίλτρου"
 
-#: templates/apply.html:198
+#: templates/apply.html:204
 msgid "Rule Basic Info"
 msgstr "Βασικές Πληροφορίες Φίλτρου"
 
-#: templates/apply.html:216
+#: templates/apply.html:222
 msgid "Admin Options"
 msgstr "Επιλογές Διαχείρισης"
 
-#: templates/apply.html:219 templates/user_routes.html:255
+#: templates/apply.html:225 templates/user_routes.html:255
+#: templates/overview/index.html:188
 msgid "Applier"
 msgstr "Χρήστης"
 
-#: templates/apply.html:234
+#: templates/apply.html:240
 msgid "Rule Match Conditions"
 msgstr "Όροι ταύτισης φίλτρου"
 
-#: templates/apply.html:275
+#: templates/apply.html:281
 msgid "Ports"
 msgstr ""
 
-#: templates/apply.html:281
+#: templates/apply.html:287
 msgid "Advanced Settings (Ports)"
 msgstr "Προηγμένες Ρυθμίσεις (Ports)"
 
-#: templates/apply.html:285
+#: templates/apply.html:291
 msgid ""
 "Select source/destination port(s), or select common port(s) for both source/"
 "destination"
 msgstr ""
 
-#: templates/apply.html:342
+#: templates/apply.html:348
 msgid "Rule Actions"
 msgstr "Ενέργειες Φίλτρου"
 
-#: templates/apply.html:363
+#: templates/apply.html:369
 msgid "Expiration"
 msgstr "Λήξη"
 
-#: templates/apply.html:379
+#: templates/apply.html:385
 msgid "Use/Comments"
 msgstr "Χρήση/Σχόλια"
 
-#: templates/apply.html:384
+#: templates/apply.html:390
 msgid ""
 "Give a short description of the intended use of this rule, that justifies "
 "the parameter selection above. Feel free to include any additional comments."
 msgstr ""
 
-#: templates/apply.html:398 templates/registration/select_institution.html:37
+#: templates/apply.html:404 templates/registration/select_institution.html:37
 msgid "Apply"
 msgstr "Εφαρμογή"
 
-#: templates/apply.html:407
+#: templates/apply.html:413
 msgid "Add new port"
 msgstr "Νέα port"
 
-#: templates/base.html:59 templates/base.html.py:158
+#: templates/base.html:59 templates/base.html.py:164
 msgid "Welcome"
 msgstr "Καλωσήρθατε"
 
-#: templates/base.html:73 templates/base.html.py:102 templates/profile.html:4
+#: templates/base.html:73 templates/base.html.py:103 templates/profile.html:4
 #: templates/profile.html.py:5 templates/profile.html:7
 msgid "My profile"
 msgstr "Το προφίλ μου"
 
-#: templates/base.html:75 templates/base.html.py:106
+#: templates/base.html:75 templates/base.html.py:112
 msgid "Admin"
 msgstr "Διαχειριστής"
 
-#: templates/base.html:77 templates/base.html.py:136
+#: templates/base.html:77 templates/base.html.py:142
 msgid "Logout"
 msgstr "Έξοδος"
 
-#: templates/base.html:80 templates/base.html.py:144
+#: templates/base.html:80 templates/base.html.py:150
 msgid ""
 "After clicking Retry Login, it is strongly suggested to close your browser "
 "and visit the page again"
@@ -383,20 +387,24 @@ msgstr ""
 "Αφού επιλέξετε Επανάληψη Εισόδου κλείστε τον browser σας και επισκεφθείτε "
 "ξανά τη σελίδα"
 
-#: templates/base.html:80 templates/base.html.py:144
+#: templates/base.html:80 templates/base.html.py:150
 msgid "Retry Login"
 msgstr "Επανάληψη Εισόδου"
 
-#: templates/base.html:82 templates/base.html.py:141 templates/base.html:147
+#: templates/base.html:82 templates/base.html.py:147 templates/base.html:153
 #: templates/welcome.html:21
 msgid "Shibboleth Login"
 msgstr "Είσοδος με Shibboleth"
 
-#: templates/base.html:115
+#: templates/base.html:108 templates/overview/index.html:121
+msgid "Overview"
+msgstr "Επισκόπηση"
+
+#: templates/base.html:121
 msgid "Language"
 msgstr "Γλώσσα"
 
-#: templates/base.html:158 templates/user_routes.html:214
+#: templates/base.html:164 templates/user_routes.html:214
 #: templates/user_routes.html.py:220
 msgid "My rules"
 msgstr "Τα φίλτρα μου"
@@ -448,7 +456,7 @@ msgstr "Πληροφορίες"
 msgid "Service Terms"
 msgstr "Όροι Χρήσης"
 
-#: templates/profile.html:11
+#: templates/profile.html:11 templates/overview/index.html:156
 msgid "Username"
 msgstr ""
 
@@ -460,7 +468,7 @@ msgstr "Όνομα"
 msgid "Last name"
 msgstr "Επώνυμο"
 
-#: templates/profile.html:23
+#: templates/profile.html:23 templates/overview/index.html:157
 msgid "Email"
 msgstr ""
 
@@ -486,43 +494,52 @@ msgstr ""
 msgid "Suspend"
 msgstr "Κατάργηση"
 
-#: templates/user_routes.html:124
+#: templates/user_routes.html:124 templates/overview/index.html:43
+#: templates/overview/index.html.py:97
 msgid "Display"
 msgstr "Προβολή"
 
-#: templates/user_routes.html:124
+#: templates/user_routes.html:124 templates/overview/index.html:43
+#: templates/overview/index.html.py:97
 msgid "All"
 msgstr "όλων των"
 
-#: templates/user_routes.html:124
+#: templates/user_routes.html:124 templates/overview/index.html:97
 msgid "rules"
 msgstr "φίλτρων"
 
-#: templates/user_routes.html:126
+#: templates/user_routes.html:126 templates/overview/index.html:45
+#: templates/overview/index.html.py:99
 msgid "No records to display"
 msgstr "Δεν βρέθηκαν εγγραφές"
 
-#: templates/user_routes.html:128
+#: templates/user_routes.html:128 templates/overview/index.html:47
+#: templates/overview/index.html.py:101
 msgid "Showing 0 to 0 of 0 entries"
 msgstr "Δείχνοντας 0 εως 0 από 0 εγγραφές"
 
-#: templates/user_routes.html:131
+#: templates/user_routes.html:131 templates/overview/index.html:50
+#: templates/overview/index.html.py:104
 msgid "Search:"
 msgstr "Αναζήτηση:"
 
-#: templates/user_routes.html:134
+#: templates/user_routes.html:134 templates/overview/index.html:53
+#: templates/overview/index.html.py:107
 msgid "First"
 msgstr "Πρώτη"
 
-#: templates/user_routes.html:135
+#: templates/user_routes.html:135 templates/overview/index.html:54
+#: templates/overview/index.html.py:108
 msgid "Previous"
 msgstr "Προηγούμενη"
 
-#: templates/user_routes.html:136
+#: templates/user_routes.html:136 templates/overview/index.html:55
+#: templates/overview/index.html.py:109
 msgid "Next"
 msgstr "Επόμενη"
 
-#: templates/user_routes.html:137
+#: templates/user_routes.html:137 templates/overview/index.html:56
+#: templates/overview/index.html.py:110
 msgid "Last"
 msgstr "Τελευταία"
 
@@ -534,11 +551,11 @@ msgstr "Κονσόλα"
 msgid "Add Rule"
 msgstr "Δημιουργία φίλτρου"
 
-#: templates/user_routes.html:251
+#: templates/user_routes.html:251 templates/overview/index.html:184
 msgid "Match"
 msgstr "Όροι"
 
-#: templates/user_routes.html:254
+#: templates/user_routes.html:254 templates/overview/index.html:187
 msgid "Details"
 msgstr "Λεπτομέρειες"
 
@@ -547,22 +564,24 @@ msgid "Actions"
 msgstr "Ενέργειες"
 
 #: templates/user_routes.html:295 templates/user_routes.html.py:309
+#: templates/overview/index.html:226 templates/overview/index.html.py:240
 msgid "Suspended by user"
 msgstr "Απενεργοποιήθηκε από το χρήστη"
 
 #: templates/user_routes.html:298 templates/user_routes.html.py:309
+#: templates/overview/index.html:229 templates/overview/index.html.py:240
 msgid "Suspended by administrator"
 msgstr "Απενεργοποιήθηκε από το διαχειριστή"
 
-#: templates/user_routes.html:301
+#: templates/user_routes.html:301 templates/overview/index.html:232
 msgid "Suspended due to expiration"
 msgstr "Απενεργοποιήθηκε λόγω λήξης"
 
-#: templates/user_routes.html:304
+#: templates/user_routes.html:304 templates/overview/index.html:235
 msgid "Syncronization error. Configuration in device deffers from rule"
 msgstr "Σφάλμα συγχρονισμού. Διαφορά διαμόρφωσης από συσκευή"
 
-#: templates/user_routes.html:309
+#: templates/user_routes.html:309 templates/overview/index.html:240
 msgid "Rule expired"
 msgstr "Λήξη Φίλτρου"
 
@@ -647,6 +666,42 @@ msgid ""
 msgstr ""
 "Για αντιμετώπιση σφαλμάτων και πληροφορίες, επικοινωνήστε με το Helpdesk του "
 "ΕΔΕΤ"
+
+#: templates/overview/index.html:43
+msgid "users"
+msgstr "χρήστες"
+
+#: templates/overview/index.html:140
+msgid "Users - Rules"
+msgstr "Χρήστες - Φίλτρα"
+
+#: templates/overview/index.html:145
+msgid "Users"
+msgstr "Χρήστες"
+
+#: templates/overview/index.html:146
+msgid "Rules"
+msgstr "Φίλτρα"
+
+#: templates/overview/index.html:160
+msgid "Peer"
+msgstr "Φορέας"
+
+#: templates/overview/index.html:169
+msgid "Active"
+msgstr ""
+
+#: templates/overview/index.html:169
+msgid "Inactive"
+msgstr ""
+
+#: templates/overview/index.html:169
+msgid "Key Expired"
+msgstr ""
+
+#: templates/overview/login.html:3 templates/overview/login.html.py:14
+msgid "Overview Login"
+msgstr "Εισόδος στην Επισκόπηση"
 
 #: templates/registration/activate.html:3
 #: templates/registration/activation_complete.html:3

@@ -2,14 +2,15 @@
 
 	<footer class="footer">
       <div id="footcontainer" class="container">
-      	 
         {% if user.is_authenticated %}
 	<p>{% trans "If you have any questions or need help, contact GRNET Helpdesk at <a href='mailto:helpdesk@grnet.gr'>helpdesk@grnet.gr</a> or 800-11-47638." %}</p>
 	{% endif %}
-	<div style="padding-top: 10px;">{% trans "Designed and developed by GRNET NOC" %}</div>
+	<div style="padding-top: 10px;">{% trans "Designed and developed by GRNET NOC" %}
+	<a href="//facebook.com/noc.grnet.gr" target="_blank"><img src="/fodstatic/img/facebook_img.png" alt="GRNET NOC on Facebook" title="GRNET NOC on Facebook"/></a>  <a href="//twitter.com/grnetnoc"  target="_blank"><img src="/fodstatic/img/twitter_img.png" alt="GRNET NOC on Twitter" title="GRNET NOC on Twitter"/></a>
+	</div>
         <div class="row"><a href="http://noc.grnet.gr">{% trans "GRNET" %} NOC</a> | <a href="/fod/info/{{LANGUAGE_CODE}}/">{% trans "Info" %}</a> | <a href="/fod/tos/{{LANGUAGE_CODE}}/">{% trans "Service Terms" %}</a></div>
         <div style="padding-top: 10px;">
-        <a href="//facebook.com/noc.grnet.gr" target="_blank"><img src="/fodstatic/img/facebook_img.png" alt="GRNET NOC on Facebook" title="GRNET NOC on Facebook"/></a>  <a href="//twitter.com/grnetnoc"  target="_blank"><img src="/fodstatic/img/twitter_img.png" alt="GRNET NOC on Twitter" title="GRNET NOC on Twitter"/></a>
+        
         </div>
 <div style="padding-top: 10px;">
 	<p style="text-align: center;"><img width="46" height="40" border="0" class="image image-img_assist_custom-46x40 " src="//noc.grnet.gr/sites/default/files/images/image_PSSYGK.img_assist_custom-46x40.png" alt="Flag ΨΣ" title="Flag ΨΣ"> <img width="49" height="40" border="0" class="image image-img_assist_custom-49x40 " src="//noc.grnet.gr/sites/default/files/images/image_EEflag.img_assist_custom-49x40.png" alt="EU flag" title="EU flag"> <img width="90" height="40" border="0" class="image image-img_assist_custom-90x40 " src="//noc.grnet.gr/sites/default/files/images/image_YPDBMTH.img_assist_custom-90x40.png" alt="Flag ΥΠΔΒΜΘ" title="Flag ΥΠΔΒΜΘ"><img width="67" height="40" border="0" class="image image-img_assist_custom-67x40 " src="//noc.grnet.gr/sites/default/files/images/image_ESPA.img_assist_custom-67x40.png" alt="ESPA" title="ESPA"></p>

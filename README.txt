@@ -1,5 +1,7 @@
 ===========
 1. Tool requirements
+Note: Depending on your setup each of the following
+may depend on other packages
 
 * python-django
 * python-django-extensions
@@ -12,8 +14,8 @@
 * python-paramiko (>= 1.7.7.1)
 * python-memcache
 * python-django-registration
-* python-ncclient
-* python-nxpy
+* ncclient (http://ncclient.grnet.gr/,  http://github.com/leopoul/ncclient)
+* nxpy (https://code.grnet.gr/projects/nxpy)
 * python-lxml
 * python-ipaddr
 * python-django-tinymce
@@ -39,15 +41,13 @@ Components roles:
 3. Operational requirements
 
 * Shibboleth authentication
-    - Required shibboleth attributes:
-        - HTTP_EPPN
-        - HTTP_SHIB_INETORGPERSON_MAIL
-        - An appropriate HTTP_SHIB_EP_ENTITLEMENT
-    - Optional Attributes:
-        - HTTP_SHIB_INETORGPERSON_GIVENNAME
-        - HTTP_SHIB_PERSON_SURNAME
-* A valid domain name in peer table (passed through HTTP_SHIB_HOMEORGANIZATION)
-
+    - Shibboleth attributes:
+        - eduPersonPrincipalName: Provides a string that uniquely identifies an administrator in the management application.
+		- eduPersonEntitlement: A specific URN value must be provided to authorize an administrator: urn:mace:grnet.gr:fod:admin
+		- mail: The e-mail address (one or more) of the administrator. It is used for notifications from the management application. It may also be used for further communication, with prior consent.
+		- givenName (optional): The person's first name.
+		- sn (optional): The person's last name.
+		
 ===========
 4. Installation Procedure
 
@@ -77,22 +77,84 @@ In settings.py set the following according to your configuration:
 
 4.2.1 Logos
 
-Inside the static folder you will find two empty png files: logo.dist.png (172x80) and shib_login.dist.png (98x80).
-Edit those two with your favourite image processing software and save them as logo.png and shib_login.png under the same folder. Image sizes are optimized to operate without any
+Inside the static folder you will find two empty png files: fod_logo.xcf (Gimp file) and shib_login.dist.png.
+Edit those two with your favourite image processing software and save them as fod_logo.png (under static/img/) and shib_login.png (under static/). Image sizes are optimized to operate without any
 other code changes. In case you want to incorporate images of different sizes you have to fine tune css and/or html as well.
 
 4.2.2 Footer
 
 Under the templates folder (templates), you can alter the footer.html file to include your own footer messages, badges, etc.
 
-4.3 Installation
+4.2.3 Welcome Page
+
+Under the templates folder (templates), you can alter the welcome page - welcome.html with your own images, carousel, videos, etc.
+
+4.3 Configuration Examples
+
+* Gunicorn configuration
+	/etc/gunicorn.d/project:
+	CONFIG = {
+    'mode': 'django',
+    'working_dir': '/path/to/flowspy',
+   #'python': '/usr/bin/python',
+    'args': (
+        '--bind=localhost:port',
+        '--workers=1',
+        '--timeout=360',
+        #'--keepalive=90',
+        '--worker-class=egg:gunicorn#gevent',
+        '--log-level=debug',
+        '--log-file=/path/to/fod.log',
+        'settings.py',
+    ),
+}
+	
+* Apache operates as a gunicorn Proxy with WSGI and Shibboleth modules enabled.
+Depending on the setup the apache configuration may vary.
+ 
+
+* Celeryd example configuration:
+	/etc/default/celeryd:
+	# Name of nodes to start, here we have a single node
+	CELERYD_NODES="w1"
+	# or we could have three nodes:
+	#CELERYD_NODES="w1 w2 w3"
+	
+	# Where to chdir at start.
+	CELERYD_CHDIR="/path/to/flowspy/"
+	# How to call "manage.py celeryd_multi"
+	CELERYD_MULTI="$CELERYD_CHDIR/manage.py celeryd_multi"
+	
+	# How to call "manage.py celeryctl"
+	CELERYCTL="$CELERYD_CHDIR/manage.py celeryctl"
+	
+	# Extra arguments to celeryd
+	#CELERYD_OPTS="--time-limit=300 --concurrency=8"
+	CELERYD_OPTS="-E -B"
+	# Name of the celery config module.
+	CELERY_CONFIG_MODULE="celeryconfig"
+	
+	# %n will be replaced with the nodename.
+	CELERYD_LOG_FILE="$CELERYD_CHDIR/celery_var/log/celery/%n.log"
+	CELERYD_PID_FILE="$CELERYD_CHDIR/celery_var/run/celery/%n.pid"
+	
+	# Workers should run as an unprivileged user.
+	CELERYD_USER="user"
+	CELERYD_GROUP="usergroup"
+	
+	# Name of the projects settings module.
+	export DJANGO_SETTINGS_MODULE="settings"
+                                           
+
+4.4 Installation
 
 * Run:
 	./manage.py syncdb
 	to create all the necessary tables in the database. Enable the admin account to insert initial data for peers and their contact info.
 * Then to allow for south migrations:
 	./manage.py migration
-* If you have properly set the primary and alternate whois servers you could go for:
+* Only if you wish to obtain info for your peers from a whois server:
+  If you have properly set the primary and alternate whois servers you could go for:
 	./manage.py fetch_networks
 	to automatically fill network info.
 	Alternatively you could fill those info manually via the admin interface.
@@ -100,7 +162,6 @@ Under the templates folder (templates), you can alter the footer.html file to in
 * Modify flatpages to suit your needs 
 * Once Apache proxying and shibboleth modules are properly setup, login to the tool. If shibboleth SP is properly setup you should see a user pending activation message and an activation email should arrive at the NOTIFY_ADMIN_MAILS accounts. 
 
-5. UPDATING:
-* from 0.9.1 to 0.9.2:
- - Check diff between urls
- - run ./manage.py migrate accounts (data migration for perms)
+
+** To share ideas and ask questions drop an email at: leopoul-at-noc(dot)grnet{dot}gr
+

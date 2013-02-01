@@ -1,5 +1,5 @@
 flowspytag = $(shell git describe --abbrev=0)
-flowspyver = $(shell git describe --abbrev=0 | egrep -o '([0-9]+\.){1,10}[0-9]+')
+flowspyver = $(shell git describe --abbrev=0 | egrep -o '([0-9]+\.){1,10}[0-9]+' | sed -e 's/\./_/g')
 name   	   = $(shell basename $(shell pwd))
 
 .PHONY: dist distclean

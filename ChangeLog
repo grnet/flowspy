@@ -1,22 +1,40 @@
 ===========
+0.9.3 RELEASE
+Minor fix
+
+Fixes:
+	-Fixed the population of "Any" in source field
+
+===========
+0.9.2 RELEASE
+Major enhancement and a minor fixes
+
+Enhancements:
+	-Added alternative view for helpdesk
+
+Fixes:
+	-Fixed the static url for tinymce in settings
+	-Fixed an issue caused by multiple Shibboleth attributes
+
+===========
 0.9.1 RELEASE
 Major UI enhancements
 
 Enhancements:
-    -Added bootstrap UI framework
-    -Added TinyMCE in flatpages
-    -Brought back flatpages with JS magic for translation switching
-    -HomeOrganization is no longer required-user selects from dropdown
-    -Added Shibboleth mapping in settings
-    -Added an Any button in source address
+	-Added bootstrap UI framework
+	-Added TinyMCE in flatpages
+	-Brought back flatpages with JS magic for translation switching
+	-HomeOrganization is no longer required-user selects from dropdown
+	-Added Shibboleth mapping in settings
+	-Added an Any button in source address
 
 ===========
 0.9 RELEASE
 Major enhancements
 
 Enhancements:
-    -Added internationalization support
-    -Added Greek translation
+	-Added internationalization support
+	-Added Greek translation
 
 ===========
 0.8.7 RELEASE

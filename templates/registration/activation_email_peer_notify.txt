@@ -1,0 +1,23 @@
+Ο/H {{ user.get_full_name }} έκανε αίτηση για νεό λογαριασμό στην υπηρεσία Firewall On Demand
+εκ μέρους του ιδρύματος/φορέα: {{peer}}.
+
+Όνομα χρήστη: {{ user.username }}
+E-mail: {{ user.email }}
+
+Ο χρήστης θα ενημερωθεί για την ενεργοποίηση του λογαριασμού του μέσω e-mail.
+
+Σε περίπτωση που ο χρήστης δεν ανήκει στο ίδρυμα/φορέα σας ή χρησιμοποιεί την υπηρεσία ενάντια στον
+εσωτερικό σας κανονισμό παρακαλούμε επικοινωνήστε άμεσα μαζί μας.
+
+-----------------------------------------------------------------------------
+
+{{ user.get_full_name }} has registered for a new Firewall on Demand account on behalf of your 
+institution: {{peer}}.
+
+Username: {{user.username}}
+E-mail: {{user.email}}
+
+The user will be notified via mail about the account activation
+
+In case this user does not belong to your institution or attempts to use the service without being
+compliant to your instututions' regulation please contact us.

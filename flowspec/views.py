@@ -374,9 +374,14 @@ def user_login(request):
 
 def user_activation_notify(user):
     current_site = Site.objects.get_current()
+    peer = user.get_profile().peer
+    
+    
+    # Email subject *must not* contain newlines
+    # TechCs will be notified about new users.
+    # Platform admins will activate the users.
     subject = render_to_string('registration/activation_email_subject.txt',
                                    { 'site': current_site })
-    # Email subject *must not* contain newlines
     subject = ''.join(subject.splitlines())
     registration_profile = RegistrationProfile.objects.create_profile(user)
     message = render_to_string('registration/activation_email.txt',
@@ -384,6 +389,20 @@ def user_activation_notify(user):
                                      'expiration_days': settings.ACCOUNT_ACTIVATION_DAYS,
                                      'site': current_site,
                                      'user': user })
+    if settings.NOTIFY_ADMIN_MAILS:
+        admin_mails = settings.NOTIFY_ADMIN_MAILS
+        send_new_mail(settings.EMAIL_SUBJECT_PREFIX + subject, 
+                                  message, settings.SERVER_EMAIL,
+                                 admin_mails, [])
+    
+    # Mail to domain techCs plus platform admins (no activation hash sent)
+    subject = render_to_string('registration/activation_email_peer_notify_subject.txt',
+                                   { 'site': current_site,
+                                     'peer': peer })
+    subject = ''.join(subject.splitlines())
+    message = render_to_string('registration/activation_email_peer_notify.txt',
+                                   { 'user': user,
+                                    'peer': peer })
     send_new_mail(settings.EMAIL_SUBJECT_PREFIX + subject, 
                               message, settings.SERVER_EMAIL,
                              get_peer_techc_mails(user), [])
@@ -495,7 +514,6 @@ def get_peer_techc_mails(user):
             techmails_list.append(techmail.email)
     if settings.NOTIFY_ADMIN_MAILS:
         additional_mail = settings.NOTIFY_ADMIN_MAILS
-#    mail.extend(user_mail)
     mail.extend(additional_mail)
     mail.extend(techmails_list)
     return mail

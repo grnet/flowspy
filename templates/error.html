@@ -32,15 +32,14 @@
 						<p>
 						{% trans "Required shibboleth attributes" %}:<br>
 						<ul>
-						<li>HTTP_EPPN</li>
-						<li>HTTP_SHIB_HOMEORGANIZATION</li>
-						<li>HTTP_SHIB_INETORGPERSON_MAIL</li>
-						<li>An appropriate HTTP_SHIB_EP_ENTITLEMENT</li>
+						<li>eduPersonPrincipalName</li>
+						<li>mail</li>
+						<li>eduPersonEntitlement</li>
 						</ul>
 						{% trans "Optional" %}:
 						<ul>
-						<li>HTTP_SHIB_INETORGPERSON_GIVENNAME</li>
-						<li>HTTP_SHIB_PERSON_SURNAME</li>
+						<li>givenName</li>
+						<li>sn</li>
 						</ul>
 						</p>
 						{% endif %}

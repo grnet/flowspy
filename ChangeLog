@@ -1,4 +1,22 @@
 ===========
+0.9.5 RELEASE
+Fixes
+
+Fixes:
+	-Fixed issue with page logo
+	-Changed Shibboleth attributes from HTML to Shibboleth naming in error.html
+	-Minor change in the user activation procedure. Activation mail goes only to admins not TechCs
+
+===========
+0.9.4 RELEASE
+Minor fixes
+
+Fixes:
+	-Change the name of the released file (Makefile)
+	-Added copyright info plus updated the README file
+	-Added missing files in images
+
+===========
 0.9.3 RELEASE
 Minor fix
 

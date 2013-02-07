@@ -1,5 +1,6 @@
 #
 # -*- coding: utf-8 -*- vim:fileencoding=utf-8:
+# vim: tabstop=4:shiftwidth=4:softtabstop=4:expandtab
 #Copyright © 2011-2013 Greek Research and Technology Network (GRNET S.A.)
 
 #Developed by Leonidas Poulopoulos (leopoul-at-noc-dot-grnet-dot-gr),
@@ -17,8 +18,8 @@
 #ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
 #SOFTWARE.
 #
-# -*- coding: utf-8 -*- vim:encoding=utf-8:
-# vim: tabstop=4:shiftwidth=4:softtabstop=4:expandtab
+
+
 
 from django.db import models
 from django.conf import settings

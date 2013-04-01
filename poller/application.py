@@ -1,4 +1,4 @@
-#
+#!/usr/bin/python
 # -*- coding: utf-8 -*- vim:fileencoding=utf-8:
 #Copyright © 2011-2013 Greek Research and Technology Network (GRNET S.A.)
 
@@ -17,7 +17,7 @@
 #ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
 #SOFTWARE.
 #
-#!/usr/bin/python
+
 from gevent import monkey; monkey.patch_all()
 import os
 import traceback

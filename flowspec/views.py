@@ -192,7 +192,7 @@ def edit_route(request, route_slug):
             except:
                 pass
         form = RouteForm(request_data, instance = route_edit)
-        critical_changed_values = ['source', 'destination', 'sourceport', 'destinationport', 'port', 'protocol', 'then']
+        critical_changed_values = ['source', 'destination', 'sourceport', 'destinationport', 'port', 'protocol', 'then', 'fragmenttype']
         if form.is_valid():
             changed_data = form.changed_data
             route=form.save(commit=False)
@@ -259,7 +259,7 @@ def delete_route(request, route_slug):
             route.expires = datetime.date.today()
             if not request.user.is_superuser:
                 route.applier = request.user
-            route.response = "Suspending"
+            route.response = "Deactivating"
             route.save()
             route.commit_delete()
             requesters_address = request.META['HTTP_X_FORWARDED_FOR']

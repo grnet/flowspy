@@ -111,7 +111,13 @@ class MatchProtocol(models.Model):
     class Meta:
         db_table = u'match_protocol'
 
-   
+class FragmentType(models.Model):
+    fragmenttype = models.CharField(max_length=20, choices=FRAGMENT_CODES, verbose_name="Fragment Type")
+    
+    def __unicode__(self):
+        return "%s" %(self.fragmenttype)
+
+
 class ThenAction(models.Model):
     action = models.CharField(max_length=60, choices=THEN_CHOICES, verbose_name="Action")
     action_value = models.CharField(max_length=255, blank=True, null=True, verbose_name="Action Value")
@@ -132,7 +138,7 @@ class Route(models.Model):
     destinationport = models.ManyToManyField(MatchPort, blank=True, null=True, related_name="matchDestinationPort", verbose_name=_("Destination Port"))
     port = models.ManyToManyField(MatchPort, blank=True, null=True, related_name="matchPort", verbose_name=_("Port"))
     dscp = models.ManyToManyField(MatchDscp, blank=True, null=True, verbose_name="DSCP")
-    fragmenttype = models.CharField(max_length=20, choices=FRAGMENT_CODES, blank=True, null=True, verbose_name="Fragment Type")
+    fragmenttype = models.ManyToManyField(FragmentType, blank=True, null=True, verbose_name="Fragment Type")
     icmpcode = models.CharField(max_length=32, blank=True, null=True, verbose_name="ICMP Code")
     icmptype = models.CharField(max_length=32, blank=True, null=True, verbose_name="ICMP Type")
     packetlength = models.IntegerField(blank=True, null=True, verbose_name="Packet Length")
@@ -251,10 +257,14 @@ class Route(models.Model):
                         logger.info('Source fields do not match')
                 except:
                     pass
+                
                 try:
-                    assert(self.fragmenttype)
-                    assert(devicematch['fragment'][0])
-                    if self.fragmenttype == devicematch['fragment'][0]:
+                    assert(self.fragmenttype.all())
+                    assert(devicematch['fragment'])
+                    devitems = devicematch['fragment']
+                    dbitems = ["%s"%i for i in self.fragmenttype.all()]
+                    intersect = list(set(devitems).intersection(set(dbitems)))
+                    if ((len(intersect) == len(dbitems)) and (len(intersect) == len(devitems))):
                         found = found and True
                         logger.info('Found a matching fragment type')
                     else:
@@ -262,6 +272,79 @@ class Route(models.Model):
                         logger.info('Fragment type fields do not match')
                 except:
                     pass
+                
+                try:
+                    assert(self.port.all())
+                    assert(devicematch['port'])
+                    devitems = devicematch['port']
+                    dbitems = ["%s"%i for i in self.port.all()]
+                    intersect = list(set(devitems).intersection(set(dbitems)))
+                    if ((len(intersect) == len(dbitems)) and (len(intersect) == len(devitems))):
+                        found = found and True
+                        logger.info('Found a matching port type')
+                    else:
+                        found = False
+                        logger.info('Port type fields do not match')
+                except:
+                    pass
+                
+                try:
+                    assert(self.protocol.all())
+                    assert(devicematch['protocol'])
+                    devitems = devicematch['protocol']
+                    dbitems = ["%s"%i for i in self.protocol.all()]
+                    intersect = list(set(devitems).intersection(set(dbitems)))
+                    if ((len(intersect) == len(dbitems)) and (len(intersect) == len(devitems))):
+                        found = found and True
+                        logger.info('Found a matching protocol type')
+                    else:
+                        found = False
+                        logger.info('Protocol type fields do not match')
+                except:
+                    pass
+
+                try:
+                    assert(self.destinationport.all())
+                    assert(devicematch['destination-port'])
+                    devitems = devicematch['destination-port']
+                    dbitems = ["%s"%i for i in self.destinationport.all()]
+                    intersect = list(set(devitems).intersection(set(dbitems)))
+                    if ((len(intersect) == len(dbitems)) and (len(intersect) == len(devitems))):
+                        found = found and True
+                        logger.info('Found a matching destination port type')
+                    else:
+                        found = False
+                        logger.info('Destination port type fields do not match')
+                except:
+                    pass
+
+                try:
+                    assert(self.sourceport.all())
+                    assert(devicematch['source-port'])
+                    devitems = devicematch['source-port']
+                    dbitems = ["%s"%i for i in self.sourceport.all()]
+                    intersect = list(set(devitems).intersection(set(dbitems)))
+                    if ((len(intersect) == len(dbitems)) and (len(intersect) == len(devitems))):
+                        found = found and True
+                        logger.info('Found a matching source port type')
+                    else:
+                        found = False
+                        logger.info('Source port type fields do not match')
+                except:
+                    pass
+                                
+                
+#                try:
+#                    assert(self.fragmenttype)
+#                    assert(devicematch['fragment'][0])
+#                    if self.fragmenttype == devicematch['fragment'][0]:
+#                        found = found and True
+#                        logger.info('Found a matching fragment type')
+#                    else:
+#                        found = False
+#                        logger.info('Fragment type fields do not match')
+#                except:
+#                    pass
                 try:
                     assert(self.icmpcode)
                     assert(devicematch['icmp-code'][0])
@@ -310,8 +393,10 @@ class Route(models.Model):
         ret = ''
         if self.destination:
             ret = '%s Dst Addr:<strong>%s</strong> <br/>' %(ret, self.destination)
-        if self.fragmenttype:
-            ret = "%s Fragment Type:<strong>%s</strong><br/>" %(ret, self.fragmenttype)
+        if self.fragmenttype.all():
+            ret = ret + "Fragment Types:<strong>%s</strong> <br/>" %(','.join(["%s"%i for i in self.fragmenttype.all()]))
+#            for fragment in self.fragmenttype.all():
+#                    ret = ret + "Fragment Types:<strong>%s</strong> <br/>" %(fragment)
         if self.icmpcode:
             ret = "%s ICMP code:<strong>%s</strong><br/>" %(ret, self.icmpcode)
         if self.icmptype:
@@ -322,18 +407,22 @@ class Route(models.Model):
             ret = "%s Src Addr:<strong>%s</strong> <br/>" %(ret, self.source)
         if self.tcpflag:
             ret = "%s TCP flag:<strong>%s</strong><br/>" %(ret, self.tcpflag)
-        if self.port:
-            for port in self.port.all():
-                    ret = ret + "Port:<strong>%s</strong> <br/>" %(port)
-        if self.protocol:
-            for protocol in self.protocol.all():
-                    ret = ret + "Protocol:<strong>%s</strong> <br/>" %(protocol)
-        if self.destinationport:
-            for port in self.destinationport.all():
-                    ret = ret + "Dst Port:<strong>%s</strong> <br/>" %(port)
-        if self.sourceport:
-            for port in self.sourceport.all():
-                    ret = ret +"Src Port:<strong>%s</strong> <br/>" %(port)
+        if self.port.all():
+            ret = ret + "Ports:<strong>%s</strong> <br/>" %(','.join(["%s"%i for i in self.port.all()]))
+#            for port in self.port.all():
+#                    ret = ret + "Port:<strong>%s</strong> <br/>" %(port)
+        if self.protocol.all():
+            ret = ret + "Protocols:<strong>%s</strong> <br/>" %(','.join(["%s"%i for i in self.protocol.all()]))
+#            for protocol in self.protocol.all():
+#                    ret = ret + "Protocol:<strong>%s</strong> <br/>" %(protocol)
+        if self.destinationport.all():
+            ret = ret + "DstPorts:<strong>%s</strong> <br/>" %(','.join(["%s"%i for i in self.destinationport.all()]))
+#            for port in self.destinationport.all():
+#                    ret = ret + "Dst Port:<strong>%s</strong> <br/>" %(port)
+        if self.sourceport.all():
+            ret = ret + "SrcPorts:<strong>%s</strong> <br/>" %(','.join(["%s"%i for i in self.sourceport.all()]))
+#            for port in self.sourceport.all():
+#                    ret = ret +"Src Port:<strong>%s</strong> <br/>" %(port)
         if self.dscp:
             for dscp in self.dscp.all():
                     ret = ret + "%s Port:<strong>%s</strong> <br/>" %(ret, dscp)

@@ -147,8 +147,14 @@ class Applier(object):
                         route.match['dscp'].append(dscp.dscp)
             except:
                 pass
-            if route_obj.fragmenttype:
-                route.match['fragment'].append(route_obj.fragmenttype)
+            
+            try:
+                if route_obj.fragmenttype:
+                    for frag in route_obj.fragmenttype.all():
+                        route.match['fragment'].append(frag.fragmenttype)
+            except:
+                pass
+            
             for thenaction in route_obj.then.all():
                 if thenaction.action_value:
                     route.then[thenaction.action] = thenaction.action_value

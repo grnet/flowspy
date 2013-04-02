@@ -29,7 +29,7 @@
 		});
 		
 		
-		$('#id_then').attr("multiple", "");
+		/*$('#id_then').attr("multiple", "");*/
 		$( "#id_expires" ).datepicker({ dateFormat: 'yy-mm-dd' , maxDate: '+10d', minDate: '+1d', changeMonth: false, changeYear: false }).datepicker( $.datepicker.regional[ "el" ] );
 		{% comment %}
 		$('#then_diag').dialog({
@@ -276,6 +276,18 @@
                    </div>
                    
                 </div>
+                <div class="control-group {% if form.fragmenttype.errors %} error {% endif %}">
+	                <label class="control-label" for="id_fragmenttype">{% trans "Fragment Type" %}</label>
+                   <div class="controls">{{ form.fragmenttype }}
+                   {% if form.fragmenttype.errors %}
+                    <span class="help-inline">
+                        {{ form.fragmenttype.errors|join:", " }}
+                    </span>
+                    {% endif %}
+                   </div>
+                   
+                </div>
+                
 			<div
 				class="control-group {% if form.port.errors %} error {% endif %}">
 				<label class="control-label" for="id_port">{% trans "Ports"	%}</label>

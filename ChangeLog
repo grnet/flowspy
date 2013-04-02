@@ -1,4 +1,19 @@
 ===========
+0.9.6 RELEASE
+New Feature and minor UI improvements (check Requirements)
+
+Requirements:
+	-south migration to include database changes
+
+Features:
+	-Added fragment type as an option in rule match statements
+
+UI Improvements:
+	-Changed wording;from 'Suspend' to 'Deactivate'
+	-Increased the size of Console and Add Rule buttons. Made Add Rule button 
+	stand out with different color.
+
+===========
 0.9.5 RELEASE
 Fixes
 

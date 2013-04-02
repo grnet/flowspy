@@ -186,10 +186,10 @@ var updater = {
 };
 
 function blink(selector){
-	$(selector).animate({ color: "red" }, 500, function(){
-	$(this).animate({ color: "white" }, 500, function(){
-	blink(this);
-	});
+	$(selector).animate({color: "#EE5F5B"}, 500, function(){
+		$(this).animate({ color: "white" }, 500, function(){
+			blink(this);
+		});
 	});
 }
 

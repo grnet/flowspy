@@ -12,6 +12,8 @@ Match Statements:
 * Ports: {% if route.sourceport.all or route.destinationport.all %}Defined by source/destination ports{% else %}{% if route.port.all %}{% for port in route.port.all %}{{ port }}{% if not forloop.last %}, {% endif %}{% endfor %}{% else %}any{% endif %}{% endif %}
 * Source Ports: {% if route.port.all %}same as ports{% else %}{% if route.sourceport.all %}{% for port in route.sourceport.all %}{{ port }}{% if not forloop.last %}, {% endif %}{% endfor %}{% else %}any{% endif %}{% endif %}
 * Destination Ports: {% if route.port.all %}same as ports{% else %}{% if route.destinationport.all %}{% for port in route.destinationport.all %}{{ port }}{% if not forloop.last %}, {% endif %}{% endfor %}{% else %}any{% endif %}{% endif %}
+* Fragment Types: {% if route.fragmenttype.all %}{% for fragment in route.fragmenttype.all %}{{ fragment }}{% if not forloop.last %}, {% endif %}{% endfor %}{% else %}-{% endif %}
+
 
 Then Actions:
 * Action:{% for then in route.then.all %}{{ then }}{% if not forloop.last %}, {% endif %}{% endfor %}

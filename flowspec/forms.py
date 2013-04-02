@@ -132,6 +132,7 @@ class RouteForm(forms.ModelForm):
         source = self.cleaned_data.get('source', None)
         sourceports = self.cleaned_data.get('sourceport', None)
         ports = self.cleaned_data.get('port', None)
+        fragmenttypes = self.cleaned_data.get('fragmenttype', None)
         then = self.cleaned_data.get('then', None)
         destination = self.cleaned_data.get('destination', None)
         destinationports = self.cleaned_data.get('destinationport', None)

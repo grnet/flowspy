@@ -1,4 +1,15 @@
 ===========
+0.9.7 RELEASE
+Minor UI improvements (check Requirements)
+
+Requirements:
+	-south migration to include database changes if you are at 
+	<=0.9.5
+
+UI Improvements:
+	-Added badges in rule status
+
+===========
 0.9.6 RELEASE
 New Feature and minor UI improvements (check Requirements)
 

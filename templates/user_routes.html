@@ -272,7 +272,7 @@ function delete_route(route){
 	<td style="text-align: center;">{{route.get_then|safe|escape}}</td>
 	
 	<td style="text-align: center; ">{% if route.status == 'EXPIRED' or route.status == 'ADMININACTIVE' or route.status == 'INACTIVE' or route.status == 'OUTOFSYNC'%}
-		{% if route.status == 'EXPIRED' or route.status == 'ADMININACTIVE' or route.status == 'INACTIVE' %}DEACTIVATED{% else %}{% if route.status == 'OUTOFSYNC' %}ERROR{% else %}{{route.status}}{% endif %}{% endif %}{% else %}{{route.status}}{% endif %}</td>
+		{% if route.status == 'EXPIRED' or route.status == 'ADMININACTIVE' or route.status == 'INACTIVE' %}<span class="label">DEACTIVATED</span>{% else %}{% if route.status == 'OUTOFSYNC' %}<span class="label label-important">ERROR</span>{% else %}{{route.status}}{% endif %}{% endif %}{% else %}{% if route.status == 'ACTIVE' %}<span class="label label-success">{{route.status}}</span>{% else %}{% if route.status == 'PENDING' %}<span class="label label-info">{{route.status}}</span>{% else %}<span class="label label-important">{{route.status}}</span>{% endif %}{% endif %}{% endif %}</td>
 		
 	{% comment %}<td style="text-align: center;">{{ route.response }}</td>{% endcomment %}
 	

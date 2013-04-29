@@ -1,4 +1,16 @@
 ===========
+0.9.8 RELEASE
+Minor functionality improvements (check Requirements)
+
+Requirements:
+	-south migration to include database changes if you are at
+	<=0.9.5
+
+Improvements:
+	-Added more port validation checks
+	-Added more IP address validation checks
+
+===========
 0.9.7 RELEASE
 Minor UI improvements (check Requirements)
 

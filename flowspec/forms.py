@@ -63,6 +63,8 @@ class RouteForm(forms.ModelForm):
         data = self.cleaned_data['source']
         private_error = False
         protected_error = False
+        networkaddr_error = False
+        broadcast_error = False
         if data:
             try:
                 address = IPNetwork(data)
@@ -77,12 +79,22 @@ class RouteForm(forms.ModelForm):
                 if address.is_private:
                     private_error = True
                     raise Exception
-                else:
-                    return self.cleaned_data["source"]
+                if address.version == 4 and int(address.prefixlen) == 32:
+                    if int(address.network.compressed.split('.')[-1]) == 0:
+                        broadcast_error = True
+                        raise Exception
+                    elif int(address.network.compressed.split('.')[-1]) == 255:
+                        networkaddr_error = True
+                        raise Exception
+                return self.cleaned_data["source"]
             except Exception:
                 error_text = _('Invalid network address format')
                 if private_error:
                     error_text = _('Private addresses not allowed')
+                if networkaddr_error:
+                    error_text = _('Malformed address format. Cannot be ...255/32')
+                if broadcast_error:
+                    error_text = _('Malformed address format. Cannot be ...0/32')
                 if protected_error:
                     error_text = _('You have no authority on this subnet')
                 raise forms.ValidationError(error_text)
@@ -93,6 +105,8 @@ class RouteForm(forms.ModelForm):
         data = self.cleaned_data['destination']
         error = None
         protected_error = False
+        networkaddr_error = False
+        broadcast_error = False
         if data:
             try:
                 address = IPNetwork(data)
@@ -107,6 +121,13 @@ class RouteForm(forms.ModelForm):
                 if address.prefixlen < settings.PREFIX_LENGTH:
                     error = _("Currently no prefix lengths < %s are allowed") %settings.PREFIX_LENGTH
                     raise Exception
+                if address.version == 4 and int(address.prefixlen) == 32:
+                    if int(address.network.compressed.split('.')[-1]) == 0:
+                        broadcast_error = True
+                        raise Exception
+                    elif int(address.network.compressed.split('.')[-1]) == 255:
+                        networkaddr_error = True
+                        raise Exception
                 return self.cleaned_data["destination"]
             except Exception:
                 error_text = _('Invalid network address format')
@@ -114,6 +135,10 @@ class RouteForm(forms.ModelForm):
                     error_text = error
                 if protected_error:
                     error_text = _('You have no authority on this subnet')
+                if networkaddr_error:
+                    error_text = _('Malformed address format. Cannot be ...255/32')
+                if broadcast_error:
+                    error_text = _('Malformed address format. Cannot be ...0/32')
                 raise forms.ValidationError(error_text)
     
     def clean_expires(self):
@@ -243,8 +268,12 @@ class PortPlainForm(forms.ModelForm):
         port = self.cleaned_data['port']
         if port:
             try:
-                assert(int(port))
+                p = int(port)
+                if int(port) > 65535 or int(port) < 0:
+                    raise forms.ValidationError(_(''))
                 return "%s" %self.cleaned_data["port"]
+            except forms.ValidationError:
+                raise forms.ValidationError(_('Port should be < 65535 and >= 0'))
             except:
                 raise forms.ValidationError(_('Port should be an integer'))
         else:

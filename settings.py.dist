@@ -193,13 +193,13 @@ CELERY_CONCURRENCY = 1
 # List of modules to import when celery starts.
 CELERY_IMPORTS = ("flowspec.tasks", )
 
-SERVER_EMAIL = "GRNET FoD Service <noreply@grnet.gr>"
+SERVER_EMAIL = "GRNET FoD Service <noreply@example.com>"
 EMAIL_SUBJECT_PREFIX = "[FoD] "
 
 LOG_FILE_LOCATION = here("log")
 
 EXPIRATION_NOTIFY_DAYS = 4
-PREFIX_LENGTH = 29 
+PREFIX_LENGTH = 29
 POLL_SESSION_UPDATE = 60.0
 
 BROKER_URL = "beanstalk://localhost:11300//"
@@ -216,7 +216,7 @@ UI_USER_PROTOCOLS = ['icmp', 'tcp', 'udp']
 
 PROTECTED_SUBNETS = ['10.10.0.0/16']
 
-CELERYBEAT_SCHEDULE = { 
+CELERYBEAT_SCHEDULE = {
     "every-day-sync": {
         "task": "flowspec.tasks.check_sync",
         "schedule": crontab(minute=01, hour=01),
@@ -229,8 +229,8 @@ CELERYBEAT_SCHEDULE = {
     },
 }
 # whois
-PRIMARY_WHOIS = 'whois.grnet.gr'
-ALTERNATE_WHOIS = 'whois.ripe.net'
+PRIMARY_WHOIS = 'whois.example.com'
+ALTERNATE_WHOIS = 'whois.example.net'
 
 ACCOUNT_ACTIVATION_DAYS = 7
 
@@ -249,4 +249,6 @@ TINYMCE_DEFAULT_CONFIG = {
     'theme': "advanced",
 }
 
+import _version
+SW_VERSION = _version.VERSION
 

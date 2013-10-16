@@ -1,33 +1,33 @@
 [
     {
-        "pk": 3, 
-        "model": "flowspec.thenaction", 
+        "pk": 3,
+        "model": "flowspec.thenaction",
         "fields": {
-            "action": "discard", 
+            "action": "discard",
             "action_value": ""
         }
-    }, 
+    },
     {
-        "pk": 27, 
-        "model": "flowspec.thenaction", 
+        "pk": 27,
+        "model": "flowspec.thenaction",
         "fields": {
-            "action": "rate-limit", 
+            "action": "rate-limit",
             "action_value": "10000k"
         }
-    }, 
+    },
     {
-        "pk": 4, 
-        "model": "flowspec.thenaction", 
+        "pk": 4,
+        "model": "flowspec.thenaction",
         "fields": {
-            "action": "rate-limit", 
+            "action": "rate-limit",
             "action_value": "1000k"
         }
-    }, 
+    },
     {
-        "pk": 1, 
-        "model": "flowspec.thenaction", 
+        "pk": 1,
+        "model": "flowspec.thenaction",
         "fields": {
-            "action": "rate-limit", 
+            "action": "rate-limit",
             "action_value": "100k"
         }
     },
@@ -50,6 +50,41 @@
         "model": "flowspec.matchprotocol",
         "fields": {
             "protocol": "udp"
+        }
+    },
+    {
+        "pk": 1,
+        "model": "flowspec.fragmenttype",
+        "fields": {
+            "fragmenttype": "is-fragment"
+        }
+    },
+    {
+        "pk": 2,
+        "model": "flowspec.fragmenttype",
+        "fields": {
+            "fragmenttype": "dont-fragment"
+        }
+    },
+    {
+        "pk": 3,
+        "model": "flowspec.fragmenttype",
+        "fields": {
+            "fragmenttype": "first-fragment"
+        }
+    },
+    {
+        "pk": 4,
+        "model": "flowspec.fragmenttype",
+        "fields": {
+            "fragmenttype": "last-fragment"
+        }
+    },
+    {
+        "pk": 5,
+        "model": "flowspec.fragmenttype",
+        "fields": {
+            "fragmenttype": "not-a-fragment"
         }
     }
 

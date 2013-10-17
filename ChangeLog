@@ -1,4 +1,15 @@
 ===========
+0.9.9 RELEASE
+Major documentation improvements. Minor app enhancements. Minor bug fixes
+
+Improvements:
+	-Wrote documentation in rst format (http://flowspy.readthedocs.org/)
+	-Update initial data with fragment types
+	-Add current version in footer via context
+	-Add beanstalk client, as installation from package is fuzzy
+	-Comment the helptext line in patched user model (django 1.3 issues)
+
+===========
 0.9.8 RELEASE
 Minor functionality improvements (check Requirements)
 

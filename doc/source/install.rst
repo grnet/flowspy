@@ -25,6 +25,13 @@ Update and install the required packages::
 .. note::
 	If you wish to deploy an outgoing mail server, now it is time to do it. Otherwise you could set FoD to send out mails via a third party account
 
+Create a database
+-----------------
+If you are using mysql, you should create a database::
+
+	mysql -u root -p -e 'create database fod'
+
+
 Required application packages
 -----------------------------
 Get the required packages and install them

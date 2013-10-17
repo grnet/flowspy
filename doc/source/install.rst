@@ -500,6 +500,11 @@ Again if the directory conventions have been followed the file should be::
 
 	</VirtualHost>
 
+Now, enable your site. You might want to disable the default site if fod is the only site you host on your server::
+
+	a2dissite default
+	a2ensite fod
+
 You are not far away from deploying FoD. When asked for a super user, create one::
 
 	cd /srv/flowspy

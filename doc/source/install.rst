@@ -175,6 +175,7 @@ celery.d
 Celery is used over beanstalkd to apply firewall rules in a serial manner so that locks are avoided on the flowspec capable device. In our setup celery runs via django. That is why the python-django-celery package was installed.
 
 Create the celeryd daemon at /etc/init.d/celeryd::
+
 	#!/bin/sh -e
 	# ============================================
 	#  celeryd - Starts the Celery worker daemon.

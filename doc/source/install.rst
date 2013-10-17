@@ -519,7 +519,7 @@ Testing the platform
 ====================
 Log in to the admin interface via https://<your ip>/fod/admin. Go to Peer ranges and add a new range (part of/or a complete subnet), eg. 83.212.0.0/19
 Go to Peers and add a new peer, eg. id: 1, name: Test, AS: 16503, tag: TEST and move the network you have crteated from Avalable to Chosen. From the admin front, go to User, and edit your user. From the bottom of the page, select the TEST peer and save.
-Last but not least, modify as required the existing (example.com) Site instance. You are done. As you are logged-n via the admin, there is no need for Shibboleth. Go to https://<your ip>/fod/ and create a new rule. Your rule should be applied on the flowspec capable device after aprox. 10 seconds.
+Last but not least, modify as required the existing (example.com) Site instance (admin home->Sites). You are done. As you are logged-in via the admin, there is no need for Shibboleth. Go to https://<your ip>/fod/ and create a new rule. Your rule should be applied on the flowspec capable device after aprox. 10 seconds.
 
 Branding
 ========

@@ -338,7 +338,7 @@ Thus we are going to create this file (/etc/default/celeryd)::
 
 	vim /etc/default/celeryd
 
-Again if the directory conventions have been followed the file should be::
+Again if the directory conventions have been followed the file is (pay attention to the CELERYD_USER, CELERYD_GROUP and change accordingly)  ::
 
 	# Name of nodes to start, here we have a single node
 	CELERYD_NODES="w1"
@@ -346,7 +346,7 @@ Again if the directory conventions have been followed the file should be::
 	#CELERYD_NODES="w1 w2 w3"
 
 	# Where to chdir at start.
-	CELERYD_CHDIR="/srv/flowspy/"
+	CELERYD_CHDIR="/srv/flowspy"
 	# How to call "manage.py celeryd_multi"
 	CELERYD_MULTI="$CELERYD_CHDIR/manage.py celeryd_multi"
 
@@ -364,8 +364,8 @@ Again if the directory conventions have been followed the file should be::
 	CELERYD_PID_FILE="$CELERYD_CHDIR/celery_var/run/celery/%n.pid"
 
 	# Workers should run as an unprivileged user.
-	CELERYD_USER="root"
-	CELERYD_GROUP="root"
+	CELERYD_USER="user"
+	CELERYD_GROUP="user"
 
 	# Name of the projects settings module.
 	export DJANGO_SETTINGS_MODULE="settings"

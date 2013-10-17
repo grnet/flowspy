@@ -176,6 +176,10 @@ Celery is used over beanstalkd to apply firewall rules in a serial manner so tha
 
 Create the celeryd daemon at /etc/init.d/celeryd::
 
+	vim /etc/init.d/celeryd
+
+The configuration should be::
+
 	#!/bin/sh -e
 	# ============================================
 	#  celeryd - Starts the Celery worker daemon.

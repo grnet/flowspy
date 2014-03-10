@@ -6,8 +6,8 @@
 
 
 
-<script type="text/javascript" src="/fodstatic/js/jquery.dataTables.js"></script>
-<script type="text/javascript" src="/fodstatic/js/datatables_bootstrap.js"></script>
+<script type="text/javascript" src="{{STATIC_URL}}js/jquery.dataTables.js"></script>
+<script type="text/javascript" src="{{STATIC_URL}}js/datatables_bootstrap.js"></script>
 
 <style>
 .tab-content {
@@ -237,7 +237,7 @@ oTableI.fnDraw();
                             {% endifequal %}
                         {% endifequal %}
                      {% endifequal %}"
-            {% endif %}>{% trans "Rule expired" %}</span>{% else %}{% if route.status == 'ADMININACTIVE' %}{% trans "Suspended by administrator" %}{% else %}{% if route.status == 'INACTIVE' %}{% trans "Suspended by user" %}{% else %}{{ route.response }}{% if route.status == 'PENDING' %}<img src="/fodstatic/dots.gif">{% endif %}{% endif %}{% endif %}{% endif %}
+            {% endif %}>{% trans "Rule expired" %}</span>{% else %}{% if route.status == 'ADMININACTIVE' %}{% trans "Suspended by administrator" %}{% else %}{% if route.status == 'INACTIVE' %}{% trans "Suspended by user" %}{% else %}{{ route.response }}{% if route.status == 'PENDING' %}<img src="{{STATIC_URL}}dots.gif">{% endif %}{% endif %}{% endif %}{% endif %}
             </td>
 
 </tr>

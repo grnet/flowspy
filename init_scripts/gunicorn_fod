@@ -1,6 +1,6 @@
 CONFIG = {
     'mode': 'django',
-    'working_dir': '/home/leopoul/projects/flowspy',
+    'working_dir': '/home/to/projects/flowspy',
    #'python': '/usr/bin/python',
     'args': (
         '--bind=127.0.0.1:8081',

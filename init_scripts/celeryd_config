@@ -4,7 +4,7 @@ CELERYD_NODES="w1"
 #CELERYD_NODES="w1 w2 w3"
 
 # Where to chdir at start.
-CELERYD_CHDIR="/home/leopoul/projects/flowspy/"
+CELERYD_CHDIR="/home/to/projects/flowspy/"
 # How to call "manage.py celeryd_multi"
 CELERYD_MULTI="$CELERYD_CHDIR/manage.py celeryd_multi"
 
@@ -22,7 +22,7 @@ CELERYD_LOG_FILE="$CELERYD_CHDIR/celery_var/log/celery/%n.log"
 CELERYD_PID_FILE="$CELERYD_CHDIR/celery_var/run/celery/%n.pid"
 
 # Workers should run as an unprivileged user.
-CELERYD_USER="leopoul"
+CELERYD_USER="user"
 CELERYD_GROUP="developers"
 
 # Name of the projects settings module.

@@ -6,7 +6,7 @@
 	<p>{% trans "If you have any questions or need help, contact GRNET Helpdesk at <a href='mailto:helpdesk@grnet.gr'>helpdesk@grnet.gr</a> or 800-11-47638." %}</p>
 	{% endif %}
 	<div style="padding-top: 10px;"><a href="https://code.grnet.gr/projects/flowspy">Vesrion: <strong>{{VERSION}}</strong></a> - {% trans "Designed and developed by GRNET NOC" %}
-	<a href="//facebook.com/noc.grnet.gr" target="_blank"><img src="/fodstatic/img/facebook_img.png" alt="GRNET NOC on Facebook" title="GRNET NOC on Facebook"/></a>  <a href="//twitter.com/grnetnoc"  target="_blank"><img src="/fodstatic/img/twitter_img.png" alt="GRNET NOC on Twitter" title="GRNET NOC on Twitter"/></a>
+	<a href="//facebook.com/noc.grnet.gr" target="_blank"><img src="{{STATIC_URL}}img/facebook_img.png" alt="GRNET NOC on Facebook" title="GRNET NOC on Facebook"/></a>  <a href="//twitter.com/grnetnoc"  target="_blank"><img src="{{STATIC_URL}}img/twitter_img.png" alt="GRNET NOC on Twitter" title="GRNET NOC on Twitter"/></a>
 	</div>
         <div class="row"><a href="http://noc.grnet.gr">{% trans "GRNET" %} NOC</a> | <a href="/fod/info/{{LANGUAGE_CODE}}/">{% trans "Info" %}</a> | <a href="/fod/tos/{{LANGUAGE_CODE}}/">{% trans "Service Terms" %}</a></div>
         <div style="padding-top: 10px;">

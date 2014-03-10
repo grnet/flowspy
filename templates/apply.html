@@ -241,7 +241,7 @@
                 </legend>
                 <div class="control-group {% if form.source.errors %} error {% endif %}">
 	                <label class="control-label" for="id_source"><b>{% trans "Source Address" %}</b></label>
-                    <div class="controls">{{ form.source }}&nbsp;<img src="/fodstatic/threat_source.png" style="height: 30px;"/>&nbsp;&nbsp;<a class="btn btn-small btn-info" id="setFromAll" href="#">Any</a>
+                    <div class="controls">{{ form.source }}&nbsp;<img src="{{STATIC_URL}}threat_source.png" style="height: 30px;"/>&nbsp;&nbsp;<a class="btn btn-small btn-info" id="setFromAll" href="#">Any</a>
                     {% if form.source.errors %}
                     <span class="help-inline">
                         {{ form.source.errors|join:", " }}
@@ -255,7 +255,7 @@
                 <div class="control-group {% if form.destination.errors %} error {% endif %}">
 	                <label class="control-label" for="id_destination"><b>{% trans "Destination Address" %}</b></label>
                     <div class="controls">
-					{{ form.destination }}&nbsp;<img src="/fodstatic/secure_destination.png" style="height: 30px;"/>
+					{{ form.destination }}&nbsp;<img src="{{STATIC_URL}}secure_destination.png" style="height: 30px;"/>
 					{% if form.destination.errors %}
                     <span class="help-inline">
                         {{ form.destination.errors|join:", " }}

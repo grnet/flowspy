@@ -1,7 +1,7 @@
 from django.utils.translation import ugettext as _
 from django.db.models.signals import class_prepared
 from django.core.validators import MaxLengthValidator
-from flowspy.monkey_patch import MAX_USERNAME_LENGTH
+from monkey_patch import MAX_USERNAME_LENGTH
 
 def longer_username(sender, *args, **kwargs):
     if sender.__name__ == "User" and sender.__module__ == "django.contrib.auth.models":

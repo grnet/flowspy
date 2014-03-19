@@ -20,7 +20,7 @@
 from django.conf.urls.defaults import *
 from django.conf import settings
 
-urlpatterns = patterns('flowspy.poller.views',
+urlpatterns = patterns('poller.views',
                        ('^$', 'main'),
                        url('^message/existing$', 'message_existing', name='fetch-existing'),
                        url('^message/new$', 'message_new',name='fetch-new'),

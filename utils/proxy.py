@@ -1,22 +1,21 @@
-#
 # -*- coding: utf-8 -*- vim:fileencoding=utf-8:
-#Copyright © 2011-2013 Greek Research and Technology Network (GRNET S.A.)
+# vim: tabstop=4:shiftwidth=4:softtabstop=4:expandtab
 
-#Developed by Leonidas Poulopoulos (leopoul-at-noc-dot-grnet-dot-gr),
-#GRNET NOC
-#
-#Permission to use, copy, modify, and/or distribute this software for any
-#purpose with or without fee is hereby granted, provided that the above
-#copyright notice and this permission notice appear in all copies.
-#
-#THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH REGARD
-#TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
-#FITNESS. IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR
-#CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE,
-#DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS
-#ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
-#SOFTWARE.
-#
+# Copyright © 2011-2014 Greek Research and Technology Network (GRNET S.A.)
+# Copyright © 2011-2014 Leonidas Poulopoulos (@leopoul)
+# 
+# Permission to use, copy, modify, and/or distribute this software for any
+# purpose with or without fee is hereby granted, provided that the above
+# copyright notice and this permission notice appear in all copies.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD
+# TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
+# FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR
+# CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE,
+# DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS
+# ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
+# SOFTWARE.
+
 import nxpy as np
 from ncclient import manager
 from ncclient.transport.errors import AuthenticationError, SSHError
@@ -45,17 +44,18 @@ def fod_unknown_host_cb(host, fingerprint):
     return True
 
 class Retriever(object):
-    def __init__(self, device=settings.NETCONF_DEVICE, username=settings.NETCONF_USER, password=settings.NETCONF_PASS, filter=settings.ROUTES_FILTER, route_name=None, xml=None):
+    def __init__(self, device=settings.NETCONF_DEVICE, username=settings.NETCONF_USER, password=settings.NETCONF_PASS, filter=settings.ROUTES_FILTER, port=settings.NETCONF_PORT, route_name=None, xml=None):
         self.device = device
         self.username = username
         self.password = password
+        self.port = port
         self.filter = filter
         self.xml = xml
         if route_name:
             self.filter = settings.ROUTE_FILTER%route_name
     
     def fetch_xml(self):
-        with manager.connect(host=self.device, port=830, username=self.username, password=self.password, unknown_host_cb=fod_unknown_host_cb) as m:
+        with manager.connect(host=self.device, port=self.port, username=self.username, password=self.password, unknown_host_cb=fod_unknown_host_cb) as m:
             xmlconfig = m.get_config(source='running', filter=('subtree',self.filter)).data_xml
         return xmlconfig
     
@@ -84,12 +84,13 @@ class Retriever(object):
                 return False
 
 class Applier(object):
-    def __init__(self, route_objects = [], route_object=None, device=settings.NETCONF_DEVICE, username=settings.NETCONF_USER, password=settings.NETCONF_PASS):
+    def __init__(self, route_objects = [], route_object=None, device=settings.NETCONF_DEVICE, username=settings.NETCONF_USER, password=settings.NETCONF_PASS, port=settings.NETCONF_PORT):
         self.route_object = route_object
         self.route_objects = route_objects
         self.device = device
         self.username = username
         self.password = password
+        self.port = port
     
     def to_xml(self, operation=None):
         logger.info("Operation: %s"%operation)
@@ -269,4 +270,4 @@ def parsexml_(*args, **kwargs):
         kwargs['parser'] = ET.ETCompatXMLParser()
     doc = ET.parse(*args, **kwargs)
     return doc
-        
+

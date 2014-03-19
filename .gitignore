@@ -1,6 +1,7 @@
-settings.py
+flowspy/settings.py
 *.pyc
 celerybeat-schedule
 *.log
 celery_var/
 urls.py
+*~

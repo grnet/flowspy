@@ -3,7 +3,7 @@ from django.core.validators import MaxLengthValidator
 from django.contrib.auth import forms as auth_forms
 from django import forms
 
-from flowspy.monkey_patch import MAX_USERNAME_LENGTH
+from monkey_patch import MAX_USERNAME_LENGTH
 
 def update_username_field(field):
     field.widget.attrs['maxlength'] = MAX_USERNAME_LENGTH()

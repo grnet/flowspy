@@ -132,7 +132,7 @@ def announce(messg, user):
 
 @task
 def check_sync(route_name=None, selected_routes = []):
-    from flowspy.flowspec.models import Route, MatchPort, MatchDscp, ThenAction
+    from flowspec.models import Route, MatchPort, MatchDscp, ThenAction
     if not selected_routes:
         routes = Route.objects.all()
     else:
@@ -155,7 +155,7 @@ def check_sync(route_name=None, selected_routes = []):
 
 @task(ignore_result=True)
 def notify_expired():
-    from flowspy.flowspec.models import *
+    from flowspec.models import *
     from django.contrib.sites.models import Site
     logger.info('Initializing expiration notification')
     routes = Route.objects.all()
@@ -167,7 +167,7 @@ def notify_expired():
                     fqdn = Site.objects.get_current().domain
                     admin_url = "https://%s%s" % \
                     (fqdn,
-                     "/fod/edit/%s"%route.name)
+                     "/edit/%s"%route.name)
                     mail_body = render_to_string("rule_action.txt",
                                              {"route": route, 'expiration_days':expiration_days, 'action':'expires', 'url':admin_url})
                     days_num = ' days'

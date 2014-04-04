@@ -376,52 +376,53 @@ class Route(models.Model):
         then_statements = self.then.all()
         for statement in then_statements:
             if statement.action_value:
-                ret = "%s %s:<strong>%s</strong><br/>" %(ret, statement.action, statement.action_value)
+                ret = "%s %s %s" %(ret, statement.action, statement.action_value)
             else: 
-                ret = "%s %s<br>" %(ret, statement.action)
-        return ret.rstrip(',')
+                ret = "%s %s" %(ret, statement.action)
+        return ret
     
     get_then.short_description = 'Then statement'
     get_then.allow_tags = True
 #
     def get_match(self):
-        ret = ''
+        ret = '<dl class="dl-horizontal">'
         if self.destination:
-            ret = '%s Dst Addr:<strong>%s</strong> <br/>' %(ret, self.destination)
+            ret = '%s <dt>Dst Addr</dt><dd>%s</dd>' %(ret, self.destination)
         if self.fragmenttype.all():
-            ret = ret + "Fragment Types:<strong>%s</strong> <br/>" %(','.join(["%s"%i for i in self.fragmenttype.all()]))
+            ret = ret + "<dt>Fragment Types</dt><dd>%s</dd>" %(', '.join(["%s"%i for i in self.fragmenttype.all()]))
 #            for fragment in self.fragmenttype.all():
-#                    ret = ret + "Fragment Types:<strong>%s</strong> <br/>" %(fragment)
+#                    ret = ret + "Fragment Types:<strong>%s</dd>" %(fragment)
         if self.icmpcode:
-            ret = "%s ICMP code:<strong>%s</strong><br/>" %(ret, self.icmpcode)
+            ret = "%s <dt>ICMP code</dt><dd>%s</dd>" %(ret, self.icmpcode)
         if self.icmptype:
-            ret = "%s ICMP Type:<strong>%s</strong><br/>" %(ret, self.icmptype)
+            ret = "%s <dt>ICMP Type</dt><dd>%s</dd>" %(ret, self.icmptype)
         if self.packetlength:
-            ret = "%s Packet Length:<strong>%s</strong><br/>" %(ret, self.packetlength)
+            ret = "%s <dt>Packet Length</dt><dd>%s</dd>" %(ret, self.packetlength)
         if self.source:
-            ret = "%s Src Addr:<strong>%s</strong> <br/>" %(ret, self.source)
+            ret = "%s <dt>Src Addr</dt><dd>%s</dd>" %(ret, self.source)
         if self.tcpflag:
-            ret = "%s TCP flag:<strong>%s</strong><br/>" %(ret, self.tcpflag)
+            ret = "%s <dt>TCP flag</dt><dd>%s</dd>" %(ret, self.tcpflag)
         if self.port.all():
-            ret = ret + "Ports:<strong>%s</strong> <br/>" %(','.join(["%s"%i for i in self.port.all()]))
+            ret = ret + "<dt>Ports</dt><dd>%s</dd>" %(', '.join(["%s"%i for i in self.port.all()]))
 #            for port in self.port.all():
-#                    ret = ret + "Port:<strong>%s</strong> <br/>" %(port)
+#                    ret = ret + "Port:<strong>%s</dd>" %(port)
         if self.protocol.all():
-            ret = ret + "Protocols:<strong>%s</strong> <br/>" %(','.join(["%s"%i for i in self.protocol.all()]))
+            ret = ret + "<dt>Protocols</dt><dd>%s</dd>" %(', '.join(["%s"%i for i in self.protocol.all()]))
 #            for protocol in self.protocol.all():
-#                    ret = ret + "Protocol:<strong>%s</strong> <br/>" %(protocol)
+#                    ret = ret + "Protocol:<strong>%s</dd>" %(protocol)
         if self.destinationport.all():
-            ret = ret + "DstPorts:<strong>%s</strong> <br/>" %(','.join(["%s"%i for i in self.destinationport.all()]))
+            ret = ret + "<dt>DstPorts</dt><dd>%s</dd>" %(', '.join(["%s"%i for i in self.destinationport.all()]))
 #            for port in self.destinationport.all():
-#                    ret = ret + "Dst Port:<strong>%s</strong> <br/>" %(port)
+#                    ret = ret + "Dst Port:<strong>%s</dd>" %(port)
         if self.sourceport.all():
-            ret = ret + "SrcPorts:<strong>%s</strong> <br/>" %(','.join(["%s"%i for i in self.sourceport.all()]))
+            ret = ret + "<dt>SrcPorts</dt><dd>%s</dd>" %(', '.join(["%s"%i for i in self.sourceport.all()]))
 #            for port in self.sourceport.all():
-#                    ret = ret +"Src Port:<strong>%s</strong> <br/>" %(port)
+#                    ret = ret +"Src Port:<strong>%s</dd>" %(port)
         if self.dscp:
             for dscp in self.dscp.all():
-                    ret = ret + "%s Port:<strong>%s</strong> <br/>" %(ret, dscp)
-        return ret.rstrip('<br/>')
+                    ret = ret + "%s <dt>Port</dt><dd>%s</dd>" %(ret, dscp)
+        ret = ret + "</dl>"
+        return ret
         
     get_match.short_description = 'Match statement'
     get_match.allow_tags = True

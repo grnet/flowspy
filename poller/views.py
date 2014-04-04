@@ -43,8 +43,8 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
 
-def create_message(body, user):
-    data = {'id': str(uuid.uuid4()), 'body': body, 'user':user}
+def create_message(message, user, time):
+    data = {'id': str(uuid.uuid4()), 'body': message, 'user':user, 'time':time}
     data['html'] = render_to_string('poll_message.html', dictionary={'message': data})
     return data
 
@@ -95,7 +95,7 @@ class Msgs(object):
             message = mesg['message']
             user = mesg['username']
             now = datetime.datetime.now()
-            msg = create_message("[%s]: %s"%(now.strftime("%Y-%m-%d %H:%M:%S"),message), user)
+            msg = create_message(message, user, now.strftime("%Y-%m-%d %H:%M:%S"))
         try:
             isinstance(self.user_cache[user], list)
         except:

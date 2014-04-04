@@ -151,7 +151,7 @@ class RouteForm(forms.ModelForm):
 
     def clean(self):
         if self.errors:
-             raise forms.ValidationError(_('Errors in form. Please review and fix them'))
+             raise forms.ValidationError(_('Errors in form. Please review and fix them: %s'%", ".join(self.errors)))
         name = self.cleaned_data.get('name', None)
         source = self.cleaned_data.get('source', None)
         sourceports = self.cleaned_data.get('sourceport', None)
@@ -269,7 +269,7 @@ class PortPlainForm(forms.ModelForm):
             try:
                 p = int(port)
                 if int(port) > 65535 or int(port) < 0:
-                    raise forms.ValidationError(_(''))
+                    raise forms.ValidationError(_('Port should be < 65535 and >= 0'))
                 return "%s" %self.cleaned_data["port"]
             except forms.ValidationError:
                 raise forms.ValidationError(_('Port should be < 65535 and >= 0'))

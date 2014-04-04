@@ -79,6 +79,24 @@ def welcome(request):
 
 @login_required
 @never_cache
+def dashboard(request):
+    group_routes = []
+    try:
+        peer = request.user.get_profile().peer
+    except UserProfile.DoesNotExist:
+        error = "User <strong>%s</strong> does not belong to any peer or organization. It is not possible to create new firewall rules.<br>Please contact Helpdesk to resolve this issue" % request.user.username
+        return render_to_response('error.html', {'error': error}, context_instance=RequestContext(request))
+    if peer:
+       peer_members = UserProfile.objects.filter(peer=peer)
+       users = [prof.user for prof in peer_members]
+       group_routes = Route.objects.filter(applier__in=users).order_by('-expires')[:10]
+       if request.user.is_superuser:
+           group_routes = Route.objects.all().order_by('-expires')[:10]
+       return render_to_response('dashboard.html', {'routes': group_routes},
+                              context_instance=RequestContext(request))
+
+@login_required
+@never_cache
 def group_routes(request):
     group_routes = []
     try:
@@ -95,12 +113,69 @@ def group_routes(request):
        return render_to_response('user_routes.html', {'routes': group_routes},
                               context_instance=RequestContext(request))
 
+@login_required
+@never_cache
+def group_routes_ajax(request):
+    group_routes = []
+    try:
+        peer = request.user.get_profile().peer
+    except UserProfile.DoesNotExist:
+        error = "User <strong>%s</strong> does not belong to any peer or organization. It is not possible to create new firewall rules.<br>Please contact Helpdesk to resolve this issue" % request.user.username
+        return render_to_response('error.html', {'error': error}, context_instance=RequestContext(request))
+    if peer:
+       peer_members = UserProfile.objects.filter(peer=peer)
+       users = [prof.user for prof in peer_members]
+       group_routes = Route.objects.filter(applier__in=users)
+       if request.user.is_superuser:
+           group_routes = Route.objects.all()
+    jresp = {}
+    routes = build_routes_json(group_routes)
+    jresp['aaData'] = routes
+    return HttpResponse(json.dumps(jresp), mimetype='application/json') 
+
+@login_required
+@never_cache
+def overview_routes_ajax(request):
+    group_routes = []
+    try:
+        peer = request.user.get_profile().peer
+    except UserProfile.DoesNotExist:
+        error = "User <strong>%s</strong> does not belong to any peer or organization. It is not possible to create new firewall rules.<br>Please contact Helpdesk to resolve this issue" % request.user.username
+        return render_to_response('error.html', {'error': error}, context_instance=RequestContext(request))
+    if peer:
+       peer_members = UserProfile.objects.filter(peer=peer)
+       users = [prof.user for prof in peer_members]
+       group_routes = Route.objects.filter(applier__in=users)
+       if request.user.is_superuser or request.user.has_perm('accounts.overview'):
+           group_routes = Route.objects.all()
+    jresp = {}
+    routes = build_routes_json(group_routes)
+    jresp['aaData'] = routes
+    return HttpResponse(json.dumps(jresp), mimetype='application/json') 
+
+def build_routes_json(groutes):
+    routes = []
+    for r in groutes:
+        rd = {}
+        rd['id'] = r.pk
+        rd['name'] = r.name
+        rd['comments'] = r.comments
+        rd['match'] = r.get_match()
+        rd['then'] = r.get_then()
+        rd['status'] = r.status
+        rd['applier'] = r.applier.username
+        rd['expires'] = "%s" %r.expires
+        rd['response'] = "%s" %r.response
+        routes.append(rd)
+    return routes
 
 @login_required
 @never_cache
 def add_route(request):
     applier = request.user.pk
     applier_peer_networks = request.user.get_profile().peer.networks.all()
+    if request.user.is_superuser:
+        applier_peer_networks = PeerRange.objects.all()
     if not applier_peer_networks:
          messages.add_message(request, messages.WARNING,
                              _("Insufficient rights on administrative networks. Cannot add rule. Contact your administrator"))
@@ -354,7 +429,7 @@ def user_login(request):
                 user_activation_notify(user)
             if user.is_active:
                login(request, user)
-               return HttpResponseRedirect(reverse("group-routes"))
+               return HttpResponseRedirect(reverse("dashboard"))
             else:
                 error = _("User account <strong>%s</strong> is pending activation. Administrators have been notified and will activate this account within the next days. <br>If this account has remained inactive for a long time contact your technical coordinator or GRNET Helpdesk") %user.username
                 return render_to_response('error.html', {'error': error, 'inactive': True},
@@ -478,8 +553,7 @@ def overview(request):
     if user.is_authenticated():
         if user.has_perm('accounts.overview'):
             users = User.objects.all()
-            group_routes = Route.objects.all()
-            return render_to_response('overview/index.html', {'users': users, 'routes': group_routes},
+            return render_to_response('overview/index.html', {'users': users},
                                   context_instance=RequestContext(request))
         else:
             violation=True

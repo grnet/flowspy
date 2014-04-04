@@ -1,4 +1,13 @@
 ===========
+1.0.0 RELEASE
+Major UI redesign, Debian Wheezy version, Django 1.4
+
+Improvements:
+	-New UI based on Bootstrap3 theme
+	-Minor fixes in long polling init
+	-Debian Wheezy - Django 1.4 ready
+
+===========
 0.9.9 RELEASE
 Major documentation improvements. Minor app enhancements. Minor bug fixes
 

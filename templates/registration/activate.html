@@ -1,31 +1,50 @@
-{% extends "base.html" %}
-{% load i18n %}
-{% block title %}{% trans "Activation Complete" %}{% endblock %}
-{% block brcrmb_container %}{% endblock %}
-    {% block content %}
-	<div class="container-fluid">
-      <div class="row-fluid">
-        <div class="span2">
-        </div><!--/span-->
+{% extends "b3theme/base.html" %}
 
-		<div class="span10">
-			<div class="row-fluid">
-				<!--/span-->
-				<h3 class='muted'>{% trans "Activation Status" %}</h3>
-				<hr><br>
-					
-					<div class="span10 alert {% if account %}alert-success{% else %}alert-info{% endif %}">
+{% load i18n %}
+{% block title %}{% trans "Activation Status" %}{% endblock %}
+   {% block sidenav %}{% endblock %}
+   {% block extraheadbottom %}
+<style>
+	@media (min-width: 768px) {
+		#page-wrapper {
+		    border-left: none;
+		    margin: 0;
+		}
+}
+</style>
+{% endblock %}
+
+{% block contentplaceholder %}
+       <div class="container">
+       <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">{% trans "Activation Status" %}</h1>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-12">
+                	<div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <i class="fa fa-info-circle"></i> Activation Status
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                        						<div class="alert {% if account %}alert-success{% else %}alert-info{% endif %}">
 					{% if account %}
 					    {{account}} {% trans "succesfully activated" %}
 					{% else %}
 					    {% trans "The user has probably been already activated." %}
 					{% endif %}
-					</div>
-				<!--/span-->
-			</div><!--/row-->
-		</div><!--/span-->
-
-        </div><!--/span-->
-    </div><!--/.fluid-container-->
+                        	</div>
+                        </div>
+                       </div>
+                      </div>
+                     </div>
+				</div>
 	{% endblock %}
+
+
+
 

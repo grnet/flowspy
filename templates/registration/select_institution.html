@@ -1,48 +1,65 @@
-{% extends "base.html" %}
-{% load i18n %}
-   
-   
-       {% block content %}
-	<div class="container-fluid">
-      <div class="row-fluid">
-        <div class="span2">
-        </div><!--/span-->
+{% extends "b3theme/base.html" %}
+{% load widget_tweaks %}
 
-		<div class="span10">
-			<div class="row-fluid">
-				<!--/span-->
-				<h3 class="muted">{% trans "Select your institution" %}</h3>
-				<hr>
-					<div class="span10 alert alert-info">Excellent! You are a step away from joining the service. Select your institution from the dropdown list.</div>
-					<div class="span10">
+{% load i18n %}
+   {% block sidenav %}{% endblock %}
+   {% block extraheadbottom %}
+<style>
+	@media (min-width: 768px) {
+		#page-wrapper {
+		    border-left: none;
+		    margin: 0;
+		}
+}
+</style>
+{% endblock %}
+
+       {% block contentplaceholder %}
+       <div class="container">
+       <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">Select Institution</h1>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-12">
+                	<div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <i class="fa fa-building-o"></i> Select Institution
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                        	
+                        	<div class="alert alert-info">Excellent! You are a step away from joining the service. Select your institution from the dropdown list.</div>
 						<form method="POST" class="form-horizontal"	action="{% url selectinst %}">
 							{% csrf_token %} {% if form.non_field_errors %}
 							<p class="error">{{ form.non_field_errors}}</p>
 							{% endif %}
 							<div style="display: none">{{form.user}}</div>
-							<div
-								class="control-group {% if form.peer.errors %} error {% endif %}">
-								<label class="control-label" for="id_peer"><b>{% trans "Institution" %}</b></label>
-								<div class="controls">
-									{{ form.peer }} {% if form.peer.errors %} <span
-										class="help-inline"> {{ form.peer.errors|join:", " }} </span>
-									{% endif %} <span class="help-block"> {{form.peer.help_text }}</span>
-								</div>
+							<div class="form-group {% if form.peer.errors %} has-error {% endif %}"> 
+								<label class="col-md-2 control-label" for="id_peer"><b>{% trans "Institution" %}</b></label>
+								<div class="col-md-8">
+		            				{% render_field form.peer class+="form-control"  %}
+		            				{% if form.peer.errors %} <span class="help-block"> {{ form.peer.errors|join:", " }} </span>
+		           					 {% endif %}
+		       					 </div>
 							</div>
 
-							<div class="control-group">
-								<div class="controls">
-									<button type="submit" id="applybutton" value="Apply" class="btn btn-primary" />{% trans "Apply" %}</button>
-        						</div>
-							</div>
-						</form>
-					</div>
-				<!--/span-->
-			</div><!--/row-->
-		</div><!--/span-->
+							<div class="form-group">
+			 	<div class="col-md-2"></div>
+			 	 <div class="col-md-8">
+			<button type="submit" id="applybutton" value="{% trans 'Apply' %}" class="btn btn-md btn-primary">Apply</button>
+				</div>
+			</div>
+                        	
+            			</div>
+            			</div>
+            			</div>
+            			</div>
+</div>
 
-        </div><!--/span-->
-    </div><!--/.fluid-container-->
 	{% endblock %}
-   
+
    

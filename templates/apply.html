@@ -1,4 +1,5 @@
-{% extends "base.html" %}
+{% extends "b3theme/base.html" %}
+{% load widget_tweaks %}
 {% load i18n %}
 
 {% block title %}
@@ -19,18 +20,28 @@
 </li>
 {% endblock %}
 {% block extrahead %}
+    <link href="{{STATIC_URL}}b3theme/css/plugins/morris/morris-0.4.3.min.css" rel="stylesheet">
+    <link href="{{STATIC_URL}}b3theme/css/plugins/timeline/timeline.css" rel="stylesheet">
+    <link href="{{STATIC_URL}}datepicker/css/datepicker.css" rel="stylesheet">
+{% endblock %}
+{% block pagejsbottom %}
+<script type="text/javascript" src="{{STATIC_URL}}datepicker/js/bootstrap-datepicker.js"></script>
 <script>
 	$(document).ready( function(){
 		
-		
+		$('#id_expires').datepicker({
+			startDate: '+1d',
+			endDate: '+10d'
+		})
 		$('#setFromAll').click(function(){
 			$("#id_source").val('0.0.0.0/0');
-			return false;
 		});
 		
 		
 		/*$('#id_then').attr("multiple", "");*/
+		/*
 		$( "#id_expires" ).datepicker({ dateFormat: 'yy-mm-dd' , maxDate: '+10d', minDate: '+1d', changeMonth: false, changeYear: false }).datepicker( $.datepicker.regional[ "el" ] );
+		*/
 		{% comment %}
 		$('#then_diag').dialog({
 			height: 220,
@@ -39,7 +50,6 @@
 			autoOpen: false,
 			buttons: {
 		'{% trans "Add" %}': function() {
-			console.log($("#add_rl_form").serialize());
 			$.ajax({
 			url:"{% url add-rate-limit %}", 
 			data:$("#add_rl_form").serialize(),
@@ -64,46 +74,7 @@
 	}
 		});
 		{% endcomment %}
-		$('#port_diag').dialog({
-			height: 220,
-            width: 340,
-			modal: true,
-			autoOpen: false,
-			buttons: {
-		'{% trans "Add" %}': function() {
-			$.ajax({
-			url:"{% url add-port %}", 
-			data:$("#add_port_form").serialize(),
-			type: "POST",
-			cache: false,
-			success:function(data){
-					console.log(data);
-					try {
-						value = data.value;
-						text = data.text;
-						console.log(text, value);
-						if (typeof value === 'undefined' && typeof text === 'undefined'){
-							$('#port_diag').html(data);	
-						}
-						else{
-							$('#id_port').append($("<option></option>").attr("value",value).text(text));
-							$('#id_destinationport').append($("<option></option>").attr("value",value).text(text));
-							$('#id_sourceport').append($("<option></option>").attr("value",value).text(text));
-							$('#port_diag').dialog('close');
-						}
-					}
-					catch (exception) {
-						$('#port_diag').html(data);
-					}					
-				}
-				});
-		},
-		'{% trans "Cancel" %}': function() {
-			$('#port_diag').dialog('close');
-		}
-	}
-		});
-		
+
 		{% comment %}
 		$("#new_then_actions").button({
             icons: {
@@ -123,8 +94,9 @@
 			});
 			
 			{% endcomment %}
-			$(".new_port").button()
-			.click(function(){
+			$(".new_port").click(function(){
+				$(".new_port").hide();
+				$("#addnewport").show()
 				$.ajax({
 					url: "{% url add-port %}",
 					cache: false,
@@ -132,14 +104,56 @@
 						$("#port_diag").html(data);
 					}
 				});
-				$('#port_diag').dialog('open');
+				// $('#port_diag').dialog('open');
 				return false;
 			});
+			
+			$('body').on('click', "#addportbtn", function(){
+			$.ajax({
+			url:"{% url add-port %}", 
+			data:$("#add_port_form").serialize(),
+			type: "POST",
+			cache: false,
+			success:function(data){
+					try {
+						value = data.value;
+						text = data.text;
+						if (typeof value === 'undefined' && typeof text === 'undefined'){
+							$('#port_diag').html(data);	
+						}
+						else{
+							$('#id_port').append($("<option></option>").attr("value",value).text(text));
+							$('#id_destinationport').append($("<option></option>").attr("value",value).text(text));
+							$('#id_sourceport').append($("<option></option>").attr("value",value).text(text));
+							$('#port_diag').html('');
+							$('#addnewport').hide();
+							$(".new_port").show();
+						}
+					}
+					catch (exception) {
+						$('#port_diag').html(data);
+					}					
+				}
+				});
+			
 			});
+			$('body').on('click', "#canceladdportbtn", function(){
+				$('#port_diag').html('');
+				$('#addnewport').hide();
+				$(".new_port").show();
+			});
+			{% comment %}
+			function reArrangeSelect(elementId) {
+ 			   $("#"+elementId).html($("#"+elementId+" option").sort(function(a, b) {
+        			return int(a.text) == int(b.text) ? 0 : int(a.text) < int(b.text) ? -1 : 1
+    			}));
+			}
+			{% endcomment %}
+	});
 		
 </script>
 {% endblock %}
-{% block content %}
+{% block contentplaceholder %}
 <style type="text/css">
 
 
@@ -183,246 +197,202 @@
     box-shadow: none;
 }
 
+.errorlist{
+	list-style: none outside none;
+}
+
 </style>
-<div id="rule_form_wrapper" class="container">
-    {% if edit %}<h4>{% trans "Edit rule" %}: {{form.data.name}}</h4>
-    {% else %}<h4>{% trans "Apply for a new rule" %}</h4>
-    {% endif %}
-    <hr>
-    <br>
-    <form method="POST" class="form-horizontal">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header"> {% if edit %}{% trans "Edit rule" %}: {{form.data.name}}
+    {% else %}{% trans "Apply for a new rule" %}
+    {% endif %}</h1>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+
+<div class="row">
+                <div class="col-lg-8">
+                	<div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <i class="fa fa-shield fa-fw"></i> Firewall Rule
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+    <form method="POST" role="form" class="form-horizontal">     
         
             {% csrf_token %}
             {% load unescape %}
             {% if form.non_field_errors %}
-            <p class="error">
-                {{ form.non_field_errors|unescape}}
-            </p>
+            <div class="form-group {% if form.non_field_errors %} has-error {% endif %}" style="color: #A94442;">
+            	{{ form.non_field_errors|unescape}}
+            	</div>
             {% endif %}
             <fieldset {%  if edit %}  style="display:none;" {%  endif %}>
-                <legend>
-                    {% trans "Rule Basic Info" %}
-                </legend>
-                <div class="control-group  {% if form.name.errors %} error {% endif %}">
-	                <label class="control-label" for="id_name"><b>{% trans "Name" %}</b></label>
-                    <div class="controls">
-                    {{ form.name }}
-                    {% if form.name.errors %}
-                    <span class="help-inline">
-                        {{ form.name.errors|join:", " }}
-                    </span>
-                    {% endif %}
-                    <span class="help-block">A unique identifier will be added as a name_suffix</span>
-                    </div>
-                </div>
+               
+                 <div class="form-group {% if form.name.errors %} has-error {% endif %}">
+        <label for="id_name" class="col-md-2 control-label"><b>{% trans "Name" %}</b></label>
+        <div class="col-md-8">
+            {% render_field form.name class+="form-control" placeholder="Eg. ntpattack. A unique identifier will be added as a suffix" %}
+            {% if form.name.errors %} <span class="help-block"> {{ form.name.errors|join:", " }} </span>
+            {% endif %}
+        </div>
+        </div>
             </fieldset>
             {% if user.is_superuser %}
             <fieldset>
-                <legend>
-                    {% trans "Admin Options" %}
-                </legend>
-                  <div class="control-group">
-	                <label class="control-label" for="id_applier"><b>{% trans "Applier" %}</b></label>
-                   <div class="controls">{{ form.applier }}</div>
-                    {% if form.applier.errors %}
-                    <br>
-                    <p class="error" style="clear:both;">
-                        {{ form.applier.errors|join:", " }}
-                    </p>
-                    {% endif %}
-                </div>
+            	<hr>
+                   <div class="form-group {% if form.applier.errors %} has-error {% endif %}">
+        		<label for="id_name" class="col-md-2 control-label"><b>{% trans "Applier" %}</b></label>
+		        <div class="col-md-8">
+		            {% render_field form.applier class+="form-control" %}
+		            {% if form.applier.errors %} <span class="help-block"> {{ form.applier.errors|join:", " }} </span>
+		            {% endif %}
+		        </div>
+		        </div>
                 </fieldset>
                 {% else %}
                  <input type="hidden" id="id_applier" name="applier" value="{{applier}}"/>
                 {% endif %}
             <fieldset>
-                <legend>
-                    {% trans "Rule Match Conditions" %}
-                </legend>
-                <div class="control-group {% if form.source.errors %} error {% endif %}">
-	                <label class="control-label" for="id_source"><b>{% trans "Source Address" %}</b></label>
-                    <div class="controls">{{ form.source }}&nbsp;<img src="{{STATIC_URL}}threat_source.png" style="height: 30px;"/>&nbsp;&nbsp;<a class="btn btn-small btn-info" id="setFromAll" href="#">Any</a>
-                    {% if form.source.errors %}
-                    <span class="help-inline">
-                        {{ form.source.errors|join:", " }}
-                    </span>
-                    {% endif %}
-                    <span class="help-block"> {{ form.source.help_text }}</span>
-                    </div> 
-
-
-                </div>
-                <div class="control-group {% if form.destination.errors %} error {% endif %}">
-	                <label class="control-label" for="id_destination"><b>{% trans "Destination Address" %}</b></label>
-                    <div class="controls">
-					{{ form.destination }}&nbsp;<img src="{{STATIC_URL}}secure_destination.png" style="height: 30px;"/>
-					{% if form.destination.errors %}
-                    <span class="help-inline">
-                        {{ form.destination.errors|join:", " }}
-                    </span>
-                    {% endif %}
-					<span class="help-block">{{ form.destination.help_text }}</span>
-					</div> 
-
-                </div>
-				<div class="control-group {% if form.protocol.errors %} error {% endif %}">
-	                <label class="control-label" for="id_protocol">{% trans "Protocol" %}</label>
-                   <div class="controls">{{ form.protocol }}
-                   {% if form.protocol.errors %}
-                    <span class="help-inline">
-                        {{ form.protocol.errors|join:", " }}
-                    </span>
-                    {% endif %}
-                   </div>
-                   
-                </div>
-                <div class="control-group {% if form.fragmenttype.errors %} error {% endif %}">
-	                <label class="control-label" for="id_fragmenttype">{% trans "Fragment Type" %}</label>
-                   <div class="controls">{{ form.fragmenttype }}
-                   {% if form.fragmenttype.errors %}
-                    <span class="help-inline">
-                        {{ form.fragmenttype.errors|join:", " }}
-                    </span>
-                    {% endif %}
-                   </div>
-                   
-                </div>
+                <hr>
+                <div class="form-group {% if form.source.errors %} has-error {% endif %}"> 
+        		<label for="id_source" class="col-md-2 control-label"><b>{% trans "Source Address" %}</b></label>
+		        <div class="col-md-6">
+		            {% render_field form.source class+="form-control" placeholder=form.source.help_text %}
+		            {% if form.source.errors %} <span class="help-block"> {{ form.source.errors|join:", " }} </span>
+		            {% endif %}
+		        </div>
+		        <div class="col-md-2">
+		            <img src="{{STATIC_URL}}threat_source.png" style="height: 30px;"/> &nbsp;&nbsp;<button type="button" class="btn btn-md btn-info btn-outline" id="setFromAll">Any</button>
+		        </div>
+		        </div>
+		        
+				<div class="form-group {% if form.destination.errors %} has-error {% endif %}"> 
+        		<label for="id_destination" class="col-md-2 control-label"><b>{% trans "Destination Address" %}</b></label>
+		        <div class="col-md-6">
+		            {% render_field form.destination class+="form-control" placeholder=form.destination.help_text %}
+		            {% if form.destination.errors %} <span class="help-block"> {{ form.destination.errors|join:", " }} </span>
+		            {% endif %}
+		        </div>
+		        <div class="col-md-2">
+		            <img src="{{STATIC_URL}}secure_destination.png" style="height: 30px;"/>
+		        </div>
+		        </div>
+		        
+				<div class="form-group {% if form.protocol.errors %} has-error {% endif %}"> 
+        		<label for="id_protocol" class="col-md-2 control-label" style="font-weight: normal;">{% trans "Protocol(s)" %}</label>
+		        <div class="col-md-8">
+		            {% render_field form.protocol class+="form-control" %}
+		            {% if form.protocol.errors %} <span class="help-block"> {{ form.protocol.errors|join:", " }} </span>
+		            {% endif %}
+		        </div>
+		        </div>
+		        
+		        <div class="form-group {% if form.fragmenttype.errors %} has-error {% endif %}"> 
+        		<label for="id_fragmenttype" class="col-md-2 control-label" style="font-weight: normal;">{% trans "Fragment Type" %}</label>
+		        <div class="col-md-8">
+		            {% render_field form.fragmenttype class+="form-control" %}
+		            {% if form.fragmenttype.errors %} <span class="help-block"> {{ form.fragmenttype.errors|join:", " }} </span>
+		            {% endif %}
+		        </div>
+		        </div>
+		        </fieldset>
+		        <!--  PORTS -->
+		        <fieldset>
+                <hr>
+		        <div class="form-group ">
+		        	<label class="col-md-10" style="font-weight: normal;"><small>{% trans "Select source/destination port(s), or select common port(s) for both source/destination" %}. {{ form.sourceport.help_text }}</small></label>
+		        </div>
+		        <div class="form-group {% if form.sourceport.errors %} has-error {% endif %} {% if form.destinationport.errors %} has-error {% endif %} {% if form.port.errors %} has-error {% endif %}"> 
+        		<label for="id_sourceport" class="col-md-2 control-label" style="font-weight: normal;">{% trans "Src. Port(s)" %}</label>
+		        <div class="col-md-2">
+		            {% render_field form.sourceport class+="form-control"  %}
+		            {% if form.sourceport.errors %} <span class="help-block"> {{ form.sourceport.errors|join:", " }} </span>
+		            {% endif %}
+		        </div>
+				<label for="id_destinationport" class="col-md-1 control-label" style="font-weight: normal;">{% trans "Dest. Port(s)" %}</label>
+		        <div class="col-md-2">
+		            {% render_field form.destinationport class+="form-control"  %}
+		            {% if form.destinationport.errors %} <span class="help-block"> {{ form.destinationport.errors|join:", " }} </span>
+		            {% endif %}
+		        </div>
+		        <label for="id_port" class="col-md-1 control-label" style="font-weight: normal;">{% trans "Port(s)" %}</label>
+		        <div class="col-md-2">
+		            {% render_field form.port class+="form-control"  %}
+		            {% if form.port.errors %} <span class="help-block"> {{ form.port.errors|join:", " }} </span>
+		            {% endif %}
+		        </div>
+		        </div>
+				<div class="form-group ">
+		        	<label class="col-md-2" style="font-weight: normal;"></label>
+		        	<div class="col-md-8">
+		        		<button class="new_port btn-info btn btn-md btn-outline" type="button">{% trans "Add Port" %}</button>
+		        	</div>
+		        </div>
+		        <div class="form-group " id="addnewport" style="display:none">
+		        	<label class="col-md-2  control-label" style="font-weight: normal;">{% trans "Add New Port" %}</label>
+		        	<div class="col-md-8">
+		        		<div id="port_diag" title="{% trans "Add new port" %}">
+		        	</div>
+		        </div>
+				</fieldset>
+		        
+		        <!--  END OF PORTS -->
+		
+            <fieldset>
+				<hr>
                 
-			<div
-				class="control-group {% if form.port.errors %} error {% endif %}">
-				<label class="control-label" for="id_port">{% trans "Ports"	%}</label>
-				<div class="controls">
-					<div id="portsaccordion" class="accordion">
-						<div class="accordion-group">
-							<div class="accordion-heading">
-								<a class="accordion-toggle" data-toggle="collapse"
-									data-parent="#accordion2" href="#collapseOne"> {% trans "Advanced Settings (Ports)" %}</a>
-							</div>
-							<div id="collapseOne" class="accordion-body collapse">
-								<div class="accordion-inner">
-								<label>{% trans "Select source/destination port(s), or select common port(s) for both source/destination" %}</label>
-								<div class="control-group  {% if form.sourceport.errors %} error {% endif %}">
-					                <label class="control-label" for="id_sourceport">{% trans "Source Port" %}</label>
-				                    <div class="controls">
-				                    {{ form.sourceport }}
-				                    
-				                    <span class="help-inline">
-				                    <button class="new_port btn  btn-small"><i class="icon-plus"></i>{% trans "Port" %}</button>
-				                    {% if form.sourceport.errors %}
-				                        {{ form.sourceport.errors|join:", " }}
-				                    {% endif %}
-				                    </span>
-				                    
-				                    <span class="help-block">{{ form.sourceport.help_text }}</span>
-				                    </div>
-				                </div>
-				                <div class="control-group  {% if form.destinationport.errors %} error {% endif %}">
-					                <label class="control-label" for="id_destinationport">{% trans "Destination Port" %}</label>
-				                    <div class="controls">
-				                    {{ form.destinationport }}
-				                    
-				                    <span class="help-inline">
-				                    <button class="new_port btn  btn-small"><i class="icon-plus"></i>{% trans "Port" %}</button>
-				                    {% if form.destinationport.errors %}
-				                        {{ form.destinationport.errors|join:", " }}
-				                    {% endif %}
-				                    </span>
-				                    
-				                    <span class="help-block">{{ form.destinationport.help_text }}</span>
-				                    </div>
-				                </div>
-				                <div class="control-group  {% if form.port.errors %} error {% endif %}">
-					                <label class="control-label" for="id_port">{% trans "Port" %}</label>
-				                    <div class="controls">
-				                    {{ form.port }}
-				                    
-				                    <span class="help-inline">
-				                    <button class="new_port btn  btn-small"><i class="icon-plus"></i>{% trans "Port" %}</button>
-				                    {% if form.port.errors %}
-				                        {{ form.port.errors|join:", " }}
-				                    {% endif %}
-				                    </span>
-				                    
-				                    <span class="help-block">{{ form.port.help_text }}</span>
-				                    </div>
-				                </div>
+               	<div class="form-group {% if form.then.errors %} has-error {% endif %}"> 
+        		<label for="id_then" class="col-md-2 control-label">{% trans "Then Actions" %}</label>
+		        <div class="col-md-8">
+		            {% render_field form.then class+="form-control" %}
+		            {% if form.then.errors %} <span class="help-block"> {{ form.then.errors|join:", " }} </span>
+		            {% endif %}
+		        </div>
+		        </div>
+                
+            </fieldset>
+            <fieldset>
+				<hr>
+                <div class="form-group {% if form.expires.errors %} has-error {% endif %}"> 
+        		<label for="id_then" class="col-md-2 control-label">{% trans "Expires" %}</label>
+		        <div class="col-md-8">
+		            {% render_field form.expires class+="form-control datepicker" data-date-format="yyyy-mm-dd"  %}
+		            {% if form.expires.errors %} <span class="help-block"> {{ form.expires.errors|join:", " }} </span>
+		            {% endif %}
+		        </div>
+		        </div>
+            </fieldset>
+            
+            
+            <fieldset>
+			<hr>
+                
+                               	<div class="form-group {% if form.comments.errors %} has-error {% endif %}"> 
+        		<label for="id_comments" class="col-md-2 control-label">{% trans "Comments" %}</label>
+		        <div class="col-md-8">
+		            {% render_field form.comments class+="form-control" placeholder="Give a short description of the intended use of this rule, that justifies the parameter selection above. Feel free to include any additional comments." %}
+		            {% if form.comments.errors %} <span class="help-block"> {{ form.comments.errors|join:", " }} </span>
+		            {% endif %}
+		        </div>
+		        </div>
 
-								</div>
-							</div>
-						</div>
-					</div>
+            
+            </fieldset>
+			 <div class="form-group">
+			 	<div class="col-md-2"></div>
+			 	 <div class="col-md-8">
+			<button type="submit" id="applybutton" value="{% trans 'Apply' %}" class="btn btn-md btn-primary">Apply</button>
 				</div>
-			</div>
-
-		</fieldset>
-            <fieldset>
-                <legend>
-                    {% trans "Rule Actions" %}
-                </legend>
-                <div class="control-group {% if form.then.errors %} error {% endif %}">
-	                <label class="control-label" for="id_then"><b>{% trans "Then" %}</b></label>
-                    <div class="controls">{{ form.then }}
-                    {% if form.then.errors %}
-                    <span class="help-inline">
-                        {{ form.then.errors|join:", " }}
-                    </span>
-                    {% endif %}
-                    </div>
-                    {% comment %}&nbsp;&nbsp;
-                    <button id="new_then_actions">
-                        Rate-limit
-                    </button>
-                    {% endcomment %}
-                    
-                </div>
-            </fieldset>
-            <fieldset>
-                <legend>
-                    {% trans "Expiration" %}
-                </legend>
-                <div class="control-group  {% if form.expires.errors %} error {% endif %}">
-	                <label class="control-label" for="id_expires">{% trans "Expires" %}</label>
-                    <div class="controls">{{ form.expires }}
-                    {% if form.expires.errors %}
-                    <span class="help-inline">
-                        {{ form.expires.errors|join:", " }}
-                    </span>
-                    {% endif %}
-                    </div>
-                </div>
-            </fieldset>
-            <fieldset>
-            
-            <legend>
-                    {% trans "Use/Comments" %}
-                </legend>
-                <div class="control-group  {% if form.comments.errors %} error {% endif %}">
-	                <label class="control-label" for="id_comments">{% trans "Comments" %}</label>
-                    <div class="controls">
-                    <span class="help-block">{% blocktrans %}Give a short description of the intended use of this rule, that justifies the parameter selection above. Feel free to include any additional comments.{% endblocktrans %}</span>
-                    {{ form.comments }}
-                    
-                    {% if form.comments.errors %}
-                    <span class="help-inline">
-                        {{ form.comments.errors|join:", " }}
-                    </span>
-                    {% endif %}
-                    </div>
-                </div>
-            
-            </fieldset>
-			 <div class="control-group">
-			<div class="controls">
-			<button type="submit" id="applybutton" value="{% trans 'Apply' %}" class="btn btn-large btn-primary"/>Apply</button>
-			</div>
 			</div>
                 
 
     </form>
-</div>
+</div></div></div></div>
 <div id="then_diag" title="Add new rate-limit value">
 </div>
-<div id="port_diag" title="{% trans "Add new port" %}">
-</div>
+<!-- <div id="port_diag" title="{% trans "Add new port" %}">
+</div> -->
 
 {% endblock %}

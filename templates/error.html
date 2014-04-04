@@ -1,9 +1,22 @@
-{% extends "base.html" %}
+{% extends "b3theme/base.html" %}
+{% load widget_tweaks %}
+
 {% load i18n %}
+   {% block sidenav %}{% endblock %}
+   {% block extraheadbottom %}
+<style>
+	@media (min-width: 768px) {
+		#page-wrapper {
+		    border-left: none;
+		    margin: 0;
+		}
+}
+</style>
+{% endblock %}
 
 {% block title %}{% if error %}{% if inactive %}{% trans "Activation Pending" %}{% else %}{% trans "Error" %}{% endif %}{% endif %}{% endblock %}
 
-{% block extrahead %}
+{% block pagejsbottom %}
 	<script type="text/javascript">
 	$(document).ready(function(){
 		$("#ttip").tooltip();
@@ -11,19 +24,24 @@
 	</script>
 {% endblock %}
 
-    {% block content %}
-	<div class="container-fluid">
-      <div class="row-fluid">
-        <div class="span2">
-        </div><!--/span-->
-
-		<div class="span10">
-			<div class="row-fluid">
-				<!--/span-->
-				{% if error %}{% if inactive %}<h3 class="muted">{% trans "Activation Pending" %}</h3>{% else %}<h3 class="muted">{% trans "Error" %}</h3>{% endif %}{% endif %}
-				<hr><br>
-					
-					<div class="span10 alert {% if missing_attributes %}alert-error{% else %}alert-info{% endif %}">
+{% block contentplaceholder %}
+       <div class="container">
+       <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">{% if error %}{% if inactive %}{% trans "Activation Pending" %}{% else %}{% trans "Error" %}{% endif %}{% endif %}</h1>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-12">
+                	<div class="panel  {% if error %}{% if inactive %}panel-primary{% else %}panel-danger{% endif %}{% endif %}">
+                        <div class="panel-heading">
+                            <i class="fa fa-info-circle"></i> {% if error %}{% if inactive %}{% trans "Activation Pending" %}{% else %}{% trans "Error" %}{% endif %}{% endif %}
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                        						<div class="alert {% if missing_attributes %}alert-danger{% else %}alert-info{% endif %}">
 					{% if missing_attributes %}
 						<p>{% trans "One or more required shibboleth attributes were not released towards this service" %}</p>
 						{% endif %}
@@ -44,10 +62,14 @@
 						</p>
 						{% endif %}
 					</div>
-				<!--/span-->
-			</div><!--/row-->
-		</div><!--/span-->
-
-        </div><!--/span-->
-    </div><!--/.fluid-container-->
+                        	</div>
+                        </div>
+                       </div>
+                      </div>
+                     </div>
+				
 	{% endblock %}
+
+
+
+

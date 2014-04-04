@@ -17,7 +17,8 @@ $(document).ready(function() {
     $("#message").select();
     {% if user.is_authenticated %}
     updater.start();
-    updater.poll(); 
+    updater.poll();
+    
     {% endif %}
 });
 
@@ -88,7 +89,7 @@ var updater = {
     poll: function() {
     	{% if user.is_authenticated %}
     	if (updater.errorSleepTime > 128000){
-    		oTable.fnReloadAjax(refreshUrl);
+    		window.setTimeout('location.reload()', 500);
     	}
     	timeout = {{timeout}};
     	$.ajax({url: "{% url fetch-updates %}", type: "POST", dataType: "json",
@@ -120,7 +121,7 @@ var updater = {
      
     onError: function(response, text) {
         	if (text == 'timeout'){
-        		oTable.fnReloadAjax(refreshUrl);
+        		window.setTimeout('location.reload()', 3000);
         	}
         	updater.errorSleepTime *= 2;
 			console.log("Poll error; sleeping for", updater.errorSleepTime, "ms");
@@ -142,7 +143,7 @@ var updater = {
 	    updater.showMessage(messages[i]);
 	}
 	$("#hid_mid").val('UPDATED');
-	oTable.fnReloadAjax(refreshUrl);
+	window.setTimeout('location.reload()', 2000);
     },
 
     existingMessages: function(response) {
@@ -165,15 +166,19 @@ var updater = {
 	var username = message.body.split("]")[0].replace("[","");
 	var mbody = message.body.replace("["+username+"] ","");
 	var htmlnode = '<li class="left clearfix">\
-                                    <div class="chat-body clearfix" style="margin-left: 0px;"> \
+                                    <span style="font-size: 25px; color: #55C1E7" class="chat-img pull-left"> \
+                                       <i class="fa fa-exclamation-circle"></i> \
+                                    </span> \
+                                    <div class="chat-body clearfix"> \
                                         <div class="header"> \
+                                        <strong class="primary-font">'+username+'</strong> \
                                             <small class="pull-right text-muted"> \
                                                 <i class="fa fa-clock-o fa-fw"></i> '+ message.time +'  \
                                             </small>\
                                         </div>\
-                                        <p><small><strong class="primary-font">'+username+'</strong>:\
+                                        <p>\
                                             '+ mbody+'\
-                                        </small></p>\
+                                        </p>\
                                     </div>\
                                 </li>';
 	var node = $(htmlnode);

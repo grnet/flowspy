@@ -1,249 +1,37 @@
-{% extends "base.html" %}
+{% extends "b3theme/base.html" %}
 {% load i18n %}
 {% block extrahead %}
-{% if user.is_authenticated %}
-<script type="text/javascript" src="{% url load-js 'poller' %}"></script>
-{% endif %}
+<link href="{{STATIC_URL}}b3theme/css/plugins/dataTables/dataTables.bootstrap.css" rel="stylesheet">
+{% endblock %}
+{% block pagejsbodttom %}
+
 <script type="text/javascript" src="{{STATIC_URL}}js/jquery.dataTables.js"></script>
 <script type="text/javascript" src="{{STATIC_URL}}js/datatables_bootstrap.js"></script>
 
-<script type="text/javascript">
 
-$(document).ready(function(){
-	$('[rel=tooltip]').tooltip();
-    $("#hid_mid").val('');
-    $('#dialog').dialog({
-        height: 250,
-        width: 340,
-        modal: true,
-        autoOpen: false,
-        buttons: {
-            '{% trans "Deactivate" %}': function(){
-                route = $('#route_to_delete').text();
-                route_url_id = '#del_route_' + route;
-                url = $(route_url_id).attr('href');
-                $.ajax({
-                    url: url,
-                    cache: false,
-                    success: function(data){
-                        $('#dialog').dialog('close');
-                        window.setTimeout('location.reload()', 1000);
-                    }
-                });
-            },
-            '{% trans "Cancel" %}': function(){
-                $('#dialog').dialog('close');
-            },
-        },
-        close: function(){
-            update_val = $("#hid_mid").val();
-            if (update_val == 'UPDATED') {
-                $("#hid_mid").val('');
-                window.setTimeout('location.reload()', 500);
-            }
-        }
-    });
-    $('#console').dialog({
-        height: 250,
-        width: 800,
-        modal: true,
-        autoOpen: false,
-		overlay: { opacity: 0.5, background: 'black'},
-        close: function(){
-            update_val = $("#hid_mid").val();
-            if (update_val == 'UPDATED') {
-                $("#hid_mid").val('');
-                window.setTimeout('location.reload()', 500);
-            }
-        }
-    });
-    $('#console').parent().css('opacity', 0.9);
-	$('#console').parent().css('filter', 'alpha(opacity=90)');
-	$(".button_place #routebutton").button({
-        icons: {
-            primary: "ui-icon-circle-plus"
-        },
-    });
-    $(".edit_button").button({
-        icons: {
-            primary: "ui-icon-wrench"
-        },
-    }).css('margin-bottom','2px');
-    $(" .del_button").button({
-        icons: {
-            primary: "ui-icon-circle-close"
-        },
-    }).click(function(){
-        $('#dialog').dialog('open');
-        return false;
-    });
-    $("#consolebutton").button().click(function(){
-        $("#consolebutton").stop().stop();
-        $('#console').dialog('open');
-        return false;
-    });
-
-
-    var oTable = $('#routes_table').dataTable({
-    	"sPaginationType": "bootstrap",
-    	"sDom": "<'row-fluid'<'span6'l><'span6'f>r>t<'row-fluid'<'span6'i><'span6'p>>",
-        "aoColumns": [{
-            "bVisible": false,
-            "bSearchable": false,
-            "bSortable": false
-        }, {
-            "bSearchable": true,
-            "bSortable": true
-        }, {
-            "bSearchable": true,
-            "bSortable": true
-        }, {
-            "bSearchable": true,
-            "bSortable": true
-        }, {
-            "bSearchable": true,
-            "bSortable": true
-        }, {
-            "bSearchable": true,
-            "bSortable": true
-        }, {
-            "bSearchable": true,
-            "bSortable": true
-        }, {
-            "bSearchable": true,
-            "bSortable": true
-        }, {
-            "bVisible": true,
-            "bSearchable": false,
-            "bSortable": false
-        }],
-        "aaSorting": [[0, 'desc']],
-        "iDisplayLength": 25,
-        "oSearch": {"bSmart": false, "bRegex":true},
-        "oLanguage": {
-        	"sLengthMenu": '{% trans "Display" %} <select><option value="25">25</option><option value="50">50</option><option value="-1">{% trans "All" %}</option></select> {% trans "rules" %}',
-            "sProcessing":   "Processing...",
-            "sZeroRecords": '{% trans "No records to display" %}',
-            "sInfo":         "Showing _START_ to _END_ of _TOTAL_ entries",
-            "sInfoEmpty":    "{% trans "Showing 0 to 0 of 0 entries" %}",
-            "sInfoFiltered": "(filtered from _MAX_ total entries)",
-            "sInfoPostFix":  "",
-            "sSearch":       '{% trans "Search:" %}',
-            "sUrl":          "",
-            "oPaginate": {
-                "sFirst":    '{% trans "First" %}',
-                "sPrevious": '{% trans "Previous" %}',
-                "sNext":     '{% trans "Next" %}',
-                "sLast":     '{% trans "Last" %}'
-            }
-        }
-    });
-
-    oTable.fnDraw();
-    
-    var reg_exp = '';
-    var checkboxs = document.getElementsByName('status_filter');
-    for (var i = 0, inp; inp = checkboxs[i]; i++) {
-        checkCookie = readCookie("cookie_" + inp.value);
-        if (checkCookie) {
-            if (checkCookie == 'true') {
-                $(inp).addClass('active');
-            }
-            else {
-                $(inp).removeClass('active');
-            }
-        }
-        
-        if (inp.type.toLowerCase() == 'button' && $(inp).hasClass('active')) {
-            reg_exp = reg_exp + inp.value + '|';
-        }
-        
-    }
-	if (reg_exp == '') {
-            reg_exp = '|'
-        }
-	
-	
-    oTable.fnFilter(reg_exp.slice(0, -1), 4, true);
-    
-    
-    $('button[name="status_filter"]').click(function(){
-    	var reg_exp = '';
-        var checkboxs = document.getElementsByName('status_filter');
-        $(this).button('toggle');
-        for (var i = 0, inp; inp = checkboxs[i]; i++) {
-            if (inp.type.toLowerCase() == 'button' && $(inp).hasClass('active')) {
-                reg_exp = reg_exp + inp.value + '|';
-            }
-            createCookie("cookie_" + inp.value, $(inp).hasClass('active'), 30);
-        }
-        //passing an empty string will result in no filter
-        //thus, it must be set to something that will not exist in the column
-        if (reg_exp == '') {
-            reg_exp = '|'
-        }
-        oTable.fnFilter(reg_exp.slice(0, -1), 4, regex=true);
-        return false;
-    });
-
-    
-});
-		
-function delete_route(route){
-	route_name = route;
-	$('#route_to_delete').text(route_name);
-	return false;
-}		
-		
-		
-
-</script>
-<style type="text/css">
-	#console {
-		background: none repeat scroll 0 0 #36102a !important;
-		color: #edeae8 !important;
-		font-family: monospace !important;
-	}
-	.message {
-		font-family: monospace !important;
-	}
-	
-	
-</style>
 {% endblock %}
 {% block title %}{% trans "My rules" %}{% endblock %}
-{% block content %}
+{% block contentplaceholder %}
 {% csrf_token %}
-<div class="row-fluid">
-<div class="span2">
-<div style="float:left">
-	<h4>{% trans "My rules" %}</h4>
-</div>
-</div>
-
-<div class="span10">
-<div class='button_place' style="float:right">
-	<button id="consolebutton" class="btn btn-inverse">
-		<i class="icon-tasks icon-white" style="align:left;"></i>{% trans "Console" %}</button>
-		<a href="{% url add-route %}" id="routebutton" class="btn btn-primary"><i class="icon-plus-sign icon-white"></i>{% trans "Add Rule" %}</a>
-</div>
-</div>
-</div>
-<hr>
-<div class="row-fluid" style="padding-top:30px;">
-
-<div id='itoggle' class="span12" style="text-align:center;">
-   <div class="btn-group" data-toggle="buttons-checkbox">
-    <button type="button" class="btn btn-small" name="status_filter" value="ACTIVE" id="show_active">Active</button>
-    <button type="button" class="btn btn-small" name="status_filter" value="DEACTIVATED" id="show_inactive">Deactivated</button>
-    <button type="button" class="btn btn-small" name="status_filter" value="ERROR" id="show_error">Error</button>
-    <button type="button" class="btn btn-small" name="status_filter" value="PENDING" id="show_pending">Pending</button>
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="page-header">{% trans "My rules" %} </h1>
+        </div>
+        <!-- /.col-lg-12 -->
     </div>
-			</div>
 
-</div>
 
-<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" width="100%" id="routes_table">
+<div class="row">
+        <div class="col-md-10">
+        	<div class="panel panel-primary">
+                <div class="panel-heading"> <i class="fa fa-shield"></i> Firewall Rules
+                </div>
+
+<div class="panel-body">
+	
+	
+                    <div class="table-responsive">
+                    	<table class="table table-striped table-bordered" id="routes_table">
 <thead>
 <tr>
 	<th>Id</th>
@@ -251,95 +39,368 @@ function delete_route(route){
 	<th>{% trans "Match" %}</th>
 	<th style="text-align: center;">{% trans "Then" %}</th>
 	<th style="text-align: center; ">{% trans "Status" %}</th>
-	{% comment %}<th style="text-align: center;">{% trans "Details" %}</th>{% endcomment %}
 	<th style="text-align: center;">{% trans "Applier" %}</th>
 	<th style="text-align: center;">{% trans "Expires" %}</th>
 	<th style="text-align: center;">{% trans "Response" %}</th>
-	<th style="text-align: center; width:180px;">{% trans "Actions" %}</th>
+	<th style="text-align: center;">{% trans "Actions" %}</th>
 </tr>
 </thead>
 
 <tbody>
-{% for route in routes %}
-
-<tr class="GradeC" >
-	<td>{{ route.pk }}</td>
-	
-	<td {% if route.comments %}style="color: #0088CC;"{% endif %}>{% if route.comments %}<span rel="tooltip" data-placement="top" title="{{route.comments}}">{{ route.name }}</span>{% else %}{{ route.name }}{% endif %}</td>
-	
-	<td>{{ route.get_match|safe|escape }}</td>
-	
-	<td style="text-align: center;">{{route.get_then|safe|escape}}</td>
-	
-	<td style="text-align: center; ">{% if route.status == 'EXPIRED' or route.status == 'ADMININACTIVE' or route.status == 'INACTIVE' or route.status == 'OUTOFSYNC'%}
-		{% if route.status == 'EXPIRED' or route.status == 'ADMININACTIVE' or route.status == 'INACTIVE' %}<span class="label">DEACTIVATED</span>{% else %}{% if route.status == 'OUTOFSYNC' %}<span class="label label-important">ERROR</span>{% else %}{{route.status}}{% endif %}{% endif %}{% else %}{% if route.status == 'ACTIVE' %}<span class="label label-success">{{route.status}}</span>{% else %}{% if route.status == 'PENDING' %}<span class="label label-info">{{route.status}}</span>{% else %}<span class="label label-important">{{route.status}}</span>{% endif %}{% endif %}{% endif %}</td>
-		
-	{% comment %}<td style="text-align: center;">{{ route.response }}</td>{% endcomment %}
-	
-	<td style="text-align: center;">{{ route.applier }}</td>
-	
-	<td style="text-align: center;" nowrap>
-		<span {% if route.status == 'EXPIRED' or route.status == 'ADMININACTIVE' or route.status == 'INACTIVE' or route.status == 'OUTOFSYNC'%}{% else %}{% if route.days_to_expire %}
-		data-placement="top"
-		rel = 'tooltip'
-		style="border-bottom:1px dashed red;" 
-        title="Expires {% ifequal route.days_to_expire '0' %}today{% else%}in {{route.days_to_expire}} day{{ route.days_to_expire|pluralize }}{% endifequal %}"
-		{% endif %}{% endif %}>{{ route.expires|date:"d M y" }}</span></td>
-		
-	<td style="text-align: center; {% if route.status == 'EXPIRED' %} color: #0088CC; {% endif %}">
-		{% if route.status == 'EXPIRED' %}
-		<span rel="tooltip"
-			{% if route.status == 'EXPIRED' or route.status == 'ADMININACTIVE' or route.status == 'INACTIVE' or route.status == 'OUTOFSYNC'%}  
-			data-placement="top" 
-			title = "{% ifequal route.status 'INACTIVE' %}
-						{% trans 'Deactivated by user' %}
-					 {% else %}
-						{% ifequal route.status 'ADMININACTIVE' %}
-							{% trans 'Deactivated by administrator' %}
-						{% else %}
-							{% ifequal route.status 'EXPIRED' %}
-								{% trans 'Deactivated due to expiration' %}
-							{% else %}
-								{% ifequal route.status 'OUTOFSYNC' %}
-									{% trans 'Syncronization error. Configuration in device differs from rule' %}
-								{% endifequal %}
-							{% endifequal %}
-						{% endifequal %}
-					 {% endifequal %}"
-			{% endif %}>{% trans "Rule expired" %}</span>{% else %}{% if route.status == 'OUTOFSYNC' %}{% trans 'Syncronization error. Configuration in device differs from rule' %}{% else %}{% if route.status == 'ADMININACTIVE' %}{% trans "Deactivated by administrator" %}{% else %}{% if route.status == 'INACTIVE' %}{% trans "Deactivated by user" %}{% else %}{{ route.response }}{% if route.status == 'PENDING' %}<img src="{{STATIC_URL}}dots.gif">{% endif %}{% endif %}{% endif %}{% endif %}{% endif %}</td>
-			
-	<td style="text-align: center; width:180px;">
-		{% ifequal route.status 'ACTIVE' %}
-		<a href="{% url edit-route route.name %}" class="edit_button btn btn-small" id="edit_button_{{route.pk}}">{% trans "Edit" %}</a> 
-		<button class="del_button btn btn-small" id="{{route.name}}" onclick="javascript:delete_route(this.id)">{% trans "Deactivate" %}</button>
-		<a href="{% url delete-route route.name %}" style="display:none" id="del_route_{{route.name}}" class="btn btn btn-danger btn-small"></a>
-		{% else %}
-		{% if route.status == 'EXPIRED' or route.status == 'ADMININACTIVE' or route.status == 'INACTIVE' %}
-		<a href="{% url edit-route route.name %}" class="edit_button btn btn-small" id="edit_button_{{route.pk}}">{% trans "Reactivate" %}</a>
-		{% else %}
-		{% ifequal route.status 'OUTOFSYNC' %}
-		<a href="{% url edit-route route.name %}" class="edit_button btn btn-small" id="edit_button_{{route.pk}}">{% trans "ReSync" %}</a>
-		{% else %}
-		{% ifequal route.status 'ERROR' %}
-		<a href="{% url edit-route route.name %}" class="edit_button btn btn-small" id="edit_button_{{route.pk}}">{% trans "Fix it!" %}</a>
-		{% else %}
-		-
-		{% endifequal %}
-		{% endifequal %}
-		{% endif %}
-		{% endifequal %}
-		</td>
-</tr>
-
-{% endfor %}
 </tbody>
 </table>
-<div id="dialog" title="{% trans "Deactivate Rule" %}">
-		<p>{% blocktrans %}You are about to deactivate rule{% endblocktrans %} <strong><span id="route_to_delete"></span></strong></p>
-		<p>{% blocktrans %}Deactivating the rule will automatically remove the configuration from the network and mark this rule as inactive.{% endblocktrans %}</p>
-		<p>{% blocktrans %}Are you sure you want to proceed?{% endblocktrans %}</p>
+</div></div>
+</div></div>
+
+
+                   <div class="col-md-2">
+                	<div class="panel panel-default">
+                        <div class="panel-heading">
+                            <i class="fa fa-tags"></i> {% trans "Shortcuts" %}
+                        </div>
+                        <!-- /.panel-heading -->
+<div class="panel-body">
+				<a class="btn btn-sm btn-outline btn-success" id="routebutton" href="{% url add-route %}"><i class="fa fa-plus-circle"></i> {% trans "Add Rule" %}</a>
+				<a class="btn btn-sm btn-outline btn-info"  href="{% url user-profile %}"><i class="fa fa-user"></i> {% trans "My Profile" %}</a>
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+
+                	<div class="chat-panel panel panel-info">
+                        <div class="panel-heading">
+                            <i class="fa fa-comment fa-fw"></i> Live status
+                        </div>
+                        <!-- /.panel-heading -->
+<div class="panel-body">
+	{% include "polldash.html" %}
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                	</div>
 </div>
-<div id="console" title="{% trans "Console" %}">
-					{% include "poll.html" %}
-</div>
+
+
 {% endblock %}
+
+{% block pagejsbottom %}
+    <script src="{{STATIC_URL}}js/dataTableslatest/jquery.dataTables.min.js"></script>
+    <script src="{{STATIC_URL}}js/dataTableslatest/dataTables.bootstrap.js"></script>
+    {% if user.is_authenticated %}
+<script type="text/javascript" src="{% url load-js 'poller' %}"></script>
+{% endif %}
+
+<script type="text/javascript">
+var filterbtns = '<div class="btn-group col-centered">\
+    <button type="button" class="btn btn-outline btn-sm btn-success" name="status_filter" value="ACTIVE" id="show_active">ACTIVE</button>\
+    <button type="button" class="btn btn-outline btn-sm btn-info" name="status_filter" value="PENDING" id="show_pending">PENDING</button>\
+    <button type="button" class="btn btn-outline btn-sm btn-warning" name="status_filter" value="ERROR" id="show_error">ERROR</button>\
+    <button type="button" class="btn btn-outline btn-sm btn-default" name="status_filter" value="DEACTIVATED" id="show_deactivated">DEACTIVATED</button>\
+    </div>';
+
+
+$.fn.dataTableExt.oApi.fnReloadAjax = function ( oSettings, sNewSource, fnCallback, bStandingRedraw )
+{   
+    // DataTables 1.10 compatibility - if 1.10 then versionCheck exists.
+    // 1.10s API has ajax reloading built in, so we use those abilities
+    // directly.
+    if ( $.fn.dataTable.versionCheck ) {
+        var api = new $.fn.dataTable.Api( oSettings );
+ 
+        if ( sNewSource ) {
+            api.ajax.url( sNewSource ).load( fnCallback, !bStandingRedraw );
+        }
+        else {
+            api.ajax.reload( fnCallback, !bStandingRedraw );
+        }
+        return;
+    }
+ 
+    if ( sNewSource !== undefined && sNewSource !== null ) {
+        oSettings.sAjaxSource = sNewSource;
+    }
+ 
+    // Server-side processing should just call fnDraw
+    if ( oSettings.oFeatures.bServerSide ) {
+        this.fnDraw();
+        return;
+    }
+ 
+    this.oApi._fnProcessingDisplay( oSettings, true );
+    var that = this;
+    var iStart = oSettings._iDisplayStart;
+    var aData = [];
+ 
+    this.oApi._fnServerParams( oSettings, aData );
+ 
+    oSettings.fnServerData.call( oSettings.oInstance, oSettings.sAjaxSource, aData, function(json) {
+        /* Clear the old information from the table */
+        that.oApi._fnClearTable( oSettings );
+ 
+        /* Got the data - add it to the table */
+        var aData =  (oSettings.sAjaxDataProp !== "") ?
+            that.oApi._fnGetObjectDataFn( oSettings.sAjaxDataProp )( json ) : json;
+ 
+        for ( var i=0 ; i<aData.length ; i++ )
+        {
+            that.oApi._fnAddData( oSettings, aData[i] );
+        }
+         
+        oSettings.aiDisplay = oSettings.aiDisplayMaster.slice();
+ 
+        that.fnDraw();
+ 
+        if ( bStandingRedraw === true )
+        {
+            oSettings._iDisplayStart = iStart;
+            that.oApi._fnCalculateEnd( oSettings );
+            that.fnDraw( false );
+        }
+ 
+        that.oApi._fnProcessingDisplay( oSettings, false );
+ 
+        /* Callback user function - for event handlers etc */
+        if ( typeof fnCallback == 'function' && fnCallback !== null )
+        {
+            fnCallback( oSettings );
+        }
+    }, oSettings );
+};
+var oTable;
+var start;
+var end;
+var oldhtml;
+var last_element = false;
+var refreshUrl = "{% url group-routes-ajax %}";
+$(document).ready( function(){
+
+
+    
+    oTable = $('#routes_table').dataTable( {
+        "bPaginate": true,
+        "bFilter": true,
+        "bAutoWidth": true,
+        "aLengthMenu" : [
+            [5, 15, 20, -1],
+            [5, 15, 20, "All"]
+        ],
+        "sDom": "<'row'<'col-xs-4'l><'col-xs-4'<'#filterplaceholder'>><'col-xs-4'f>><'row'<'col-xs-6'i><'col-xs-6'p>>tr<'row'<'col-xs-6'i><'col-xs-6'p>>",
+        "iDisplayLength": 20,
+        "bProcessing": true,
+        "sAjaxSource": refreshUrl,
+        "bDeferRender": true,
+         "fnInitComplete": function(oSettings, json) {
+         	oTable.fnSetColumnVis( 0,false );
+         	update_size();
+    
+          	$('body').on('click', '.revertbutton', function () {
+            	var my = $(this);
+            	my.parent().html(oldhtml);
+            	last_element = false;
+            	return false;
+            });
+            $('body').on('click', ".del_buttonpre", function(){
+            	var my = $(this);
+            	if (last_element != false){
+            		last_element.html(oldhtml);
+            	}
+            	oldhtml = my.parent().html();
+            	last_element = my.parent();
+            	var routename = $(this).data("routename");
+				var btn = '<a href="#" data-toggle="tooltip" title="This will deactivate your rule"  data-routename="'+routename+'" class="del_button btn btn-sm btn-warning"> {% trans "Deactivate" %}</a>'
+				var back = '<a href="#" class="revertbutton btn btn-sm btn-info"><i class="fa fa-undo"></i></a>';
+            	my.parent().html(back+" "+btn);
+            	return false;
+            });
+
+            $('body').on('click', ".del_button", function(){
+            	last_element = false;
+            	var my = $(this);
+            	my.html('Deactivating...')
+				var routename = $(this).data("routename");
+				var delurl = "{% url delete-route 'route_placeholder'%}".replace('route_placeholder', routename.toString());
+				$.ajax({
+        			type: 'POST',
+        			url: delurl,
+        			cache: false,
+        			success: function(data) {
+            		 oTable.fnReloadAjax(refreshUrl);
+	        		}
+	    		});
+				return false;
+			});
+          },
+        "aoColumns":[
+                     {"mData":"id", "bSearchable": false,"bSortable": false, "bvisible":false},
+                     {"mData":"name", "sClass" : "alignCenter","bSearchable": true,"bSortable": true,
+                     "mRender": function (data, type, full) {
+                     	if (!full.comments.trim()) {
+ 						   return '<small>'+data+'</small>';
+						}
+						return '<a rel="tooltip" href="#" data-toggle="tooltip" data-placement="top" title='+full.comments+'><small>'+data+'</small>'
+                     }
+                     },
+                     {"mData":"match", "sClass" : "alignCenter","bSearchable": true,"bSortable": true,
+                     "mRender": function (data, type, full) {
+                     	return '<small>'+data+'</small>';             
+                     }
+                     },
+                     {"mData":"then", "sClass" : "alignCenter","bSearchable": true,"bSortable": true,
+                     "mRender": function (data, type, full) {
+                     	return '<small>'+data+'</small>';             
+                     }
+                     },
+                     {"mData":"status", "sClass" : "alignCenter","bSearchable": true,"bSortable": true,
+                     "mRender": function (data, type, full) {
+                     	var status = data;
+                     	if (status == "EXPIRED" ||status == "ADMININACTIVE" || status == "INACTIVE" || status == "OUTOFSYNC"){
+                     		if (status == "EXPIRED" ||status == "ADMININACTIVE" || status == "INACTIVE" ){
+                     			return '<span class="label label-default">DEACTIVATED</span>';
+                     		}
+                     		else
+                     		{ 
+                     			if (status == "OUTOFSYNC"){
+                     				return '<span class="label label-danger">ERROR</span>';
+                     			}
+                     			else{
+                     				return status;
+                     			}
+                     		}
+                     	}
+                     	else{
+                     		if (status == 'ACTIVE'){
+                     			return '<span class="label label-success">'+status+'</span>';
+                     		}
+                     		else{
+                     			if (status == 'PENDING'){
+                     				return '<span class="label label-info">'+status+'</span>';
+                     			}
+                     			else{
+                     				return '<span class="label label-danger">'+status+'</span>';
+                     			}
+                     		}
+                     	}           
+                     }
+                     },
+                     {"mData":"applier", "sClass" : "alignCenter","bSearchable": true,"bSortable": true,
+                     "mRender": function (data, type, full) {
+                     	return '<small>'+data+'</small>';             
+                     }
+                     },
+                     {"mData":"expires", "sClass" : "alignCenter","bSearchable": true,"bSortable": true,
+                     "mRender": function (data, type, full) {
+                     	return '<small>'+data+'</small>';             
+                     }},
+                     {"mData":"response", "sClass" : "alignCenter","bSearchable": true,"bSortable": true,
+                     "mRender": function (data, type, full) {
+                     	status = full.status;
+                     	toolt = '<a rel="tooltip" href="#" data-toggle="tooltip" data-placement="top"';
+   	                     	if (status == "EXPIRED" ||status == "ADMININACTIVE" || status == "INACTIVE" || status == "OUTOFSYNC"){	
+	                     		if (status == "INACTIVE" ){
+	                     			title = "{% trans 'Deactivated by user' %}";
+	                     		}
+	                     		if (status == "ADMININACTIVE" ){
+	                     			title = "{% trans 'Deactivated by administrator' %}";
+	                     		}
+	                     		if (status == "EXPIRED" ){
+	                     			title = "{% trans 'Deactivated due to expiration' %}";
+	                     		}
+	                     		if (status == "OUTOFSYNC" ){
+	                     			title = "{% trans 'Syncronization error. Configuration in device differs from rule' %}";
+	                     		}
+	                     		return toolt+" title=\""+title+"\">"+"<small>{% trans 'Rule expired' %}</small>"+"</a>";
+	                     	}
+                     		if (status == "PENDING"){
+                     				return '<img src="{{STATIC_URL}}dots.gif">';
+                     			}
+                     		return "<small>"+full.response+"</small>";
+
+                     }
+                     },
+                     {"mData":"comments", "sClass" : "alignCenter","bSearchable": true,"bSortable": true,
+                      "mRender": function (data, type, full) {
+                     status = full.status;
+                     btn = '';
+                     editurl = "{% url edit-route 'routename'  %}".replace('routename', full.name.toString());
+                     if (status == "ACTIVE" ){
+                     	btn = '<a href="'+editurl+'" class="btn-info btn btn-sm btn-outline">{% trans "Edit" %}</a>';
+        				btn = btn + ' <button class="del_buttonpre btn-warning btn btn-sm btn-outline" id="'+full.name+'" data-routename="'+full.name+'">{% trans "Deactivate" %}</button>';             	
+                     }
+                     if (status == 'EXPIRED' || status == 'ADMININACTIVE' || status == 'INACTIVE' ){
+                     	btn = '<a href="'+editurl+'" class="btn-info btn btn-sm btn-outline" id="edit_button_{{route.pk}}">{% trans "Reactivate" %}</a>';
+                     }
+                     if (status == "OUTOFSYNC" ){
+                     	btn = '<a href="'+editurl+'" class="btn-info btn btn-sm btn-outline" id="edit_button_{{route.pk}}">{% trans "Resync" %}</a>';
+                     }
+                     if (status == "ERROR" ){
+                     	btn = '<a href="'+editurl+'" class="btn-info btn btn-sm btn-outline" id="edit_button_{{route.pk}}">{% trans "Fix it!" %}</a>';
+                     }
+                     return btn;
+                     },
+                    }
+                    
+         ]
+} );
+$('#filterplaceholder').html(filterbtns);
+
+ 
+     
+    $('body').on('click', 'button[name="status_filter"]', function(){
+    	var reg_exp = '';
+        var checkboxs = document.getElementsByName('status_filter');
+        $(this).button('toggle');
+        for (var i = 0, inp; inp = checkboxs[i]; i++) {
+            if (inp.type.toLowerCase() == 'button' && $(inp).hasClass('active')) {
+                reg_exp = reg_exp + inp.value + '|';
+            }
+        }
+        //passing an empty string will result in no filter
+        //thus, it must be set to something that will not exist in the column
+        if (reg_exp == '') {
+            reg_exp = '|'
+        }
+        oTable.fnFilter(reg_exp.slice(0, -1), 4, true, false, false);
+        console.log(reg_exp.slice(0, -1))
+        return false;
+    });
+
+  $(window).resize(function() {
+    clearTimeout(window.refresh_size);
+    window.refresh_size = setTimeout(function() { update_size(); }, 250);
+  });
+  
+var update_size = function() {
+    $(oTable).css({ width: $(oTable).parent().width() });
+    pw=$(oTable).parent().width();
+    tw=$(oTable).width();
+    if (tw>pw){
+		oTable.fnSetColumnVis( 7,false );
+		oTable.fnSetColumnVis( 5,false );
+    }else{
+    	oTable.fnSetColumnVis( 7,true );
+    	oTable.fnSetColumnVis( 5,true );
+    }
+    oTable.fnAdjustColumnSizing(); 
+  }
+
+$("body").tooltip({ selector: '[data-toggle="tooltip"]' });
+});
+</script>
+<style type="text/css">
+
+	
+	.dl-horizontal dt {
+    width: 70px;
+}
+.dl-horizontal dd {
+    margin-left: 90px;
+}
+
+th{
+	font-size: 12px;
+}
+</style>
+
+{% endblock %}
+

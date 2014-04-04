@@ -1,0 +1,8 @@
+<div  >
+	<ul class="chat" id="inbox">
+	{% for message in messages %}
+          {% include "poll_message.html" %}
+	{% endfor %}
+	</ul>
+	<input type="hidden" name="hid_mid" id="hid_mid" value=''/>
+</div>

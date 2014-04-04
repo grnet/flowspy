@@ -1,0 +1,222 @@
+{% extends "b3theme/base.html" %}
+{% load i18n %}
+{% block extrahead %}
+    <link href="{{STATIC_URL}}b3theme/css/plugins/morris/morris-0.4.3.min.css" rel="stylesheet">
+    <link href="{{STATIC_URL}}b3theme/css/plugins/timeline/timeline.css" rel="stylesheet">
+    <style type="text/css">
+
+	
+	.dl-horizontal dt {
+    width: 70px;
+}
+.dl-horizontal dd {
+    margin-left: 90px;
+}
+</style>
+{% endblock %}
+
+
+{% block title %}{% trans "Dashboard" %}{% endblock %}
+{% block contentplaceholder %}
+{% csrf_token %}
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">{% trans "Dashboard" %}</h1>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+<div class="row">
+                <div class="col-lg-8">
+                	<div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <i class="fa fa-clock-o fa-fw"></i> {% trans "Timeline" %} - {% trans "Latest 10" %}
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <ul class="timeline">
+                            	{% for route in routes %}
+                                <li class="{% cycle '' 'timeline-inverted' %}">
+                                    
+                                    	{% if route.status == 'EXPIRED' or route.status == 'ADMININACTIVE' or route.status == 'INACTIVE' or route.status == 'OUTOFSYNC'%}
+											{% if route.status == 'EXPIRED' or route.status == 'ADMININACTIVE' or route.status == 'INACTIVE' %}
+												<div class="timeline-badge"><i class="fa fa-adjust"></i></div>
+											{% else %}
+												{% if route.status == 'OUTOFSYNC' %}
+													<div class="timeline-badge danger"><i class="fa fa-bug"></i></div>
+												{% else %}
+													<div class="timeline-badge danger"><i class="fa fa-exclamation"></i></div>
+												{% endif %}
+											{% endif %}
+										{% else %}
+											{% if route.status == 'ACTIVE' %}
+												<div class="timeline-badge success"><i class="fa fa-shield"></i></div>
+											{% else %}
+												{% if route.status == 'PENDING' %}
+													<div class="timeline-badge info"><i class="fa fa-spinner"></i></div>
+												{% else %}
+													<div class="timeline-badge warning"><i class="fa fa-exclamation"></i></div>
+												{% endif %}
+											{% endif %}
+										{% endif %}
+
+                                    <div class="timeline-panel">
+                                        <div class="timeline-heading">
+                                            <h4 class="timeline-title">{{route.name}}</h4> 
+                                            <p>
+                                                <small class="text-muted"><i class="fa fa-pencil-square-o"></i> {% trans "Last update" %}: {{route.last_updated}} {% trans "by" %} {{route.applier}}</small>
+                                            </p>
+                                            <p>
+                                                <small class="text-muted"><i class="fa fa-clock-o"></i> {% trans "Expires" %}: {{ route.expires|date:"d M y" }}</small>
+                                            </p>
+                                        </div>
+                                        <div class="timeline-body">
+										<small>
+                                        		<p>
+                                        			{% if route.status == 'EXPIRED' or route.status == 'ADMININACTIVE' or route.status == 'INACTIVE' or route.status == 'OUTOFSYNC'%}
+														{% if route.status == 'EXPIRED' or route.status == 'ADMININACTIVE' or route.status == 'INACTIVE' %}
+														<span class="label label-default">DEACTIVATED</span>
+														{% else %}
+															{% if route.status == 'OUTOFSYNC' %}
+																<span class="label label-danger">ERROR</span>
+															{% else %}
+																<span class="label label-info">{{route.status}}</span>
+															{% endif %}
+														{% endif %}
+													{% else %}
+														{% if route.status == 'ACTIVE' %}
+															<span class="label label-success">{{route.status}}</span>
+														{% else %}
+															{% if route.status == 'PENDING' %}
+																<span class="label label-info">{{route.status}}</span>
+															{% else %}
+																<span class="label label-warning">{{route.status}}</span>
+															{% endif %}
+														{% endif %}
+													{% endif %}
+                                        		</p>
+
+                                        	{{ route.get_match|safe|escape }}
+                                        	
+                                        	<dl class="dl-horizontal">
+                                        		<dt>Then</dt><dd>{{ route.get_then }}</dd>
+                                        	</dl>
+                                        	
+										</small>
+										<div>
+										{% ifequal route.status 'ACTIVE' %}
+											<a href="{% url edit-route route.name %}" class="btn-info btn btn-xs btn-outline" id="edit_button_{{route.pk}}">{% trans "Edit" %}</a> 
+											<button class="del_buttonpre btn-outline btn btn-xs btn-warning" id="{{route.name}}" data-routename="{{route.name}}">{% trans "Deactivate" %}</button>
+										{% else %}
+											{% if route.status == 'EXPIRED' or route.status == 'ADMININACTIVE' or route.status == 'INACTIVE' %}
+												<a href="{% url edit-route route.name %}" class="btn-info btn btn-xs btn-outline" id="edit_button_{{route.pk}}" type="button">{% trans "Reactivate" %}</a>
+											{% else %}
+												{% ifequal route.status 'OUTOFSYNC' %}
+													<a href="{% url edit-route route.name %}" class="btn-info btn btn-xs btn-outline" id="edit_button_{{route.pk}}">{% trans "ReSync" %}</a>
+												{% else %}
+													{% ifequal route.status 'ERROR' %}
+														<a href="{% url edit-route route.name %}" class="btn-info btn btn-xs btn-outline" id="edit_button_{{route.pk}}">{% trans "Fix it!" %}</a>
+													{% else %}
+													-
+													{% endifequal %}
+												{% endifequal %}
+											{% endif %}
+										{% endifequal %}
+										</div>
+                                        </div>
+                                    </div>
+                                </li>
+
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                	</div>
+                   <div class="col-lg-4">
+                	<div class="panel panel-default">
+                        <div class="panel-heading">
+                            <i class="fa fa-tags"></i> {% trans "Shortcuts" %}
+                        </div>
+                        <!-- /.panel-heading -->
+<div class="panel-body">
+				<a class="btn btn-sm btn-outline btn-success" id="routebutton" href="{% url add-route %}"><i class="fa fa-plus-circle"></i> {% trans "Add Rule" %}</a>
+				<a class="btn btn-sm btn-outline btn-primary"  href="{% url group-routes %}"><i class="fa fa-shield fa-fw"></i> {% trans "My Rules" %}</a>
+				<a class="btn btn-sm btn-outline btn-info"  href="{% url user-profile %}"><i class="fa fa-user"></i> {% trans "My Profile" %}</a>
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+
+                	<div class="chat-panel panel panel-info">
+                        <div class="panel-heading">
+                            <i class="fa fa-circle-o"></i> Live status
+                        </div>
+                        <!-- /.panel-heading -->
+<div class="panel-body">
+	{% include "polldash.html" %}
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                	</div>
+                	</div>
+
+
+
+
+{% endblock %}
+{% block pagejsbottom %}
+{% if user.is_authenticated %}
+<script type="text/javascript" src="{% url load-js 'pollerdash' %}"></script>
+{% endif %}
+<script type="text/javascript" src="{{STATIC_URL}}js/jquery.dataTables.js"></script>
+<script type="text/javascript" src="{{STATIC_URL}}js/datatables_bootstrap.js"></script>
+<script>
+var oldhtml;
+var last_element = false;
+var refreshUrl = "{% url group-routes-ajax %}";
+	$(document).ready( function(){
+		$('body').on('click', ".del_buttonpre", function(){
+            	var my = $(this);
+            	if (last_element != false){
+            		last_element.html(oldhtml);
+            	}
+            	oldhtml = my.parent().html();
+            	last_element = my.parent();
+            	var routename = $(this).data("routename");
+				var btn = '<a href="#" data-toggle="tooltip" title="This will deactivate your rule"  data-routename="'+routename+'" class="del_button btn btn-xs btn-warning"> {% trans "Deactivate" %}</a>'
+				var back = '<a href="#" class="revertbutton btn btn-xs btn-info"><i class="fa fa-undo"></i></a>';
+            	my.parent().html(back+" "+btn);
+            	return false;
+            });
+
+            $('body').on('click', ".del_button", function(){
+            	last_element = false;
+            	var my = $(this);
+            	my.html('Deactivating...')
+				var routename = $(this).data("routename");
+				var delurl = "{% url delete-route 'route_placeholder'%}".replace('route_placeholder', routename.toString());
+				$.ajax({
+        			type: 'POST',
+        			url: delurl,
+        			cache: false,
+        			success: function(data) {
+            		 
+	        		}
+	    		});
+				return false;
+			});
+			$('body').on('click', '.revertbutton', function () {
+            	var my = $(this);
+            	my.parent().html(oldhtml);
+            	last_element = false;
+            	return false;
+            });
+			$("body").tooltip({ selector: '[data-toggle="tooltip"]' });
+
+	});
+</script>
+
+
+{% endblock %}

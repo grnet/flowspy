@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-04-01 15:49+0300\n"
+"POT-Creation-Date: 2014-04-07 12:30+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Leonidas Poulopoulos <leopoul@grnet.gr>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -129,7 +129,7 @@ msgstr "Η port θα πρέπει να είναι < 65535 και >= 0"
 msgid "Port should be an integer"
 msgstr "Η port θα πρέπει να είναι ένας ακέραιος αριθμός"
 
-#: flowspec/models.py:128 templates/apply.html:237
+#: flowspec/models.py:128 templates/apply.html:242
 #: templates/user_routes.html:38 templates/overview/index.html:355
 #: templates/overview/index.html.py:383
 msgid "Name"
@@ -139,7 +139,7 @@ msgstr "Όνομα"
 msgid "Network address. Use address/CIDR notation"
 msgstr "Διεύθυνση δικτύου/υποδικτύου. Χρησιμοποιήστε σύνταξη διεύθυνσης/CIDR"
 
-#: flowspec/models.py:130 templates/apply.html:263
+#: flowspec/models.py:130 templates/apply.html:268
 msgid "Source Address"
 msgstr "Διεύθυνση Πηγής"
 
@@ -147,7 +147,7 @@ msgstr "Διεύθυνση Πηγής"
 msgid "Source Port"
 msgstr "Port Πηγής"
 
-#: flowspec/models.py:132 templates/apply.html:275
+#: flowspec/models.py:132 templates/apply.html:280
 msgid "Destination Address"
 msgstr "Διεύθυνση Προορισμού"
 
@@ -174,7 +174,7 @@ msgstr "Ενέργειες"
 msgid "Status"
 msgstr "Κατάσταση"
 
-#: flowspec/models.py:148 templates/apply.html:362 templates/dashboard.html:69
+#: flowspec/models.py:148 templates/apply.html:367 templates/dashboard.html:69
 #: templates/user_routes.html:43 templates/overview/index.html:388
 msgid "Expires"
 msgstr "Λήγει"
@@ -184,7 +184,7 @@ msgstr "Λήγει"
 msgid "Response"
 msgstr "Απόκριση Δικτύου"
 
-#: flowspec/models.py:150 templates/apply.html:376
+#: flowspec/models.py:150 templates/apply.html:381
 msgid "Comments"
 msgstr "Σχόλια"
 
@@ -196,7 +196,7 @@ msgstr "Λανθασμένη μορφή διεύθυνσης δικυου στο
 msgid "Invalid network address format at Source Field"
 msgstr "Λανθασμένη μορφή διεύθυνσης δικυου στο πεδίο Πηγή"
 
-#: flowspec/views.py:179
+#: flowspec/views.py:181
 msgid ""
 "Insufficient rights on administrative networks. Cannot add rule. Contact "
 "your administrator"
@@ -204,23 +204,23 @@ msgstr ""
 "Μη επαρκή δικαιώματα στα διαχειριστικά δίκτυα. Η προσθήκη φίλτρων δεν είναι "
 "εφικτή. Επικοινωνήστε με το διαχειριστή σας"
 
-#: flowspec/views.py:240
+#: flowspec/views.py:242
 #, python-format
 msgid "Insufficient rights to edit rule %s"
 msgstr "Μη επαρκή δικαιώματα για την επεξεργασία του φίλτρου %s"
 
-#: flowspec/views.py:252
+#: flowspec/views.py:254
 #, python-format
 msgid "Cannot edit a pending rule: %s."
 msgstr "Δεν είναι δυνατή η επεξεργασία ενός φίλτρου (%s) σε κατάσταση pending "
 
-#: flowspec/views.py:395
+#: flowspec/views.py:397
 msgid ""
 "Your idP should release the HTTP_EPPN attribute towards this service<br>"
 msgstr ""
 "Ο idP σας θα πρέπει να παρέχει την HTTP_EPPN παράμετερο στην υπηρεσία<br>"
 
-#: flowspec/views.py:399
+#: flowspec/views.py:401
 msgid ""
 "Your idP should release an appropriate HTTP_SHIB_EP_ENTITLEMENT attribute "
 "towards this service<br>"
@@ -228,7 +228,7 @@ msgstr ""
 "Ο idP σας θα πρέπει να παρέχει την HTTP_SHIB_EP_ENTITLEMENT παράμετερο στην "
 "υπηρεσία<br>"
 
-#: flowspec/views.py:401
+#: flowspec/views.py:403
 msgid ""
 "Your idP should release the HTTP_SHIB_INETORGPERSON_MAIL attribute towards "
 "this service"
@@ -236,7 +236,7 @@ msgstr ""
 "Ο idP σας θα πρέπει να παρέχει την HTTP_SHIB_INETORGPERSON_MAIL παράμετερο "
 "στην υπηρεσία<br>"
 
-#: flowspec/views.py:432 flowspec/views.py:540
+#: flowspec/views.py:434 flowspec/views.py:542
 #, python-format
 msgid ""
 "User account <strong>%s</strong> is pending activation. Administrators have "
@@ -250,19 +250,19 @@ msgstr ""
 "ενεργοποιηθεί για μεγάλο χρονικό διάστημα, επικοινωνήστε με τον τεχνικό σας "
 "υπέυθυνο ή το Helpdesk του ΕΔΕΤ."
 
-#: flowspec/views.py:436
+#: flowspec/views.py:438
 msgid ""
 "Something went wrong during user authentication. Contact your administrator"
 msgstr ""
 "Παρουσιάστηκε ένα σφάλμα κατά την είσοδο του χρήστη. Επικοινωνήστε με το "
 "διαχειριστή σας"
 
-#: flowspec/views.py:440
+#: flowspec/views.py:442
 #, python-format
 msgid "Invalid login procedure. Error: %s"
 msgstr "Εσφαλμένη διαδικασία εισόδου. Σφάλμα: %s"
 
-#: flowspec/views.py:530
+#: flowspec/views.py:532
 msgid ""
 "Violation warning: User account is already associated with an institution."
 "The event has been logged and our administrators will be notified about it"
@@ -299,7 +299,7 @@ msgstr "Επεξεργασία φίλτρου"
 msgid "Create new Rule"
 msgstr "Δημιουργία νέου Φίλτρου"
 
-#: templates/apply.html:16 templates/apply.html.py:210
+#: templates/apply.html:16 templates/apply.html.py:215
 msgid "Edit rule"
 msgstr "Επεξεργασία φίλτρου"
 
@@ -307,59 +307,59 @@ msgstr "Επεξεργασία φίλτρου"
 msgid "Create rule"
 msgstr "Δημιουργία φίλτρου"
 
-#: templates/apply.html:211
+#: templates/apply.html:216
 msgid "Apply for a new rule"
 msgstr "Αίτηση δημιουργίας νέου φίλτρου"
 
-#: templates/apply.html:249 templates/user_routes.html:42
+#: templates/apply.html:254 templates/user_routes.html:42
 #: templates/overview/index.html:387
 msgid "Applier"
 msgstr "Χρήστης"
 
-#: templates/apply.html:287
+#: templates/apply.html:292
 msgid "Protocol(s)"
 msgstr "Πρωτόκολλο"
 
-#: templates/apply.html:296
+#: templates/apply.html:301
 msgid "Fragment Type"
 msgstr ""
 
-#: templates/apply.html:308
+#: templates/apply.html:313
 msgid ""
 "Select source/destination port(s), or select common port(s) for both source/"
 "destination"
 msgstr ""
 
-#: templates/apply.html:311
+#: templates/apply.html:316
 msgid "Src. Port(s)"
 msgstr "Port Πηγής"
 
-#: templates/apply.html:317
+#: templates/apply.html:322
 msgid "Dest. Port(s)"
 msgstr "Port Προορισμού"
 
-#: templates/apply.html:323
+#: templates/apply.html:328
 #, fuzzy
 msgid "Port(s)"
 msgstr "Port Πηγής"
 
-#: templates/apply.html:333
+#: templates/apply.html:338
 msgid "Add Port"
 msgstr "Νέα port"
 
-#: templates/apply.html:337
+#: templates/apply.html:342
 msgid "Add New Port"
 msgstr "Νέα port"
 
-#: templates/apply.html:339 templates/apply.html.py:398
+#: templates/apply.html:344 templates/apply.html.py:403
 msgid "Add new port"
 msgstr "Νέα port"
 
-#: templates/apply.html:350
+#: templates/apply.html:355
 msgid "Then Actions"
 msgstr "Ενέργειες Φίλτρου"
 
-#: templates/apply.html:389 templates/registration/activate_edit.html:58
+#: templates/apply.html:394 templates/registration/activate_edit.html:58
 #: templates/registration/select_institution.html:53
 msgid "Apply"
 msgstr "Εφαρμογή"
@@ -389,7 +389,7 @@ msgid "Logout"
 msgstr "Έξοδος"
 
 #: templates/base.html:148 templates/base.html.py:154
-#: templates/welcome.html:47 templates/b3theme/base.html:103
+#: templates/welcome.html:73 templates/b3theme/base.html:103
 msgid "Shibboleth Login"
 msgstr "Είσοδος με Shibboleth"
 
@@ -517,7 +517,7 @@ msgstr "ΕΔΕΤ"
 msgid "Info"
 msgstr "Πληροφορίες"
 
-#: templates/footer.html:11 templates/welcome.html:38
+#: templates/footer.html:11 templates/welcome.html:64
 msgid "Service Terms"
 msgstr "Όροι Χρήσης"
 
@@ -540,9 +540,9 @@ msgid ""
 msgstr ""
 
 #: templates/profile.html:64 templates/overview/index.html:353
-#, fuzzy
+#: templates/overview/login.html:53
 msgid "Username"
-msgstr "Χρήστες"
+msgstr "Όνομα χρήστη"
 
 #: templates/profile.html:65
 msgid "First name"
@@ -588,45 +588,45 @@ msgstr "Λήξη Φίλτρου"
 msgid "Resync"
 msgstr ""
 
-#: templates/welcome.html:3
+#: templates/welcome.html:3 templates/overview/login.html:71
 msgid "Login"
 msgstr "Είσοδος"
 
-#: templates/welcome.html:27
-msgid "Welcome to GRNET's FoD service."
-msgstr "Καλωσήρθατε στην υπηρεσία FoD του ΕΔΕΤ."
+#: templates/welcome.html:35
+msgid "Join Now"
+msgstr ""
 
-#: templates/welcome.html:36
+#: templates/welcome.html:62
 msgid "What"
 msgstr "Τι"
 
-#: templates/welcome.html:37
+#: templates/welcome.html:63
 msgid "If you are new to the service, take some time to read the"
 msgstr "Εάν χρησιμοποιείτε την υπηρεσία για πρώτη φορά, δείτε την"
 
-#: templates/welcome.html:37
+#: templates/welcome.html:63
 msgid "Service Description"
 msgstr "Περιγραφή της Υπηρεσίας"
 
-#: templates/welcome.html:38
+#: templates/welcome.html:64
 msgid "Before asking why? take some time to look at the"
 msgstr "Πριν ρωτήσετε γιατί; διαβάστε την ενότητα"
 
-#: templates/welcome.html:42
+#: templates/welcome.html:68
 msgid "How"
 msgstr "Πως"
 
-#: templates/welcome.html:43
+#: templates/welcome.html:69
 msgid "If you have properly set your Shibboleth attributes, you may proceed"
 msgstr ""
 "Έαν έχετε ορίσει ορθά τις απαιτούμενες παραμέτρους του Shibboleth, μπορείτε "
 "να συνεχίσετε"
 
-#: templates/welcome.html:52
+#: templates/welcome.html:78
 msgid "Help"
 msgstr "Βοήθεια"
 
-#: templates/welcome.html:54
+#: templates/welcome.html:79
 msgid ""
 "For troubleshooting info and remarks do not hesitate to contact GRNET's "
 "Helpdesk."
@@ -665,9 +665,13 @@ msgstr "Απενεργοποίηση"
 msgid "Key Expired"
 msgstr "Λήξη Φίλτρου"
 
-#: templates/overview/login.html:3 templates/overview/login.html.py:14
+#: templates/overview/login.html:19 templates/overview/login.html.py:28
 msgid "Overview Login"
 msgstr "Εισόδος στην Επισκόπηση"
+
+#: templates/overview/login.html:61
+msgid "Password"
+msgstr ""
 
 #: templates/registration/activate.html:4
 #: templates/registration/activate.html:21
@@ -709,3 +713,6 @@ msgstr "Ολοκλήρωση ενεργοποίησης"
 #: templates/registration/activation_complete.html:34
 msgid "The user will be notified about his/her account activation"
 msgstr "Ο χρήστης θα ενημερωθεί για την ενεργοποίηση του λογαριασμού"
+
+#~ msgid "Welcome to GRNET's FoD service."
+#~ msgstr "Καλωσήρθατε στην υπηρεσία FoD του ΕΔΕΤ."

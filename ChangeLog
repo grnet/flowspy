@@ -1,4 +1,12 @@
 ===========
+1.0.1 RELEASE
+Minor fixes
+
+Fixes:
+	-Overview login theme
+	-Add missing urls
+
+===========
 1.0.0 RELEASE
 Major UI redesign, Debian Wheezy version, Django 1.4
 

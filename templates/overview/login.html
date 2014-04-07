@@ -1,54 +1,82 @@
-{% extends "base.html" %} 
+{% extends "b3theme/base.html" %}
+{% load widget_tweaks %}
 {% load i18n %}
-{% block title %}{% trans "Overview Login" %}{% endblock %}
+   {% block extraheadbottom %}
+<style>
+	@media (min-width: 768px) {
+		#page-wrapper {
+		    border-left: none;
+		    margin: 0;
+		}
+}
+.errorlist{
+	list-style: none outside none;
+}
+</style>
+{% endblock %}
+{% block title %}
+	
+		{% trans "Overview Login" %}
 
-    {% block content %}
-    <div class="container-fluid">
-      <div class="row-fluid">
-        <div class="span2">
-        </div><!--/span-->
+{% endblock %}
 
-        <div class="span10">
-            <div class="row-fluid">
-                <!--/span-->
-                <h3 class="muted">{% trans "Overview Login" %}</h3>
-                <hr>
-                    
-                    <form class="form-horizontal" method="post"
-                            action="{% url altlogin %}">
-    
-                            {% if form.non_field_errors %} {% for err in form.non_field_errors %}
-                            <div class="control-group error ">
-                                <div class="controls error">
-                                    <span style="color: #B94A48;">{{err}}</span>
-                                </div>
-                            </div>
-                            {% endfor %} {% endif %} {% csrf_token %}
-                            <div class="control-group {% if form.username.errors %} error {% endif %}">
-                                <label class="control-label" for="id_username">Username</label>
-                                <div class="controls">
-                                    {{ form.username }} {% if form.username.errors %} <span class="help-inline"> {{ form.username.errors|join:", "}} </span> {% endif %}
-                                </div>
-                            </div>
-                            <div class="control-group {% if form.password.errors %} error {% endif %}">
-                                <label class="control-label" for="id_password">Password</label>
-                                <div class="controls">
-                                    {{ form.password }} {% if form.password.errors %} <span
-                                        class="help-inline"> {{ form.password.errors|join:", "}} </span> {% endif %}
-                                </div>
-                            </div>
-                            <div class="control-group">
-                                <div class="controls">
-                                    <button type="submit" class="btn">Sign in</button>
-                                    <input type="hidden" name="next" value="{% url overview %}" />
-                                </div>
-                            </div>
-                        </form>
-                <!--/span-->
-            </div><!--/row-->
-        </div><!--/span-->
 
-        </div><!--/span-->
-    </div><!--/.fluid-container-->
+    {% block contentplaceholder %}
+    <div class="container">
+    <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">{% trans "Overview Login" %}</h1>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            
+            
+<div class="row">
+                <div class="col-lg-8">
+                	<div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <i class="fa fa-user fa-fw"></i> Login
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+    <form class="form-horizontal" method="post" action="{% url altlogin %}" role="form">     
+        
+            {% csrf_token %}
+            {% load unescape %}
+            {% if form.non_field_errors %}
+            <div class="form-group {% if form.non_field_errors %} has-error {% endif %}" style="color: #A94442;">
+            	{{ form.non_field_errors|unescape}}
+            	</div>
+            {% endif %}
+               
+                 <div class="form-group {% if form.username.errors %} has-error {% endif %}">
+        <label for="id_username" class="col-md-2 control-label"><b>{% trans "Username" %}</b></label>
+        <div class="col-md-8">
+            {% render_field form.username class+="form-control"  %}
+            {% if form.username.errors %} <span class="help-block"> {{ form.username.errors|join:", " }} </span>
+            {% endif %}
+        </div>
+        </div>
+        <div class="form-group {% if form.password.errors %} has-error {% endif %}">
+        <label for="id_password" class="col-md-2 control-label"><b>{% trans "Password" %}</b></label>
+        <div class="col-md-8">
+            {% render_field form.password class+="form-control" %}
+            {% if form.password.errors %} <span class="help-block"> {{ form.password.errors|join:", " }} </span>
+            {% endif %}
+        </div>
+        </div>
+        			 <div class="form-group">
+			 	<div class="col-md-2"></div>
+			 	 <div class="col-md-8">
+			<button type="submit" id="applybutton" value="{% trans 'Login' %}" class="btn btn-md btn-primary">Login</button>
+				</div>
+			</div>
+        
+            </form>
+            </div>
+            </div>  
+            </div>  
+            </div>          
+           </div>
     {% endblock %}
 

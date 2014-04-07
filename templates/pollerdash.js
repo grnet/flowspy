@@ -28,7 +28,9 @@ function newMessage(form) {
     var message = form.formToDict();
     var disabled = form.find("input[type=submit]");
     disabled.disable();
-    $.postJSON("{% url fetch-new %}", message, function(response) {
+    var date = new Date();
+	var timestamp = date.getTime();
+    $.postJSON("{% url fetch-new %}?="+timestamp, message, function(response) {
 	updater.showMessage(response);
 	if (message.id) {
 	    form.parent().remove();
@@ -45,7 +47,7 @@ function getCookie(name) {
 }
 
 jQuery.postJSON = function(url, args, callback) {
-    $.ajax({url: url, dataType: "json", type: "POST",
+    $.ajax({url: url, dataType: "json", type: "POST", cache: false,
 	    success: function(response) {
 	if (callback) callback(response);
     }, error: function(response) {
@@ -81,7 +83,9 @@ var updater = {
     errorSleepTime: 500,
     cursor: null,
     start: function() {
-		$.ajax({url: "{% url fetch-existing %}", type: "POST", dataType: "json",
+    	var date = new Date();
+	var timestamp = date.getTime();
+		$.ajax({url: "{% url fetch-existing %}?="+timestamp, type: "POST", dataType: "json", cache: false,
     		success: updater.onFetchExisting,
     		error: updater.onError});
         },
@@ -92,7 +96,10 @@ var updater = {
     		window.setTimeout('location.reload()', 500);
     	}
     	timeout = {{timeout}};
-    	$.ajax({url: "{% url fetch-updates %}", type: "POST", dataType: "json",
+    	var date = new Date();
+	var timestamp = date.getTime();
+			
+    	$.ajax({url: "{% url fetch-updates %}?="+timestamp, type: "POST", dataType: "json", cache: false,
     		success: updater.onSuccess,
     		timeout: timeout,
     		error: updater.onError});

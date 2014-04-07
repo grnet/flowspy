@@ -1,23 +1,19 @@
-{% extends "base.html" %}
-
+{% extends "b3theme/base.html" %}
+{% block sidenav %}{% endblock %}
 {% load i18n %}
     {% block title %}{{ flatpage.title }}{% endblock %}
-     {% block breadcrumbs %}
- <li class="active"><span class="divider">/</span>
-	
-	{% trans flatpage.title %}
-</li>
+{% block extraheadbottom %}
+<style>
+	@media (min-width: 768px) {
+		#page-wrapper {
+		    border-left: none;
+		    margin: 0;
+		}
+}
+</style>
 {% endblock %}
-    {% block extrahead %}
-    <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
-	<META HTTP-EQUIV="Expires" CONTENT="-1">
-    <style type="text/css">
-      
-      .headtitle {font-family: "Franklin Gothic Demi", "Franklin Gothic", "ITC Franklin Gothic", Arial, sans-serif; letter-spacing: -1px; }
-    </style>
-    <script type="text/javascript" src="{{STATIC_URL}}js/jquery.min.js"></script>
- 
-<script type="text/javascript">
+    {% block pagejsbottom %}
+    <script type="text/javascript">
 
         function setlang(lang) {
                 $("#langsel").val(lang);
@@ -34,15 +30,42 @@
                 
         }
 </script>
-    
+    {% endblock %}
 
+    {% block extrahead %}
+    <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+	<META HTTP-EQUIV="Expires" CONTENT="-1">
+    
 {% endblock %}
 
-		{% block content %}
-			<h4 class='muted'>{{ flatpage.title }}</h4>
-			<hr>
-			<div class="span9">
-			{{ flatpage.content|linebreaks }}
-			</div>
+		{% block contentplaceholder %}
+		
+		<div class="container">
+    <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">{{ flatpage.title }}</h1>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+		
+		
+            
+<div class="row">
+                <div class="col-lg-8">
+                	<div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <i class="fa fa-info fa-fw"></i> {{ flatpage.title }}
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                        	
+            {{ flatpage.content|linebreaks }}
+            </div>
+            </div>  
+            </div>  
+            </div>          
+           </div>
+		
+			
 		{% endblock %}
 

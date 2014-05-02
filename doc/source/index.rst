@@ -30,7 +30,7 @@ In GRNET's case the flowspec capable device is an EX4200.
 	Make sure your FoD server has ssh access to your flowspec device.
 
 .. attention::
-   Installation instructions assume a Debian Wheezy installation with Django 1.4
+   Installation instructions assume a clean Debian Wheezy with Django 1.4
    
 Contact
 =======

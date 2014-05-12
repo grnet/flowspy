@@ -55,7 +55,7 @@ class Retriever(object):
             self.filter = settings.ROUTE_FILTER%route_name
     
     def fetch_xml(self):
-        with manager.connect(host=self.device, port=self.port, username=self.username, password=self.password, unknown_host_cb=fod_unknown_host_cb) as m:
+        with manager.connect(host=self.device, port=self.port, username=self.username, password=self.password, hostkey_verify=False) as m:
             xmlconfig = m.get_config(source='running', filter=('subtree',self.filter)).data_xml
         return xmlconfig
     
@@ -194,7 +194,7 @@ class Applier(object):
         commit_confirmed_is_successful = False
         commit_is_successful = False
         if configuration:
-            with manager.connect(host=self.device, port=830, username=self.username, password=self.password, unknown_host_cb=fod_unknown_host_cb) as m:
+            with manager.connect(host=self.device, port=self.port, username=self.username, password=self.password, hostkey_verify=False) as m:
                 assert(":candidate" in m.server_capabilities)
                 with m.locked(target='candidate'):
                     m.discard_changes()

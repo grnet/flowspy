@@ -1,4 +1,12 @@
 ===========
+1.0.3 RELEASE
+Minor fixes. Check documentation for peers table handling
+
+	- Fix issue with altlogin redirection
+	- Switch peers primary key to AutoField
+	- Make peers tables management configurable
+
+===========
 1.0.2 RELEASE
 Documentation enhancements
 

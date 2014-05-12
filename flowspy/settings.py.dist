@@ -318,6 +318,14 @@ TINYMCE_DEFAULT_CONFIG = {
 import _version
 SW_VERSION = _version.VERSION
 
-LOG_FILE_LOCATION = here("../log")
+LOG_FILE_LOCATION = "/var/log/fod"
+
+# Change the following values only if you know what you are doing!!!
+# To integrate FoD with tables (Peer, Networks, Contacts) 
+# from your CRM platform, set the following values to False and create the views that are 
+# exact matches of the tables in peers/models.py
+PEER_MANAGED_TABLE = True
+PEER_RANGE_MANAGED_TABLE = True
+PEER_TECHC_MANAGED_TABLE = True
 
 

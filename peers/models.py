@@ -19,6 +19,7 @@
 from django.db import models
 from utils.whois import *
 from django.contrib.auth.models import User
+from django.conf import settings
 
 class PeerRange(models.Model):
     network = models.CharField(max_length=128)
@@ -27,6 +28,7 @@ class PeerRange(models.Model):
     class Meta:
         db_table = u'peer_range'
         ordering = ['network']
+        managed = settings.PEER_RANGE_MANAGED_TABLE
 
 class TechcEmail(models.Model):
     email = models.CharField(max_length=352, db_column="email")
@@ -34,9 +36,10 @@ class TechcEmail(models.Model):
         return self.email
     class Meta:
         db_table="techc_email"
+        managed = settings.PEER_TECHC_MANAGED_TABLE
 
 class Peer(models.Model):
-    peer_id = models.IntegerField(primary_key=True)
+    peer_id = models.AutoField(primary_key=True)
     peer_name = models.CharField(max_length=128)
     peer_as = models.IntegerField()
     peer_tag = models.CharField(max_length=64)
@@ -49,6 +52,7 @@ class Peer(models.Model):
     class Meta:
         db_table = u'peer'
         ordering = ['peer_name']
+        managed = settings.PEER_MANAGED_TABLE
 
         
     def fill_networks(self):

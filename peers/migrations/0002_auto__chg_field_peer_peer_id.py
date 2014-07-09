@@ -5,10 +5,21 @@ from south.v2 import SchemaMigration
 from django.db import models
 
 
+# Probably due to a MySQL bug, the AutoField is not created properly and raises a 
+# "Warning 1364: Field 'peer_id' doesn't have a default value" exception on inserts via Django admin.
+# This does not make sense... No exception comes up once insterts are done via MySQL cli or phpmyadmin
+# What seems to cause this issue is a South generated sql query: 
+# ALTER TABLE `peer` ALTER COLUMN `peer_id` DROP DEFAULT;
+# will have to override _alter_set_defaults
+def new_alter_columns_set_default(field, name, params, sqls):
+    return
+
+db._alter_set_defaults = new_alter_columns_set_default
+
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-
+        
         # Changing field 'Peer.peer_id'
         db.alter_column(u'peer', 'peer_id', self.gf('django.db.models.fields.AutoField')(primary_key=True))
 

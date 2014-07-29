@@ -17,4 +17,49 @@
 		        </div>
 		</div>
     </form>
-
+<script>
+$(document).ready( function(){
+	$('#addportbtn').click(function(){
+		$.ajax({
+		url:"{% url add-port %}", 
+		data:$("#add_port_form").serialize(),
+		type: "POST",
+		cache: false,
+		success:function(data){
+				try {
+					value = data.value;
+					text = data.text;
+					if (typeof value === 'undefined' && typeof text === 'undefined'){
+						$('#port_diag').html(data);	
+					}
+					else{
+						$('#id_port').append($("<option></option>").attr("value",value).text(text));
+						$('#id_destinationport').append($("<option></option>").attr("value",value).text(text));
+						$('#id_sourceport').append($("<option></option>").attr("value",value).text(text));
+						$('#port_diag').html('');
+						$('#addnewport').hide();
+						$(".new_port").show();
+						reArrangeSelect2("id_sourceport");
+						reArrangeSelect2("id_destinationport");
+						reArrangeSelect2("id_port");
+					}
+				}
+				catch (exception) {
+					$('#port_diag').html(data);
+				}					
+			}
+			});
+	});
+	$('#canceladdportbtn').click(function(){
+		$('#port_diag').html('');
+		$('#addnewport').hide();
+		$(".new_port").show();
+	});
+	
+		function reArrangeSelect2(elementId) {
+	   $("#"+elementId).html($("#"+elementId+" option").sort(function(a, b) {
+			return parseInt(a.text) == parseInt(b.text) ? 0 : parseInt(a.text) < parseInt(b.text) ? -1 : 1
+		}));
+	}
+});
+			</script>

@@ -23,6 +23,7 @@
     <link href="{{STATIC_URL}}b3theme/css/plugins/morris/morris-0.4.3.min.css" rel="stylesheet">
     <link href="{{STATIC_URL}}b3theme/css/plugins/timeline/timeline.css" rel="stylesheet">
     <link href="{{STATIC_URL}}datepicker/css/datepicker.css" rel="stylesheet">
+   
 {% endblock %}
 
 {% block extraheadbottom %}
@@ -74,17 +75,36 @@
 }
 
 </style>
+ <link href="{{STATIC_URL}}js/select2/select2.css" rel="stylesheet">
+ <link href="{{STATIC_URL}}js/select2/select2-bootstrap.css" rel="stylesheet">
 {% endblock %}
 
 {% block pagejsbottom %}
 <script type="text/javascript" src="{{STATIC_URL}}datepicker/js/bootstrap-datepicker.js"></script>
+<script type="text/javascript" src="{{STATIC_URL}}js/select2/select2.js"></script>
 <script>
 	$(document).ready( function(){
+		$('#id_then').removeAttr("multiple");
+		$("#id_protocol").select2();
+		$("#id_fragmenttype").select2();
+		$("#id_then").select2();
 		
+		reArrangeSelect("id_sourceport");
+		$("#id_sourceport").select2({
+			placeholder: "Source Port(s)"
+		});
+		reArrangeSelect("id_destinationport");
+		$("#id_destinationport").select2({
+			placeholder: "Destination Port(s)"
+		});
+		reArrangeSelect("id_port");
+		$("#id_port").select2({
+			placeholder: "Port(s)"
+		});
 		$('#id_expires').datepicker({
 			startDate: '+1d',
 			endDate: '+10d'
-		})
+		});
 		$('#setFromAll').click(function(){
 			$("#id_source").val('0.0.0.0/0');
 		});
@@ -160,47 +180,11 @@
 				return false;
 			});
 			
-			$('body').on('click', "#addportbtn", function(){
-			$.ajax({
-			url:"{% url add-port %}", 
-			data:$("#add_port_form").serialize(),
-			type: "POST",
-			cache: false,
-			success:function(data){
-					try {
-						value = data.value;
-						text = data.text;
-						if (typeof value === 'undefined' && typeof text === 'undefined'){
-							$('#port_diag').html(data);	
-						}
-						else{
-							$('#id_port').append($("<option></option>").attr("value",value).text(text));
-							$('#id_destinationport').append($("<option></option>").attr("value",value).text(text));
-							$('#id_sourceport').append($("<option></option>").attr("value",value).text(text));
-							$('#port_diag').html('');
-							$('#addnewport').hide();
-							$(".new_port").show();
-						}
-					}
-					catch (exception) {
-						$('#port_diag').html(data);
-					}					
-				}
-				});
-			
-			});
-			$('body').on('click', "#canceladdportbtn", function(){
-				$('#port_diag').html('');
-				$('#addnewport').hide();
-				$(".new_port").show();
-			});
-			{% comment %}
 			function reArrangeSelect(elementId) {
  			   $("#"+elementId).html($("#"+elementId+" option").sort(function(a, b) {
-        			return int(a.text) == int(b.text) ? 0 : int(a.text) < int(b.text) ? -1 : 1
+        			return parseInt(a.text) == parseInt(b.text) ? 0 : parseInt(a.text) < parseInt(b.text) ? -1 : 1
     			}));
 			}
-			{% endcomment %}
 	});
 		
 </script>

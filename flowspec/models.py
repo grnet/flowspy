@@ -181,13 +181,13 @@ class Route(models.Model):
                 raise ValidationError(_('Invalid network address format at Source Field'))
    
     def commit_add(self, *args, **kwargs):
-        peer = self.applier.get_profile().peer.domain_name
+        peer = self.applier.get_profile().peer.peer_tag
         send_message("[%s] Adding rule %s. Please wait..." %(self.applier.username, self.name), peer)
         response = add.delay(self)
         logger.info("Got add job id: %s" %response)
         
     def commit_edit(self, *args, **kwargs):
-        peer = self.applier.get_profile().peer.domain_name
+        peer = self.applier.get_profile().peer.peer_tag
         send_message("[%s] Editing rule %s. Please wait..." %(self.applier.username, self.name), peer)
         response = edit.delay(self)
         logger.info("Got edit job id: %s" %response)
@@ -198,7 +198,7 @@ class Route(models.Model):
         if "reason" in kwargs:
             reason = kwargs['reason']
             reason_text = "Reason: %s. " %reason
-        peer = self.applier.get_profile().peer.domain_name
+        peer = self.applier.get_profile().peer.peer_tag
         send_message("[%s] Suspending rule %s. %sPlease wait..." %(self.applier.username, self.name, reason_text), peer)
         response = delete.delay(self, reason=reason)
         logger.info("Got delete job id: %s" %response)

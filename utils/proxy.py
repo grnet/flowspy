@@ -24,6 +24,7 @@ from django.conf import settings
 import logging
 from django.core.cache import cache
 import os
+from celery.exceptions import TimeLimitExceeded, SoftTimeLimitExceeded
 
 cwd = os.getcwd()
     
@@ -204,6 +205,14 @@ class Applier(object):
                         logger.info("Successfully edited @ %s" % self.device)
                         if not edit_is_successful:
                             raise Exception()
+                    except SoftTimeLimitExceeded:
+                        cause="Task timeout"
+                        logger.error(cause)
+                        return False, cause
+                    except TimeLimitExceeded:
+                        cause="Task timeout"
+                        logger.error(cause)
+                        return False, cause
                     except Exception as e:
                         cause="Caught edit exception: %s %s" %(e,reason)
                         cause=cause.replace('\n', '')
@@ -221,11 +230,20 @@ class Applier(object):
                                 logger.info("Successfully confirmed committed @ %s" % self.device)
                                 if not settings.COMMIT:
                                     return True, "Successfully confirmed committed"
+                        except SoftTimeLimitExceeded:
+                            cause="Task timeout"
+                            logger.error(cause)
+                            return False, cause
+                        except TimeLimitExceeded:
+                            cause="Task timeout"
+                            logger.error(cause)
+                            return False, cause
                         except Exception as e:
                             cause="Caught commit confirmed exception: %s %s" %(e,reason)
                             cause=cause.replace('\n', '')
                             logger.error(cause)
                             return False, cause
+                        
                         if settings.COMMIT:
                             if edit_is_successful and commit_confirmed_is_successful:
                                 try:
@@ -242,6 +260,14 @@ class Applier(object):
                                     else:
                                         logger.info("Successfully cached device configuration")
                                         return True, "Successfully committed"
+                                except SoftTimeLimitExceeded:
+                                    cause="Task timeout"
+                                    logger.error(cause)
+                                    return False, cause
+                                except TimeLimitExceeded:
+                                    cause="Task timeout"
+                                    logger.error(cause)
+                                    return False, cause
                                 except Exception as e:
                                     cause="Caught commit exception: %s %s" %(e,reason)
                                     cause=cause.replace('\n', '')

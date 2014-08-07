@@ -42,6 +42,7 @@ class Peer(models.Model):
     peer_id = models.AutoField(primary_key=True)
     peer_name = models.CharField(max_length=128)
     peer_as = models.IntegerField()
+    # This needs to be converted to slug and an info message needs to be added.
     peer_tag = models.CharField(max_length=64)
     domain_name = models.CharField(max_length=128, null=True, blank=True)
     networks = models.ManyToManyField(PeerRange, null=True, blank=True)

@@ -4,16 +4,6 @@ $(document).ready(function() {
     if (!window.console) window.console = {};
     if (!window.console.log) window.console.log = function() {};
 
-    $("#messageform").on("submit", function() {
-	newMessage($(this));
-	return false;
-    });
-    $("#messageform").on("keypress", function(e) {
-	if (e.keyCode == 13) {
-	    newMessage($(this));
-	    return false;
-	}
-    });
     $("#message").select();
     {% if user.is_authenticated %}
     updater.start();
@@ -22,24 +12,6 @@ $(document).ready(function() {
     {% endif %}
 });
 
-
-
-function newMessage(form) {
-    var message = form.formToDict();
-    var disabled = form.find("input[type=submit]");
-    disabled.disable();
-    var date = new Date();
-	var timestamp = date.getTime();
-    $.postJSON("{% url fetch-new %}?="+timestamp, message, function(response) {
-	updater.showMessage(response);
-	if (message.id) {
-	    form.parent().remove();
-	} else {
-	    form.find("input[type=text]").val("").select();
-	    disabled.enable();
-	}
-    });
-}
 
 function getCookie(name) {
     var r = document.cookie.match("\\b" + name + "=([^;]*)\\b");

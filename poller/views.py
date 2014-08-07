@@ -19,6 +19,7 @@
 from gevent import monkey
 monkey.patch_all()
 from gevent.pool import Pool
+import gevent
 import json
 
 import uuid
@@ -31,17 +32,20 @@ from django.conf import settings
 #from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
-
+from django.conf import settings
 
 import beanstalkc
 
 import logging
+import os
 
-FORMAT = '%(asctime)s %(levelname)s: %(message)s'
-logging.basicConfig(format=FORMAT)
+LOG_FILENAME = os.path.join(settings.LOG_FILE_LOCATION, 'poller.log')
+formatter = logging.Formatter('%(asctime)s %(levelname)s: %(message)s')
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
-
+handler = logging.FileHandler(LOG_FILENAME)
+handler.setFormatter(formatter)
+logger.addHandler(handler)
 
 def create_message(message, user, time):
     data = {'id': str(uuid.uuid4()), 'body': message, 'user':user, 'time':time}
@@ -55,6 +59,12 @@ def json_response(value, **kwargs):
 
 class Msgs(object):
     cache_size = 500
+    
+    _instance = None
+    def __new__(cls, *args, **kwargs):
+        if not cls._instance:
+            cls._instance = super(Msgs, cls).__new__(cls, *args, **kwargs)
+        return cls._instance
 
     def __init__(self):
         logger.info("initializing")
@@ -73,7 +83,7 @@ class Msgs(object):
     def message_existing(self, request):
         if request.is_ajax():
             try:
-                user = request.user.get_profile().peer.domain_name
+                user = request.user.get_profile().peer.peer_tag
             except:
                 user = None
                 return False
@@ -94,6 +104,7 @@ class Msgs(object):
         if mesg:
             message = mesg['message']
             user = mesg['username']
+            logger.info("from %s" %user)
             now = datetime.datetime.now()
             msg = create_message(message, user, now.strftime("%Y-%m-%d %H:%M:%S"))
         try:
@@ -119,7 +130,7 @@ class Msgs(object):
         if request.is_ajax():
             cursor = {}
             try:
-                user = request.user.get_profile().peer.domain_name
+                user = request.user.get_profile().peer.peer_tag
             except:
                 user = None
                 return False
@@ -145,29 +156,28 @@ class Msgs(object):
                     self.user_cursor[user] = self.user_cache[user][-1]['id']
         return HttpResponseRedirect(reverse('group-routes'))
 
-    def monitor_polls(self, polls=None):
+    def monitor_polls(self):
         b = beanstalkc.Connection()
         b.watch(settings.POLLS_TUBE)
         while True:
             job = b.reserve()
             msg = json.loads(job.body)
             job.bury()
+            logger.info("Got New message")
             self.message_new(msg)
             
     
     def start_polling(self):
         logger.info("Start Polling")
-        p = Pool(10)
-        while True:
-            p.spawn(self.monitor_polls)
+        gevent.spawn(self.monitor_polls)
+
             
 msgs = Msgs()
 main = msgs.main
 
-message_new = msgs.message_new
 message_updates = msgs.message_updates
 message_existing = msgs.message_existing
 
+
 poll = msgs.start_polling
 poll()
-

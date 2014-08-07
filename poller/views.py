@@ -16,8 +16,6 @@
 # ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
 # SOFTWARE.
 
-from gevent import monkey
-monkey.patch_all()
 from gevent.pool import Pool
 import gevent
 import json

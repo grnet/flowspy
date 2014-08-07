@@ -98,20 +98,12 @@ def dashboard(request):
 @login_required
 @never_cache
 def group_routes(request):
-    group_routes = []
     try:
         peer = request.user.get_profile().peer
     except UserProfile.DoesNotExist:
         error = "User <strong>%s</strong> does not belong to any peer or organization. It is not possible to create new firewall rules.<br>Please contact Helpdesk to resolve this issue" % request.user.username
         return render_to_response('error.html', {'error': error}, context_instance=RequestContext(request))
-    if peer:
-       peer_members = UserProfile.objects.filter(peer=peer)
-       users = [prof.user for prof in peer_members]
-       group_routes = Route.objects.filter(applier__in=users)
-       if request.user.is_superuser:
-           group_routes = Route.objects.all()
-       return render_to_response('user_routes.html', {'routes': group_routes},
-                              context_instance=RequestContext(request))
+    return render_to_response('user_routes.html', context_instance=RequestContext(request))
 
 @login_required
 @never_cache
@@ -164,6 +156,10 @@ def build_routes_json(groutes):
         rd['then'] = r.get_then()
         rd['status'] = r.status
         rd['applier'] = r.applier.username
+        try:
+            rd['peer'] = r.applier.get_profile().peer.peer_name
+        except UserProfile.DoesNotExist:
+            rd['peer'] = ''
         rd['expires'] = "%s" %r.expires
         rd['response'] = "%s" %r.response
         routes.append(rd)
@@ -212,7 +208,7 @@ def add_route(request):
             route.commit_add()
             requesters_address = request.META['HTTP_X_FORWARDED_FOR']
             fqdn = Site.objects.get_current().domain
-            admin_url = "https://%s%s" % (fqdn, "/fod/edit/%s"%route.name)
+            admin_url = "https://%s%s" % (fqdn, reverse("edit-route", kwargs={'route_slug': route.name }))
             mail_body = render_to_string("rule_action.txt",
                                              {"route": route, "address": requesters_address, "action": "creation", "url": admin_url})
             user_mail = "%s" %route.applier.email
@@ -285,7 +281,7 @@ def edit_route(request, route_slug):
                 route.commit_edit()
                 requesters_address = request.META['HTTP_X_FORWARDED_FOR']
                 fqdn = Site.objects.get_current().domain
-                admin_url = "https://%s%s" % (fqdn, "/fod/edit/%s"%route.name)
+                admin_url = "https://%s%s" % (fqdn, reverse("edit-route", kwargs={'route_slug': route.name }))
                 mail_body = render_to_string("rule_action.txt",
                                              {"route": route, "address": requesters_address, "action": "edit", "url": admin_url})
                 user_mail = "%s" %route.applier.email
@@ -337,7 +333,7 @@ def delete_route(request, route_slug):
             route.commit_delete()
             requesters_address = request.META['HTTP_X_FORWARDED_FOR']
             fqdn = Site.objects.get_current().domain
-            admin_url = "https://%s%s" % (fqdn, "/fod/edit/%s"%route.name)
+            admin_url = "https://%s%s" % (fqdn, reverse("edit-route", kwargs={'route_slug': route.name }))
             mail_body = render_to_string("rule_action.txt",
                                              {"route": route, "address": requesters_address, "action": "removal", "url": admin_url})
             user_mail = "%s" %route.applier.email

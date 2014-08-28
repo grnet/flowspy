@@ -9,6 +9,15 @@ Debian Wheezy (x64) - Django 1.4.x
 ==================================
 This guide assumes that installation is carried out in /srv/flowspy directory. If other directory is to be used, please change the corresponding configuration files. It is also assumed that the root user will perform every action.
 
+
+Upgrading from v<1.1.x
+----------------------
+If upgrading from flowspy version <1.1.x pay attention to settings.py changes. Also, do not forget to run::
+    
+    ./manage.py migrate 
+    
+to catch-up with latest database changes.
+
 Upgrading from v<1.0.x
 ----------------------
 If upgrading from flowspy version <1.0.x pay attention to settings.py changes. Also, do not forget to run::
@@ -490,6 +499,7 @@ You are not far away from deploying FoD. When asked for a super user, create one
 
     cd /srv/flowspy
     python manage.py syncdb
+    python manage.py migrate longerusername
     python manage.py migrate flowspec
     python manage.py migrate djcelery
     python manage.py migrate accounts

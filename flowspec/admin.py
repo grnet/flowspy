@@ -27,8 +27,8 @@ from peers.models import *
 from flowspec.forms import *
 import datetime
 from django.conf import settings
+from longerusername.forms import UserCreationForm, UserChangeForm
 
-from monkey_patch.forms import UserCreationForm, UserChangeForm
 
 class RouteAdmin(admin.ModelAdmin):
     form = RouteForm

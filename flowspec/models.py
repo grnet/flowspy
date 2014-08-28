@@ -31,6 +31,19 @@ from utils.randomizer import id_generator as id_gen
 
 from tasks import *
 
+def user_unicode_patch(self):
+    peer = None
+    try:
+        peer = self.get_profile().peer.peer_name
+    except:
+        pass
+    if peer:
+        return '%s.::.%s' % (self.username, peer)
+    return self.username
+
+User.__unicode__ = user_unicode_patch
+
+
 FORMAT = '%(asctime)s %(levelname)s: %(message)s'
 logging.basicConfig(format=FORMAT)
 logger = logging.getLogger(__name__)

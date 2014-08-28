@@ -1,4 +1,20 @@
 ===========
+1.1.0 RELEASE
+Updates and enhancements. Check documentation for updating from previous versions
+
+	- Minor UI enhancements
+	- Patch user model to include user peer in __unicode__
+	- Include celery task exceptions in proxy
+	- Cleanup js files
+	- Resolve a major issue where the platform would start on 2nd refresh
+	- Cleanup poller urls
+	- Enhancements to json routes export
+	- Include timeout handling in tasks
+	- Fix issue with ports not updating
+	- Add longerusername plugin to replace user monkey patching
+	- Handle a bug in South that causes the Peer table to become unusable after adding autoincrement
+
+===========
 1.0.3 RELEASE
 Minor fixes. Check documentation for peers table handling
 

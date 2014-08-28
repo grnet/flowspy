@@ -85,6 +85,9 @@
 <script>
 	$(document).ready( function(){
 		$('#id_then').removeAttr("multiple");
+		{% if user.is_superuser %}
+			$("#id_applier").select2();
+		{% endif %}
 		$("#id_protocol").select2();
 		$("#id_fragmenttype").select2();
 		$("#id_then").select2();

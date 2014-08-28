@@ -177,6 +177,7 @@ FoD is served via gunicorn and is then proxied by Apache. If the above directory
                '--workers=1',
                '--worker-class=egg:gunicorn#gevent',
                '--timeout=30',
+               '--debug',
                '--log-level=debug',
                '--log-file=/var/log/gunicorn/fod.log',
           ),
@@ -372,7 +373,7 @@ Again if the directory conventions have been followed the file is (pay attention
     
     # Extra arguments to celeryd
     #CELERYD_OPTS="--time-limit=300 --concurrency=8"
-    CELERYD_OPTS="-E -B --schedule=/var/run/celery/celerybeat-schedule"
+    CELERYD_OPTS="-E -B --schedule=/var/run/celery/celerybeat-schedule --concurrency=1 --soft-time-limit=180 --time-limit=1800"
     # Name of the celery config module.
     CELERY_CONFIG_MODULE="celeryconfig"
     

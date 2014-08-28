@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-04-07 12:30+0300\n"
+"POT-Creation-Date: 2014-08-28 11:45+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Leonidas Poulopoulos <leopoul@grnet.gr>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -129,74 +129,74 @@ msgstr "Η port θα πρέπει να είναι < 65535 και >= 0"
 msgid "Port should be an integer"
 msgstr "Η port θα πρέπει να είναι ένας ακέραιος αριθμός"
 
-#: flowspec/models.py:128 templates/apply.html:242
+#: flowspec/models.py:141 templates/apply.html:228
 #: templates/user_routes.html:38 templates/overview/index.html:355
 #: templates/overview/index.html.py:383
 msgid "Name"
 msgstr "Όνομα"
 
-#: flowspec/models.py:130 flowspec/models.py:132
+#: flowspec/models.py:143 flowspec/models.py:145
 msgid "Network address. Use address/CIDR notation"
 msgstr "Διεύθυνση δικτύου/υποδικτύου. Χρησιμοποιήστε σύνταξη διεύθυνσης/CIDR"
 
-#: flowspec/models.py:130 templates/apply.html:268
+#: flowspec/models.py:143 templates/apply.html:254
 msgid "Source Address"
 msgstr "Διεύθυνση Πηγής"
 
-#: flowspec/models.py:131
+#: flowspec/models.py:144
 msgid "Source Port"
 msgstr "Port Πηγής"
 
-#: flowspec/models.py:132 templates/apply.html:280
+#: flowspec/models.py:145 templates/apply.html:266
 msgid "Destination Address"
 msgstr "Διεύθυνση Προορισμού"
 
-#: flowspec/models.py:133
+#: flowspec/models.py:146
 msgid "Destination Port"
 msgstr "Port Προορισμού"
 
-#: flowspec/models.py:134
+#: flowspec/models.py:147
 #, fuzzy
 msgid "Port"
 msgstr "Νέα port"
 
-#: flowspec/models.py:140
+#: flowspec/models.py:153
 msgid "Protocol"
 msgstr "Πρωτόκολλο"
 
-#: flowspec/models.py:142 templates/user_routes.html:40
+#: flowspec/models.py:155 templates/user_routes.html:40
 #: templates/overview/index.html:385
 msgid "Then"
 msgstr "Ενέργειες"
 
-#: flowspec/models.py:145 templates/user_routes.html:41
+#: flowspec/models.py:158 templates/user_routes.html:41
 #: templates/overview/index.html:356 templates/overview/index.html.py:386
 msgid "Status"
 msgstr "Κατάσταση"
 
-#: flowspec/models.py:148 templates/apply.html:367 templates/dashboard.html:69
+#: flowspec/models.py:161 templates/apply.html:353 templates/dashboard.html:69
 #: templates/user_routes.html:43 templates/overview/index.html:388
 msgid "Expires"
 msgstr "Λήγει"
 
-#: flowspec/models.py:149 templates/user_routes.html:44
+#: flowspec/models.py:162 templates/user_routes.html:44
 #: templates/overview/index.html:389
 msgid "Response"
 msgstr "Απόκριση Δικτύου"
 
-#: flowspec/models.py:150 templates/apply.html:381
+#: flowspec/models.py:163 templates/apply.html:367
 msgid "Comments"
 msgstr "Σχόλια"
 
-#: flowspec/models.py:175
+#: flowspec/models.py:188
 msgid "Invalid network address format at Destination Field"
 msgstr "Λανθασμένη μορφή διεύθυνσης δικυου στο πεδίο Προορισμός"
 
-#: flowspec/models.py:181
+#: flowspec/models.py:194
 msgid "Invalid network address format at Source Field"
 msgstr "Λανθασμένη μορφή διεύθυνσης δικυου στο πεδίο Πηγή"
 
-#: flowspec/views.py:181
+#: flowspec/views.py:177
 msgid ""
 "Insufficient rights on administrative networks. Cannot add rule. Contact "
 "your administrator"
@@ -204,23 +204,23 @@ msgstr ""
 "Μη επαρκή δικαιώματα στα διαχειριστικά δίκτυα. Η προσθήκη φίλτρων δεν είναι "
 "εφικτή. Επικοινωνήστε με το διαχειριστή σας"
 
-#: flowspec/views.py:242
+#: flowspec/views.py:238
 #, python-format
 msgid "Insufficient rights to edit rule %s"
 msgstr "Μη επαρκή δικαιώματα για την επεξεργασία του φίλτρου %s"
 
-#: flowspec/views.py:254
+#: flowspec/views.py:250
 #, python-format
 msgid "Cannot edit a pending rule: %s."
 msgstr "Δεν είναι δυνατή η επεξεργασία ενός φίλτρου (%s) σε κατάσταση pending "
 
-#: flowspec/views.py:397
+#: flowspec/views.py:393
 msgid ""
 "Your idP should release the HTTP_EPPN attribute towards this service<br>"
 msgstr ""
 "Ο idP σας θα πρέπει να παρέχει την HTTP_EPPN παράμετερο στην υπηρεσία<br>"
 
-#: flowspec/views.py:401
+#: flowspec/views.py:397
 msgid ""
 "Your idP should release an appropriate HTTP_SHIB_EP_ENTITLEMENT attribute "
 "towards this service<br>"
@@ -228,7 +228,7 @@ msgstr ""
 "Ο idP σας θα πρέπει να παρέχει την HTTP_SHIB_EP_ENTITLEMENT παράμετερο στην "
 "υπηρεσία<br>"
 
-#: flowspec/views.py:403
+#: flowspec/views.py:399
 msgid ""
 "Your idP should release the HTTP_SHIB_INETORGPERSON_MAIL attribute towards "
 "this service"
@@ -236,7 +236,7 @@ msgstr ""
 "Ο idP σας θα πρέπει να παρέχει την HTTP_SHIB_INETORGPERSON_MAIL παράμετερο "
 "στην υπηρεσία<br>"
 
-#: flowspec/views.py:434 flowspec/views.py:542
+#: flowspec/views.py:430 flowspec/views.py:538
 #, python-format
 msgid ""
 "User account <strong>%s</strong> is pending activation. Administrators have "
@@ -250,33 +250,33 @@ msgstr ""
 "ενεργοποιηθεί για μεγάλο χρονικό διάστημα, επικοινωνήστε με τον τεχνικό σας "
 "υπέυθυνο ή το Helpdesk του ΕΔΕΤ."
 
-#: flowspec/views.py:438
+#: flowspec/views.py:434
 msgid ""
 "Something went wrong during user authentication. Contact your administrator"
 msgstr ""
 "Παρουσιάστηκε ένα σφάλμα κατά την είσοδο του χρήστη. Επικοινωνήστε με το "
 "διαχειριστή σας"
 
-#: flowspec/views.py:442
+#: flowspec/views.py:438
 #, python-format
 msgid "Invalid login procedure. Error: %s"
 msgstr "Εσφαλμένη διαδικασία εισόδου. Σφάλμα: %s"
 
-#: flowspec/views.py:532
+#: flowspec/views.py:528
 msgid ""
 "Violation warning: User account is already associated with an institution."
 "The event has been logged and our administrators will be notified about it"
 msgstr ""
 
-#: flowspy/settings.py:60
+#: flowspy/Copy of settings.py:60 flowspy/settings.py:60
 msgid "Greek"
 msgstr "Ελληνικά"
 
-#: flowspy/settings.py:61
+#: flowspy/Copy of settings.py:61 flowspy/settings.py:61
 msgid "English"
 msgstr "Αγγλικά"
 
-#: monkey_patch/forms.py:11
+#: longerusername/forms.py:11 monkey_patch/forms.py:11
 #, python-format
 msgid ""
 "Required, %s characters or fewer. Only letters, numbers, and characters such "
@@ -299,7 +299,7 @@ msgstr "Επεξεργασία φίλτρου"
 msgid "Create new Rule"
 msgstr "Δημιουργία νέου Φίλτρου"
 
-#: templates/apply.html:16 templates/apply.html.py:215
+#: templates/apply.html:16 templates/apply.html.py:201
 msgid "Edit rule"
 msgstr "Επεξεργασία φίλτρου"
 
@@ -307,59 +307,59 @@ msgstr "Επεξεργασία φίλτρου"
 msgid "Create rule"
 msgstr "Δημιουργία φίλτρου"
 
-#: templates/apply.html:216
+#: templates/apply.html:202
 msgid "Apply for a new rule"
 msgstr "Αίτηση δημιουργίας νέου φίλτρου"
 
-#: templates/apply.html:254 templates/user_routes.html:42
+#: templates/apply.html:240 templates/user_routes.html:42
 #: templates/overview/index.html:387
 msgid "Applier"
 msgstr "Χρήστης"
 
-#: templates/apply.html:292
+#: templates/apply.html:278
 msgid "Protocol(s)"
 msgstr "Πρωτόκολλο"
 
-#: templates/apply.html:301
+#: templates/apply.html:287
 msgid "Fragment Type"
 msgstr ""
 
-#: templates/apply.html:313
+#: templates/apply.html:299
 msgid ""
 "Select source/destination port(s), or select common port(s) for both source/"
 "destination"
 msgstr ""
 
-#: templates/apply.html:316
+#: templates/apply.html:302
 msgid "Src. Port(s)"
 msgstr "Port Πηγής"
 
-#: templates/apply.html:322
+#: templates/apply.html:308
 msgid "Dest. Port(s)"
 msgstr "Port Προορισμού"
 
-#: templates/apply.html:328
+#: templates/apply.html:314
 #, fuzzy
 msgid "Port(s)"
 msgstr "Port Πηγής"
 
-#: templates/apply.html:338
+#: templates/apply.html:324
 msgid "Add Port"
 msgstr "Νέα port"
 
-#: templates/apply.html:342
+#: templates/apply.html:328
 msgid "Add New Port"
 msgstr "Νέα port"
 
-#: templates/apply.html:344 templates/apply.html.py:403
+#: templates/apply.html:330 templates/apply.html.py:389
 msgid "Add new port"
 msgstr "Νέα port"
 
-#: templates/apply.html:355
+#: templates/apply.html:341
 msgid "Then Actions"
 msgstr "Ενέργειες Φίλτρου"
 
-#: templates/apply.html:394 templates/registration/activate_edit.html:58
+#: templates/apply.html:380 templates/registration/activate_edit.html:58
 #: templates/registration/select_institution.html:53
 msgid "Apply"
 msgstr "Εφαρμογή"
@@ -540,7 +540,7 @@ msgid ""
 msgstr ""
 
 #: templates/profile.html:64 templates/overview/index.html:353
-#: templates/overview/login.html:53
+#: templates/overview/login.html:54
 msgid "Username"
 msgstr "Όνομα χρήστη"
 
@@ -588,7 +588,7 @@ msgstr "Λήξη Φίλτρου"
 msgid "Resync"
 msgstr ""
 
-#: templates/welcome.html:3 templates/overview/login.html:71
+#: templates/welcome.html:3 templates/overview/login.html:72
 msgid "Login"
 msgstr "Είσοδος"
 
@@ -665,11 +665,11 @@ msgstr "Απενεργοποίηση"
 msgid "Key Expired"
 msgstr "Λήξη Φίλτρου"
 
-#: templates/overview/login.html:19 templates/overview/login.html.py:28
+#: templates/overview/login.html:20 templates/overview/login.html.py:29
 msgid "Overview Login"
 msgstr "Εισόδος στην Επισκόπηση"
 
-#: templates/overview/login.html:61
+#: templates/overview/login.html:62
 msgid "Password"
 msgstr ""
 

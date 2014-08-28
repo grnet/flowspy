@@ -54,6 +54,7 @@ from utils.decorators import shib_required
 from django.views.decorators.cache import never_cache
 from django.conf import settings
 from django.core.mail.message import EmailMessage
+from django.template.defaultfilters import slugify
 import datetime
 import os
 
@@ -372,7 +373,7 @@ def user_login(request):
         error_mail = False
         has_entitlement = False
         error = ''
-        username = request.META['HTTP_EPPN']
+        username = lookupShibAttr(settings.SHIB_USERNAME, request.META)
         if not username:
             error_username = True
         firstname = lookupShibAttr(settings.SHIB_FIRSTNAME, request.META)
@@ -401,6 +402,8 @@ def user_login(request):
             return render_to_response('error.html', {'error': error, "missing_attributes": True},
                                   context_instance=RequestContext(request))
         try:
+            if settings.SHIB_SLUGIFY_USERNAME:
+                username = slugify(username)
             user = User.objects.get(username__exact=username)
             user.email = mail
             user.first_name = firstname

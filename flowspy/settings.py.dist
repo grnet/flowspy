@@ -168,7 +168,7 @@ TEMPLATE_DIRS = (
 )
 
 INSTALLED_APPS = (
-    'monkey_patch',
+    'longerusername',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -302,6 +302,8 @@ ACCOUNT_ACTIVATION_DAYS = 7
 
 #Shibboleth attribute map
 SHIB_USERNAME = ['HTTP_EPPN']
+SHIB_SLUGIFY_USERNAME = False
+
 SHIB_MAIL = ['mail', 'HTTP_MAIL', 'HTTP_SHIB_INETORGPERSON_MAIL']
 SHIB_FIRSTNAME = ['HTTP_SHIB_INETORGPERSON_GIVENNAME']
 SHIB_LASTNAME = ['HTTP_SHIB_PERSON_SURNAME']

@@ -34,7 +34,7 @@ from tasks import *
 def user_unicode_patch(self):
     peer = None
     try:
-        peer = self.get_profile().peer.peer_name
+        peer = self.get_profile().peer.peer_tag
     except:
         pass
     if peer:

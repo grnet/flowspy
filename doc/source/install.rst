@@ -12,11 +12,21 @@ This guide assumes that installation is carried out in /srv/flowspy directory. I
 
 Upgrading from v<1.1.x
 ----------------------
-If upgrading from flowspy version <1.1.x pay attention to settings.py changes. Also, do not forget to run::
+
+.. note::
+    If PEER\_\*\_TABLE tables are set to FALSE in settings.py, you need to perform the south migrations per application:: 
+    
+        ./manage.py migrate longerusername
+        ./manage.py migrate flowspec
+        ./manage.py migrate accounts
+        
+        
+
+If upgrading from flowspy version <1.1.x pay attention to settings.py changes. Also, do not forget to run if PEER\_\*\_TABLE tables are set to TRUE in settings.py::
     
     ./manage.py migrate 
     
-to catch-up with latest database changes.
+to catch-up with latest database changes. 
 
 Upgrading from v<1.0.x
 ----------------------
@@ -140,6 +150,9 @@ Let's move on with some copies and dir creations::
     chown www-data.www-data /var/log/fod
     cp urls.py.dist urls.py
     cd ..
+
+.. note::
+    LOG_FILE_LOCATION in settings.py is set to **/var/log/fod**. Adjust the chown command above to your selected dir.
 
 System configuration
 ====================
@@ -390,9 +403,8 @@ Again if the directory conventions have been followed the file is (pay attention
     CELERYD_LOG_FILE="/var/log/celery/fod_%n.log"
     CELERYD_PID_FILE="/var/run/celery/%n.pid"
     
-    # Workers should run as an unprivileged user.
-    CELERYD_USER="celery"
-    CELERYD_GROUP="celery"
+    CELERYD_USER="root"
+    CELERYD_GROUP="root"
     
     # Name of the projects settings module.
     export DJANGO_SETTINGS_MODULE="flowspy.settings"

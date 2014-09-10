@@ -262,8 +262,6 @@ CELERY_IMPORTS = ("flowspec.tasks", )
 SERVER_EMAIL = "Example FoD Service <noreply@example.com>"
 EMAIL_SUBJECT_PREFIX = "[FoD] "
 
-LOG_FILE_LOCATION = here("log")
-
 EXPIRATION_NOTIFY_DAYS = 4
 PREFIX_LENGTH = 29
 POLL_SESSION_UPDATE = 60.0

@@ -28,13 +28,13 @@ flowspec capable routers. Of course FoD could apply rules directly (via
 NETCONF always) to a router and then ibgp would do the rest. In GRNET’s
 case the flowspec capable device is an EX4200.
 
-> **attention**
->
-> Make sure your FoD server has ssh access to your flowspec device.
+  **attention**
 
-> **attention**
->
-> Installation instructions assume a clean Debian Wheezy with Django 1.4
+  Make sure your FoD server has ssh access to your flowspec device.
+
+  **attention**
+
+  Installation instructions assume a clean Debian Wheezy with Django 1.4
 
 Contact
 -------
@@ -100,15 +100,15 @@ Update and install the required packages:
 Also, django rest framework package is required. In debian Wheezy it is
 not available, but one can install it via pip.
 
-> **note**
->
-> Set username and password for mysql if used
+  **note**
 
-> **note**
->
-> If you wish to deploy an outgoing mail server, now it is time to do
-> it. Otherwise you could set FoD to send out mails via a third party
-> account
+  Set username and password for mysql if used
+
+  **note**
+
+  If you wish to deploy an outgoing mail server, now it is time to do
+  it. Otherwise you could set FoD to send out mails via a third party
+  account
 
 ### Create a database
 
@@ -136,8 +136,8 @@ Get the required packages and their dependencies and install them:
         cd nxpy
         python setup.py install
 
--   flowspy: core application. Installation is done at /srv/flowspy:
 
+- flowspy: core web application. Installation is done at /srv/flowspy::
         cd /srv
         git clone https://code.grnet.gr/git/flowspy
         cd flowspy
@@ -210,10 +210,10 @@ By doing that the corresponding tables as defined in peers/models will
 not be created. As noted above, you have to create the views that the
 tables will rely on.
 
-> **note**
->
-> Soon we will release a version with django-registration as a means to
-> add users and Shibboleth will become an alternative
+  **note**
+
+  Soon we will release a version with django-registration as a means to
+  add users and Shibboleth will become an alternative
 
 Let’s move on with some copies and dir creations:
 
@@ -222,10 +222,10 @@ Let’s move on with some copies and dir creations:
     cp urls.py.dist urls.py
     cd ..
 
-> **note**
->
-> LOG\_FILE\_LOCATION in settings.py is set to **/var/log/fod**. Adjust
-> the chown command above to your selected dir.
+  **note**
+
+  LOG\_FILE\_LOCATION in settings.py is set to **/var/log/fod**. Adjust
+  the chown command above to your selected dir.
 
 System configuration
 ====================

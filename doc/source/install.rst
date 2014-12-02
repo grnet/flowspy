@@ -76,7 +76,7 @@ Get the required packages and their dependencies and install them::
     cd nxpy
     python setup.py install
 
-- flowspy: core application. Installation is done at /srv/flowspy::
+- flowspy: core web application. Installation is done at /srv/flowspy::
 
     cd /srv
     git clone https://code.grnet.gr/git/flowspy

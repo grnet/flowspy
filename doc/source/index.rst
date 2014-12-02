@@ -34,9 +34,9 @@ In GRNET's case the flowspec capable device is an EX4200.
    
 Contact
 =======
-You can find more about FoD or raise your issues at `GRNET FoD repository <https://code.grnet.gr/projects/flowspy>`_.
+You can find more about FoD or raise your issues at `GRNET FoD repository <https://code.grnet.gr/projects/flowspy>`_ or `GRNET FoD Github repo <https://github.com/grnet/flowspy>`_ .
 
-You can contact us directly at leopoul{at}noc[dot]grnet(.)gr
+You can contact us directly at grnet{at}noc[dot]grnet(.)gr
 
 Install
 =======

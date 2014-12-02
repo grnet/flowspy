@@ -41,6 +41,23 @@ If upgrading from a previous version bear in mind the changes introduced in Djan
 ##Contact##
 
 You can find more about FoD or raise your issues at GRNET FoD
-repository: [GRNET repo](https://code.grnet.gr/fod) or [Github repo](https://github.com/leopoul/flowspy).
+repository: [GRNET repo](https://code.grnet.gr/fod) or [Github repo](https://github.com/grnet/flowspy).
 
-You can contact us directly at leopoul{at}noc[dot]grnet(.)gr
+You can contact us directly at noc{at}noc[dot]grnet(.)gr
+
+## Copyright and license
+
+Copyright © 2010-2014 Greek Research and Technology Network (GRNET S.A.)
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.

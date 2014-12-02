@@ -46,5 +46,5 @@ Contact
 You can find more about FoD or raise your issues at GRNET FoD
 repository: https://code.grnet.gr/fod.
 
-You can contact us directly at leopoul{at}noc[dot]grnet(.)gr
+You can contact us directly at noc{at}noc[dot]grnet(.)gr
 

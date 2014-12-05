@@ -18,7 +18,7 @@
 #
 
 from django.core.management.base import BaseCommand, CommandError
-from flowspy.peers.models import *
+from peers.models import *
 
 class Command(BaseCommand):
     args = ''

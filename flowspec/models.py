@@ -26,11 +26,13 @@ from ipaddr import *
 import datetime
 import logging
 from time import sleep
+from junos import create_junos_name, policer_name
 
 import beanstalkc
 from utils.randomizer import id_generator as id_gen
 
 from tasks import *
+
 
 def user_unicode_patch(self):
     peer = None
@@ -66,7 +68,7 @@ THEN_CHOICES = (
     ("next-term", "Next term"),
     ("routing-instance", "Routing Instance"),
     ("rate-limit", "Rate limit"),
-    ("sample", "Sample")                
+    ("sample", "Sample")
 )
 
 MATCH_PROTOCOL = (
@@ -93,18 +95,18 @@ ROUTE_STATES = (
     ("PENDING", "PENDING"),
     ("OUTOFSYNC", "OUTOFSYNC"),
     ("INACTIVE", "INACTIVE"),
-    ("ADMININACTIVE", "ADMININACTIVE"),           
+    ("ADMININACTIVE", "ADMININACTIVE"),
 )
 
 
 def days_offset(): return datetime.date.today() + datetime.timedelta(days = settings.EXPIRATION_DAYS_OFFSET)
-    
+
 class MatchPort(models.Model):
     port = models.CharField(max_length=24, unique=True)
     def __unicode__(self):
         return self.port
     class Meta:
-        db_table = u'match_port'    
+        db_table = u'match_port'
 
 class MatchDscp(models.Model):
     dscp = models.CharField(max_length=24)
@@ -122,7 +124,7 @@ class MatchProtocol(models.Model):
 
 class FragmentType(models.Model):
     fragmenttype = models.CharField(max_length=20, choices=FRAGMENT_CODES, verbose_name="Fragment Type")
-    
+
     def __unicode__(self):
         return "%s" %(self.fragmenttype)
 
@@ -130,13 +132,16 @@ class FragmentType(models.Model):
 class ThenAction(models.Model):
     action = models.CharField(max_length=60, choices=THEN_CHOICES, verbose_name="Action")
     action_value = models.CharField(max_length=255, blank=True, null=True, verbose_name="Action Value")
+
     def __unicode__(self):
         ret = "%s:%s" %(self.action, self.action_value)
         return ret.rstrip(":")
+
     class Meta:
         db_table = u'then_action'
         ordering = ['action', 'action_value']
         unique_together = ("action", "action_value")
+
 
 class Route(models.Model):
     name = models.SlugField(max_length=128, verbose_name=_("Name"))
@@ -163,22 +168,22 @@ class Route(models.Model):
     response = models.CharField(max_length=512, blank=True, null=True, verbose_name=_("Response"))
     comments = models.TextField(null=True, blank=True, verbose_name=_("Comments"))
 
-    
+
     def __unicode__(self):
         return self.name
-    
+
     class Meta:
         db_table = u'route'
         verbose_name = "Rule"
         verbose_name_plural = "Rules"
-    
+
     def save(self, *args, **kwargs):
         if not self.pk:
             hash = id_gen()
             self.name = "%s_%s" %(self.name, hash)
         super(Route, self).save(*args, **kwargs) # Call the "real" save() method.
 
-        
+
     def clean(self, *args, **kwargs):
         from django.core.exceptions import ValidationError
         if self.destination:
@@ -193,13 +198,13 @@ class Route(models.Model):
                 self.source = address.exploded
             except Exception:
                 raise ValidationError(_('Invalid network address format at Source Field'))
-   
+
     def commit_add(self, *args, **kwargs):
         peer = self.applier.get_profile().peer.peer_tag
         send_message("[%s] Adding rule %s. Please wait..." %(self.applier.username, self.name), peer)
         response = add.delay(self)
         logger.info("Got add job id: %s" %response)
-        
+
     def commit_edit(self, *args, **kwargs):
         peer = self.applier.get_profile().peer.peer_tag
         send_message("[%s] Editing rule %s. Please wait..." %(self.applier.username, self.name), peer)
@@ -222,12 +227,12 @@ class Route(models.Model):
         if today > self.expires:
             return True
         return False
-    
+
     def check_sync(self):
         if not self.is_synced():
             self.status = "OUTOFSYNC"
             self.save()
-    
+
     def is_synced(self):
         found = False
         get_device = PR.Retriever()
@@ -266,7 +271,7 @@ class Route(models.Model):
                         logger.info('Source fields do not match')
                 except:
                     pass
-                
+
                 try:
                     assert(self.fragmenttype.all())
                     assert(devicematch['fragment'])
@@ -281,7 +286,7 @@ class Route(models.Model):
                         logger.info('Fragment type fields do not match')
                 except:
                     pass
-                
+
                 try:
                     assert(self.port.all())
                     assert(devicematch['port'])
@@ -296,7 +301,7 @@ class Route(models.Model):
                         logger.info('Port type fields do not match')
                 except:
                     pass
-                
+
                 try:
                     assert(self.protocol.all())
                     assert(devicematch['protocol'])
@@ -341,8 +346,8 @@ class Route(models.Model):
                         logger.info('Source port type fields do not match')
                 except:
                     pass
-                                
-                
+
+
 #                try:
 #                    assert(self.fragmenttype)
 #                    assert(devicematch['fragment'][0])
@@ -391,10 +396,10 @@ class Route(models.Model):
         for statement in then_statements:
             if statement.action_value:
                 ret = "%s %s %s" %(ret, statement.action, statement.action_value)
-            else: 
+            else:
                 ret = "%s %s" %(ret, statement.action)
         return ret
-    
+
     get_then.short_description = 'Then statement'
     get_then.allow_tags = True
 #
@@ -437,10 +442,10 @@ class Route(models.Model):
                     ret = ret + "%s <dt>Port</dt><dd>%s</dd>" %(ret, dscp)
         ret = ret + "</dl>"
         return ret
-        
+
     get_match.short_description = 'Match statement'
     get_match.allow_tags = True
-    
+
     @property
     def applier_peer(self):
         try:
@@ -448,7 +453,7 @@ class Route(models.Model):
         except:
             applier_peer = None
         return applier_peer
-    
+
     @property
     def days_to_expire(self):
         if self.status not in ['EXPIRED', 'ADMININACTIVE', 'ERROR', 'INACTIVE']:
@@ -459,6 +464,11 @@ class Route(models.Model):
                 return False
         else:
             return False
+
+    @property
+    def junos_name(self):
+        return create_junos_name(self)
+
 
 def send_message(msg, user):
 #    username = user.username

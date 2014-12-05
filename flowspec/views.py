@@ -43,7 +43,7 @@ from django.contrib.auth import authenticate, login
 
 from django.forms.models import model_to_dict
 
-from flowspec.forms import * 
+from flowspec.forms import *
 from flowspec.models import *
 from peers.models import *
 
@@ -125,7 +125,7 @@ def group_routes_ajax(request):
     jresp = {}
     routes = build_routes_json(group_routes)
     jresp['aaData'] = routes
-    return HttpResponse(json.dumps(jresp), mimetype='application/json') 
+    return HttpResponse(json.dumps(jresp), mimetype='application/json')
 
 @login_required
 @never_cache
@@ -145,7 +145,7 @@ def overview_routes_ajax(request):
     jresp = {}
     routes = build_routes_json(group_routes)
     jresp['aaData'] = routes
-    return HttpResponse(json.dumps(jresp), mimetype='application/json') 
+    return HttpResponse(json.dumps(jresp), mimetype='application/json')
 
 def build_routes_json(groutes):
     routes = []
@@ -153,7 +153,10 @@ def build_routes_json(groutes):
         rd = {}
         rd['id'] = r.pk
         rd['name'] = r.name
-        rd['comments'] = r.comments
+        if not r.comments:
+            rd['comments'] = 'Not Any'
+        else:
+            rd['comments'] = r.comments
         rd['match'] = r.get_match()
         rd['then'] = r.get_then()
         rd['status'] = r.status
@@ -340,7 +343,7 @@ def delete_route(request, route_slug):
                                              {"route": route, "address": requesters_address, "action": "removal", "url": admin_url})
             user_mail = "%s" %route.applier.email
             user_mail = user_mail.split(';')
-            send_new_mail(settings.EMAIL_SUBJECT_PREFIX + "Rule %s removal request submitted by %s" %(route.name, route.applier.username), 
+            send_new_mail(settings.EMAIL_SUBJECT_PREFIX + "Rule %s removal request submitted by %s" %(route.name, route.applier.username),
                               mail_body, settings.SERVER_EMAIL, user_mail,
                              get_peer_techc_mails(route.applier))
             d = { 'clientip' : requesters_address, 'user' : route.applier.username }
@@ -382,7 +385,7 @@ def user_login(request):
         mail = lookupShibAttr(settings.SHIB_MAIL, request.META)
         entitlement = lookupShibAttr(settings.SHIB_ENTITLEMENT, request.META)
         #organization = request.META['HTTP_SHIB_HOMEORGANIZATION']
-        
+
         if settings.SHIB_AUTH_ENTITLEMENT in entitlement.split(";"):
             has_entitlement = True
         if not has_entitlement:
@@ -414,7 +417,7 @@ def user_login(request):
         except:
             user_exists = False
         user = authenticate(username=username, firstname=firstname, lastname=lastname, mail=mail, authsource='shibboleth')
-        
+
         if user is not None:
             try:
                 peer = user.get_profile().peer
@@ -448,8 +451,8 @@ def user_login(request):
 def user_activation_notify(user):
     current_site = Site.objects.get_current()
     peer = user.get_profile().peer
-    
-    
+
+
     # Email subject *must not* contain newlines
     # TechCs will be notified about new users.
     # Platform admins will activate the users.
@@ -464,10 +467,10 @@ def user_activation_notify(user):
                                      'user': user })
     if settings.NOTIFY_ADMIN_MAILS:
         admin_mails = settings.NOTIFY_ADMIN_MAILS
-        send_new_mail(settings.EMAIL_SUBJECT_PREFIX + subject, 
+        send_new_mail(settings.EMAIL_SUBJECT_PREFIX + subject,
                                   message, settings.SERVER_EMAIL,
                                  admin_mails, [])
-    
+
     # Mail to domain techCs plus platform admins (no activation hash sent)
     subject = render_to_string('registration/activation_email_peer_notify_subject.txt',
                                    { 'site': current_site,
@@ -476,7 +479,7 @@ def user_activation_notify(user):
     message = render_to_string('registration/activation_email_peer_notify.txt',
                                    { 'user': user,
                                     'peer': peer })
-    send_new_mail(settings.EMAIL_SUBJECT_PREFIX + subject, 
+    send_new_mail(settings.EMAIL_SUBJECT_PREFIX + subject,
                               message, settings.SERVER_EMAIL,
                              get_peer_techc_mails(user), [])
 
@@ -534,7 +537,7 @@ def selectinst(request):
                                   context_instance=RequestContext(request))
         except UserProfile.DoesNotExist:
             pass
-            
+
         form = UserProfileForm(request_data)
         if form.is_valid():
             userprofile = form.save()
@@ -567,7 +570,7 @@ def overview(request):
 def user_logout(request):
     logout(request)
     return HttpResponseRedirect(reverse('group-routes'))
-    
+
 @never_cache
 def load_jscript(request, file):
     long_polling_timeout = int(settings.POLL_SESSION_UPDATE)*1000 + 10000

@@ -35,12 +35,12 @@ GRNET's case the flowspec capable device is an EX4200.
 
 
 You can find the installation instructions for Debian Wheezy (64)
-with Django 1.4.x at [Flowspy documentation](http://flowspy.readthedocs.org). 
-If upgrading from a previous version bear in mind the changes introduced in Django 1.4. 
+with Django 1.4.x at [Flowspy documentation](http://flowspy.readthedocs.org).
+If upgrading from a previous version bear in mind the changes introduced in Django 1.4.
 
 ##Contact##
 
 You can find more about FoD or raise your issues at GRNET FoD
-repository: [GRNET repo](https://code.grnet.gr/fod) or [Github repo](https://github.com/leopoul/flowspy).
+repository: [GRNET repo](https://code.grnet.gr/fod) or [Github repo](https://github.com/grnet/flowspy).
 
-You can contact us directly at leopoul{at}noc[dot]grnet(.)gr
+You can contact us directly at staurosk{at}noc[dot]grnet(.)gr

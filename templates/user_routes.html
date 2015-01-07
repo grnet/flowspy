@@ -28,8 +28,8 @@
                 </div>
 
 <div class="panel-body">
-	
-	
+
+
                     <div class="table-responsive">
                     	<table class="table table-striped table-bordered" id="routes_table">
 <thead>
@@ -101,13 +101,13 @@ var filterbtns = '<div class="btn-group col-centered">\
 
 
 $.fn.dataTableExt.oApi.fnReloadAjax = function ( oSettings, sNewSource, fnCallback, bStandingRedraw )
-{   
+{
     // DataTables 1.10 compatibility - if 1.10 then versionCheck exists.
     // 1.10s API has ajax reloading built in, so we use those abilities
     // directly.
     if ( $.fn.dataTable.versionCheck ) {
         var api = new $.fn.dataTable.Api( oSettings );
- 
+
         if ( sNewSource ) {
             api.ajax.url( sNewSource ).load( fnCallback, !bStandingRedraw );
         }
@@ -116,50 +116,50 @@ $.fn.dataTableExt.oApi.fnReloadAjax = function ( oSettings, sNewSource, fnCallba
         }
         return;
     }
- 
+
     if ( sNewSource !== undefined && sNewSource !== null ) {
         oSettings.sAjaxSource = sNewSource;
     }
- 
+
     // Server-side processing should just call fnDraw
     if ( oSettings.oFeatures.bServerSide ) {
         this.fnDraw();
         return;
     }
- 
+
     this.oApi._fnProcessingDisplay( oSettings, true );
     var that = this;
     var iStart = oSettings._iDisplayStart;
     var aData = [];
- 
+
     this.oApi._fnServerParams( oSettings, aData );
- 
+
     oSettings.fnServerData.call( oSettings.oInstance, oSettings.sAjaxSource, aData, function(json) {
         /* Clear the old information from the table */
         that.oApi._fnClearTable( oSettings );
- 
+
         /* Got the data - add it to the table */
         var aData =  (oSettings.sAjaxDataProp !== "") ?
             that.oApi._fnGetObjectDataFn( oSettings.sAjaxDataProp )( json ) : json;
- 
+
         for ( var i=0 ; i<aData.length ; i++ )
         {
             that.oApi._fnAddData( oSettings, aData[i] );
         }
-         
+
         oSettings.aiDisplay = oSettings.aiDisplayMaster.slice();
- 
+
         that.fnDraw();
- 
+
         if ( bStandingRedraw === true )
         {
             oSettings._iDisplayStart = iStart;
             that.oApi._fnCalculateEnd( oSettings );
             that.fnDraw( false );
         }
- 
+
         that.oApi._fnProcessingDisplay( oSettings, false );
- 
+
         /* Callback user function - for event handlers etc */
         if ( typeof fnCallback == 'function' && fnCallback !== null )
         {
@@ -176,7 +176,7 @@ var refreshUrl = "{% url group-routes-ajax %}";
 $(document).ready( function(){
 
 
-    
+
     oTable = $('#routes_table').dataTable( {
         "bPaginate": true,
         "bFilter": true,
@@ -193,7 +193,7 @@ $(document).ready( function(){
          "fnInitComplete": function(oSettings, json) {
          	oTable.fnSetColumnVis( 0,false );
          	update_size();
-    
+
           	$('body').on('click', '.revertbutton', function () {
             	var my = $(this);
             	my.parent().html(oldhtml);
@@ -235,20 +235,24 @@ $(document).ready( function(){
                      {"mData":"id", "bSearchable": false,"bSortable": false, "bvisible":false},
                      {"mData":"name", "sClass" : "alignCenter","bSearchable": true,"bSortable": true,
                      "mRender": function (data, type, full) {
-                     	if (!full.comments.trim()) {
- 						   return '<small>'+data+'</small>';
-						}
-						return '<a rel="tooltip" href="#" data-toggle="tooltip" data-placement="top" title='+full.comments+'><small>'+data+'</small>'
+                        if (full.comments !== null) {
+                            if (!full.comments.trim()) {
+                               return '<small>'+data+'</small>';
+                            }
+                            return '<a rel="tooltip" href="#" data-toggle="tooltip" data-placement="top" title='+full.comments+'><small>'+data+'</small>'
+                        } else {
+                            return 'No comments'
+                        }
                      }
                      },
                      {"mData":"match", "sClass" : "alignCenter","bSearchable": true,"bSortable": true,
                      "mRender": function (data, type, full) {
-                     	return '<small>'+data+'</small>';             
+                     	return '<small>'+data+'</small>';
                      }
                      },
                      {"mData":"then", "sClass" : "alignCenter","bSearchable": true,"bSortable": true,
                      "mRender": function (data, type, full) {
-                     	return '<small>'+data+'</small>';             
+                     	return '<small>'+data+'</small>';
                      }
                      },
                      {"mData":"status", "sClass" : "alignCenter","bSearchable": true,"bSortable": true,
@@ -259,7 +263,7 @@ $(document).ready( function(){
                      			return '<span class="label label-default">DEACTIVATED</span>';
                      		}
                      		else
-                     		{ 
+                     		{
                      			if (status == "OUTOFSYNC"){
                      				return '<span class="label label-danger">ERROR</span>';
                      			}
@@ -280,23 +284,23 @@ $(document).ready( function(){
                      				return '<span class="label label-danger">'+status+'</span>';
                      			}
                      		}
-                     	}           
+                     	}
                      }
                      },
                      {"mData":"applier", "sClass" : "alignCenter","bSearchable": true,"bSortable": true,
                      "mRender": function (data, type, full) {
-                     	return '<small>'+data+' ('+full.peer+')</small>';           
+                     	return '<small>'+data+' ('+full.peer+')</small>';
                      }
                      },
                      {"mData":"expires", "sClass" : "alignCenter","bSearchable": true,"bSortable": true,
                      "mRender": function (data, type, full) {
-                     	return '<small>'+data+'</small>';             
+                     	return '<small>'+data+'</small>';
                      }},
                      {"mData":"response", "sClass" : "alignCenter","bSearchable": true,"bSortable": true,
                      "mRender": function (data, type, full) {
                      	status = full.status;
                      	toolt = '<a rel="tooltip" href="#" data-toggle="tooltip" data-placement="top"';
-   	                     	if (status == "EXPIRED" ||status == "ADMININACTIVE" || status == "INACTIVE" || status == "OUTOFSYNC"){	
+   	                     	if (status == "EXPIRED" ||status == "ADMININACTIVE" || status == "INACTIVE" || status == "OUTOFSYNC"){
 	                     		if (status == "INACTIVE" ){
 	                     			title = "{% trans 'Deactivated by user' %}";
 	                     		}
@@ -325,7 +329,7 @@ $(document).ready( function(){
                      editurl = "{% url edit-route 'routename'  %}".replace('routename', full.name.toString());
                      if (status == "ACTIVE" ){
                      	btn = '<a href="'+editurl+'" class="btn-info btn btn-sm btn-outline">{% trans "Edit" %}</a>';
-        				btn = btn + ' <button class="del_buttonpre btn-warning btn btn-sm btn-outline" id="'+full.name+'" data-routename="'+full.name+'">{% trans "Deactivate" %}</button>';             	
+        				btn = btn + ' <button class="del_buttonpre btn-warning btn btn-sm btn-outline" id="'+full.name+'" data-routename="'+full.name+'">{% trans "Deactivate" %}</button>';
                      }
                      if (status == 'EXPIRED' || status == 'ADMININACTIVE' || status == 'INACTIVE' ){
                      	btn = '<a href="'+editurl+'" class="btn-info btn btn-sm btn-outline" id="edit_button_{{route.pk}}">{% trans "Reactivate" %}</a>';
@@ -339,13 +343,13 @@ $(document).ready( function(){
                      return btn;
                      },
                     }
-                    
+
          ]
 } );
 $('#filterplaceholder').html(filterbtns);
 
- 
-     
+
+
     $('body').on('click', 'button[name="status_filter"]', function(){
     	var reg_exp = '';
         var checkboxs = document.getElementsByName('status_filter');
@@ -369,7 +373,7 @@ $('#filterplaceholder').html(filterbtns);
     clearTimeout(window.refresh_size);
     window.refresh_size = setTimeout(function() { update_size(); }, 250);
   });
-  
+
 var update_size = function() {
     $(oTable).css({ width: $(oTable).parent().width() });
     pw=$(oTable).parent().width();
@@ -381,7 +385,7 @@ var update_size = function() {
     	oTable.fnSetColumnVis( 7,true );
     	oTable.fnSetColumnVis( 5,true );
     }
-    oTable.fnAdjustColumnSizing(); 
+    oTable.fnAdjustColumnSizing();
   }
 
 $("body").tooltip({ selector: '[data-toggle="tooltip"]' });
@@ -389,7 +393,7 @@ $("body").tooltip({ selector: '[data-toggle="tooltip"]' });
 </script>
 <style type="text/css">
 
-	
+
 	.dl-horizontal dt {
     width: 70px;
 }

@@ -190,6 +190,7 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
     'djcelery',
     'peers',
+    'rest_framework',
 	'registration',
     'accounts',
     'tinymce',

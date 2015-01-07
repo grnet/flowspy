@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*- vim:fileencoding=utf-8:
 # vim: tabstop=4:shiftwidth=4:softtabstop=4:expandtab
 # Django settings for flowspy project.
-# Copyright © 2011-2014 Greek Research and Technology Network (GRNET S.A.)
+# Copyright © 2011-2015 Greek Research and Technology Network (GRNET S.A.)
 # Copyright © 2011-2014 Leonidas Poulopoulos (@leopoul)
-# 
+# Copyright © 2014-2015 Stavros Kroustouris (@kroustou)
+#
 # Permission to use, copy, modify, and/or distribute this software for any
 # purpose with or without fee is hereby granted, provided that the above
 # copyright notice and this permission notice appear in all copies.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD
 # TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
 # FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR
@@ -65,8 +66,8 @@ LANGUAGES = (
 # http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGE_CODE = 'en'
 
-LOCALE_PATHS = (  
-    os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'locale'),  
+LOCALE_PATHS = (
+    os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'locale'),
 )
 
 SITE_ID = 1
@@ -162,6 +163,7 @@ AUTHENTICATION_BACKENDS = (
 
 TEMPLATE_DIRS = (
 	'/path/to/templates/',
+    '/path/to/rest_framework/templates/',
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
@@ -321,8 +323,8 @@ SW_VERSION = _version.VERSION
 LOG_FILE_LOCATION = "/var/log/fod"
 
 # Change the following values only if you know what you are doing!!!
-# To integrate FoD with tables (Peer, Networks, Contacts) 
-# from your CRM platform, set the following values to False and create the views that are 
+# To integrate FoD with tables (Peer, Networks, Contacts)
+# from your CRM platform, set the following values to False and create the views that are
 # exact matches of the tables in peers/models.py
 PEER_MANAGED_TABLE = True
 PEER_RANGE_MANAGED_TABLE = True

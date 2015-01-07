@@ -1,12 +1,31 @@
 from django.conf.urls import patterns, include, url
 from django.views.generic.simple import direct_to_template
-from django.conf import settings
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 admin.autodiscover()
 
+from rest_framework import routers
+from flowspec.viewsets import (
+    MatchProtocolViewSet,
+    RouteViewSet,
+    PortViewSet,
+    FragmentTypeViewSet,
+    ThenActionViewSet
+)
+
+from accounts.viewsets import UserViewSet
+
+
+# Routers provide an easy way of automatically determining the URL conf.
+router = routers.DefaultRouter()
+router.register(r'users', UserViewSet)
+router.register(r'routes', RouteViewSet)
+router.register(r'ports', PortViewSet)
+router.register(r'fragmenttypes', FragmentTypeViewSet)
+router.register(r'matchprotocols', MatchProtocolViewSet)
+router.register(r'then_action', ThenActionViewSet)
+
 urlpatterns = patterns('',
-    # Example:
     (r'^poll/', include('poller.urls')),
     url(r'^/?$', 'flowspec.views.group_routes', name="group-routes"),
     url(r'^routes_ajax/?$', 'flowspec.views.group_routes_ajax', name="group-routes-ajax"),
@@ -22,10 +41,9 @@ urlpatterns = patterns('',
     url(r'^welcome/?', 'flowspec.views.welcome', name="welcome"),
     url(r'^logout/?', 'flowspec.views.user_logout', name="logout"),
     (r'^setlang/?$', 'django.views.i18n.set_language'),
-    # Uncomment the admin/doc line below to enable admin documentation:
     (r'^admin/doc/', include('django.contrib.admindocs.urls')),
-    url(r'^load_js/(?P<file>[\w\s\d_-]+)/$', 'flowspec.views.load_jscript', name="load-js"), 
-	url(r'^selectinst/?$', 'flowspec.views.selectinst', name="selectinst"),
+    url(r'^load_js/(?P<file>[\w\s\d_-]+)/$', 'flowspec.views.load_jscript', name="load-js"),
+    url(r'^selectinst/?$', 'flowspec.views.selectinst', name="selectinst"),
     url(r'^accounts/activate/(?P<activation_key>\w+)/$', 'accounts.views.activate', name='activate_account'),
     url(r'^activate/complete/$',
                            direct_to_template,
@@ -34,11 +52,14 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
     (r'^admin/', include(admin.site.urls)),
-	(r'^tinymce/', include('tinymce.urls')),
-	
-	    
+    (r'^tinymce/', include('tinymce.urls')),
+
+
     url(r'^altlogin/?', 'django.contrib.auth.views.login', {'template_name': 'overview/login.html'}, name="altlogin"),
     url(r'^overview/?$', 'flowspec.views.overview', name="overview"),
+
+    url(r'^api/v1/', include(router.urls)),
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 )
 
 

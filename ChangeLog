@@ -1,4 +1,10 @@
 ===========
+1.1.2 RELEASE
+Updates and enhancements. Check documentation for updating from previous versions
+	- Rest Api
+
+
+===========
 1.1.0 RELEASE
 Updates and enhancements. Check documentation for updating from previous versions
 
@@ -71,7 +77,7 @@ Improvements:
 Minor UI improvements (check Requirements)
 
 Requirements:
-	-south migration to include database changes if you are at 
+	-south migration to include database changes if you are at
 	<=0.9.5
 
 UI Improvements:
@@ -89,7 +95,7 @@ Features:
 
 UI Improvements:
 	-Changed wording;from 'Suspend' to 'Deactivate'
-	-Increased the size of Console and Add Rule buttons. Made Add Rule button 
+	-Increased the size of Console and Add Rule buttons. Made Add Rule button
 	stand out with different color.
 
 ===========
@@ -187,13 +193,13 @@ Fixes:
 0.8.3 RELEASE
 Feature enhancement release
 Fixes:
-	- User/username length monkey patching now works with admin forms as well  
+	- User/username length monkey patching now works with admin forms as well
 
 ===========
 0.8.2 RELEASE
 Bug Fix release
 Fixes:
-	- Fixed bug with csrf cookie not being set while logged in for the first time 
+	- Fixed bug with csrf cookie not being set while logged in for the first time
 
 ===========
 0.8.1 RELEASE
@@ -201,10 +207,10 @@ This is the latest alpha release operating on production network
 Changes:
 	- Fixed bug with protected networks form cleaning
 
-===========    
+===========
 v0.8.0 RELEASE
 New features
-Changes:  
+Changes:
 	- DB migration to protocol addition
 	- Added protocol to match conditions plus check mechanism to form cleaning
 
@@ -270,7 +276,7 @@ Major release/changes
 Features:
 	- Added registration to installed apps
 	- Removed user activation from shibboleth backend. Moved it to login view
-	
+
 ===========
 Application features up to now:
 	- Rule creation and application to device via netconf, nxpy
@@ -278,5 +284,5 @@ Application features up to now:
 	- Then statements include discard and rate limit for plain users
 	- User authentication via Shibboleth
 	- Whois client determines user peer networks and user authority
-	 
+
 

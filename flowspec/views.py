@@ -54,8 +54,8 @@ from utils.decorators import shib_required
 
 from django.views.decorators.cache import never_cache
 from django.conf import settings
-from django.core.mail.message import EmailMessage
 from django.template.defaultfilters import slugify
+from flowspec.helpers import send_new_mail, get_peer_techc_mails
 import datetime
 import os
 
@@ -127,6 +127,7 @@ def group_routes_ajax(request):
     jresp['aaData'] = routes
     return HttpResponse(json.dumps(jresp), mimetype='application/json')
 
+
 @login_required
 @never_cache
 def overview_routes_ajax(request):
@@ -146,6 +147,7 @@ def overview_routes_ajax(request):
     routes = build_routes_json(group_routes)
     jresp['aaData'] = routes
     return HttpResponse(json.dumps(jresp), mimetype='application/json')
+
 
 def build_routes_json(groutes):
     routes = []
@@ -170,6 +172,7 @@ def build_routes_json(groutes):
         routes.append(rd)
     return routes
 
+
 @login_required
 @never_cache
 def add_route(request):
@@ -178,9 +181,12 @@ def add_route(request):
     if request.user.is_superuser:
         applier_peer_networks = PeerRange.objects.all()
     if not applier_peer_networks:
-         messages.add_message(request, messages.WARNING,
-                             _("Insufficient rights on administrative networks. Cannot add rule. Contact your administrator"))
-         return HttpResponseRedirect(reverse("group-routes"))
+        messages.add_message(
+            request,
+            messages.WARNING,
+            ('Insufficient rights on administrative networks. Cannot add rule. Contact your administrator')
+        )
+        return HttpResponseRedirect(reverse("group-routes"))
     if request.method == "GET":
         form = RouteForm(initial={'applier': applier})
         if not request.user.is_superuser:
@@ -201,35 +207,30 @@ def add_route(request):
                 pass
         form = RouteForm(request_data)
         if form.is_valid():
-            route=form.save(commit=False)
+            route = form.save(commit=False)
             if not request.user.is_superuser:
                 route.applier = request.user
             route.status = "PENDING"
             route.response = "Applying"
-            route.source = IPNetwork("%s/%s" %(IPNetwork(route.source).network.compressed, IPNetwork(route.source).prefixlen)).compressed
-            route.destination = IPNetwork("%s/%s" %(IPNetwork(route.destination).network.compressed, IPNetwork(route.destination).prefixlen)).compressed
+            route.source = IPNetwork('%s/%s' % (IPNetwork(route.source).network.compressed, IPNetwork(route.source).prefixlen)).compressed
+            route.destination = IPNetwork('%s/%s' % (IPNetwork(route.destination).network.compressed, IPNetwork(route.destination).prefixlen)).compressed
+            route.requesters_address = request.META['HTTP_X_FORWARDED_FOR']
             route.save()
             form.save_m2m()
-            route.commit_add()
-            requesters_address = request.META['HTTP_X_FORWARDED_FOR']
-            fqdn = Site.objects.get_current().domain
-            admin_url = "https://%s%s" % (fqdn, reverse("edit-route", kwargs={'route_slug': route.name }))
-            mail_body = render_to_string("rule_action.txt",
-                                             {"route": route, "address": requesters_address, "action": "creation", "url": admin_url})
-            user_mail = "%s" %route.applier.email
-            user_mail = user_mail.split(';')
-            send_new_mail(settings.EMAIL_SUBJECT_PREFIX + "Rule %s creation request submitted by %s" %(route.name, route.applier.username),
-                              mail_body, settings.SERVER_EMAIL, user_mail,
-                              get_peer_techc_mails(route.applier))
-            d = { 'clientip' : "%s"%requesters_address, 'user' : route.applier.username }
-            logger.info(mail_body, extra=d)
             return HttpResponseRedirect(reverse("group-routes"))
         else:
             if not request.user.is_superuser:
                 form.fields['then'] = forms.ModelMultipleChoiceField(queryset=ThenAction.objects.filter(action__in=settings.UI_USER_THEN_ACTIONS).order_by('action'), required=True)
                 form.fields['protocol'] = forms.ModelMultipleChoiceField(queryset=MatchProtocol.objects.filter(protocol__in=settings.UI_USER_PROTOCOLS).order_by('protocol'), required=False)
-            return render_to_response('apply.html', {'form': form, 'applier':applier},
-                                      context_instance=RequestContext(request))
+            return render_to_response(
+                'apply.html',
+                {
+                    'form': form,
+                    'applier': applier
+                },
+                context_instance=RequestContext(request)
+            )
+
 
 @login_required
 @never_cache
@@ -239,8 +240,11 @@ def edit_route(request, route_slug):
     route_edit = get_object_or_404(Route, name=route_slug)
     route_edit_applier_peer = route_edit.applier.get_profile().peer
     if applier_peer != route_edit_applier_peer and (not request.user.is_superuser):
-        messages.add_message(request, messages.WARNING,
-                             _("Insufficient rights to edit rule %s") %(route_slug))
+        messages.add_message(
+            request,
+            messages.WARNING,
+            ('Insufficient rights to edit rule %s') % (route_slug)
+        )
         return HttpResponseRedirect(reverse("group-routes"))
 #    if route_edit.status == "ADMININACTIVE" :
 #        messages.add_message(request, messages.WARNING,
@@ -250,9 +254,12 @@ def edit_route(request, route_slug):
 #        messages.add_message(request, messages.WARNING,
 #                             "Cannot edit the expired rule %s. Contact helpdesk to enable it" %(route_slug))
 #        return HttpResponseRedirect(reverse("group-routes"))
-    if route_edit.status == "PENDING" :
-        messages.add_message(request, messages.WARNING,
-                             _("Cannot edit a pending rule: %s.") %(route_slug))
+    if route_edit.status == 'PENDING':
+        messages.add_message(
+            request,
+            messages.WARNING,
+            ('Cannot edit a pending rule: %s.') % (route_slug)
+        )
         return HttpResponseRedirect(reverse("group-routes"))
     route_original = deepcopy(route_edit)
     if request.POST:
@@ -265,11 +272,14 @@ def edit_route(request, route_slug):
                 del request_data['issuperuser']
             except:
                 pass
-        form = RouteForm(request_data, instance = route_edit)
+        form = RouteForm(
+            request_data,
+            instance=route_edit
+        )
         critical_changed_values = ['source', 'destination', 'sourceport', 'destinationport', 'port', 'protocol', 'then', 'fragmenttype']
         if form.is_valid():
             changed_data = form.changed_data
-            route=form.save(commit=False)
+            route = form.save(commit=False)
             route.name = route_original.name
             route.status = route_original.status
             route.response = route_original.response
@@ -278,34 +288,30 @@ def edit_route(request, route_slug):
             if bool(set(changed_data) & set(critical_changed_values)) or (not route_original.status == 'ACTIVE'):
                 route.status = "PENDING"
                 route.response = "Applying"
-                route.source = IPNetwork("%s/%s" %(IPNetwork(route.source).network.compressed, IPNetwork(route.source).prefixlen)).compressed
-                route.destination = IPNetwork("%s/%s" %(IPNetwork(route.destination).network.compressed, IPNetwork(route.destination).prefixlen)).compressed
+                route.source = IPNetwork('%s/%s' % (IPNetwork(route.source).network.compressed, IPNetwork(route.source).prefixlen)).compressed
+                route.destination = IPNetwork('%s/%s' % (IPNetwork(route.destination).network.compressed, IPNetwork(route.destination).prefixlen)).compressed
+                route.requesters_address = self.request.META['HTTP_X_FORWARDED_FOR']
             route.save()
             if bool(set(changed_data) & set(critical_changed_values)) or (not route_original.status == 'ACTIVE'):
                 form.save_m2m()
-                route.commit_edit()
-                requesters_address = request.META['HTTP_X_FORWARDED_FOR']
-                fqdn = Site.objects.get_current().domain
-                admin_url = "https://%s%s" % (fqdn, reverse("edit-route", kwargs={'route_slug': route.name }))
-                mail_body = render_to_string("rule_action.txt",
-                                             {"route": route, "address": requesters_address, "action": "edit", "url": admin_url})
-                user_mail = "%s" %route.applier.email
-                user_mail = user_mail.split(';')
-                send_new_mail(settings.EMAIL_SUBJECT_PREFIX + "Rule %s edit request submitted by %s" %(route.name, route.applier.username),
-                              mail_body, settings.SERVER_EMAIL, user_mail,
-                              get_peer_techc_mails(route.applier))
-                d = { 'clientip' : requesters_address, 'user' : route.applier.username }
-                logger.info(mail_body, extra=d)
+                # route.commit_edit()
             return HttpResponseRedirect(reverse("group-routes"))
         else:
             if not request.user.is_superuser:
                 form.fields['then'] = forms.ModelMultipleChoiceField(queryset=ThenAction.objects.filter(action__in=settings.UI_USER_THEN_ACTIONS).order_by('action'), required=True)
                 form.fields['protocol'] = forms.ModelMultipleChoiceField(queryset=MatchProtocol.objects.filter(protocol__in=settings.UI_USER_PROTOCOLS).order_by('protocol'), required=False)
-            return render_to_response('apply.html', {'form': form, 'edit':True, 'applier': applier},
-                                      context_instance=RequestContext(request))
+            return render_to_response(
+                'apply.html',
+                {
+                    'form': form,
+                    'edit': True,
+                    'applier': applier
+                },
+                context_instance=RequestContext(request)
+            )
     else:
         if (not route_original.status == 'ACTIVE'):
-            route_edit.expires = datetime.date.today() + datetime.timedelta(days = settings.EXPIRATION_DAYS_OFFSET)
+            route_edit.expires = datetime.date.today() + datetime.timedelta(days=settings.EXPIRATION_DAYS_OFFSET)
         dictionary = model_to_dict(route_edit, fields=[], exclude=[])
         if request.user.is_superuser:
             dictionary['issuperuser'] = request.user.username
@@ -318,8 +324,16 @@ def edit_route(request, route_slug):
         if not request.user.is_superuser:
             form.fields['then'] = forms.ModelMultipleChoiceField(queryset=ThenAction.objects.filter(action__in=settings.UI_USER_THEN_ACTIONS).order_by('action'), required=True)
             form.fields['protocol'] = forms.ModelMultipleChoiceField(queryset=MatchProtocol.objects.filter(protocol__in=settings.UI_USER_PROTOCOLS).order_by('protocol'), required=False)
-        return render_to_response('apply.html', {'form': form, 'edit':True, 'applier': applier},
-                                  context_instance=RequestContext(request))
+        return render_to_response(
+            'apply.html',
+            {
+                'form': form,
+                'edit': True,
+                'applier': applier
+            },
+            context_instance=RequestContext(request)
+        )
+
 
 @login_required
 @never_cache
@@ -334,24 +348,14 @@ def delete_route(request, route_slug):
             if not request.user.is_superuser:
                 route.applier = request.user
             route.response = "Deactivating"
+            route.requesters_address = request.META['HTTP_X_FORWARDED_FOR']
             route.save()
-            route.commit_delete()
-            requesters_address = request.META['HTTP_X_FORWARDED_FOR']
-            fqdn = Site.objects.get_current().domain
-            admin_url = "https://%s%s" % (fqdn, reverse("edit-route", kwargs={'route_slug': route.name }))
-            mail_body = render_to_string("rule_action.txt",
-                                             {"route": route, "address": requesters_address, "action": "removal", "url": admin_url})
-            user_mail = "%s" %route.applier.email
-            user_mail = user_mail.split(';')
-            send_new_mail(settings.EMAIL_SUBJECT_PREFIX + "Rule %s removal request submitted by %s" %(route.name, route.applier.username),
-                              mail_body, settings.SERVER_EMAIL, user_mail,
-                             get_peer_techc_mails(route.applier))
-            d = { 'clientip' : requesters_address, 'user' : route.applier.username }
-            logger.info(mail_body, extra=d)
+            # route.commit_delete()
         html = "<html><body>Done</body></html>"
         return HttpResponse(html)
     else:
         return HttpResponseRedirect(reverse("group-routes"))
+
 
 @login_required
 @never_cache
@@ -575,26 +579,6 @@ def user_logout(request):
 def load_jscript(request, file):
     long_polling_timeout = int(settings.POLL_SESSION_UPDATE)*1000 + 10000
     return render_to_response('%s.js' % file, {'timeout': long_polling_timeout}, context_instance=RequestContext(request), mimetype="text/javascript")
-
-
-def get_peer_techc_mails(user):
-    mail = []
-    additional_mail = []
-    techmails_list = []
-    user_mail = "%s" %user.email
-    user_mail = user_mail.split(';')
-    techmails = user.get_profile().peer.techc_emails.all()
-    if techmails:
-        for techmail in techmails:
-            techmails_list.append(techmail.email)
-    if settings.NOTIFY_ADMIN_MAILS:
-        additional_mail = settings.NOTIFY_ADMIN_MAILS
-    mail.extend(additional_mail)
-    mail.extend(techmails_list)
-    return mail
-
-def send_new_mail(subject, message, from_email, recipient_list, bcc_list):
-    return EmailMessage(subject, message, from_email, recipient_list, bcc_list).send()
 
 
 def lookupShibAttr(attrmap, requestMeta):

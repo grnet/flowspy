@@ -36,6 +36,9 @@ class RouteViewSet(viewsets.ModelViewSet):
     queryset = Route.objects.all()
     serializer_class = RouteSerializer
 
+    def pre_save(self, obj):
+        obj.requesters_address = self.request.META['HTTP_X_FORWARDED_FOR']
+
 
 class PortViewSet(viewsets.ModelViewSet):
     queryset = MatchPort.objects.all()

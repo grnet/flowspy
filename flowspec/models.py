@@ -20,13 +20,18 @@
 from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import User
+from django.contrib.sites.models import Site
+from django.db.models.signals import post_save
 from django.utils.translation import ugettext_lazy as _
+from django.core.urlresolvers import reverse
+
+from flowspec.helpers import send_new_mail, get_peer_techc_mails
 from utils import proxy as PR
 from ipaddr import *
 import datetime
 import logging
 from time import sleep
-from junos import create_junos_name, policer_name
+from junos import create_junos_name
 
 import beanstalkc
 from utils.randomizer import id_generator as id_gen
@@ -167,7 +172,7 @@ class Route(models.Model):
     expires = models.DateField(default=days_offset, verbose_name=_("Expires"))
     response = models.CharField(max_length=512, blank=True, null=True, verbose_name=_("Response"))
     comments = models.TextField(null=True, blank=True, verbose_name=_("Comments"))
-
+    requesters_address = models.CharField(max_length=255, blank=True, null=True)
 
     def __unicode__(self):
         return self.name
@@ -182,7 +187,6 @@ class Route(models.Model):
             hash = id_gen()
             self.name = "%s_%s" %(self.name, hash)
         super(Route, self).save(*args, **kwargs) # Call the "real" save() method.
-
 
     def clean(self, *args, **kwargs):
         from django.core.exceptions import ValidationError
@@ -201,26 +205,125 @@ class Route(models.Model):
 
     def commit_add(self, *args, **kwargs):
         peer = self.applier.get_profile().peer.peer_tag
-        send_message("[%s] Adding rule %s. Please wait..." %(self.applier.username, self.name), peer)
+        send_message("[%s] Adding rule %s. Please wait..." % (self.applier.username, self.name), peer)
         response = add.delay(self)
-        logger.info("Got add job id: %s" %response)
+        logger.info('Got add job id: %s' % response)
+        fqdn = Site.objects.get_current().domain
+        admin_url = 'https://%s%s' % (
+            fqdn,
+            reverse('edit-route', kwargs={'route_slug': self.name})
+        )
+        mail_body = render_to_string(
+            'rule_action.txt',
+            {
+                'route': self,
+                'address': self.requesters_address,
+                'action': 'creation',
+                'url': admin_url
+            }
+        )
+        user_mail = '%s' % self.applier.email
+        user_mail = user_mail.split(';')
+        send_new_mail(
+            settings.EMAIL_SUBJECT_PREFIX + 'Rule %s creation request submitted by %s' % (self.name, self.applier.username),
+            mail_body,
+            settings.SERVER_EMAIL, user_mail,
+            get_peer_techc_mails(self.applier)
+        )
+        d = {
+            'clientip': '%s' % self.requesters_address,
+            'user': self.applier.username
+        }
+        logger.info(mail_body, extra=d)
 
     def commit_edit(self, *args, **kwargs):
         peer = self.applier.get_profile().peer.peer_tag
-        send_message("[%s] Editing rule %s. Please wait..." %(self.applier.username, self.name), peer)
+        send_message(
+            '[%s] Editing rule %s. Please wait...' %
+            (
+                self.applier.username,
+                self.name
+            ), peer
+        )
         response = edit.delay(self)
-        logger.info("Got edit job id: %s" %response)
+        logger.info('Got edit job id: %s' % response)
+        fqdn = Site.objects.get_current().domain
+        admin_url = 'https://%s%s' % (
+            fqdn,
+            reverse(
+                'edit-route',
+                kwargs={'route_slug': self.name}
+            )
+        )
+        mail_body = render_to_string(
+            'rule_action.txt',
+            {
+                'route': self,
+                'address': self.requesters_address,
+                'action': 'edit',
+                'url': admin_url
+            }
+        )
+        user_mail = '%s' % self.applier.email
+        user_mail = user_mail.split(';')
+        send_new_mail(
+            settings.EMAIL_SUBJECT_PREFIX + 'Rule %s edit request submitted by %s' % (self.name, self.applier.username),
+            mail_body, settings.SERVER_EMAIL, user_mail,
+            get_peer_techc_mails(self.applier)
+        )
+        d = {
+            'clientip': self.requesters_address,
+            'user': self.applier.username
+        }
+        logger.info(mail_body, extra=d)
 
     def commit_delete(self, *args, **kwargs):
         reason_text = ''
         reason = ''
         if "reason" in kwargs:
             reason = kwargs['reason']
-            reason_text = "Reason: %s. " %reason
+            reason_text = 'Reason: %s.' % reason
         peer = self.applier.get_profile().peer.peer_tag
-        send_message("[%s] Suspending rule %s. %sPlease wait..." %(self.applier.username, self.name, reason_text), peer)
+        send_message(
+            '[%s] Suspending rule %s. %sPlease wait...' % (
+                self.applier.username,
+                self.name,
+                reason_text
+            ), peer
+        )
         response = delete.delay(self, reason=reason)
-        logger.info("Got delete job id: %s" %response)
+        logger.info('Got delete job id: %s' % response)
+        fqdn = Site.objects.get_current().domain
+        admin_url = 'https://%s%s' % (
+            fqdn,
+            reverse(
+                'edit-route',
+                kwargs={'route_slug': self.name}
+            )
+        )
+        mail_body = render_to_string(
+            'rule_action.txt',
+            {
+                'route': self,
+                'address': self.requesters_address,
+                'action': 'removal',
+                'url': admin_url
+            }
+        )
+        user_mail = '%' % self.applier.email
+        user_mail = user_mail.split(';')
+        send_new_mail(
+            settings.EMAIL_SUBJECT_PREFIX + 'Rule %s removal request submitted by %s' % (self.name, self.applier.username),
+            mail_body,
+            settings.SERVER_EMAIL,
+            user_mail,
+            get_peer_techc_mails(self.applier)
+        )
+        d = {
+            'clientip': self.requesters_address,
+            'user': self.applier.username
+        }
+        logger.info(mail_body, extra=d)
 
     def has_expired(self):
         today = datetime.date.today()
@@ -242,7 +345,7 @@ class Route(models.Model):
         except Exception as e:
             self.status = "EXPIRED"
             self.save()
-            logger.error("No routing options on device. Exception: %s" %e)
+            logger.error('No routing options on device. Exception: %s' % e)
             return True
         for route in routes:
             if route.name == self.name:
@@ -478,3 +581,16 @@ def send_message(msg, user):
     tube_message = json.dumps({'message': str(msg), 'username':peer})
     b.put(tube_message)
     b.close()
+
+
+def notify_user(sender, instance, created, **kwargs):
+    if created:
+        instance.commit_add()
+    else:
+        if instance.has_expired():
+            instance.commit_delete()
+        else:
+            instance.commit_edit()
+
+
+post_save.connect(notify_user, sender=Route)

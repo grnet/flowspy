@@ -6,3 +6,4 @@ celery_var/
 urls.py
 *~
 celeryd@*
+doc_rst/

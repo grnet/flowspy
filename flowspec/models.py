@@ -176,10 +176,7 @@ class Route(models.Model):
     comments = models.TextField(null=True, blank=True, verbose_name=_("Comments"))
     requesters_address = models.CharField(max_length=255, blank=True, null=True)
 
-<<<<<<< HEAD
-=======
 
->>>>>>> 7ae0e0ec4604a3363386ec307eaad6002ed8bd8d
     def __unicode__(self):
         return self.name
 
@@ -194,10 +191,7 @@ class Route(models.Model):
             self.name = "%s_%s" %(self.name, hash)
         super(Route, self).save(*args, **kwargs) # Call the "real" save() method.
 
-<<<<<<< HEAD
-=======
 
->>>>>>> 7ae0e0ec4604a3363386ec307eaad6002ed8bd8d
     def clean(self, *args, **kwargs):
         from django.core.exceptions import ValidationError
         if self.destination:
@@ -217,7 +211,6 @@ class Route(models.Model):
         peer = self.applier.get_profile().peer.peer_tag
         send_message("[%s] Adding rule %s. Please wait..." % (self.applier.username, self.name), peer)
         response = add.delay(self)
-<<<<<<< HEAD
         logger.info('Got add job id: %s' % response)
         fqdn = Site.objects.get_current().domain
         admin_url = 'https://%s%s' % (
@@ -246,9 +239,6 @@ class Route(models.Model):
             'user': self.applier.username
         }
         logger.info(mail_body, extra=d)
-=======
-        logger.info("Got add job id: %s" %response)
->>>>>>> 7ae0e0ec4604a3363386ec307eaad6002ed8bd8d
 
     def commit_edit(self, *args, **kwargs):
         peer = self.applier.get_profile().peer.peer_tag

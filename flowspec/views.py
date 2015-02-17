@@ -573,7 +573,8 @@ def overview(request):
 @never_cache
 def user_logout(request):
     logout(request)
-    return HttpResponseRedirect(reverse('group-routes'))
+    return HttpResponseRedirect(settings.SHIB_LOGOUT_URL or reverse('group-routes'))
+
 
 @never_cache
 def load_jscript(request, file):

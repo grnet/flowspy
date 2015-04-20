@@ -95,7 +95,7 @@ Edit settings.py file and set the following according to your configuration::
     DATABASES (to point to your local database). You could use views instead of tables for models: peer, peercontacts, peernetworks. For this to work we suggest MySQL with MyISAM db engine
     SECRET_KEY : Make this unique, and don't share it with anybody
     STATIC_ROOT: /srv/flowspy/static (or your installation directory)
-    STATIC_URL (static media directory) . If you have followed the above this should be: /srv/flowspy/static
+    STATIC_URL (static media directory) . If you have followed the above this should be: /static/
     TEMPLATE_DIRS : If you have followed the above this should be: /srv/flowspy/templates
     CACHE_BACKEND:  Enable Memcached for production or leave to DummyCache for development environments
     Alternatively you could go for redis with the corresponding Django client lib.

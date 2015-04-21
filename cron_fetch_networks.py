@@ -5,7 +5,6 @@ import sys
 def populate_networks():
     peers = Peer.objects.all()
     for peer in peers:
-        print peer
         peer.fill_networks()
 
 if __name__ == "__main__":

@@ -1,7 +1,9 @@
 {% extends "base.html" %}
-{% block sidenav %}{% endblock %}
 {% load i18n %}
-    {% block title %}{{ flatpage.title }}{% endblock %}
+
+{% block sidenav %}{% endblock %}
+{% block title %}{{ flatpage.title }}{% endblock %}
+
 {% block extraheadbottom %}
 <style>
 	@media (min-width: 768px) {
@@ -12,60 +14,50 @@
 }
 </style>
 {% endblock %}
-    {% block pagejsbottom %}
-    <script type="text/javascript">
 
-        function setlang(lang) {
-                $("#langsel").val(lang);
-                var form = $("#langform");
-                $.ajax({
-        			url: form.attr('action'),
-        			data: form.serialize(),
-        			type: "POST",
-        			cache: false,
-        			success:function(data){
-        					window.location.href=location.href + "../" + lang + "/";
-        				}
-                });
-
-        }
+{% block pagejsbottom %}
+<script type="text/javascript">
+    function setlang(lang) {
+        $("#langsel").val(lang);
+        var form = $("#langform");
+        $.ajax({
+			url: form.attr('action'),
+			data: form.serialize(),
+			type: "POST",
+			cache: false,
+			success:function(data){
+				window.location.href=location.href + "../" + lang + "/";
+			}
+        });
+    }
 </script>
-    {% endblock %}
-
-    {% block extrahead %}
-    <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
-	<META HTTP-EQUIV="Expires" CONTENT="-1">
-
 {% endblock %}
 
-		{% block contentplaceholder %}
+{% block extrahead %}
+<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+<META HTTP-EQUIV="Expires" CONTENT="-1">
+{% endblock %}
 
-		<div class="container">
+{% block contentplaceholder %}
+<div class="container">
     <div class="row">
-                <div class="col-lg-12">
-                    <h1 class="page-header">{{ flatpage.title }}</h1>
+        <div class="col-lg-12">
+            <h1 class="page-header">{{ flatpage.title }}</h1>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <div class="row">
+        <div class="col-lg-8">
+        	<div class="panel panel-primary">
+                <div class="panel-heading">
+                    <i class="fa fa-info fa-fw"></i> {{ flatpage.title }}
                 </div>
-                <!-- /.col-lg-12 -->
+                <!-- /.panel-heading -->
+                <div class="panel-body">
+                    {{ flatpage.content|linebreaks }}
+                </div>
             </div>
-
-
-
-<div class="row">
-                <div class="col-lg-8">
-                	<div class="panel panel-primary">
-                        <div class="panel-heading">
-                            <i class="fa fa-info fa-fw"></i> {{ flatpage.title }}
-                        </div>
-                        <!-- /.panel-heading -->
-                        <div class="panel-body">
-
-            {{ flatpage.content|linebreaks }}
-            </div>
-            </div>
-            </div>
-            </div>
-           </div>
-
-
-		{% endblock %}
-
+        </div>
+    </div>
+</div>
+{% endblock %}

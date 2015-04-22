@@ -1,4 +1,5 @@
 {% load i18n %}
+<<<<<<< HEAD
 {% load staticfiles %}
 <!DOCTYPE html>
 <html>
@@ -96,53 +97,105 @@
                     <li>
                         <a href="{% url dashboard %}"><i class="fa fa-dashboard fa-fw"></i> {% trans "Dashboard" %}</a>
                     </li>
-                    <li>
-                        <a href="{% url group-routes %}"><i class="fa fa-shield fa-fw"></i> {% trans "Rules" %}</a>
+                    <!-- /.dropdown -->
+                    {% if user.is_authenticated %}
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <i class="fa fa-user fa-fw"></i>
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-user" role="menu" >
+                            <li role="presentation" class="dropdown-header">{{user}}</li>
+                            <li class="divider"></li>
+                            {% if user.get_profile.peer %}
+                            <li>
+                                <a href="{% url user-profile %}"><i class="fa fa-user fa-fw"></i>{% trans "My profile" %}</a>
+                            </li>
+                            {% endif %}
+                            {% if user.is_superuser %}
+                            <li class="divider"></li>
+                            <li>
+                                <a href="{% url admin:index %}">
+                                    <i class="fa fa-cogs"></i>
+                                    {% trans "Admin" %}
+                                </a>
+                            </li>
+                            {% endif %}
+                            <li class="divider"></li>
+                            <li>
+                                <a href="{% url logout %}"><i class="fa fa-sign-out fa-fw"></i> {% trans "Logout" %}</a>
+                            </li>
+                        </ul>
+                        <!-- /.dropdown-user -->
                     </li>
+                    {% else %}
                     <li>
-                        <a href="{% url add-route %}"><i class="fa fa-plus-circle fa-fw"></i> {% trans "Add Rule" %}</a>
+                        <a href="{% url login %}">
+                            {% trans "Shibboleth Login" %}
+                        </a>
                     </li>
-                    {% if perms.accounts.overview %}<li>
-                            <a href="{% url overview %}"><i class="fa fa-desktop fa-fw"></i> {% trans "Overview" %}</a>
-                        </li>{% endif %}
-                    {% if user.is_superuser %}
-                        <li><a href="{% url admin:index %}"><i class="fa fa-cogs fa-fw"></i> {% trans "Admin" %}</a>
-                        </li>
-						{% endif %}
-					{% if user.get_profile.peer %}
-				        <li>
-				            <a href="{% url user-profile %}"><i class="fa fa-user fa-fw"></i> {% trans "My profile" %}</a>
-				        </li>
-				    {% endif %}
+                    {% endif %}
+                    <!-- /.dropdown -->
                 </ul>
-                <!-- /#side-menu -->
+                <!-- /.navbar-top-links -->
+            </nav>
+            <!-- /.navbar-static-top -->
+            {% block sidenav %}
+            <nav class="navbar-default navbar-static-side" role="navigation">
+                {% if user.is_authenticated %}
+                <div class="sidebar-collapse">
+                    <ul class="nav" id="side-menu">
+                        <li>
+                            <a href="{% url dashboard %}"><i class="fa fa-dashboard fa-fw"></i> {% trans "Dashboard" %}</a>
+                        </li>
+                        <li>
+                            <a href="{% url group-routes %}"><i class="fa fa-shield fa-fw"></i> {% trans "Rules" %}</a>
+                        </li>
+                        <li>
+                            <a href="{% url add-route %}"><i class="fa fa-plus-circle fa-fw"></i> {% trans "Add Rule" %}</a>
+                        </li>
+                        {% if perms.accounts.overview %}<li>
+                                <a href="{% url overview %}"><i class="fa fa-desktop fa-fw"></i> {% trans "Overview" %}</a>
+                            </li>{% endif %}
+                        {% if user.is_superuser %}
+                            <li><a href="{% url admin:index %}"><i class="fa fa-cogs fa-fw"></i> {% trans "Admin" %}</a>
+                            </li>
+                            {% endif %}
+                        {% if user.get_profile.peer %}
+                            <li>
+                                <a href="{% url user-profile %}"><i class="fa fa-user fa-fw"></i> {% trans "My profile" %}</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                    <!-- /#side-menu -->
+                </div>
+                {% endif %}
+                <!-- /.sidebar-collapse -->
+            </nav>
+            <!-- /.navbar-static-side -->
+            {% endblock %}
+            <div id="page-wrapper">
+                {% if messages %}
+                <div class="row">
+                    <div class="lg-col-12">
+                        <div id="messages">
+                        {% for message in messages %}
+                            <div {% if message.tags %} class="alert alert-{{ message.tags }} alert-dismissable"{% endif %}>
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                <span>{{ message }}</span><br/>
+                            </div>
+                        {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                {% block contentplaceholder %}
+                {% endblock %}
             </div>
-            {% endif %}
-            <!-- /.sidebar-collapse -->
-        </nav>
-        <!-- /.navbar-static-side -->
-		{% endblock %}
-        <div id="page-wrapper">
-
-        	{% if messages %}
-        	        	<div class="row">
-        		<div class="lg-col-12">
-				<div id="messages">
-				{% for message in messages %}
-					<div {% if message.tags %} class="alert alert-{{ message.tags }} alert-dismissable"{% endif %}>
-					<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-					{{ message }}</span><br />
-				{% endfor %}
-				</div>
-								</div>
-			</div>
-				{% endif %}
-
-        	{% block contentplaceholder %}
-        	{% endblock %}
+            <!-- /#page-wrapper -->
         </div>
         <!-- /#page-wrapper -->
-
     </div>
     <!-- /#wrapper -->
 	{% block footerblock %}
@@ -175,5 +228,4 @@
 	</script>
 
 </body>
-
 </html>

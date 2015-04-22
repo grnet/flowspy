@@ -381,6 +381,7 @@ msgstr "Φίλτρα"
 msgid "Add Rule"
 msgstr "Δημιουργία φίλτρου"
 
+
 #: templates/base.html:107 templates/overview/index.html:324
 msgid "Overview"
 msgstr "Επισκόπηση"
@@ -425,6 +426,7 @@ msgstr "Επιδιόρθωση"
 #: templates/dashboard.html:139 templates/user_routes.html:59
 msgid "Shortcuts"
 msgstr "Συντομεύσεις"
+
 
 #: templates/dashboard.html:144 templates/profile.html:51
 msgid "My Rules"
@@ -603,6 +605,10 @@ msgid ""
 msgstr ""
 "Για αντιμετώπιση σφαλμάτων και πληροφορίες, επικοινωνήστε με το Helpdesk του "
 "%(BRANDING.name)s"
+
+#: templates/base.html:120 templates/overview/index.html:376
+msgid "Rules"
+msgstr "Φίλτρα"
 
 #: templates/overview/index.html:305
 msgid "Access Rights Violation"

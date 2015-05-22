@@ -5,6 +5,7 @@ import socket
 
 register = template.Library()
 
+
 @register.filter
 def tofqdn(value):
     try:
@@ -13,6 +14,5 @@ def tofqdn(value):
             return False
         else:
             return fqdn
-    except socket.gaierror:
+    except:
         return False
-        

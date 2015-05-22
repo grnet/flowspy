@@ -313,7 +313,7 @@ class Route(models.Model):
                 'url': admin_url
             }
         )
-        user_mail = '%' % self.applier.email
+        user_mail = '%s' % self.applier.email
         user_mail = user_mail.split(';')
         send_new_mail(
             settings.EMAIL_SUBJECT_PREFIX + 'Rule %s removal request submitted by %s' % (self.name, self.applier.username),

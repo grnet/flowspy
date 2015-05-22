@@ -291,7 +291,7 @@ def edit_route(request, route_slug):
                 route.response = "Applying"
                 route.source = IPNetwork('%s/%s' % (IPNetwork(route.source).network.compressed, IPNetwork(route.source).prefixlen)).compressed
                 route.destination = IPNetwork('%s/%s' % (IPNetwork(route.destination).network.compressed, IPNetwork(route.destination).prefixlen)).compressed
-                route.requesters_address = self.request.META['HTTP_X_FORWARDED_FOR']
+                route.requesters_address = request.META['HTTP_X_FORWARDED_FOR']
             route.save()
             route.commit_edit()
             if bool(set(changed_data) & set(critical_changed_values)) or (not route_original.status == 'ACTIVE'):

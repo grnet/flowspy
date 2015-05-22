@@ -21,7 +21,6 @@ from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
-from django.db.models.signals import post_save
 from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
 
@@ -585,16 +584,3 @@ def send_message(msg, user):
     tube_message = json.dumps({'message': str(msg), 'username':peer})
     b.put(tube_message)
     b.close()
-
-
-def notify_user(sender, instance, created, **kwargs):
-    if created:
-        instance.commit_add()
-    else:
-        if instance.has_expired():
-            instance.commit_delete()
-        else:
-            instance.commit_edit()
-
-
-post_save.connect(notify_user, sender=Route)

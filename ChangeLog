@@ -3,7 +3,6 @@
 Updates and enhancements. Check documentation for updating from previous versions
 
 	- Rest Api
-	- Use Django signals for notifications
 
 =======
 1.1.1 RELEASE

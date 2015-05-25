@@ -1,0 +1,24 @@
+body {
+    background-color: white !important;
+}
+
+
+.slideshow {
+    margin-bottom: 20px;
+}
+
+.navbar-brand {
+    float: left;
+    font-size: 18px;
+    height: 20px;
+    line-height: 20px;
+    padding: 1px;
+}
+
+.footer {
+    border-top: 1px solid #E5E5E5;
+    color: #777777;
+    padding-bottom: 40px;
+    padding-top: 40px;
+    text-align: center;
+}

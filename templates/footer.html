@@ -3,17 +3,23 @@
 	<footer class="footer">
       <div id="footcontainer" class="container">
         {% if user.is_authenticated %}
-	<p>{% trans "If you have any questions or need help, contact GRNET Helpdesk at <a href='mailto:helpdesk@grnet.gr'>helpdesk@grnet.gr</a> or 800-11-47638." %}</p>
-	{% endif %}
-	<div style="padding-top: 10px;"><a href="https://code.grnet.gr/projects/flowspy">Version: <strong>{{VERSION}}</strong></a> - {% trans "Designed and developed by GRNET NOC" %}
-	<a href="//facebook.com/noc.grnet.gr" target="_blank"><img src="{{STATIC_URL}}img/facebook_img.png" alt="GRNET NOC on Facebook" title="GRNET NOC on Facebook"/></a>  <a href="//twitter.com/grnetnoc"  target="_blank"><img src="{{STATIC_URL}}img/twitter_img.png" alt="GRNET NOC on Twitter" title="GRNET NOC on Twitter"/></a>
+			<p>
+				{% blocktrans %}
+					If you have any questions or need help, contact {{ BRANDING.name }} Helpdesk at <a href='mailto:{{ BRANDING.email }}'>{{ BRANDING.email }}</a> or {{ BRANDING.phone }}.
+				{% endblocktrans %}
+			</p>
+		{% endif %}
+	<div style="padding-top: 10px;"><a href="https://code.grnet.gr/projects/flowspy">Version: <strong>{{ VERSION }}</strong></a> - {% blocktrans %} Designed and developed by {{ BRANDING.name }}" {% endblocktrans %}
+	<a href="{{ BRANDING.facebook }}" target="_blank"><img src="{{STATIC_URL}}img/facebook_img.png" alt="{{ BRANDING.name }} on Facebook" title="{{ BRANDING.name }} on Facebook"/></a>  <a href="{{ BRANDING.twitter }}"  target="_blank"><img src="{{STATIC_URL}}img/twitter_img.png" alt="{{ BRANDING.name }} on Twitter" title="{{ BRANDING.name }} on Twitter"/></a>
 	</div>
-        <div class="row"><a href="http://noc.grnet.gr">{% trans "GRNET" %} NOC</a> | <a href="/info/{{LANGUAGE_CODE}}/">{% trans "Info" %}</a> | <a href="/tos/{{LANGUAGE_CODE}}/">{% trans "Service Terms" %}</a></div>
+        <div class="row"><a href="{{ BRANDING.url }}">{{ BRANDING.name }}</a> | <a href="/info/{{LANGUAGE_CODE}}/">{% trans "Info" %}</a> | <a href="/tos/{{LANGUAGE_CODE}}/">{% trans "Service Terms" %}</a></div>
         <div style="padding-top: 10px;">
 
         </div>
 <div style="padding-top: 10px;">
-	<iframe width="500" scrolling="no" height="50" frameborder="0" align="middle" src="https://dido.grnet.gr/logos/index.html" marginwidth="0" marginheight="0"></iframe>
+	{% if BRANDING.footer_iframe %}
+		<iframe width="500" scrolling="no" height="50" frameborder="0" align="middle" src="{{ BRANDING.footer_iframe }}" marginwidth="0" marginheight="0"></iframe>
+	{% endif %}
 	</div>
       </div>
     </footer>

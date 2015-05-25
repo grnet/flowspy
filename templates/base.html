@@ -1,49 +1,30 @@
+{% load i18n %}
+{% load staticfiles %}
 <!DOCTYPE html>
 <html>
-{% load i18n %}
 <head>
-
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>GRNET FoD :: {% block title %}{% endblock %}</title>
+    <title>{{ BRANDING.name }} FoD :: {% block title %}{% endblock %}</title>
 	<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
 	<META HTTP-EQUIV="expires" CONTENT="Wed, 26 Feb 1997 08:21:57 GMT">
-	<link REL="SHORTCUT ICON" HREF="{{STATIC_URL}}favicon.ico">
+	<link REL="SHORTCUT ICON" HREF="{% static BRANDING.favicon %}">
     <!-- Core CSS - Include with every page -->
-    <link href="{{STATIC_URL}}b3theme/css/bootstrap.min.css" rel="stylesheet">
-    <link href="{{STATIC_URL}}b3theme/font-awesome/css/font-awesome.css" rel="stylesheet">
-
+    <link href="{% static 'b3theme/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'b3theme/font-awesome/css/font-awesome.css' %}" rel="stylesheet">
+    <link href="{% static 'css/custom.css' %}" rel="stylesheet">
     {% block extrahead %}{% endblock %}
 
     <!-- SB Admin CSS - Include with every page -->
     <link href="{{STATIC_URL}}b3theme/css/sb-admin.css" rel="stylesheet">
     {% block extraheadbottom %}{% endblock %}
-    <style>
-    	.navbar-brand {
-    float: left;
-    font-size: 18px;
-    height: 20px;
-    line-height: 20px;
-    padding: 1px;
-}
-
-.footer {
-    border-top: 1px solid #E5E5E5;
-    color: #777777;
-    padding-bottom: 40px;
-    padding-top: 40px;
-    text-align: center;
-}
-
-    </style>
 </head>
 
 <body>
 
     <div id="wrapper">
 
-        <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+        <nav class="navbar navbar-default navbar-static-top" role="navigation" >
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
                     <span class="sr-only">Toggle navigation</span>
@@ -51,7 +32,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="{% url dashboard %}"><img src="{{STATIC_URL}}fodlogo2.png">&nbsp;</a>
+                <a class="navbar-brand" href="{% url dashboard %}"><img src="{% static BRANDING.logo %}">&nbsp;</a>
             </div>
             <!-- /.navbar-header -->
 

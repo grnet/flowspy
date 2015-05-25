@@ -19,8 +19,11 @@
 
 from django.conf import settings
 
+
 def settings_vars(context):
-    # return the value you want as a dictionnary. you may add multiple values in there.
+    # return the value you want as a dictionary.
+    # you may add multiple values in there.
     return {
-            'VERSION': settings.SW_VERSION,
-            }
+        'VERSION': settings.SW_VERSION,
+        'BRANDING': settings.BRANDING
+    }

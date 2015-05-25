@@ -140,7 +140,7 @@ class RouteForm(forms.ModelForm):
                 if broadcast_error:
                     error_text = _('Malformed address format. Cannot be ...0/32')
                 raise forms.ValidationError(error_text)
-    
+
     def clean_expires(self):
         date = self.cleaned_data['expires']
         if date:
@@ -152,22 +152,17 @@ class RouteForm(forms.ModelForm):
 
     def clean(self):
         if self.errors:
-             raise forms.ValidationError(_('Errors in form. Please review and fix them: %s'%", ".join(self.errors)))
+            raise forms.ValidationError(_('Errors in form. Please review and fix them: %s'%", ".join(self.errors)))
         name = self.cleaned_data.get('name', None)
         source = self.cleaned_data.get('source', None)
         sourceports = self.cleaned_data.get('sourceport', None)
         ports = self.cleaned_data.get('port', None)
-        fragmenttypes = self.cleaned_data.get('fragmenttype', None)
         then = self.cleaned_data.get('then', None)
         destination = self.cleaned_data.get('destination', None)
         destinationports = self.cleaned_data.get('destinationport', None)
         protocols = self.cleaned_data.get('protocol', None)
         user = self.cleaned_data.get('applier', None)
-        try:
-            issuperuser = self.data['issuperuser']
-            su = User.objects.get(username=issuperuser)
-        except:
-            issuperuser = None
+        issuperuser = self.data.get('issuperuser')
         peer = user.get_profile().peer
         networks = peer.networks.all()
         if issuperuser:
@@ -223,7 +218,7 @@ class RouteForm(forms.ModelForm):
         if ports:
             route_pk_list=get_matchingport_route_pks(ports, existing_routes)
             if route_pk_list:
-                existing_routes = existing_routes.filter(pk__in=route_pk_list)              
+                existing_routes = existing_routes.filter(pk__in=route_pk_list)
         else:
             existing_routes = existing_routes.filter(port=None)
         for route in existing_routes:
@@ -233,11 +228,12 @@ class RouteForm(forms.ModelForm):
                     raise forms.ValidationError('Found an exact %s rule, %s with destination prefix %s<br>To avoid overlapping try editing rule <a href=\'%s\'>%s</a>' %(route.status, route.name, route.destination, existing_url, route.name))
         return self.cleaned_data
 
+
 class ThenPlainForm(forms.ModelForm):
 #    action = forms.CharField(initial='rate-limit')
     class Meta:
         model = ThenAction
-    
+
     def clean_action_value(self):
         action_value = self.cleaned_data['action_value']
         if action_value:
@@ -257,18 +253,17 @@ class ThenPlainForm(forms.ModelForm):
             raise forms.ValidationError(_('Cannot select something other than rate-limit'))
         else:
             return self.cleaned_data["action"]
-    
+
 
 class PortPlainForm(forms.ModelForm):
 #    action = forms.CharField(initial='rate-limit')
     class Meta:
         model = MatchPort
-    
+
     def clean_port(self):
         port = self.cleaned_data['port']
         if port:
             try:
-                p = int(port)
                 if int(port) > 65535 or int(port) < 0:
                     raise forms.ValidationError(_('Port should be < 65535 and >= 0'))
                 return "%s" %self.cleaned_data["port"]
@@ -279,11 +274,13 @@ class PortPlainForm(forms.ModelForm):
         else:
             raise forms.ValidationError(_('Cannot be empty'))
 
+
 def value_list_to_list(valuelist):
     vl = []
     for val in valuelist:
         vl.append(val[0])
     return vl
+
 
 def get_matchingport_route_pks(portlist, routes):
     route_pk_list = []
@@ -293,6 +290,7 @@ def get_matchingport_route_pks(portlist, routes):
         if rsp and rsp == ports_value_list:
             route_pk_list.append(route.pk)
     return route_pk_list
+
 
 def get_matchingprotocol_route_pks(protocolist, routes):
     route_pk_list = []

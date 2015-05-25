@@ -28,16 +28,14 @@ from django.conf import settings
 import datetime
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
-from django.core.urlresolvers import reverse
 import os
 from celery.exceptions import TimeLimitExceeded, SoftTimeLimitExceeded
 
-
-
 LOG_FILENAME = os.path.join(settings.LOG_FILE_LOCATION, 'celery_jobs.log')
 
-#FORMAT = '%(asctime)s %(levelname)s: %(message)s'
-#logging.basicConfig(format=FORMAT)
+
+# FORMAT = '%(asctime)s %(levelname)s: %(message)s'
+# logging.basicConfig(format=FORMAT)
 formatter = logging.Formatter('%(asctime)s %(levelname)s: %(message)s')
 
 logger = logging.getLogger(__name__)
@@ -74,7 +72,8 @@ def add(route, callback=None):
         route.status = "ERROR"
         route.response = "Error"
         route.save()
-        announce("[%s] Rule add: %s - Result: %s"%(route.applier, route.name, route.response), route.applier)   
+        announce("[%s] Rule add: %s - Result: %s"%(route.applier, route.name, route.response), route.applier)
+
 
 @task(ignore_result=True)
 def edit(route, callback=None):
@@ -103,7 +102,7 @@ def edit(route, callback=None):
         route.status = "ERROR"
         route.response = "Error"
         route.save()
-        announce("[%s] Rule edit: %s - Result: %s"%(route.applier, route.name, route.response), route.applier)        
+        announce("[%s] Rule edit: %s - Result: %s"%(route.applier, route.name, route.response), route.applier)
 
 
 @task(ignore_result=True)
@@ -137,7 +136,8 @@ def delete(route, **kwargs):
         route.status = "ERROR"
         route.response = "Error"
         route.save()
-        announce("[%s] Suspending rule : %s - Result: %s"%(route.applier, route.name, route.response), route.applier)   
+        announce("[%s] Suspending rule : %s - Result: %s"%(route.applier, route.name, route.response), route.applier)
+
 
 # May not work in the first place... proxy is not aware of Route models
 @task
@@ -164,9 +164,10 @@ def batch_delete(routes, **kwargs):
             route.response = response
             route.expires = datetime.date.today()
             route.save()
-            announce("[%s] Rule removal: %s%s- Result %s" %(route.applier, route.name, reason_text, response), route.applier)
+            announce("[%s] Rule removal: %s%s- Result %s" % (route.applier, route.name, reason_text, response), route.applier)
     else:
         return False
+
 
 #@task(ignore_result=True)
 def announce(messg, user):
@@ -174,12 +175,13 @@ def announce(messg, user):
     username = user.get_profile().peer.peer_tag
     b = beanstalkc.Connection()
     b.use(settings.POLLS_TUBE)
-    tube_message = json.dumps({'message': messg, 'username':username})
+    tube_message = json.dumps({'message': messg, 'username': username})
     b.put(tube_message)
     b.close()
 
+
 @task
-def check_sync(route_name=None, selected_routes = []):
+def check_sync(route_name=None, selected_routes=[]):
     from flowspec.models import Route, MatchPort, MatchDscp, ThenAction
     if not selected_routes:
         routes = Route.objects.all()
@@ -195,6 +197,7 @@ def check_sync(route_name=None, selected_routes = []):
         else:
             if route.status != 'EXPIRED':
                 route.check_sync()
+
 
 @task(ignore_result=True)
 def notify_expired():
@@ -229,25 +232,3 @@ def notify_expired():
                     logger.info("Exception: %s"%e)
                     pass
     logger.info('Expiration notification process finished')
-
-#def delete(route):
-#    
-#    applier = PR.Applier(route_object=route)
-#    commit, response = applier.apply(configuration=applier.delete_routes())
-#    if commit:
-#            rows = queryset.update(is_online=False, is_active=False)
-#            queryset.update(response="Successfully removed route from network")
-#            self.message_user(request, "Successfully removed %s routes from network" % rows)
-#        else:
-#            self.message_user(request, "Could not remove routes from network")
-#    if commit:
-#        is_online = False
-#        is_active = False
-#        response = "Successfully removed route from network"
-#    else:
-#        is_online = False
-#        is_active = True
-#    route.is_online = is_online
-#    route.is_active = is_active
-#    route.response = response
-#    route.save()

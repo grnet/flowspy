@@ -18,20 +18,21 @@
 #
 
 from django.contrib import admin
-from accounts.models import *
-from django.contrib.auth.models import User
-from peers.models import *
-from django.conf import settings
+from django import forms
+from django.core.urlresolvers import reverse
+from django.contrib.flatpages.admin import FlatPageAdmin
+from django.contrib.flatpages.models import FlatPage
+
+from tinymce.widgets import TinyMCE
+from accounts.models import UserProfile
+
 
 class UserPrAdmin(admin.ModelAdmin):
     list_display = ('user', 'peer')
 
 admin.site.register(UserProfile, UserPrAdmin)
-from django import forms
-from django.core.urlresolvers import reverse
-from django.contrib.flatpages.admin import FlatPageAdmin
-from django.contrib.flatpages.models import FlatPage
-from tinymce.widgets import TinyMCE
+
+
 
 class TinyMCEFlatPageAdmin(FlatPageAdmin):
     def formfield_for_dbfield(self, db_field, **kwargs):

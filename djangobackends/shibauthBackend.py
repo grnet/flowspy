@@ -17,9 +17,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+from django.contrib.auth.models import User
 
-from django.contrib.auth.models import User, UserManager, Permission, Group
-from django.conf import settings
 
 class shibauthBackend:
     def authenticate(self, **kwargs):
@@ -43,7 +42,7 @@ class shibauthBackend:
         try:
             user = User.objects.get(username__exact=username)
         # The user did not exist. Create one with no privileges
-        except: 
+        except:
             user = User.objects.create_user(username, mail, None)
             user.first_name = firstname
             user.last_name = lastname

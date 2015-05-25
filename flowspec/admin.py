@@ -18,23 +18,21 @@
 #
 
 from django.contrib import admin
-from flowspec.models import *
-from accounts.models import *
+from flowspec.models import MatchPort, MatchDscp, MatchProtocol, FragmentType, ThenAction, Route
+from accounts.models import UserProfile
 from utils import proxy as PR
 from tasks import *
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
 from peers.models import *
 from flowspec.forms import *
-import datetime
-from django.conf import settings
 from longerusername.forms import UserCreationForm, UserChangeForm
 
 
 class RouteAdmin(admin.ModelAdmin):
     form = RouteForm
     actions = ['deactivate']
-    
+
     def deactivate(self, request, queryset):
         queryset = queryset.filter(status='ACTIVE')
         response = batch_delete.delay(queryset, reason="ADMININACTIVE")
@@ -52,23 +50,23 @@ class RouteAdmin(admin.ModelAdmin):
     def has_delete_permission(self, request, obj=None):
         return False
 
-    list_display = ('name', 'status', 'applier' , 'applier_peer', 'get_match', 'get_then', 'response', "expires", "comments")
+    list_display = ('name', 'status', 'applier', 'applier_peer', 'get_match', 'get_then', 'response', "expires", "comments")
 
     fieldsets = [
-        (None,               {'fields': ['name','applier']}),
-        ("Match",               {'fields': ['source', 'sourceport', 'destination', 'destinationport', 'port']}),
+        (None, {'fields': ['name', 'applier']}),
+        ("Match", {'fields': ['source', 'sourceport', 'destination', 'destinationport', 'port']}),
         ('Advanced Match Statements', {'fields': ['dscp', 'fragmenttype', 'icmpcode', 'icmptype', 'packetlength', 'protocol', 'tcpflag'], 'classes': ['collapse']}),
-        ("Then",               {'fields': ['then' ]}),
-        ("Expires",               {'fields': ['expires' ]}),
-        (None,               {'fields': ['comments',]}),
-        
+        ("Then", {'fields': ['then']}),
+        ("Expires", {'fields': ['expires']}),
+        (None, {'fields': ['comments', ]}),
+
     ]
-    
 
 
 class UserProfileInline(admin.StackedInline):
     model = UserProfile
-    
+
+
 class UserProfileAdmin(UserAdmin):
     add_form = UserCreationForm
     form = UserChangeForm

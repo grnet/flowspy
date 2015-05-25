@@ -17,22 +17,16 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-import urllib2
-import socket
 import json
 from django import forms
-from django.views.decorators.csrf import csrf_exempt
-from django.core import urlresolvers
-from django.core import serializers
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.contrib.sites.models import Site
 from django.contrib.auth.models import User
-from django.http import HttpResponseRedirect, HttpResponseForbidden, HttpResponse
-from django.shortcuts import get_object_or_404, render_to_response
-from django.core.context_processors import request
+from django.http import HttpResponseRedirect, HttpResponse
+from django.shortcuts import get_object_or_404, render_to_response, render
 from django.template.context import RequestContext
-from django.template.loader import get_template, render_to_string
+from django.template.loader import render_to_string
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
 from django.contrib import messages
@@ -50,7 +44,6 @@ from peers.models import *
 from registration.models import RegistrationProfile
 
 from copy import deepcopy
-from utils.decorators import shib_required
 
 from django.views.decorators.cache import never_cache
 from django.conf import settings
@@ -60,8 +53,8 @@ import datetime
 import os
 
 LOG_FILENAME = os.path.join(settings.LOG_FILE_LOCATION, 'celery_jobs.log')
-#FORMAT = '%(asctime)s %(levelname)s: %(message)s'
-#logging.basicConfig(format=FORMAT)
+# FORMAT = '%(asctime)s %(levelname)s: %(message)s'
+# logging.basicConfig(format=FORMAT)
 formatter = logging.Formatter('%(asctime)s %(levelname)s %(clientip)s %(user)s: %(message)s')
 
 logger = logging.getLogger(__name__)
@@ -70,14 +63,26 @@ handler = logging.FileHandler(LOG_FILENAME)
 handler.setFormatter(formatter)
 logger.addHandler(handler)
 
+
 @login_required
 def user_routes(request):
     user_routes = Route.objects.filter(applier=request.user)
-    return render_to_response('user_routes.html', {'routes': user_routes},
-                              context_instance=RequestContext(request))
+    return render(
+        request,
+        'user_routes.html',
+        {
+            'routes': user_routes
+        },
+    )
+
 
 def welcome(request):
-    return render_to_response('welcome.html', context_instance=RequestContext(request))
+    return render(
+        request,
+        'welcome.html',
+        {}
+    )
+
 
 @login_required
 @never_cache
@@ -87,25 +92,48 @@ def dashboard(request):
         peer = request.user.get_profile().peer
     except UserProfile.DoesNotExist:
         error = "User <strong>%s</strong> does not belong to any peer or organization. It is not possible to create new firewall rules.<br>Please contact Helpdesk to resolve this issue" % request.user.username
-        return render_to_response('error.html', {'error': error}, context_instance=RequestContext(request))
+        return render(
+            request,
+            'error.html',
+            {
+                'error': error
+            }
+        )
     if peer:
-       peer_members = UserProfile.objects.filter(peer=peer)
-       users = [prof.user for prof in peer_members]
-       group_routes = Route.objects.filter(applier__in=users).order_by('-expires')[:10]
-       if request.user.is_superuser:
-           group_routes = Route.objects.all().order_by('-expires')[:10]
-       return render_to_response('dashboard.html', {'routes': group_routes},
-                              context_instance=RequestContext(request))
+        peer_members = UserProfile.objects.filter(peer=peer)
+        users = [prof.user for prof in peer_members]
+        group_routes = Route.objects.filter(applier__in=users).order_by('-expires')[:10]
+        if request.user.is_superuser:
+            group_routes = Route.objects.all().order_by('-expires')[:10]
+        return render(
+            request,
+            'dashboard.html',
+            {
+                'routes': group_routes
+            },
+        )
+
 
 @login_required
 @never_cache
 def group_routes(request):
     try:
-        peer = request.user.get_profile().peer
+        request.user.get_profile().peer
     except UserProfile.DoesNotExist:
         error = "User <strong>%s</strong> does not belong to any peer or organization. It is not possible to create new firewall rules.<br>Please contact Helpdesk to resolve this issue" % request.user.username
-        return render_to_response('error.html', {'error': error}, context_instance=RequestContext(request))
-    return render_to_response('user_routes.html', context_instance=RequestContext(request))
+        return render(
+            request,
+            'error.html',
+            {
+                'error': error
+            }
+        )
+    return render(
+        request,
+        'user_routes.html',
+        {}
+    )
+
 
 @login_required
 @never_cache
@@ -115,13 +143,17 @@ def group_routes_ajax(request):
         peer = request.user.get_profile().peer
     except UserProfile.DoesNotExist:
         error = "User <strong>%s</strong> does not belong to any peer or organization. It is not possible to create new firewall rules.<br>Please contact Helpdesk to resolve this issue" % request.user.username
-        return render_to_response('error.html', {'error': error}, context_instance=RequestContext(request))
+        return render(
+            request,
+            'error.html',
+            {'error': error}
+        )
     if peer:
-       peer_members = UserProfile.objects.filter(peer=peer)
-       users = [prof.user for prof in peer_members]
-       group_routes = Route.objects.filter(applier__in=users)
-       if request.user.is_superuser:
-           group_routes = Route.objects.all()
+        peer_members = UserProfile.objects.filter(peer=peer)
+        users = [prof.user for prof in peer_members]
+        group_routes = Route.objects.filter(applier__in=users)
+        if request.user.is_superuser:
+            group_routes = Route.objects.all()
     jresp = {}
     routes = build_routes_json(group_routes)
     jresp['aaData'] = routes
@@ -138,11 +170,11 @@ def overview_routes_ajax(request):
         error = "User <strong>%s</strong> does not belong to any peer or organization. It is not possible to create new firewall rules.<br>Please contact Helpdesk to resolve this issue" % request.user.username
         return render_to_response('error.html', {'error': error}, context_instance=RequestContext(request))
     if peer:
-       peer_members = UserProfile.objects.filter(peer=peer)
-       users = [prof.user for prof in peer_members]
-       group_routes = Route.objects.filter(applier__in=users)
-       if request.user.is_superuser or request.user.has_perm('accounts.overview'):
-           group_routes = Route.objects.all()
+        peer_members = UserProfile.objects.filter(peer=peer)
+        users = [prof.user for prof in peer_members]
+        group_routes = Route.objects.filter(applier__in=users)
+        if request.user.is_superuser or request.user.has_perm('accounts.overview'):
+            group_routes = Route.objects.all()
     jresp = {}
     routes = build_routes_json(group_routes)
     jresp['aaData'] = routes
@@ -223,13 +255,13 @@ def add_route(request):
             if not request.user.is_superuser:
                 form.fields['then'] = forms.ModelMultipleChoiceField(queryset=ThenAction.objects.filter(action__in=settings.UI_USER_THEN_ACTIONS).order_by('action'), required=True)
                 form.fields['protocol'] = forms.ModelMultipleChoiceField(queryset=MatchProtocol.objects.filter(protocol__in=settings.UI_USER_PROTOCOLS).order_by('protocol'), required=False)
-            return render_to_response(
+            return render(
+                request,
                 'apply.html',
                 {
                     'form': form,
                     'applier': applier
-                },
-                context_instance=RequestContext(request)
+                }
             )
 
 
@@ -247,14 +279,6 @@ def edit_route(request, route_slug):
             ('Insufficient rights to edit rule %s') % (route_slug)
         )
         return HttpResponseRedirect(reverse("group-routes"))
-#    if route_edit.status == "ADMININACTIVE" :
-#        messages.add_message(request, messages.WARNING,
-#                             "Administrator has disabled editing of rule %s" %(route_slug))
-#        return HttpResponseRedirect(reverse("group-routes"))
-#    if route_edit.status == "EXPIRED" :
-#        messages.add_message(request, messages.WARNING,
-#                             "Cannot edit the expired rule %s. Contact helpdesk to enable it" %(route_slug))
-#        return HttpResponseRedirect(reverse("group-routes"))
     if route_edit.status == 'PENDING':
         messages.add_message(
             request,
@@ -370,9 +394,20 @@ def user_profile(request):
             peers = Peer.objects.all()
     except UserProfile.DoesNotExist:
         error = "User <strong>%s</strong> does not belong to any peer or organization. It is not possible to create new firewall rules.<br>Please contact Helpdesk to resolve this issue" % user.username
-        return render_to_response('error.html', {'error': error}, context_instance=RequestContext(request))
-    return render_to_response('profile.html', {'user': user, 'peers':peers},
-                                  context_instance=RequestContext(request))
+        return render(
+            request,
+            'error.html',
+            {'error': error}
+        )
+    return render(
+        request,
+        'profile.html',
+        {
+            'user': user,
+            'peers': peers
+        },
+    )
+
 
 @never_cache
 def user_login(request):
@@ -390,27 +425,28 @@ def user_login(request):
         lastname = lookupShibAttr(settings.SHIB_LASTNAME, request.META)
         mail = lookupShibAttr(settings.SHIB_MAIL, request.META)
         entitlement = lookupShibAttr(settings.SHIB_ENTITLEMENT, request.META)
-        #organization = request.META['HTTP_SHIB_HOMEORGANIZATION']
 
         if settings.SHIB_AUTH_ENTITLEMENT in entitlement.split(";"):
             has_entitlement = True
         if not has_entitlement:
             error_entitlement = True
-#        if not organization:
-#            error_orgname = True
         if not mail:
             error_mail = True
         if error_username:
             error = _("Your idP should release the HTTP_EPPN attribute towards this service<br>")
-#        if error_orgname:
-#            error = error + _("Your idP should release the HTTP_SHIB_HOMEORGANIZATION attribute towards this service<br>")
         if error_entitlement:
             error = error + _("Your idP should release an appropriate HTTP_SHIB_EP_ENTITLEMENT attribute towards this service<br>")
         if error_mail:
             error = error + _("Your idP should release the HTTP_SHIB_INETORGPERSON_MAIL attribute towards this service")
         if error_username or error_orgname or error_entitlement or error_mail:
-            return render_to_response('error.html', {'error': error, "missing_attributes": True},
-                                  context_instance=RequestContext(request))
+            return render(
+                request,
+                'error.html',
+                {
+                    'error': error,
+                    "missing_attributes": True
+                },
+            )
         try:
             if settings.SHIB_SLUGIFY_USERNAME:
                 username = slugify(username)
@@ -426,9 +462,7 @@ def user_login(request):
 
         if user is not None:
             try:
-                peer = user.get_profile().peer
-#                peer = Peer.objects.get(domain_name=organization)
-#                up = UserProfile.objects.get_or_create(user=user,peer=peer)
+                user.get_profile().peer
             except:
                 form = UserProfileForm()
                 form.fields['user'] = forms.ModelChoiceField(queryset=User.objects.filter(pk=user.pk), empty_label=None)
@@ -437,99 +471,157 @@ def user_login(request):
             if not user_exists:
                 user_activation_notify(user)
             if user.is_active:
-               login(request, user)
-               return HttpResponseRedirect(reverse("dashboard"))
+                login(request, user)
+                return HttpResponseRedirect(reverse("dashboard"))
             else:
                 error = _("User account <strong>%s</strong> is pending activation. Administrators have been notified and will activate this account within the next days. <br>If this account has remained inactive for a long time contact your technical coordinator or GRNET Helpdesk") %user.username
-                return render_to_response('error.html', {'error': error, 'inactive': True},
-                                  context_instance=RequestContext(request))
+                return render(
+                    request,
+                    'error.html',
+                    {
+                        'error': error,
+                        'inactive': True
+                    },
+                )
         else:
             error = _("Something went wrong during user authentication. Contact your administrator")
-            return render_to_response('error.html', {'error': error,},
-                                  context_instance=RequestContext(request))
+            return render(
+                request,
+                'error.html',
+                {'error': error},
+            )
     except User.DoesNotExist as e:
-        error = _("Invalid login procedure. Error: %s" %e)
-        return render_to_response('error.html', {'error': error,},
-                                  context_instance=RequestContext(request))
-        # Return an 'invalid login' error message.
-#    return HttpResponseRedirect(reverse("user-routes"))
+        error = _("Invalid login procedure. Error: %s" % e)
+        return render(
+            request,
+            'error.html',
+            {
+                'error': error
+            },
+        )
+
 
 def user_activation_notify(user):
     current_site = Site.objects.get_current()
     peer = user.get_profile().peer
 
-
     # Email subject *must not* contain newlines
     # TechCs will be notified about new users.
     # Platform admins will activate the users.
-    subject = render_to_string('registration/activation_email_subject.txt',
-                                   { 'site': current_site })
+    subject = render_to_string(
+        'registration/activation_email_subject.txt',
+        {
+            'site': current_site
+        }
+    )
     subject = ''.join(subject.splitlines())
     registration_profile = RegistrationProfile.objects.create_profile(user)
-    message = render_to_string('registration/activation_email.txt',
-                                   { 'activation_key': registration_profile.activation_key,
-                                     'expiration_days': settings.ACCOUNT_ACTIVATION_DAYS,
-                                     'site': current_site,
-                                     'user': user })
+    message = render_to_string(
+        'registration/activation_email.txt',
+        {
+            'activation_key': registration_profile.activation_key,
+            'expiration_days': settings.ACCOUNT_ACTIVATION_DAYS,
+            'site': current_site,
+            'user': user
+        }
+    )
     if settings.NOTIFY_ADMIN_MAILS:
         admin_mails = settings.NOTIFY_ADMIN_MAILS
-        send_new_mail(settings.EMAIL_SUBJECT_PREFIX + subject,
-                                  message, settings.SERVER_EMAIL,
-                                 admin_mails, [])
-
+        send_new_mail(
+            settings.EMAIL_SUBJECT_PREFIX + subject,
+            message,
+            settings.SERVER_EMAIL,
+            admin_mails,
+            []
+        )
     # Mail to domain techCs plus platform admins (no activation hash sent)
-    subject = render_to_string('registration/activation_email_peer_notify_subject.txt',
-                                   { 'site': current_site,
-                                     'peer': peer })
+    subject = render_to_string(
+        'registration/activation_email_peer_notify_subject.txt',
+        {
+            'site': current_site,
+            'peer': peer
+        }
+    )
     subject = ''.join(subject.splitlines())
-    message = render_to_string('registration/activation_email_peer_notify.txt',
-                                   { 'user': user,
-                                    'peer': peer })
-    send_new_mail(settings.EMAIL_SUBJECT_PREFIX + subject,
-                              message, settings.SERVER_EMAIL,
-                             get_peer_techc_mails(user), [])
+    message = render_to_string(
+        'registration/activation_email_peer_notify.txt',
+        {
+            'user': user,
+            'peer': peer
+        }
+    )
+    send_new_mail(
+        settings.EMAIL_SUBJECT_PREFIX + subject,
+        message,
+        settings.SERVER_EMAIL,
+        get_peer_techc_mails(user), [])
+
 
 @login_required
 @never_cache
 def add_rate_limit(request):
     if request.method == "GET":
         form = ThenPlainForm()
-        return render_to_response('add_rate_limit.html', {'form': form,},
-                                  context_instance=RequestContext(request))
-
+        return render(
+            request,
+            'add_rate_limit.html',
+            {
+                'form': form,
+            },
+        )
     else:
         form = ThenPlainForm(request.POST)
         if form.is_valid():
-            then=form.save(commit=False)
-            then.action_value = "%sk"%then.action_value
+            then = form.save(commit=False)
+            then.action_value = "%sk" % then.action_value
             then.save()
             response_data = {}
-            response_data['pk'] = "%s" %then.pk
-            response_data['value'] = "%s:%s" %(then.action, then.action_value)
-            return HttpResponse(json.dumps(response_data), mimetype='application/json')
+            response_data['pk'] = "%s" % then.pk
+            response_data['value'] = "%s:%s" % (then.action, then.action_value)
+            return HttpResponse(
+                json.dumps(response_data),
+                mimetype='application/json'
+            )
         else:
-            return render_to_response('add_rate_limit.html', {'form': form,},
-                                      context_instance=RequestContext(request))
+            return render(
+                request,
+                'add_rate_limit.html',
+                {
+                    'form': form,
+                },
+            )
+
 
 @login_required
 @never_cache
 def add_port(request):
     if request.method == "GET":
         form = PortPlainForm()
-        return render_to_response('add_port.html', {'form': form,},
-                                  context_instance=RequestContext(request))
-
+        return render(
+            'add_port.html',
+            {
+                'form': form,
+            },
+        )
     else:
         form = PortPlainForm(request.POST)
         if form.is_valid():
-            port=form.save()
+            port = form.save()
             response_data = {}
-            response_data['value'] = "%s" %port.pk
-            response_data['text'] = "%s" %port.port
-            return HttpResponse(json.dumps(response_data), mimetype='application/json')
+            response_data['value'] = "%s" % port.pk
+            response_data['text'] = "%s" % port.port
+            return HttpResponse(
+                json.dumps(response_data),
+                mimetype='application/json'
+            )
         else:
-            return render_to_response('add_port.html', {'form': form,},
-                                      context_instance=RequestContext(request))
+            return render(
+                'add_port.html',
+                {
+                    'form': form,
+                },
+            )
+
 
 @never_cache
 def selectinst(request):
@@ -537,10 +629,16 @@ def selectinst(request):
         request_data = request.POST.copy()
         user = request_data['user']
         try:
-            existingProfile = UserProfile.objects.get(user=user)
+            UserProfile.objects.get(user=user)
             error = _("Violation warning: User account is already associated with an institution.The event has been logged and our administrators will be notified about it")
-            return render_to_response('error.html', {'error': error, 'inactive': True},
-                                  context_instance=RequestContext(request))
+            return render(
+                request,
+                'error.html',
+                {
+                    'error': error,
+                    'inactive': True
+                },
+            )
         except UserProfile.DoesNotExist:
             pass
 
@@ -549,12 +647,25 @@ def selectinst(request):
             userprofile = form.save()
             user_activation_notify(userprofile.user)
             error = _("User account <strong>%s</strong> is pending activation. Administrators have been notified and will activate this account within the next days. <br>If this account has remained inactive for a long time contact your technical coordinator or GRNET Helpdesk") %userprofile.user.username
-            return render_to_response('error.html', {'error': error, 'inactive': True},
-                                  context_instance=RequestContext(request))
+            return render(
+                request,
+                'error.html',
+                {
+                    'error': error,
+                    'inactive': True
+                },
+            )
         else:
             form.fields['user'] = forms.ModelChoiceField(queryset=User.objects.filter(pk=user.pk), empty_label=None)
             form.fields['institution'] = forms.ModelChoiceField(queryset=Peer.objects.all(), empty_label=None)
-            return render_to_response('registration/select_institution.html', {'form': form}, context_instance=RequestContext(request))
+            return render(
+                request,
+                'registration/select_institution.html',
+                {
+                    'form': form
+                }
+            )
+
 
 @never_cache
 def overview(request):
@@ -562,14 +673,25 @@ def overview(request):
     if user.is_authenticated():
         if user.has_perm('accounts.overview'):
             users = User.objects.all()
-            return render_to_response('overview/index.html', {'users': users},
-                                  context_instance=RequestContext(request))
+            return render(
+                request,
+                'overview/index.html',
+                {
+                    'users': users
+                },
+            )
         else:
-            violation=True
-            return render_to_response('overview/index.html', {'violation': violation},
-                                  context_instance=RequestContext(request))
+            violation = True
+            return render(
+                request,
+                'overview/index.html',
+                {
+                    'violation': violation
+                },
+            )
     else:
         return HttpResponseRedirect(reverse("altlogin"))
+
 
 @login_required
 @never_cache
@@ -580,7 +702,7 @@ def user_logout(request):
 
 @never_cache
 def load_jscript(request, file):
-    long_polling_timeout = int(settings.POLL_SESSION_UPDATE)*1000 + 10000
+    long_polling_timeout = int(settings.POLL_SESSION_UPDATE) * 1000 + 10000
     return render_to_response('%s.js' % file, {'timeout': long_polling_timeout}, context_instance=RequestContext(request), mimetype="text/javascript")
 
 

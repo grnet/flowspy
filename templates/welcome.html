@@ -1,4 +1,4 @@
-{% extends "b3theme/base.html" %}
+{% extends "base.html" %}
 {% load i18n %}
 {% block title %}{% trans "Login" %}{% endblock %}
 {% block sidenav %}{% endblock %}
@@ -55,7 +55,7 @@
 
             </div>
 
-            
+
 				<div class="row" style="padding-top:5px;"></div>
 				<div class="row">
 					<div class="col-lg-4">
@@ -68,10 +68,10 @@
 				<div class="well"><h3>{% trans "How" %}?</h3><hr>
 				<p>{% blocktrans %}If you have properly set your Shibboleth attributes, you may proceed{% endblocktrans %}</p>
 				<div class="text-center">
-					
+
 					<p><img src="{{STATIC_URL}}shib_login.png" style="border:none;"></p>
 					<p><a href="{% url login %}" type="button" class="btn btn-outline btn-primary">{% trans "Shibboleth Login" %}</a></p>
-	
+
 </div></div>
 				</div>
 				<div class="col-lg-4">
@@ -85,9 +85,9 @@
                     <div class="text-center">
                         <br>
                         <p>
-                    <iframe width="640" height="360" src="https://www.youtube.com/embed/VZy7DG8sjSk?rel=0" frameborder="0" allowfullscreen></iframe>            
+                    <iframe width="640" height="360" src="https://www.youtube.com/embed/VZy7DG8sjSk?rel=0" frameborder="0" allowfullscreen></iframe>
                 </p>
-                
+
                 <p>{% blocktrans %}Welcome to GRNET's FoD service.{% endblocktrans %}</p>
                     </div>
                 </div>

@@ -1,11 +1,11 @@
-{% extends "b3theme/base.html" %}
+{% extends "base.html" %}
 {% load i18n %}
 {% block extrahead %}
     <link href="{{STATIC_URL}}b3theme/css/plugins/morris/morris-0.4.3.min.css" rel="stylesheet">
     <link href="{{STATIC_URL}}b3theme/css/plugins/timeline/timeline.css" rel="stylesheet">
     <style type="text/css">
 
-	
+
 	.dl-horizontal dt {
     width: 70px;
 }
@@ -36,7 +36,7 @@
                             <ul class="timeline">
                             	{% for route in routes %}
                                 <li class="{% cycle '' 'timeline-inverted' %}">
-                                    
+
                                     	{% if route.status == 'EXPIRED' or route.status == 'ADMININACTIVE' or route.status == 'INACTIVE' or route.status == 'OUTOFSYNC'%}
 											{% if route.status == 'EXPIRED' or route.status == 'ADMININACTIVE' or route.status == 'INACTIVE' %}
 												<div class="timeline-badge"><i class="fa fa-adjust"></i></div>
@@ -61,7 +61,7 @@
 
                                     <div class="timeline-panel">
                                         <div class="timeline-heading">
-                                            <h4 class="timeline-title">{{route.name}}</h4> 
+                                            <h4 class="timeline-title">{{route.name}}</h4>
                                             <p>
                                                 <small class="text-muted"><i class="fa fa-pencil-square-o"></i> {% trans "Last update" %}: {{route.last_updated}} {% trans "by" %} {{route.applier}}</small>
                                             </p>
@@ -96,15 +96,15 @@
                                         		</p>
 
                                         	{{ route.get_match|safe|escape }}
-                                        	
+
                                         	<dl class="dl-horizontal">
                                         		<dt>Then</dt><dd>{{ route.get_then }}</dd>
                                         	</dl>
-                                        	
+
 										</small>
 										<div>
 										{% ifequal route.status 'ACTIVE' %}
-											<a href="{% url edit-route route.name %}" class="btn-info btn btn-xs btn-outline" id="edit_button_{{route.pk}}">{% trans "Edit" %}</a> 
+											<a href="{% url edit-route route.name %}" class="btn-info btn btn-xs btn-outline" id="edit_button_{{route.pk}}">{% trans "Edit" %}</a>
 											<button class="del_buttonpre btn-outline btn btn-xs btn-warning" id="{{route.name}}" data-routename="{{route.name}}">{% trans "Deactivate" %}</button>
 										{% else %}
 											{% if route.status == 'EXPIRED' or route.status == 'ADMININACTIVE' or route.status == 'INACTIVE' %}
@@ -202,7 +202,7 @@ var refreshUrl = "{% url group-routes-ajax %}";
         			url: delurl,
         			cache: false,
         			success: function(data) {
-            		 
+
 	        		}
 	    		});
 				return false;

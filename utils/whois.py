@@ -22,10 +22,11 @@ from ipaddr import *
 import re
 from django.conf import settings
 
+
 def query(query, hostname, flags):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.connect((hostname, 43))
-    # as IPv6 is not supported by flowspec for the time ommit -T route6 
+    # as IPv6 is not supported by flowspec for the time ommit -T route6
     s.send(" -i origin -r -K -T route " + query + "\r\n")
     response = ''
     while True:
@@ -54,8 +55,9 @@ def query(query, hostname, flags):
     final_routes = final_routes4 + final_routes6
     return final_routes
 
+
 def whois(queryas):
-    routes = query(queryas,settings.PRIMARY_WHOIS, None)
+    routes = query(queryas, settings.PRIMARY_WHOIS, None)
     if not routes:
-        routes = query(queryas,settings.ALTERNATE_WHOIS, None)
+        routes = query(queryas, settings.ALTERNATE_WHOIS, None)
     return routes

@@ -28,12 +28,12 @@ import os
 from celery.exceptions import TimeLimitExceeded, SoftTimeLimitExceeded
 
 cwd = os.getcwd()
-    
+
 
 LOG_FILENAME = os.path.join(settings.LOG_FILE_LOCATION, 'celery_jobs.log')
 
-#FORMAT = '%(asctime)s %(levelname)s: %(message)s'
-#logging.basicConfig(format=FORMAT)
+# FORMAT = '%(asctime)s %(levelname)s: %(message)s'
+# logging.basicConfig(format=FORMAT)
 formatter = logging.Formatter('%(asctime)s %(levelname)s: %(message)s')
 
 logger = logging.getLogger(__name__)
@@ -42,8 +42,10 @@ handler = logging.FileHandler(LOG_FILENAME)
 handler.setFormatter(formatter)
 logger.addHandler(handler)
 
+
 def fod_unknown_host_cb(host, fingerprint):
     return True
+
 
 class Retriever(object):
     def __init__(self, device=settings.NETCONF_DEVICE, username=settings.NETCONF_USER, password=settings.NETCONF_PASS, filter=settings.ROUTES_FILTER, port=settings.NETCONF_PORT, route_name=None, xml=None):
@@ -55,12 +57,12 @@ class Retriever(object):
         self.xml = xml
         if route_name:
             self.filter = settings.ROUTE_FILTER%route_name
-    
+
     def fetch_xml(self):
         with manager.connect(host=self.device, port=self.port, username=self.username, password=self.password, hostkey_verify=False) as m:
             xmlconfig = m.get_config(source='running', filter=('subtree',self.filter)).data_xml
         return xmlconfig
-    
+
     def proccess_xml(self):
         if self.xml:
             xmlconfig = self.xml
@@ -69,8 +71,8 @@ class Retriever(object):
         parser = np.Parser()
         parser.confile = xmlconfig
         device = parser.export()
-        return device    
-    
+        return device
+
     def fetch_device(self):
         device = cache.get("device")
         logger.info("[CACHE] hit! got device")
@@ -85,15 +87,16 @@ class Retriever(object):
             else:
                 return False
 
+
 class Applier(object):
-    def __init__(self, route_objects = [], route_object=None, device=settings.NETCONF_DEVICE, username=settings.NETCONF_USER, password=settings.NETCONF_PASS, port=settings.NETCONF_PORT):
+    def __init__(self, route_objects=[], route_object=None, device=settings.NETCONF_DEVICE, username=settings.NETCONF_USER, password=settings.NETCONF_PASS, port=settings.NETCONF_PORT):
         self.route_object = route_object
         self.route_objects = route_objects
         self.device = device
         self.username = username
         self.password = password
         self.port = port
-    
+
     def to_xml(self, operation=None):
         logger.info("Operation: %s"%operation)
         if self.route_object:
@@ -150,14 +153,14 @@ class Applier(object):
                         route.match['dscp'].append(dscp.dscp)
             except:
                 pass
-            
+
             try:
                 if route_obj.fragmenttype:
                     for frag in route_obj.fragmenttype.all():
                         route.match['fragment'].append(frag.fragmenttype)
             except:
                 pass
-            
+
             for thenaction in route_obj.then.all():
                 if thenaction.action_value:
                     route.then[thenaction.action] = thenaction.action_value
@@ -186,8 +189,8 @@ class Applier(object):
             device = device.export(netconf_config=True)
             return ET.tostring(device)
         else:
-            return False    
-    
+            return False
+
     def apply(self, configuration = None, operation=None):
         reason = None
         if not configuration:
@@ -215,8 +218,8 @@ class Applier(object):
                         logger.error(cause)
                         return False, cause
                     except Exception as e:
-                        cause="Caught edit exception: %s %s" %(e,reason)
-                        cause=cause.replace('\n', '')
+                        cause = "Caught edit exception: %s %s" % (e, reason)
+                        cause = cause.replace('\n', '')
                         logger.error(cause)
                         m.discard_changes()
                         return False, cause
@@ -224,7 +227,7 @@ class Applier(object):
                         try:
                             commit_confirmed_response = m.commit(confirmed=True, timeout=settings.COMMIT_CONFIRMED_TIMEOUT)
                             commit_confirmed_is_successful, reason = is_successful(commit_confirmed_response)
-                                
+
                             if not commit_confirmed_is_successful:
                                 raise Exception()
                             else:
@@ -244,7 +247,7 @@ class Applier(object):
                             cause=cause.replace('\n', '')
                             logger.error(cause)
                             return False, cause
-                        
+
                         if settings.COMMIT:
                             if edit_is_successful and commit_confirmed_is_successful:
                                 try:
@@ -255,7 +258,7 @@ class Applier(object):
                                     retrieve = Retriever(xml=newconfig)
                                     logger.info("[CACHE] caching device configuration")
                                     cache.set("device", retrieve.proccess_xml(), 3600)
-                                    
+
                                     if not commit_is_successful:
                                         raise Exception()
                                     else:
@@ -276,25 +279,25 @@ class Applier(object):
                                     return False, cause
         else:
             return False, "No configuration was supplied"
-            
+
+
 def is_successful(response):
     from StringIO import StringIO
     doc = parsexml_(StringIO(response))
     rootNode = doc.getroot()
     success_list = rootNode.xpath("//*[local-name()='ok']")
-    if len(success_list)>0:
+    if len(success_list) > 0:
         return True, None
     else:
         reason_return = ''
         reason_list = rootNode.xpath("//*[local-name()='error-message']")
         for reason in reason_list:
-            reason_return = "%s %s" %(reason_return, reason.text)  
+            reason_return = '%s %s' % (reason_return, reason.text)
         return False, reason_return
-    
-    
+
+
 def parsexml_(*args, **kwargs):
     if 'parser' not in kwargs:
         kwargs['parser'] = ET.ETCompatXMLParser()
     doc = ET.parse(*args, **kwargs)
     return doc
-

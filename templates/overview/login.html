@@ -1,4 +1,4 @@
-{% extends "b3theme/base.html" %}
+{% extends "base.html" %}
 {% load widget_tweaks %}
 {% block sidenav %}{% endblock %}
 {% load i18n %}
@@ -16,7 +16,7 @@
 </style>
 {% endblock %}
 {% block title %}
-	
+
 		{% trans "Overview Login" %}
 
 {% endblock %}
@@ -30,8 +30,8 @@
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
-            
-            
+
+
 <div class="row">
                 <div class="col-lg-8">
                 	<div class="panel panel-primary">
@@ -40,8 +40,8 @@
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
-    <form class="form-horizontal" method="post" action="{% url altlogin %}" role="form">     
-        
+    <form class="form-horizontal" method="post" action="{% url altlogin %}" role="form">
+
             {% csrf_token %}
             {% load unescape %}
             {% if form.non_field_errors %}
@@ -49,7 +49,7 @@
             	{{ form.non_field_errors|unescape}}
             	</div>
             {% endif %}
-               
+
                  <div class="form-group {% if form.username.errors %} has-error {% endif %}">
         <label for="id_username" class="col-md-2 control-label"><b>{% trans "Username" %}</b></label>
         <div class="col-md-8">
@@ -75,9 +75,9 @@
         	<input name="next" id="next" type="hidden" value="{% url group-routes %}">
             </form>
             </div>
-            </div>  
-            </div>  
-            </div>          
+            </div>
+            </div>
+            </div>
            </div>
     {% endblock %}
 

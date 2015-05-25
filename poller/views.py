@@ -28,10 +28,8 @@ from django.template.loader import render_to_string
 from django.http import HttpResponse
 from gevent.event import Event
 from django.conf import settings
-#from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
-from django.conf import settings
 
 import beanstalkc
 
@@ -46,6 +44,7 @@ handler = logging.FileHandler(LOG_FILENAME)
 handler.setFormatter(formatter)
 logger.addHandler(handler)
 
+
 def create_message(message, user, time):
     data = {'id': str(uuid.uuid4()), 'body': message, 'user':user, 'time':time}
     data['html'] = render_to_string('poll_message.html', dictionary={'message': data})
@@ -56,10 +55,12 @@ def json_response(value, **kwargs):
     kwargs.setdefault('content_type', 'text/javascript; charset=UTF-8')
     return HttpResponse(json.dumps(value), **kwargs)
 
+
 class Msgs(object):
     cache_size = 500
-    
+
     _instance = None
+
     def __new__(cls, *args, **kwargs):
         if not cls._instance:
             cls._instance = super(Msgs, cls).__new__(cls, *args, **kwargs)
@@ -98,7 +99,7 @@ class Msgs(object):
                 self.user_cursor[user] = ''
             return json_response({'messages': self.user_cache[user]})
         return HttpResponseRedirect(reverse('group-routes'))
-    
+
     def message_new(self, mesg=None):
         if mesg:
             message = mesg['message']
@@ -111,7 +112,7 @@ class Msgs(object):
         except:
             self.user_cache[user] = []
         self.user_cache[user].append(msg)
-        if self.user_cache[user][-1] == self.user_cache[user][0]: 
+        if self.user_cache[user][-1] == self.user_cache[user][0]:
             self.user_cursor[user] = self.user_cache[user][-1]['id']
         else:
             self.user_cursor[user] = self.user_cache[user][-2]['id']
@@ -120,11 +121,11 @@ class Msgs(object):
         try:
             assert(self.new_message_user_event[user])
         except:
-            self.new_message_user_event[user] = Event()            
+            self.new_message_user_event[user] = Event()
         self.new_message_user_event[user].set()
         self.new_message_user_event[user].clear()
         return json_response(msg)
-    
+
     def message_updates(self, request):
         if request.is_ajax():
             cursor = {}
@@ -137,7 +138,7 @@ class Msgs(object):
                 cursor[user] = self.user_cursor[user]
             except:
                 return HttpResponse(content='', mimetype=None, status=400)
-                
+
             try:
                 if not isinstance(self.user_cache[user], list):
                     self.user_cache[user] = []
@@ -164,13 +165,12 @@ class Msgs(object):
             job.bury()
             logger.info("Got New message")
             self.message_new(msg)
-            
-    
+
     def start_polling(self):
         logger.info("Start Polling")
         gevent.spawn(self.monitor_polls)
 
-            
+
 msgs = Msgs()
 main = msgs.main
 

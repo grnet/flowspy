@@ -1,4 +1,4 @@
-{% extends "b3theme/base.html" %}
+{% extends "base.html" %}
 {% load widget_tweaks %}
 {% load i18n %}
 
@@ -23,7 +23,7 @@
     <link href="{{STATIC_URL}}b3theme/css/plugins/morris/morris-0.4.3.min.css" rel="stylesheet">
     <link href="{{STATIC_URL}}b3theme/css/plugins/timeline/timeline.css" rel="stylesheet">
     <link href="{{STATIC_URL}}datepicker/css/datepicker.css" rel="stylesheet">
-   
+
 {% endblock %}
 
 {% block extraheadbottom %}
@@ -34,7 +34,7 @@
 #rule_form_container input:not([type="submit"]), #rule_form_container select {
     background: none repeat scroll 0 0 #FFFFFF;
     border: 1px solid #DDDDDD;
-	-moz-border-radius: 3px; border-radius:3px; -webkit-border-radius: 3px; 
+	-moz-border-radius: 3px; border-radius:3px; -webkit-border-radius: 3px;
     float: left;
     font-family: "Century Gothic",Helvetica,sans-serif;
     font-size: 13px;
@@ -46,7 +46,7 @@
 
 #rule_form_container{
 	-moz-border-radius: 10px 10px 10px 10px; border-radius:10px; -webkit-border-radius: 10px;
-	-moz-box-shadow: 0 0 3px #AAAAAA; box-shadow: 0 0 3px #AAAAAA; -webkit-box-shadow: 0 0 3px #AAAAAA; 
+	-moz-box-shadow: 0 0 3px #AAAAAA; box-shadow: 0 0 3px #AAAAAA; -webkit-box-shadow: 0 0 3px #AAAAAA;
 	background-color: #F9F9F9;
 	border: 2px solid #FFFFFF;
 	overflow: hidden;
@@ -91,7 +91,7 @@
 		$("#id_protocol").select2();
 		$("#id_fragmenttype").select2();
 		$("#id_then").select2();
-		
+
 		reArrangeSelect("id_sourceport");
 		$("#id_sourceport").select2({
 			placeholder: "Source Port(s)"
@@ -111,8 +111,8 @@
 		$('#setFromAll').click(function(){
 			$("#id_source").val('0.0.0.0/0');
 		});
-		
-		
+
+
 		/*$('#id_then').attr("multiple", "");*/
 		/*
 		$( "#id_expires" ).datepicker({ dateFormat: 'yy-mm-dd' , maxDate: '+10d', minDate: '+1d', changeMonth: false, changeYear: false }).datepicker( $.datepicker.regional[ "el" ] );
@@ -126,7 +126,7 @@
 			buttons: {
 		'{% trans "Add" %}': function() {
 			$.ajax({
-			url:"{% url add-rate-limit %}", 
+			url:"{% url add-rate-limit %}",
 			data:$("#add_rl_form").serialize(),
 			type: "POST",
 			cache: false,
@@ -139,7 +139,7 @@
 					}
 					catch (exception) {
 						$('#then_diag').html(data);
-					}					
+					}
 				}
 				});
 		},
@@ -167,7 +167,7 @@
 				$('#then_diag').dialog('open');
 				return false;
 			});
-			
+
 			{% endcomment %}
 			$(".new_port").click(function(){
 				$(".new_port").hide();
@@ -182,14 +182,14 @@
 				// $('#port_diag').dialog('open');
 				return false;
 			});
-			
+
 			function reArrangeSelect(elementId) {
  			   $("#"+elementId).html($("#"+elementId+" option").sort(function(a, b) {
         			return parseInt(a.text) == parseInt(b.text) ? 0 : parseInt(a.text) < parseInt(b.text) ? -1 : 1
     			}));
 			}
 	});
-		
+
 </script>
 {% endblock %}
 {% block contentplaceholder %}
@@ -211,8 +211,8 @@
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
-    <form method="POST" role="form" class="form-horizontal">     
-        
+    <form method="POST" role="form" class="form-horizontal">
+
             {% csrf_token %}
             {% load unescape %}
             {% if form.non_field_errors %}
@@ -221,7 +221,7 @@
             	</div>
             {% endif %}
             <fieldset {%  if edit %}  style="display:none;" {%  endif %}>
-               
+
                  <div class="form-group {% if form.name.errors %} has-error {% endif %}">
         <label for="id_name" class="col-md-2 control-label"><b>{% trans "Name" %}</b></label>
         <div class="col-md-8">
@@ -248,7 +248,7 @@
                 {% endif %}
             <fieldset>
                 <hr>
-                <div class="form-group {% if form.source.errors %} has-error {% endif %}"> 
+                <div class="form-group {% if form.source.errors %} has-error {% endif %}">
         		<label for="id_source" class="col-md-2 control-label"><b>{% trans "Source Address" %}</b></label>
 		        <div class="col-md-6">
 		            {% render_field form.source class+="form-control" placeholder=form.source.help_text %}
@@ -259,8 +259,8 @@
 		            <img src="{{STATIC_URL}}threat_source.png" style="height: 30px;"/> &nbsp;&nbsp;<button type="button" class="btn btn-md btn-info btn-outline" id="setFromAll">Any</button>
 		        </div>
 		        </div>
-		        
-				<div class="form-group {% if form.destination.errors %} has-error {% endif %}"> 
+
+				<div class="form-group {% if form.destination.errors %} has-error {% endif %}">
         		<label for="id_destination" class="col-md-2 control-label"><b>{% trans "Destination Address" %}</b></label>
 		        <div class="col-md-6">
 		            {% render_field form.destination class+="form-control" placeholder=form.destination.help_text %}
@@ -271,8 +271,8 @@
 		            <img src="{{STATIC_URL}}secure_destination.png" style="height: 30px;"/>
 		        </div>
 		        </div>
-		        
-				<div class="form-group {% if form.protocol.errors %} has-error {% endif %}"> 
+
+				<div class="form-group {% if form.protocol.errors %} has-error {% endif %}">
         		<label for="id_protocol" class="col-md-2 control-label" style="font-weight: normal;">{% trans "Protocol(s)" %}</label>
 		        <div class="col-md-8">
 		            {% render_field form.protocol class+="form-control" %}
@@ -280,8 +280,8 @@
 		            {% endif %}
 		        </div>
 		        </div>
-		        
-		        <div class="form-group {% if form.fragmenttype.errors %} has-error {% endif %}"> 
+
+		        <div class="form-group {% if form.fragmenttype.errors %} has-error {% endif %}">
         		<label for="id_fragmenttype" class="col-md-2 control-label" style="font-weight: normal;">{% trans "Fragment Type" %}</label>
 		        <div class="col-md-8">
 		            {% render_field form.fragmenttype class+="form-control" %}
@@ -296,7 +296,7 @@
 		        <div class="form-group ">
 		        	<label class="col-md-10" style="font-weight: normal;"><small>{% trans "Select source/destination port(s), or select common port(s) for both source/destination" %}</small></label>
 		        </div>
-		        <div class="form-group {% if form.sourceport.errors %} has-error {% endif %} {% if form.destinationport.errors %} has-error {% endif %} {% if form.port.errors %} has-error {% endif %}"> 
+		        <div class="form-group {% if form.sourceport.errors %} has-error {% endif %} {% if form.destinationport.errors %} has-error {% endif %} {% if form.port.errors %} has-error {% endif %}">
         		<label for="id_sourceport" class="col-md-2 control-label" style="font-weight: normal;">{% trans "Src. Port(s)" %}</label>
 		        <div class="col-md-2">
 		            {% render_field form.sourceport class+="form-control"  %}
@@ -329,13 +329,13 @@
 		        	</div>
 		        </div>
 				</fieldset>
-		        
+
 		        <!--  END OF PORTS -->
-		
+
             <fieldset>
 				<hr>
-                
-               	<div class="form-group {% if form.then.errors %} has-error {% endif %}"> 
+
+               	<div class="form-group {% if form.then.errors %} has-error {% endif %}">
         		<label for="id_then" class="col-md-2 control-label">{% trans "Then Actions" %}</label>
 		        <div class="col-md-8">
 		            {% render_field form.then class+="form-control" %}
@@ -343,11 +343,11 @@
 		            {% endif %}
 		        </div>
 		        </div>
-                
+
             </fieldset>
             <fieldset>
 				<hr>
-                <div class="form-group {% if form.expires.errors %} has-error {% endif %}"> 
+                <div class="form-group {% if form.expires.errors %} has-error {% endif %}">
         		<label for="id_then" class="col-md-2 control-label">{% trans "Expires" %}</label>
 		        <div class="col-md-8">
 		            {% render_field form.expires class+="form-control datepicker" data-date-format="yyyy-mm-dd"  %}
@@ -356,12 +356,12 @@
 		        </div>
 		        </div>
             </fieldset>
-            
-            
+
+
             <fieldset>
 			<hr>
-                
-                               	<div class="form-group {% if form.comments.errors %} has-error {% endif %}"> 
+
+                               	<div class="form-group {% if form.comments.errors %} has-error {% endif %}">
         		<label for="id_comments" class="col-md-2 control-label">{% trans "Comments" %}</label>
 		        <div class="col-md-8">
 		            {% render_field form.comments class+="form-control" placeholder="Give a short description of the intended use of this rule, that justifies the parameter selection above. Feel free to include any additional comments." %}
@@ -370,7 +370,7 @@
 		        </div>
 		        </div>
 
-            
+
             </fieldset>
 			 <div class="form-group">
 			 	<div class="col-md-2"></div>
@@ -378,7 +378,7 @@
 			<button type="submit" id="applybutton" value="{% trans 'Apply' %}" class="btn btn-md btn-primary">Apply</button>
 				</div>
 			</div>
-                
+
 
     </form>
 </div></div></div></div>

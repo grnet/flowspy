@@ -16,11 +16,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-from django.conf.urls.defaults import *
+from django.conf.urls.defaults import patterns, url
 
-urlpatterns = patterns('poller.views',
-                       ('^$', 'main'),
-                       url('^message/existing$', 'message_existing', name='fetch-existing'),
-                       url('^message/updates$', 'message_updates', name='fetch-updates'))
-
-
+urlpatterns = patterns(
+    'poller.views',
+    ('^$', 'main'),
+    url('^message/existing$', 'message_existing', name='fetch-existing'),
+    url('^message/updates$', 'message_updates', name='fetch-updates')
+)

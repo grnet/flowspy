@@ -1,4 +1,4 @@
-{% extends "b3theme/base.html" %}
+{% extends "base.html" %}
 {% load widget_tweaks %}
 
 {% load i18n %}
@@ -22,7 +22,7 @@
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
-            
+
             <div class="row">
                 <div class="col-lg-12">
                 	<div class="panel panel-primary">
@@ -30,12 +30,12 @@
                             <i class="fa fa-user"></i> {% trans "Activate User" %}
                         </div>
                         <!-- /.panel-heading -->
-                        <div class="panel-body">                        	
+                        <div class="panel-body">
 						<form method="POST" class="form-horizontal">
 							{% csrf_token %} {% if form.non_field_errors %}
 							<p class="error">{{ form.non_field_errors}}</p>
 							{% endif %}
-							<div class="form-group {% if form.user.errors %} has-error {% endif %}"> 
+							<div class="form-group {% if form.user.errors %} has-error {% endif %}">
 								<label class="col-md-2 control-label" for="id_peer"><b>{% trans "User" %}</b></label>
 								<div class="col-md-8">
 		            				{% render_field form.user class+="form-control"  %}
@@ -43,7 +43,7 @@
 		           					 {% endif %}
 		       					 </div>
 							</div>
-							<div class="form-group {% if form.peer.errors %} has-error {% endif %}"> 
+							<div class="form-group {% if form.peer.errors %} has-error {% endif %}">
 								<label class="col-md-2 control-label" for="id_peer"><b>{% trans "Institution" %}</b></label>
 								<div class="col-md-8">
 		            				{% render_field form.peer class+="form-control"  %}
@@ -58,7 +58,7 @@
 			<button type="submit" id="applybutton" value="{% trans 'Apply' %}" class="btn btn-md btn-primary">{% trans "Activate" %}</button>
 				</div>
 			</div>
-                        	
+
             			</div>
             			</div>
             			</div>

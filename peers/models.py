@@ -19,25 +19,31 @@
 
 from django.db import models
 from utils.whois import *
-from django.contrib.auth.models import User
 from django.conf import settings
+
 
 class PeerRange(models.Model):
     network = models.CharField(max_length=128)
+
     def __unicode__(self):
         return self.network
+
     class Meta:
         db_table = u'peer_range'
         ordering = ['network']
         managed = settings.PEER_RANGE_MANAGED_TABLE
 
+
 class TechcEmail(models.Model):
     email = models.CharField(max_length=352, db_column="email")
+
     def __unicode__(self):
         return self.email
+
     class Meta:
-        db_table="techc_email"
+        db_table = "techc_email"
         managed = settings.PEER_TECHC_MANAGED_TABLE
+
 
 class Peer(models.Model):
     peer_id = models.AutoField(primary_key=True)
@@ -51,16 +57,16 @@ class Peer(models.Model):
 
     def __unicode__(self):
         return self.peer_name
+
     class Meta:
         db_table = u'peer'
         ordering = ['peer_name']
         managed = settings.PEER_MANAGED_TABLE
 
-        
     def fill_networks(self):
         network_range = []
         networks_list = []
-        peer_as = "AS%s" %self.peer_as
+        peer_as = "AS%s" % self.peer_as
         network_range = whois(peer_as)
         if network_range:
             for network_item in network_range:
@@ -68,5 +74,3 @@ class Peer(models.Model):
                 networks_list.append(range)
             self.networks = networks_list
             self.save()
-
-

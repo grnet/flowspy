@@ -19,19 +19,28 @@
 
 from django.contrib import admin
 
-from peers.models import *
-from flowspec.forms import *
-from django.conf import settings
+from peers.models import PeerRange, TechcEmail, Peer
+from django import forms
 from django.forms import ModelForm
 from django.contrib.admin.widgets import FilteredSelectMultiple
 
+
 class PeerAdminForm(ModelForm):
-    networks=forms.ModelMultipleChoiceField(PeerRange.objects.all(),widget=
-            FilteredSelectMultiple("PeerRange",True), required=False)
-    techc_emails=forms.ModelMultipleChoiceField(TechcEmail.objects.all(),widget=
-            FilteredSelectMultiple("TechcEmail",True), required=False)
+    networks = forms.ModelMultipleChoiceField(
+        PeerRange.objects.all(),
+        widget=FilteredSelectMultiple("PeerRange", True),
+        required=False
+    )
+
+    techc_emails = forms.ModelMultipleChoiceField(
+        TechcEmail.objects.all(),
+        widget=FilteredSelectMultiple("TechcEmail", True),
+        required=False
+    )
+
     class Meta:
-        model= Peer
+        model = Peer
+
 
 class PeerAdmin(admin.ModelAdmin):
     form = PeerAdminForm

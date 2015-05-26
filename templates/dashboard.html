@@ -1,8 +1,10 @@
 {% extends "base.html" %}
+{% load staticfiles %}
 {% load i18n %}
+
 {% block extrahead %}
-    <link href="{{STATIC_URL}}css/plugins/morris/morris-0.4.3.min.css" rel="stylesheet">
-    <link href="{{STATIC_URL}}css/plugins/timeline/timeline.css" rel="stylesheet">
+    <link href="{% static 'b3theme/css/plugins/morris/morris-0.4.3.min.css' %}" rel="stylesheet">
+    <link href="{% static 'b3theme/css/plugins/timeline/timeline.css' %}" rel="stylesheet">
     <style type="text/css">
 
 

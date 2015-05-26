@@ -60,10 +60,10 @@
 			<div class="well">
 				<h3>{% trans "What" %}?</h3><hr>
 				<p>
-					{% blocktrans %}If you are new to the service, take some time to read the{% endblocktrans %} <a href="/info/{{LANGUAGE_CODE}}/">{% trans "Service Description" %}</a>
+					{% blocktrans %}If you are new to the service, take some time to read the{% endblocktrans %} <a href="/info/{{ LANGUAGE_CODE }}/">{% trans "Service Description" %}</a>
 				</p>
 				<p>
-					{% blocktrans %}Before asking why? take some time to look at the{% endblocktrans %} <a href="/tos/{{LANGUAGE_CODE}}/">{% trans "Service Terms" %}</a>
+					{% blocktrans %}Before asking why? take some time to look at the{% endblocktrans %} <a href="/tos/{{ LANGUAGE_CODE }}/">{% trans "Service Terms" %}</a>
 				</p>
 			</div>
 		</div>
@@ -84,7 +84,9 @@
 		<div class="col-lg-4">
 			<div class="well">
 				<h3>{% trans "Help" %}?</h3><hr>
-				<p>{% blocktrans %}For troubleshooting info and remarks do not hesitate to contact {{ BRANDING.name }}'s Helpdesk.{% endblocktrans %}</p>
+				{% with BRANDING.name as name %}
+				<p>{% blocktrans %}For troubleshooting info and remarks do not hesitate to contact {{ name }}'s Helpdesk.{% endblocktrans %}</p>
+				{% endwith %}
 			</div>
 		</div>
 	</div>

@@ -1,25 +1,29 @@
 {% load i18n %}
-
+{% load staticfiles %}
 	<footer class="footer">
       <div id="footcontainer" class="container">
-        {% if user.is_authenticated %}
-			<p>
-				{% blocktrans %}
-					If you have any questions or need help, contact {{ BRANDING.name }} Helpdesk at <a href='mailto:{{ BRANDING.email }}'>{{ BRANDING.email }}</a> or {{ BRANDING.phone }}.
-				{% endblocktrans %}
-			</p>
-		{% endif %}
-	<div style="padding-top: 10px;"><a href="https://code.grnet.gr/projects/flowspy">Version: <strong>{{ VERSION }}</strong></a> - {% blocktrans %} Designed and developed by {{ BRANDING.name }}" {% endblocktrans %}
-	<a href="{{ BRANDING.facebook }}" target="_blank"><img src="{{STATIC_URL}}img/facebook_img.png" alt="{{ BRANDING.name }} on Facebook" title="{{ BRANDING.name }} on Facebook"/></a>  <a href="{{ BRANDING.twitter }}"  target="_blank"><img src="{{STATIC_URL}}img/twitter_img.png" alt="{{ BRANDING.name }} on Twitter" title="{{ BRANDING.name }} on Twitter"/></a>
+		<p>
+		{% with BRANDING.name as name %}
+		{% with BRANDING.email as email %}
+		{% with BRANDING.phone as phone %}
+			{% blocktrans %}
+				If you have any questions or need help, contact {{ name }} Helpdesk at <a href='mailto:{{ email }}'>{{ email }}</a> or {{ phone }}.
+			{% endblocktrans %}
+		{% endwith %}
+		{% endwith %}
+		{% endwith %}
+		</p>
+	<div style="padding-top: 10px;"><a href="https://github.com/grnet/flowspy">Version: <strong>{{ VERSION }}</strong></a> - {% blocktrans %} Designed and developed by {{ BRANDING.name }}" {% endblocktrans %}
+	<a href="{{ BRANDING.facebook }}" target="_blank"><img src="{% static 'img/facebook_img.png' %}" alt="{{ BRANDING.name }} on Facebook" title="{{ BRANDING.name }} on Facebook"/></a>  <a href="{{ BRANDING.twitter }}"  target="_blank"><img src="{% static 'img/twitter_img.png' %}" alt="{{ BRANDING.name }} on Twitter" title="{{ BRANDING.name }} on Twitter"/></a>
 	</div>
-        <div class="row"><a href="{{ BRANDING.url }}">{{ BRANDING.name }}</a> | <a href="/info/{{LANGUAGE_CODE}}/">{% trans "Info" %}</a> | <a href="/tos/{{LANGUAGE_CODE}}/">{% trans "Service Terms" %}</a></div>
+        <div class="row">
+        	<a href="{{ BRANDING.url }}">{{ BRANDING.name }}</a> | <a href="/info/{{ LANGUAGE_CODE }}/">{% trans "Info" %}</a> | <a href="/tos/{{ LANGUAGE_CODE }}/">{% trans "Service Terms" %}</a></div>
         <div style="padding-top: 10px;">
-
         </div>
-<div style="padding-top: 10px;">
-	{% if BRANDING.footer_iframe %}
-		<iframe width="500" scrolling="no" height="50" frameborder="0" align="middle" src="{{ BRANDING.footer_iframe }}" marginwidth="0" marginheight="0"></iframe>
-	{% endif %}
-	</div>
+		<div style="padding-top: 10px;">
+			{% if BRANDING.footer_iframe %}
+				<iframe width="500" scrolling="no" height="50" frameborder="0" align="middle" src="{{ BRANDING.footer_iframe }}" marginwidth="0" marginheight="0"></iframe>
+			{% endif %}
+		</div>
       </div>
     </footer>

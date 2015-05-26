@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-08-28 11:45+0300\n"
+"POT-Creation-Date: 2015-05-25 17:42+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Leonidas Poulopoulos <leopoul@grnet.gr>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,42 +18,42 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: accounts/views.py:92
+#: accounts/views.py:113
 #, python-format
 msgid "%sUser account activated"
 msgstr "%s Ενεργοποιήθηκε ο λογαριασμός του χρήστη"
 
-#: flowspec/forms.py:90 flowspec/forms.py:132
+#: flowspec/forms.py:91 flowspec/forms.py:133
 msgid "Invalid network address format"
 msgstr "Λανθασμένη μορφή διεύθυνσης δικτύου στο πεδίο Πηγή"
 
-#: flowspec/forms.py:92
+#: flowspec/forms.py:93
 msgid "Private addresses not allowed"
 msgstr "Δεν επιτρέπονται οι private διευθύνσεις"
 
-#: flowspec/forms.py:94 flowspec/forms.py:138
+#: flowspec/forms.py:95 flowspec/forms.py:139
 msgid "Malformed address format. Cannot be ...255/32"
 msgstr ""
 
-#: flowspec/forms.py:96 flowspec/forms.py:140
+#: flowspec/forms.py:97 flowspec/forms.py:141
 msgid "Malformed address format. Cannot be ...0/32"
 msgstr ""
 
-#: flowspec/forms.py:98 flowspec/forms.py:136
+#: flowspec/forms.py:99 flowspec/forms.py:137
 msgid "You have no authority on this subnet"
 msgstr "Δεν έχετε δικαιώματα σε αυτό το υποδίκτυο"
 
-#: flowspec/forms.py:121
+#: flowspec/forms.py:122
 #, python-format
 msgid "Currently no prefix lengths < %s are allowed"
 msgstr "Προς το παρόν δεν επιτρέπονται υποδίκτυα <%s"
 
-#: flowspec/forms.py:154
+#: flowspec/forms.py:155
 #, python-format
 msgid "Errors in form. Please review and fix them: %s"
 msgstr "Σφάλματα στη φόρμα. Παρακαλώ διορθώστε τα: %s"
 
-#: flowspec/forms.py:182
+#: flowspec/forms.py:178
 msgid ""
 "Destination address/network should belong to your administrative address "
 "space. Check My Profile to review your networks"
@@ -61,7 +61,7 @@ msgstr ""
 "Η διεύθυνση προορισμού πρέπει να ανήκει στα διαχειριστικά σας δίκτυα. "
 "Επισκεφθείτε 'Το Προφίλ μου' για την προβολή των διαχειριστικών σας δικτύων"
 
-#: flowspec/forms.py:184
+#: flowspec/forms.py:180
 msgid ""
 "Cannot create rule for source ports and ports at the same time. Select "
 "either ports or source ports"
@@ -69,7 +69,7 @@ msgstr ""
 "Δεν μπορεί να δημιουργηθεί φίλτρο για source ports και ports ταυτόχρονα. "
 "Επιλέξτε είτε ports είτε source ports"
 
-#: flowspec/forms.py:186
+#: flowspec/forms.py:182
 msgid ""
 "Cannot create rule for destination ports and ports at the same time. Select "
 "either ports or destination ports"
@@ -77,7 +77,7 @@ msgstr ""
 "Δεν μπορεί να δημιουργηθεί φίλτρο για destination ports και ports "
 "ταυτόχρονα. Επιλέξτε είτε ports είτε destination ports"
 
-#: flowspec/forms.py:188
+#: flowspec/forms.py:184
 msgid ""
 "Once source port is matched, source has to be filled as well. Either "
 "deselect source port or fill source address"
@@ -86,7 +86,7 @@ msgstr ""
 "Είτε απο-επιλέξτε το πεδίο source port είτε συμπληρώστε μια διεύθυνση στο "
 "source"
 
-#: flowspec/forms.py:190
+#: flowspec/forms.py:186
 msgid ""
 "Once destination port is matched, destination has to be filled as well. "
 "Either deselect destination port or fill destination address"
@@ -95,132 +95,114 @@ msgstr ""
 "συμπληρωθεί. Είτε απο-επιλέξτε το πεδίο destination port είτε συμπληρώστε "
 "μια διεύθυνση στο destination"
 
-#: flowspec/forms.py:192
+#: flowspec/forms.py:188
 msgid "Fill at least a Rule Match Condition"
 msgstr "Συμπληρώστε τουλάχιστον έναν όρο ταύτισης"
 
-#: flowspec/forms.py:194
+#: flowspec/forms.py:190
 #, python-format
 msgid "This action \"%s\" is not permitted"
 msgstr "Η ενέργεια %s δεν επιτρέπεται"
 
-#: flowspec/forms.py:246
+#: flowspec/forms.py:243
 msgid "Rate-limiting cannot be < 50kbps"
 msgstr ""
 
-#: flowspec/forms.py:249
+#: flowspec/forms.py:246
 #, fuzzy
 msgid "Rate-limiting should be an integer < 50"
 msgstr "Η port θα πρέπει να είναι ένας ακέραιος αριθμός"
 
-#: flowspec/forms.py:251 flowspec/forms.py:279
+#: flowspec/forms.py:248 flowspec/forms.py:275
 msgid "Cannot be empty"
 msgstr "Το πεδίο δεν μπορεί να είναι κενό"
 
-#: flowspec/forms.py:256
+#: flowspec/forms.py:253
 msgid "Cannot select something other than rate-limit"
 msgstr ""
 
-#: flowspec/forms.py:272 flowspec/forms.py:275
+#: flowspec/forms.py:268 flowspec/forms.py:271
 msgid "Port should be < 65535 and >= 0"
 msgstr "Η port θα πρέπει να είναι < 65535 και >= 0"
 
-#: flowspec/forms.py:277
+#: flowspec/forms.py:273
 msgid "Port should be an integer"
 msgstr "Η port θα πρέπει να είναι ένας ακέραιος αριθμός"
 
-#: flowspec/models.py:141 templates/apply.html:228
+#: flowspec/models.py:153 templates/apply.html:228
 #: templates/user_routes.html:38 templates/overview/index.html:355
 #: templates/overview/index.html.py:383
 msgid "Name"
 msgstr "Όνομα"
 
-#: flowspec/models.py:143 flowspec/models.py:145
+#: flowspec/models.py:155 flowspec/models.py:157
 msgid "Network address. Use address/CIDR notation"
 msgstr "Διεύθυνση δικτύου/υποδικτύου. Χρησιμοποιήστε σύνταξη διεύθυνσης/CIDR"
 
-#: flowspec/models.py:143 templates/apply.html:254
+#: flowspec/models.py:155 templates/apply.html:254
 msgid "Source Address"
 msgstr "Διεύθυνση Πηγής"
 
-#: flowspec/models.py:144
+#: flowspec/models.py:156
 msgid "Source Port"
 msgstr "Port Πηγής"
 
-#: flowspec/models.py:145 templates/apply.html:266
+#: flowspec/models.py:157 templates/apply.html:266
 msgid "Destination Address"
 msgstr "Διεύθυνση Προορισμού"
 
-#: flowspec/models.py:146
+#: flowspec/models.py:158
 msgid "Destination Port"
 msgstr "Port Προορισμού"
 
-#: flowspec/models.py:147
+#: flowspec/models.py:159
 #, fuzzy
 msgid "Port"
 msgstr "Νέα port"
 
-#: flowspec/models.py:153
+#: flowspec/models.py:165
 msgid "Protocol"
 msgstr "Πρωτόκολλο"
 
-#: flowspec/models.py:155 templates/user_routes.html:40
+#: flowspec/models.py:167 templates/user_routes.html:40
 #: templates/overview/index.html:385
 msgid "Then"
 msgstr "Ενέργειες"
 
-#: flowspec/models.py:158 templates/user_routes.html:41
+#: flowspec/models.py:170 templates/user_routes.html:41
 #: templates/overview/index.html:356 templates/overview/index.html.py:386
 msgid "Status"
 msgstr "Κατάσταση"
 
-#: flowspec/models.py:161 templates/apply.html:353 templates/dashboard.html:69
+#: flowspec/models.py:173 templates/apply.html:353 templates/dashboard.html:69
 #: templates/user_routes.html:43 templates/overview/index.html:388
 msgid "Expires"
 msgstr "Λήγει"
 
-#: flowspec/models.py:162 templates/user_routes.html:44
+#: flowspec/models.py:174 templates/user_routes.html:44
 #: templates/overview/index.html:389
 msgid "Response"
 msgstr "Απόκριση Δικτύου"
 
-#: flowspec/models.py:163 templates/apply.html:367
+#: flowspec/models.py:175 templates/apply.html:367
 msgid "Comments"
 msgstr "Σχόλια"
 
-#: flowspec/models.py:188
+#: flowspec/models.py:201
 msgid "Invalid network address format at Destination Field"
 msgstr "Λανθασμένη μορφή διεύθυνσης δικυου στο πεδίο Προορισμός"
 
-#: flowspec/models.py:194
+#: flowspec/models.py:207
 msgid "Invalid network address format at Source Field"
 msgstr "Λανθασμένη μορφή διεύθυνσης δικυου στο πεδίο Πηγή"
 
-#: flowspec/views.py:177
-msgid ""
-"Insufficient rights on administrative networks. Cannot add rule. Contact "
-"your administrator"
-msgstr ""
-"Μη επαρκή δικαιώματα στα διαχειριστικά δίκτυα. Η προσθήκη φίλτρων δεν είναι "
-"εφικτή. Επικοινωνήστε με το διαχειριστή σας"
-
-#: flowspec/views.py:238
-#, python-format
-msgid "Insufficient rights to edit rule %s"
-msgstr "Μη επαρκή δικαιώματα για την επεξεργασία του φίλτρου %s"
-
-#: flowspec/views.py:250
-#, python-format
-msgid "Cannot edit a pending rule: %s."
-msgstr "Δεν είναι δυνατή η επεξεργασία ενός φίλτρου (%s) σε κατάσταση pending "
-
-#: flowspec/views.py:393
+#: flowspec/views.py:436
 msgid ""
 "Your idP should release the HTTP_EPPN attribute towards this service<br>"
 msgstr ""
 "Ο idP σας θα πρέπει να παρέχει την HTTP_EPPN παράμετερο στην υπηρεσία<br>"
 
-#: flowspec/views.py:397
+#: flowspec/views.py:438
 msgid ""
 "Your idP should release an appropriate HTTP_SHIB_EP_ENTITLEMENT attribute "
 "towards this service<br>"
@@ -228,7 +210,7 @@ msgstr ""
 "Ο idP σας θα πρέπει να παρέχει την HTTP_SHIB_EP_ENTITLEMENT παράμετερο στην "
 "υπηρεσία<br>"
 
-#: flowspec/views.py:399
+#: flowspec/views.py:440
 msgid ""
 "Your idP should release the HTTP_SHIB_INETORGPERSON_MAIL attribute towards "
 "this service"
@@ -236,7 +218,7 @@ msgstr ""
 "Ο idP σας θα πρέπει να παρέχει την HTTP_SHIB_INETORGPERSON_MAIL παράμετερο "
 "στην υπηρεσία<br>"
 
-#: flowspec/views.py:430 flowspec/views.py:538
+#: flowspec/views.py:477 flowspec/views.py:649
 #, python-format
 msgid ""
 "User account <strong>%s</strong> is pending activation. Administrators have "
@@ -250,33 +232,33 @@ msgstr ""
 "ενεργοποιηθεί για μεγάλο χρονικό διάστημα, επικοινωνήστε με τον τεχνικό σας "
 "υπέυθυνο ή το Helpdesk του ΕΔΕΤ."
 
-#: flowspec/views.py:434
+#: flowspec/views.py:487
 msgid ""
 "Something went wrong during user authentication. Contact your administrator"
 msgstr ""
 "Παρουσιάστηκε ένα σφάλμα κατά την είσοδο του χρήστη. Επικοινωνήστε με το "
 "διαχειριστή σας"
 
-#: flowspec/views.py:438
+#: flowspec/views.py:494
 #, python-format
 msgid "Invalid login procedure. Error: %s"
 msgstr "Εσφαλμένη διαδικασία εισόδου. Σφάλμα: %s"
 
-#: flowspec/views.py:528
+#: flowspec/views.py:633
 msgid ""
 "Violation warning: User account is already associated with an institution."
 "The event has been logged and our administrators will be notified about it"
 msgstr ""
 
-#: flowspy/Copy of settings.py:60 flowspy/settings.py:60
+#: flowspy/settings.py:72
 msgid "Greek"
 msgstr "Ελληνικά"
 
-#: flowspy/Copy of settings.py:61 flowspy/settings.py:61
+#: flowspy/settings.py:73
 msgid "English"
 msgstr "Αγγλικά"
 
-#: longerusername/forms.py:11 monkey_patch/forms.py:11
+#: longerusername/forms.py:11
 #, python-format
 msgid ""
 "Required, %s characters or fewer. Only letters, numbers, and characters such "
@@ -364,60 +346,44 @@ msgstr "Ενέργειες Φίλτρου"
 msgid "Apply"
 msgstr "Εφαρμογή"
 
-#: templates/base.html:104 templates/profile.html:4
-#: templates/profile.html.py:8 templates/b3theme/base.html:87
-#: templates/b3theme/base.html.py:134
-msgid "My profile"
-msgstr "Το προφίλ μου"
-
-#: templates/base.html:109 templates/b3theme/base.html:126
-#: templates/overview/index.html:324
-msgid "Overview"
-msgstr "Επισκόπηση"
-
-#: templates/base.html:113 templates/b3theme/base.html:92
-#: templates/b3theme/base.html.py:129
-msgid "Admin"
-msgstr "Διαχειριστής"
-
-#: templates/base.html:122 templates/b3theme/base.html:60
+#: templates/base.html:41
 msgid "Language"
 msgstr "Γλώσσα"
 
-#: templates/base.html:143 templates/b3theme/base.html:96
+#: templates/base.html:68 templates/base.html.py:115 templates/profile.html:4
+#: templates/profile.html.py:8
+msgid "My profile"
+msgstr "Το προφίλ μου"
+
+#: templates/base.html:73 templates/base.html.py:110
+msgid "Admin"
+msgstr "Διαχειριστής"
+
+#: templates/base.html:77
 msgid "Logout"
 msgstr "Έξοδος"
 
-#: templates/base.html:148 templates/base.html.py:154
-#: templates/welcome.html:73 templates/b3theme/base.html:103
+#: templates/base.html:84 templates/welcome.html:79
 msgid "Shibboleth Login"
 msgstr "Είσοδος με Shibboleth"
 
-#: templates/base.html:151
-msgid ""
-"After clicking Retry Login, it is strongly suggested to close your browser "
-"and visit the page again"
-msgstr ""
-"Αφού επιλέξετε Επανάληψη Εισόδου κλείστε τον browser σας και επισκεφθείτε "
-"ξανά τη σελίδα"
-
-#: templates/base.html:151
-msgid "Retry Login"
-msgstr "Επανάληψη Εισόδου"
-
-#: templates/base.html:165 templates/user_routes.html:13
-#: templates/user_routes.html.py:18
-msgid "My rules"
-msgstr "Τα φίλτρα μου"
-
-#: templates/base.html:165
-msgid "Welcome"
-msgstr "Καλωσήρθατε"
-
-#: templates/dashboard.html:19 templates/dashboard.html.py:24
-#: templates/profile.html:52 templates/b3theme/base.html:117
+#: templates/base.html:98 templates/dashboard.html:19
+#: templates/dashboard.html.py:24 templates/profile.html:52
 msgid "Dashboard"
 msgstr "Πίνακας"
+
+#: templates/base.html:101 templates/overview/index.html:376
+msgid "Rules"
+msgstr "Φίλτρα"
+
+#: templates/base.html:104 templates/dashboard.html:143
+#: templates/profile.html:50 templates/user_routes.html:63
+msgid "Add Rule"
+msgstr "Δημιουργία φίλτρου"
+
+#: templates/base.html:107 templates/overview/index.html:324
+msgid "Overview"
+msgstr "Επισκόπηση"
 
 #: templates/dashboard.html:32
 msgid "Timeline"
@@ -435,16 +401,16 @@ msgstr "Ενημερώθηκε"
 msgid "by"
 msgstr "από"
 
-#: templates/dashboard.html:107 templates/user_routes.html:327
+#: templates/dashboard.html:107 templates/user_routes.html:331
 msgid "Edit"
 msgstr "Επεξεργασία"
 
 #: templates/dashboard.html:108 templates/dashboard.html.py:188
-#: templates/user_routes.html:211 templates/user_routes.html.py:328
+#: templates/user_routes.html:211 templates/user_routes.html.py:332
 msgid "Deactivate"
 msgstr "Απενεργοποίηση"
 
-#: templates/dashboard.html:111 templates/user_routes.html:331
+#: templates/dashboard.html:111 templates/user_routes.html:335
 msgid "Reactivate"
 msgstr "Ενεργοποίηση"
 
@@ -452,18 +418,13 @@ msgstr "Ενεργοποίηση"
 msgid "ReSync"
 msgstr ""
 
-#: templates/dashboard.html:117 templates/user_routes.html:337
+#: templates/dashboard.html:117 templates/user_routes.html:341
 msgid "Fix it!"
 msgstr "Επιδιόρθωση"
 
 #: templates/dashboard.html:139 templates/user_routes.html:59
 msgid "Shortcuts"
 msgstr "Συντομεύσεις"
-
-#: templates/dashboard.html:143 templates/profile.html:50
-#: templates/user_routes.html:63 templates/b3theme/base.html:123
-msgid "Add Rule"
-msgstr "Δημιουργία φίλτρου"
 
 #: templates/dashboard.html:144 templates/profile.html:51
 msgid "My Rules"
@@ -496,28 +457,32 @@ msgstr "Απαιτούμενα Shibboleth attributes "
 msgid "Optional"
 msgstr "Προαιρετικά"
 
-#: templates/footer.html:6
+#: templates/footer.html:7
+#, fuzzy, python-format
 msgid ""
-"If you have any questions or need help, contact GRNET Helpdesk at <a "
-"href='mailto:helpdesk@grnet.gr'>helpdesk@grnet.gr</a> or 800-11-47638."
+"\n"
+"\t\t\t\t%(a)s\n"
+"\t\t\t\tIf you have any questions or need help, contact %(BRANDING.name)s "
+"Helpdesk at <a href='mailto:%(BRANDING.email)s'>%(BRANDING.email)s</a> or "
+"%(BRANDING.phone)s.\n"
+"\t\t\t"
 msgstr ""
-"Eάν χρειάζεστε διευκρινήσεις ή βοήθεια, επικοινωνήστε με το Helpdesk του "
-"ΕΔΕΤ στο <a href='mailto:helpdesk@grnet.gr'>helpdesk@grnet.gr</a> ή "
-"τηλεφωνικά στο 800-11-47638."
+"\n"
+"\t\t\t\t\tIf you have any questions or need help, contact %(BRANDING.name)s "
+"Helpdesk at <a href='mailto:%(BRANDING.email)s'>%(BRANDING.email)s</a> or "
+"%(BRANDING.phone)s.\n"
+"\t\t\t\t"
 
-#: templates/footer.html:8
-msgid "Designed and developed by GRNET NOC"
+#: templates/footer.html:13
+#, fuzzy, python-format
+msgid " Designed and developed by %(BRANDING.name)s\" "
 msgstr "Σχεδιάστηκε και αναπτύχθηκε από το NOC του ΕΔΕΤ"
 
-#: templates/footer.html:11
-msgid "GRNET"
-msgstr "ΕΔΕΤ"
-
-#: templates/footer.html:11
+#: templates/footer.html:16
 msgid "Info"
 msgstr "Πληροφορίες"
 
-#: templates/footer.html:11 templates/welcome.html:64
+#: templates/footer.html:16 templates/welcome.html:66
 msgid "Service Terms"
 msgstr "Όροι Χρήσης"
 
@@ -556,6 +521,10 @@ msgstr "Επώνυμο"
 msgid "Email"
 msgstr ""
 
+#: templates/user_routes.html:13 templates/user_routes.html.py:18
+msgid "My rules"
+msgstr "Τα φίλτρα μου"
+
 #: templates/user_routes.html:39 templates/overview/index.html:384
 msgid "Match"
 msgstr "Όροι"
@@ -564,39 +533,39 @@ msgstr "Όροι"
 msgid "Actions"
 msgstr "Ενέργειες"
 
-#: templates/user_routes.html:301 templates/overview/index.html:250
+#: templates/user_routes.html:305 templates/overview/index.html:250
 msgid "Deactivated by user"
 msgstr "Απενεργοποιήθηκε από το χρήστη"
 
-#: templates/user_routes.html:304 templates/overview/index.html:253
+#: templates/user_routes.html:308 templates/overview/index.html:253
 msgid "Deactivated by administrator"
 msgstr "Απενεργοποιήθηκε από το διαχειριστή"
 
-#: templates/user_routes.html:307 templates/overview/index.html:256
+#: templates/user_routes.html:311 templates/overview/index.html:256
 msgid "Deactivated due to expiration"
 msgstr "Απενεργοποιήθηκε λόγω λήξης"
 
-#: templates/user_routes.html:310 templates/overview/index.html:259
+#: templates/user_routes.html:314 templates/overview/index.html:259
 msgid "Syncronization error. Configuration in device differs from rule"
 msgstr "Σφάλμα συγχρονισμού. Διαφορετική διαμόρφωση από τη συσκευή"
 
-#: templates/user_routes.html:312 templates/overview/index.html:261
+#: templates/user_routes.html:316 templates/overview/index.html:261
 msgid "Rule expired"
 msgstr "Λήξη Φίλτρου"
 
-#: templates/user_routes.html:334
+#: templates/user_routes.html:338
 msgid "Resync"
 msgstr ""
 
-#: templates/welcome.html:3 templates/overview/login.html:72
+#: templates/welcome.html:5 templates/overview/login.html:72
 msgid "Login"
 msgstr "Είσοδος"
 
-#: templates/welcome.html:35
+#: templates/welcome.html:36
 msgid "Join Now"
 msgstr ""
 
-#: templates/welcome.html:62
+#: templates/welcome.html:61
 msgid "What"
 msgstr "Τι"
 
@@ -608,35 +577,32 @@ msgstr "Εάν χρησιμοποιείτε την υπηρεσία για πρ�
 msgid "Service Description"
 msgstr "Περιγραφή της Υπηρεσίας"
 
-#: templates/welcome.html:64
+#: templates/welcome.html:66
 msgid "Before asking why? take some time to look at the"
 msgstr "Πριν ρωτήσετε γιατί; διαβάστε την ενότητα"
 
-#: templates/welcome.html:68
+#: templates/welcome.html:72
 msgid "How"
 msgstr "Πως"
 
-#: templates/welcome.html:69
+#: templates/welcome.html:73
 msgid "If you have properly set your Shibboleth attributes, you may proceed"
 msgstr ""
 "Έαν έχετε ορίσει ορθά τις απαιτούμενες παραμέτρους του Shibboleth, μπορείτε "
 "να συνεχίσετε"
 
-#: templates/welcome.html:78
+#: templates/welcome.html:86
 msgid "Help"
 msgstr "Βοήθεια"
 
-#: templates/welcome.html:79
+#: templates/welcome.html:87
+#, python-format
 msgid ""
-"For troubleshooting info and remarks do not hesitate to contact GRNET's "
-"Helpdesk."
+"For troubleshooting info and remarks do not hesitate to contact "
+"%(BRANDING.name)s's Helpdesk."
 msgstr ""
 "Για αντιμετώπιση σφαλμάτων και πληροφορίες, επικοινωνήστε με το Helpdesk του "
-"ΕΔΕΤ"
-
-#: templates/b3theme/base.html:120 templates/overview/index.html:376
-msgid "Rules"
-msgstr "Φίλτρα"
+"%(BRANDING.name)s"
 
 #: templates/overview/index.html:305
 msgid "Access Rights Violation"
@@ -713,6 +679,36 @@ msgstr "Ολοκλήρωση ενεργοποίησης"
 #: templates/registration/activation_complete.html:34
 msgid "The user will be notified about his/her account activation"
 msgstr "Ο χρήστης θα ενημερωθεί για την ενεργοποίηση του λογαριασμού"
+
+#~ msgid ""
+#~ "Insufficient rights on administrative networks. Cannot add rule. Contact "
+#~ "your administrator"
+#~ msgstr ""
+#~ "Μη επαρκή δικαιώματα στα διαχειριστικά δίκτυα. Η προσθήκη φίλτρων δεν "
+#~ "είναι εφικτή. Επικοινωνήστε με το διαχειριστή σας"
+
+#~ msgid "Insufficient rights to edit rule %s"
+#~ msgstr "Μη επαρκή δικαιώματα για την επεξεργασία του φίλτρου %s"
+
+#~ msgid "Cannot edit a pending rule: %s."
+#~ msgstr ""
+#~ "Δεν είναι δυνατή η επεξεργασία ενός φίλτρου (%s) σε κατάσταση pending "
+
+#~ msgid ""
+#~ "After clicking Retry Login, it is strongly suggested to close your "
+#~ "browser and visit the page again"
+#~ msgstr ""
+#~ "Αφού επιλέξετε Επανάληψη Εισόδου κλείστε τον browser σας και επισκεφθείτε "
+#~ "ξανά τη σελίδα"
+
+#~ msgid "Retry Login"
+#~ msgstr "Επανάληψη Εισόδου"
+
+#~ msgid "Welcome"
+#~ msgstr "Καλωσήρθατε"
+
+#~ msgid "GRNET"
+#~ msgstr "ΕΔΕΤ"
 
 #~ msgid "Welcome to GRNET's FoD service."
 #~ msgstr "Καλωσήρθατε στην υπηρεσία FoD του ΕΔΕΤ."

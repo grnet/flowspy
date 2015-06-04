@@ -33,7 +33,6 @@ GRNET's case the flowspec capable device is an EX4200.
 
 ##Installation Considerations##
 
-
 You can find the installation instructions for Debian Wheezy (64)
 with Django 1.4.x at [Flowspy documentation](http://flowspy.readthedocs.org).
 If upgrading from a previous version bear in mind the changes introduced in Django 1.4.

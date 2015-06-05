@@ -20,15 +20,13 @@ from flowspec.serializers import (
 
 from rest_framework.response import Response
 
-from django.contrib.auth.models import User
-
 
 class RouteViewSet(viewsets.ModelViewSet):
     queryset = Route.objects.all()
     serializer_class = RouteSerializer
 
     def get_queryset(self):
-        if self.request.user.is_anonymous or self.request.user.is_superuser:
+        if self.request.user.is_superuser:
             return Route.objects.all()
         else:
             return Route.objects.filter(applier=self.request.user)
@@ -43,10 +41,7 @@ class RouteViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
     def pre_save(self, obj):
-        if self.request.user.is_anonymous:
-            obj.applier = User.objects.all()[0]
-        else:
-            obj.applier = self.request.user
+        obj.applier = self.request.user
 
 
 class PortViewSet(viewsets.ModelViewSet):

@@ -56,7 +56,7 @@ Here are some examples:
 
 - Retrieve a specific rule:
 
-            curl -X GET https:/fod.example.com/api/routes/<rule_id>/ -H 'Authorization: Token <Your users token>'
+            curl -X GET https://fod.example.com/api/routes/<rule_id>/ -H 'Authorization: Token <Your users token>'
 
 - In order to create or modify a rule you have to use POST/PUT methods.
 

@@ -1,3 +1,7 @@
+// If the user clicks on Generate token,
+// then the following function will ask django
+// for a token and then present it
+
 $(document).ready(function() {
   	$('a#generate_token').one('click', function (ev) {
   		ev.preventDefault();

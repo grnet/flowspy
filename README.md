@@ -51,17 +51,20 @@ Here are some examples:
 
 #### GET items
 - List all the rules your user has created (admin users can see all the rules)
-      curl -X GET https://fod.example.com/api/routes/ -H 'Authorization: Token <Your users token>'
+
+            curl -X GET https://fod.example.com/api/routes/ -H 'Authorization: Token <Your users token>'
 
 - Retrieve a specific rule:
-      curl -X GET https:/fod.example.com/api/routes/<rule_id>/ -H 'Authorization: Token <Your users token>'
+
+            curl -X GET https:/fod.example.com/api/routes/<rule_id>/ -H 'Authorization: Token <Your users token>'
 
 - In order to create or modify a rule you have to use POST/PUT methods.
 
-#### POST/PUT items
+#### POST/PUT rules
+In order to update or create rules you can follow this example:
 
 ##### Foreign Keys
-In order to create/modify a rule you have to connect the rule with:
+In order to create/modify a rule you have to connect the rule with some foreign keys:
 
 ###### Ports, Fragmentypes, protocols, thenactions
 When creating a rule, one can specify:

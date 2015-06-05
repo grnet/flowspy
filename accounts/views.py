@@ -21,15 +21,25 @@ from django.conf import settings
 from django.core.mail import send_mail
 from django.contrib.sites.models import Site
 from django.contrib.auth.models import User
-from django.shortcuts import render
+from django.shortcuts import render, HttpResponse
 from django.template.loader import render_to_string
 from django.utils.translation import ugettext_lazy as _
 from django.views.decorators.cache import never_cache
 
+from rest_framework.authtoken.models import Token
 from accounts.models import UserProfile
 from peers.models import Peer
 from flowspec.forms import UserProfileForm
 from registration.models import RegistrationProfile
+
+
+def generate_token(request):
+    user = request.user
+    try:
+        token = user.auth_token
+    except Token.DoesNotExist:
+        token = Token.objects.create(user=request.user)
+    return HttpResponse(token)
 
 
 @never_cache

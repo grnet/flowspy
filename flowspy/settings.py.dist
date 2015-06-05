@@ -316,3 +316,19 @@ BRANDING = {
     'logo': 'fodlogo2.png',
     'favicon': 'favicon.ico',
 }
+
+
+# Django Rest Framework configuration.
+# You should leave this intact.
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+    ),
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissions',
+        'rest_framework.permissions.IsAuthenticated'
+    ]
+}

@@ -37,6 +37,50 @@ You can find the installation instructions for Debian Wheezy (64)
 with Django 1.4.x at [Flowspy documentation](http://flowspy.readthedocs.org).
 If upgrading from a previous version bear in mind the changes introduced in Django 1.4.
 
+
+##Rest Api##
+FoD provides a rest api. It uses token as authentication method.
+
+### Generating Tokens
+A user can generate a token for his account on "my profile" page from FoD's
+UI. Then by using this token in the header of the request he can list, retrieve,
+modify and create rules.
+
+### Example Usage
+Here are some examples:
+
+#### GET items
+- List all the rules your user has created (admin users can see all the rules)
+      curl -X GET https://fod.example.com/api/routes/ -H 'Authorization: Token <Your users token>'
+
+- Retrieve a specific rule:
+      curl -X GET https:/fod.example.com/api/routes/<rule_id>/ -H 'Authorization: Token <Your users token>'
+
+- In order to create or modify a rule you have to use POST/PUT methods.
+
+#### POST/PUT items
+
+##### Foreign Keys
+In order to create/modify a rule you have to connect the rule with:
+
+###### Ports, Fragmentypes, protocols, thenactions
+When creating a rule, one can specify:
+
+- source port
+- destination port
+- port (if source = destination)
+
+That can be done by getting the url of the desired port instance from `/api/ports/<port_id>/`
+
+Same with Fragmentypes in `/api/fragmenttypes/<fragmenttype_id>/`, protocols in `/api/matchprotocol/<protocol_id>/` and then actions in `/api/thenactions/<action_id>/`.
+
+Since we have the urls we want to connect with the rule we want to create, we can make a POST request like the following:
+
+
+
+      curl -X POST -H 'Authorization: Token <Your users token>' -F "name=Example" -F "comments=Description" -F "source=0.0.0.0/0" -F "sourceport=https://fod.example.com/api/ports/7/" -F "destination=203.0.113.12" https://fod.example.com/api/routes/
+
+
 ##Contact##
 
 You can find more about FoD or raise your issues at GRNET FoD

@@ -175,6 +175,12 @@ class Route(models.Model):
     comments = models.TextField(null=True, blank=True, verbose_name=_("Comments"))
     requesters_address = models.CharField(max_length=255, blank=True, null=True)
 
+    @property
+    def applier_username(self):
+        if self.applier:
+            return self.applier.username
+        else:
+            return None
 
     def __unicode__(self):
         return self.name

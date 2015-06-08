@@ -80,8 +80,11 @@ Same with Fragmentypes in `/api/fragmenttypes/<fragmenttype_id>/`, protocols in 
 Since we have the urls we want to connect with the rule we want to create, we can make a POST request like the following:
 
 
-
       curl -X POST -H 'Authorization: Token <Your users token>' -F "name=Example" -F "comments=Description" -F "source=0.0.0.0/0" -F "sourceport=https://fod.example.com/api/ports/7/" -F "destination=203.0.113.12" https://fod.example.com/api/routes/
+
+And here is a PUT request example:
+
+      curl -X PUT -F "name=Example" -F "comments=Description" -F "source=0.0.0.0/0" -F "sourceport=https://fod.example.com/api/ports/7/" -F "destination=83.212.9.93" https://fod.example.com/api/routes/12/ -H  'Authorization: Token <Your users token>'
 
 
 ##Contact##

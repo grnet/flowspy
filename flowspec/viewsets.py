@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404
-from rest_framework import status
+from django.conf import settings
 
 from rest_framework import viewsets
 from flowspec.models import (
@@ -41,7 +41,27 @@ class RouteViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
     def pre_save(self, obj):
-        obj.applier = self.request.user
+        # DEBUG
+        if settings.DEBUG:
+            if self.request.user.is_anonymous():
+                from django.contrib.auth.models import User
+                obj.applier = User.objects.all()[0]
+            elif self.request.user.is_authenticated():
+                obj.applier = self.request.user
+            else:
+                raise Exception('User is not Authenticated')
+        else:
+            obj.applier = self.request.user
+
+    def post_save(self, obj, created):
+        if created:
+            obj.commit_add()
+        else:
+            if obj.status not in ['EXPIRED', 'INACTIVE', 'ADMININACTIVE']:
+                obj.commit_edit()
+
+    def pre_delete(self, obj):
+        obj.commit_delete()
 
 
 class PortViewSet(viewsets.ModelViewSet):
@@ -62,4 +82,3 @@ class FragmentTypeViewSet(viewsets.ModelViewSet):
 class MatchProtocolViewSet(viewsets.ModelViewSet):
     queryset = MatchProtocol.objects.all()
     serializer_class = MatchProtocolSerializer
-

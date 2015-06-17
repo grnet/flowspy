@@ -92,7 +92,7 @@ And here is a PUT request example:
 You can find more about FoD or raise your issues at GRNET FoD
 repository: [GRNET repo](https://code.grnet.gr/fod) or [Github repo](https://github.com/grnet/flowspy).
 
-You can contact us directly at noc{at}noc[dot]grnet(.)gr
+You can contact us directly at dev{at}noc[dot]grnet(.)gr
 
 ## Copyright and license
 

@@ -15,3 +15,4 @@ pyparsing==1.5.6
 python-dateutil==1.5
 python-memcached==1.48
 djangorestframework==2.3.14
+git+https://code.grnet.gr/git/nxpy

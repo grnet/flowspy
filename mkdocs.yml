@@ -1,0 +1,12 @@
+site_name: Firewall On Demand
+repo_url: https://github.com/grnet/flowspy/
+docs_dir: doc
+site_author: Stavros Kroustouris
+theme: readthedocs
+pages:
+    - 'Introduction': 'index.md'
+    - 'Installation':
+        - 'Generic': 'installation/generic.md'
+        - 'Debian': 'installation/debian_wheezy.md'
+        - 'Red Hat': 'installation/redhat.md'
+    - 'Configuration': 'configuration.md'

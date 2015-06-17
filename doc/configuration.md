@@ -26,7 +26,7 @@ By doing that the corresponding tables as defined in peers/models will
 not be created. As noted above, you have to create the views that the
 tables will rely on.
 
-### Administratos
+### Administrators
 
 	ADMINS: set your admin name and email (assuming that your server can send notifications)
 

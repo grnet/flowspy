@@ -194,13 +194,20 @@ def build_routes_json(groutes):
         rd['match'] = r.get_match()
         rd['then'] = r.get_then()
         rd['status'] = r.status
-        rd['applier'] = r.applier.username
+        # in case there is no applier (this should not occur)
         try:
-            rd['peer'] = r.applier.get_profile().peer.peer_name
-        except UserProfile.DoesNotExist:
+            rd['applier'] = r.applier.username
+        except:
+            rd['applier'] = 'unknown'
             rd['peer'] = ''
-        rd['expires'] = "%s" %r.expires
-        rd['response'] = "%s" %r.response
+        else:
+            try:
+                rd['peer'] = r.applier.get_profile().peer.peer_name
+            except UserProfile.DoesNotExist:
+                rd['peer'] = ''
+
+        rd['expires'] = "%s" % r.expires
+        rd['response'] = "%s" % r.response
         routes.append(rd)
     return routes
 

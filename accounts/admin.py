@@ -28,6 +28,7 @@ from accounts.models import UserProfile
 
 
 class UserPrAdmin(admin.ModelAdmin):
+    search_fields = ['user__username', 'peer__peer_name']
     list_display = ('user', 'peer')
 
 admin.site.register(UserProfile, UserPrAdmin)

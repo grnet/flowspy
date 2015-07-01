@@ -32,6 +32,7 @@ from longerusername.forms import UserCreationForm, UserChangeForm
 class RouteAdmin(admin.ModelAdmin):
     form = RouteForm
     actions = ['deactivate']
+    search_fields = ['destination', 'name', 'applier__username']
 
     def deactivate(self, request, queryset):
         queryset = queryset.filter(status='ACTIVE')
@@ -68,6 +69,7 @@ class UserProfileInline(admin.StackedInline):
 
 
 class UserProfileAdmin(UserAdmin):
+    search_fields = ['username']
     add_form = UserCreationForm
     form = UserChangeForm
     actions = ['deactivate', 'activate']

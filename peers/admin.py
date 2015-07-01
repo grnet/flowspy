@@ -43,8 +43,18 @@ class PeerAdminForm(ModelForm):
 
 
 class PeerAdmin(admin.ModelAdmin):
+    search_fields = ['peer_name', 'networks__network']
     form = PeerAdminForm
 
+
+class PeerRangeAdmin(admin.ModelAdmin):
+    search_fields = ['network']
+
+
+class TechcEmailAdmin(admin.ModelAdmin):
+    search_fields = ['email']
+
+
 admin.site.register(Peer, PeerAdmin)
-admin.site.register(PeerRange)
-admin.site.register(TechcEmail)
+admin.site.register(PeerRange, PeerRangeAdmin)
+admin.site.register(TechcEmail, TechcEmailAdmin)

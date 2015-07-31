@@ -581,6 +581,9 @@ class Route(models.Model):
     def junos_name(self):
         return create_junos_name(self)
 
+    def get_absolute_url(self):
+        return reverse('route-details', kwargs={'route_slug': self.name})
+
 
 def send_message(msg, user):
 #    username = user.username

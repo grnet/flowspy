@@ -63,7 +63,7 @@
 
                                     <div class="timeline-panel">
                                         <div class="timeline-heading">
-                                            <h4 class="timeline-title">{{route.name}}</h4>
+                                            <h4 class="timeline-title"><a href="{{ route.get_absolute_url }}">{{route.name}}</a></h4>
                                             <p>
                                                 <small class="text-muted"><i class="fa fa-pencil-square-o"></i> {% trans "Last update" %}: {{route.last_updated}} {% trans "by" %} {{route.applier}}</small>
                                             </p>

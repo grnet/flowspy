@@ -186,7 +186,8 @@ def build_routes_json(groutes):
     for r in groutes:
         rd = {}
         rd['id'] = r.pk
-        rd['name'] = r.name
+        # name with link to rule details
+        rd['name'] = '<a href="%s">%s</a>' % (r.get_absolute_url(), r.name)
         if not r.comments:
             rd['comments'] = 'Not Any'
         else:
@@ -720,3 +721,7 @@ def lookupShibAttr(attrmap, requestMeta):
             if len(requestMeta[attr]) > 0:
                 return requestMeta[attr]
     return ''
+
+
+def routedetails(request, route_slug):
+    raise NotImplementedError

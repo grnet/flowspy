@@ -233,11 +233,11 @@ $(document).ready( function(){
           },
         "aoColumns":[
                      {"mData":"id", "bSearchable": false,"bSortable": false, "bvisible":false},
-                     {"mData":"name", "sClass" : "alignCenter","bSearchable": true,"bSortable": true,
+                     {"mData":"details", "sClass" : "alignCenter","bSearchable": true,"bSortable": true,
                      "mRender": function (data, type, full) {
                         if (full.comments !== null) {
                             if (!full.comments.trim()) {
-                               return '<small>'+data+'</small>';
+                               return '<small>' + data + '</small>';
                             }
                             return '<a rel="tooltip" href="#" data-toggle="tooltip" data-placement="top" title='+full.comments+'><small>'+data+'</small>'
                         } else {

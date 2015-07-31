@@ -187,7 +187,8 @@ def build_routes_json(groutes):
         rd = {}
         rd['id'] = r.pk
         # name with link to rule details
-        rd['name'] = '<a href="%s">%s</a>' % (r.get_absolute_url(), r.name)
+        rd['name'] = r.name
+        rd['details'] = '<a href="%s">%s</a>' % (r.get_absolute_url(), r.name)
         if not r.comments:
             rd['comments'] = 'Not Any'
         else:
@@ -723,5 +724,8 @@ def lookupShibAttr(attrmap, requestMeta):
     return ''
 
 
+# show the details of specific route
+@login_required
 def routedetails(request, route_slug):
-    raise NotImplementedError
+    route = get_object_or_404(Route, name=route_slug)
+    return render(request, 'flowspy/route_details.html', {'route': route})

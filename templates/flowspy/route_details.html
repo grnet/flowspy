@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block contentplaceholder %}
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">{{ route.name }}</h1>
+    </div>
+</div>
+<div class="row">
+	 <div class="col-md-12">
+		<div>
+			<i class="fa fa-clock-o"></i> {% trans "Expires" %}: {{ route.expires|date:"d M y" }}
+		</div>
+	</div>
+	 <div class="col-md-12">
+		<div>
+			<i class="fa fa-pencil-square-o"></i> {% trans "Last update" %}: {{route.last_updated}} {% trans "by" %} {{route.applier}}
+		</div>
+		<div>
+			<h2>{% trans 'About' %}</h2>
+			{{ route.get_then }}
+			{% trans 'all'%}
+			{% if route.protocol.count %}
+				{% for proto in route.protocol.all %}
+					{{ proto }} {% if not forloop.last %},{% endif %}
+				{% endfor %}
+			{% endif %}
+			{% trans 'traffic from' %}
+			{{ route.source }}
+			{% if route.port.count %}, {% trans 'port' %}
+				{% for port in route.port.all %}
+					{{ port }} {% if not forloop.last %},{% endif %}
+				{% endfor %}
+			{% endif %}
+			{% trans 'to' %}
+			{{ route.destination }}
+			{% if route.destinationport.count %}, {% trans 'port' %}
+				{% for port in route.destinationport.all %}
+					{{ port }} {% if not forloop.last %},{% endif %}
+				{% endfor %}
+			{% endif %}
+			{% if route.fragmenttype.count %}
+			({% trans 'Fragmentypes' %}:
+			{% for f in route.fragmenttype.all %}
+				{{ f }} {% if not forloop.last %},{% endif %}
+			{% endfor %}
+			)
+			{% endif %}
+		 	{% if route.status = 'EXPIRED' or route.status = 'ADMININACTIVE' or route.status = 'INACTIVE' %}
+		 		<span class="label label-default">DEACTIVATED</span>
+		 	{% elif route.status = 'OUTOFSYNC'  %}
+		 		<span class="label label-danger">ERROR</span>
+		 	{% elif route.status = 'ACTIVE'  %}
+		 		<span class="label label-success">{{ route.status }}</span>
+		 	{% elif route.status = 'PENDING'  %}
+		 		<span class="label label-info">{{ route.status }}</span>
+		 	{% else %}
+		 		<span class="label label-danger">{{ route.status }}</span>
+		 	{% endif %}
+		 	{% if route.status != 'PENDING'  %}
+
+		 		<a href="{% url edit-route route.name  %}" class="btn-info btn btn-sm btn-outline">{% trans "Edit" %}</a>
+		 		{% if route.status = 'ACTIVE' %}
+		 			<button class="del_button btn-warning btn btn-sm btn-outline" id="{{ route.name }}" data-routename="{{ route.name }}">{% trans "Deactivate" %}</button>
+		 		{% endif %}
+		 	{% endif %}
+		</div>
+	</div>
+</div>
+
+{% endblock %}
+{% block pagejsbottom %}
+<script type="text/javascript">
+
+
+	$('body').on('click', ".del_button", function(){
+    	last_element = false;
+    	var my = $(this);
+    	my.html('Deactivating...')
+		var routename = $(this).data("routename");
+		var delurl = "{% url delete-route 'route_placeholder'%}".replace('route_placeholder', routename.toString());
+		$.ajax({
+			type: 'POST',
+			url: delurl,
+			cache: false,
+			success: function(data) {
+    		 	$('.del_button').addClass('disabled').text('Done');
+    		}
+		});
+		return false;
+	});
+</script>
+{% endblock %}

@@ -25,5 +25,6 @@ def settings_vars(context):
     # you may add multiple values in there.
     return {
         'VERSION': settings.SW_VERSION,
-        'BRANDING': settings.BRANDING
+        'BRANDING': settings.BRANDING,
+        'INSTALLED_APPS': settings.INSTALLED_APPS,
     }

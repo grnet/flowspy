@@ -67,28 +67,84 @@
 		 	{% endif %}
 		</div>
 	</div>
+	{% comment %}check if graphs plugin in installed apps{% endcomment %}
+	{% if 'graphs' in INSTALLED_APPS %}
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
+
+	<div class="col-md-12 graphs-wrapper" style="display: none">
+		<h3>{% trans 'Graphs' %}</h3>
+		<div class="col-md-3">
+			<div id="reportrange" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc;">
+			    <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>&nbsp;
+			    <span></span> <b class="caret"></b>
+			</div>
+		</div>
+		<div class="graphs col-md-12" data-url="{% url graphs route.name %}" >
+		loading...
+		</div>
+	</div>
+	{% endif %}
 </div>
-
 {% endblock %}
+
 {% block pagejsbottom %}
+
+{% if 'graphs' in INSTALLED_APPS %}
+<script src="https://cdn.jsdelivr.net/momentjs/2.9.0/moment.min.js"></script>
+<script src="https://cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
 <script type="text/javascript">
+	$(document).ready(function () {
 
+		var url = $('.graphs').data('url');
+		var start = moment().subtract(1, 'days').format('X')
+		var end = moment().format('X')
 
-	$('body').on('click', ".del_button", function(){
-    	last_element = false;
-    	var my = $(this);
-    	my.html('Deactivating...')
-		var routename = $(this).data("routename");
-		var delurl = "{% url delete-route 'route_placeholder'%}".replace('route_placeholder', routename.toString());
-		$.ajax({
-			type: 'POST',
-			url: delurl,
-			cache: false,
-			success: function(data) {
-    		 	$('.del_button').addClass('disabled').text('Done');
-    		}
+	    function cb(start, end) {
+	        $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+			$('.graphs').load(url + '?start=' + start.format('X') + '&end=' + end.format('X'), function () {
+				$('.graphs-wrapper').show();
+			});
+		}
+	    cb(moment().subtract(29, 'days'), moment());
+
+	    $('#reportrange').daterangepicker({
+	        ranges: {
+	           'Today': [moment().subtract(1, 'days'), moment()],
+	           'Yesterday': [moment().subtract(2, 'days'), moment().subtract(1, 'days')],
+	           'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+	           'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+	           'This Month': [moment().startOf('month'), moment().endOf('month')],
+	           'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+	        }
+	    }, cb(moment().subtract(1, 'days'), moment()));
+
+		$('body').on('apply.daterangepicker', '#reportrange', function(ev, picker) {
+			cb(picker.startDate, picker.endDate);
 		});
-		return false;
+
+
+	});
+</script>
+{% endif %}
+
+<script type="text/javascript">
+	$(document).ready(function () {
+		$('body').on('click', ".del_button", function(){
+	    	last_element = false;
+	    	var my = $(this);
+	    	my.html('Deactivating...')
+			var routename = $(this).data("routename");
+			var delurl = "{% url delete-route 'route_placeholder'%}".replace('route_placeholder', routename.toString());
+			$.ajax({
+				type: 'POST',
+				url: delurl,
+				cache: false,
+				success: function(data) {
+	    		 	$('.del_button').addClass('disabled').text('Done');
+	    		}
+			});
+			return false;
+		});
 	});
 </script>
 {% endblock %}

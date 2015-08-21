@@ -64,9 +64,15 @@
                 <dl class="dl-horizontal">
                     <dt>{% trans "Username" %}:</dt>
                     <dd>{{user.username}}</dd>
+                    {% if user.first_name %}
                     <dt>{% trans "First name" %}:</dt><dd>{{user.first_name}}</dd>
+                    {% endif %}
+                    {% if user.last_name %}
                     <dt>{% trans "Last name" %}:</dt><dd>{{user.last_name}}</dd>
+                    {% endif %}
+                    {% if user.email %}
                     <dt>{% trans "Email" %}:</dt><dd>{{user.email}}</dd>
+                    {% endif %}
                     <dt>{% trans "Api Token" %}:</dt>
                     <dd>
                     {% if user.auth_token %}

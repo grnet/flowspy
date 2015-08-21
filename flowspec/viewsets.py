@@ -26,13 +26,21 @@ class RouteViewSet(viewsets.ModelViewSet):
     serializer_class = RouteSerializer
 
     def get_queryset(self):
+        if settings.DEBUG:
+            if self.request.user.is_anonymous():
+                return Route.objects.all()
+            elif self.request.user.is_authenticated():
+                return Route.objects.filter(applier=self.request.user)
+            else:
+                raise Exception('User is not Authenticated')
+
         if self.request.user.is_superuser:
             return Route.objects.all()
-        else:
+        elif self.request.user.is_authenticated and not self.request.user.is_anonymous:
             return Route.objects.filter(applier=self.request.user)
 
     def list(self, request):
-        serializer = RouteSerializer(self.get_queryset(), many=True)
+        serializer = RouteSerializer(self.get_queryset(), many=True, context={'request': request})
         return Response(serializer.data)
 
     def retrieve(self, request, pk=None):

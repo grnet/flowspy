@@ -218,9 +218,10 @@ def build_routes_json(groutes):
 @never_cache
 def add_route(request):
     applier = request.user.pk
-    applier_peer_networks = request.user.get_profile().peer.networks.all()
     if request.user.is_superuser:
         applier_peer_networks = PeerRange.objects.all()
+    else:
+        applier_peer_networks = request.user.get_profile().peer.networks.all()
     if not applier_peer_networks:
         messages.add_message(
             request,
@@ -255,10 +256,16 @@ def add_route(request):
             route.response = "Applying"
             route.source = IPNetwork('%s/%s' % (IPNetwork(route.source).network.compressed, IPNetwork(route.source).prefixlen)).compressed
             route.destination = IPNetwork('%s/%s' % (IPNetwork(route.destination).network.compressed, IPNetwork(route.destination).prefixlen)).compressed
-            route.requesters_address = request.META['HTTP_X_FORWARDED_FOR']
+            try:
+                route.requesters_address = request.META['HTTP_X_FORWARDED_FOR']
+            except:
+                # in case the header is not provided
+                route.requesters_address = 'unknown'
             route.save()
-            route.commit_add()
             form.save_m2m()
+            # We have to make the commit after saving the form
+            # in order to have all the m2m relations.
+            route.commit_add()
             return HttpResponseRedirect(reverse("group-routes"))
         else:
             if not request.user.is_superuser:
@@ -325,12 +332,16 @@ def edit_route(request, route_slug):
                 route.response = "Applying"
                 route.source = IPNetwork('%s/%s' % (IPNetwork(route.source).network.compressed, IPNetwork(route.source).prefixlen)).compressed
                 route.destination = IPNetwork('%s/%s' % (IPNetwork(route.destination).network.compressed, IPNetwork(route.destination).prefixlen)).compressed
-                route.requesters_address = request.META['HTTP_X_FORWARDED_FOR']
+                try:
+                    route.requesters_address = request.META['HTTP_X_FORWARDED_FOR']
+                except:
+                    # in case the header is not provided
+                    route.requesters_address = 'unknown'
+
             route.save()
-            route.commit_edit()
             if bool(set(changed_data) & set(critical_changed_values)) or (not route_original.status == 'ACTIVE'):
                 form.save_m2m()
-                # route.commit_edit()
+                route.commit_edit()
             return HttpResponseRedirect(reverse("group-routes"))
         else:
             if not request.user.is_superuser:

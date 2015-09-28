@@ -2,6 +2,7 @@ from django.conf.urls import patterns, include, url
 from django.views.generic.simple import direct_to_template
 from django.contrib import admin
 from rest_framework import routers
+from graphs import urls as graphs_urls
 from flowspec.viewsets import (
     RouteViewSet,
     PortViewSet,
@@ -27,7 +28,7 @@ urlpatterns = patterns(
     url(r'^/?$', 'flowspec.views.group_routes', name="group-routes"),
     url(r'^routes_ajax/?$', 'flowspec.views.group_routes_ajax', name="group-routes-ajax"),
     url(r'^overview_ajax/?$', 'flowspec.views.overview_routes_ajax', name="overview-ajax"),
-    url(r'^dashboard/?$', 'flowspec.views.dashboard', name="dashboard"),
+    url(r'^dashboard/$', 'flowspec.views.dashboard', name="dashboard"),
     url(r'^profile/?$', 'flowspec.views.user_profile', name="user-profile"),
     url(r'^profile/token/$', 'accounts.views.generate_token', name="user-profile-token"),
     url(r'^add/?$', 'flowspec.views.add_route', name="add-route"),
@@ -56,4 +57,5 @@ urlpatterns = patterns(
     ),
     url(r'^overview/?$', 'flowspec.views.overview', name="overview"),
     url(r'^api/', include(router.urls)),
+    url(r'^details/(?P<route_slug>[\w\-]+)/$', 'flowspec.views.routedetails', name="route-details"),
 )

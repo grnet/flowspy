@@ -25,15 +25,18 @@ from peers.models import Peer
 class UserProfile(models.Model):
     user = models.OneToOneField(User)
     peer = models.ForeignKey(Peer)
-    peers = models.ManyToManyField(Peer, related_name='peer_info')
+    peers = models.ManyToManyField(Peer, related_name='user_profile')
 
     class Meta:
         permissions = (
             ("overview", "Can see registered users and rules"),
         )
 
+    def username(self):
+        return "%s" % (self.user.username)
+
     def __unicode__(self):
-        return "%s:%s" % (self.user.username, self.peer.peer_name)
+        return self.username()
 
     def get_address_space(self):
         networks = self.domain.networks.all()

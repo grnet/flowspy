@@ -51,7 +51,7 @@ class RouteAdmin(admin.ModelAdmin):
     def has_delete_permission(self, request, obj=None):
         return False
 
-    list_display = ('name', 'status', 'applier', 'applier_peer', 'get_match', 'get_then', 'response', "expires", "comments")
+    list_display = ('name', 'status', 'applier_username', 'applier_peers', 'get_match', 'get_then', 'response', "expires", "comments")
 
     fieldsets = [
         (None, {'fields': ['name', 'applier']}),
@@ -73,7 +73,7 @@ class UserProfileAdmin(UserAdmin):
     add_form = UserCreationForm
     form = UserChangeForm
     actions = ['deactivate', 'activate']
-    list_display = ('username', 'email', 'first_name' , 'last_name', 'is_staff', 'is_active', 'is_superuser', 'get_userprofile_peer')
+    list_display = ('username', 'email', 'first_name', 'last_name', 'is_staff', 'is_active', 'is_superuser', 'get_userprofile_peers')
     inlines = [UserProfileInline]
 
     def deactivate(self, request, queryset):
@@ -84,10 +84,12 @@ class UserProfileAdmin(UserAdmin):
         queryset = queryset.update(is_active=True)
     activate.short_description = "Activate Selected Users"
 
-    def get_userprofile_peer(self, instance):
+    def get_userprofile_peers(self, instance):
         # instance is User instance
-        return instance.get_profile().peer
-    get_userprofile_peer.short_description = "User Peer"
+        peers = instance.get_profile().peers.all()
+        return ''.join(('%s, ' % (peer.peer_name)) for peer in peers)[:-2]
+
+    get_userprofile_peers.short_description = "User Peer(s)"
 #    fields = ('name', 'applier', 'expires')
 
     #def formfield_for_dbfield(self, db_field, **kwargs):

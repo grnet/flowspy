@@ -81,6 +81,3 @@ class PeerNotify(models.Model):
     peer = models.ForeignKey(Peer)
     user = models.ForeignKey(User)
     peer_activation_notified = models.BooleanField(default=True)
-
-    def __unicode__(self):
-        return self.peer_activation_notified

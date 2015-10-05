@@ -16,3 +16,7 @@ python-dateutil==1.5
 python-memcached==1.48
 djangorestframework==2.3.14
 git+https://code.grnet.gr/git/nxpy
+South==0.7
+celery==2.5.3
+django-celery==2.5.5
+pyyaml==3.11

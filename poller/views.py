@@ -29,6 +29,7 @@ from gevent.event import Event
 from django.conf import settings
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
+from peers.models import Peer
 
 import beanstalkc
 
@@ -79,10 +80,10 @@ class Msgs(object):
             request.session['cursor'] = self.user_cache[-1]['id']
         return render_to_response('poll.html', {'messages': self.user_cache})
 
-    def message_existing(self, request):
+    def message_existing(self, request, peer_id):
         if request.is_ajax():
             try:
-                user = request.user.get_profile().peer.peer_tag
+                user = Peer.objects.get(pk=peer_id).peer_tag
             except:
                 user = None
                 return False
@@ -125,11 +126,11 @@ class Msgs(object):
         self.new_message_user_event[user].clear()
         return json_response(msg)
 
-    def message_updates(self, request):
+    def message_updates(self, request, peer_id):
         if request.is_ajax():
             cursor = {}
             try:
-                user = request.user.get_profile().peer.peer_tag
+                user = Peer.objects.get(pk=peer_id).peer_tag
             except:
                 user = None
                 return False

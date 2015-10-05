@@ -7,7 +7,7 @@ $(document).ready(function() {
     $("#message").select();
     {% if user.is_authenticated %}
     updater.start();
-    updater.poll(); 
+    updater.poll();
     {% endif %}
 });
 
@@ -55,11 +55,12 @@ var updater = {
     start: function() {
     	    var date = new Date();
 			var timestamp = date.getTime();
-		$.ajax({url: "{% url fetch-existing %}?="+timestamp, type: "POST", dataType: "json", cache:false, 
+        {% for peer in user.userprofile.peers.all %}
+        $.ajax({url: "{% url fetch-existing  peer.pk %}?="+timestamp, type: "POST", dataType: "json", cache:false,
     		success: updater.onFetchExisting,
     		error: updater.onError});
+        {% endfor %}
         },
-    
     poll: function() {
     	{% if user.is_authenticated %}
     	if (updater.errorSleepTime > 128000){
@@ -68,10 +69,12 @@ var updater = {
     	timeout = {{timeout}};
     	    var date = new Date();
 			var timestamp = date.getTime();
-    	$.ajax({url: "{% url fetch-updates %}?="+timestamp, type: "POST", dataType: "json", cache:false,
+        {% for peer in user.userprofile.peers.all %}
+        $.ajax({url: "{% url fetch-updates  peer.pk %}?="+timestamp, type: "POST", dataType: "json", cache:false,
     		success: updater.onSuccess,
     		timeout: timeout,
     		error: updater.onError});
+        {% endfor %}
     	{% endif %}
     },
     onSuccess: function(response) {
@@ -94,7 +97,7 @@ var updater = {
     	    return;
     	}
         },
-     
+
     onError: function(response, text) {
         	if (text == 'timeout'){
         		oTable.fnReloadAjax(refreshUrl);
@@ -102,7 +105,7 @@ var updater = {
         	updater.errorSleepTime *= 2;
 			console.log("Poll error; sleeping for", updater.errorSleepTime, "ms");
 			window.setTimeout(updater.poll, updater.errorSleepTime);
-        	
+
     },
 
     newMessages: function(response) {
@@ -114,7 +117,7 @@ var updater = {
 	var messages = response.messages;
 	updater.cursor = messages[messages.length - 1].id;
 	console.log(messages.length, "new messages, cursor:", updater.cursor);
-	
+
 	for (var i = 0; i < messages.length; i++) {
 	    updater.showMessage(messages[i]);
 	}
@@ -135,7 +138,7 @@ var updater = {
     	    updater.showMessage(messages[i]);
     	}
         },
-   
+
     showMessage: function(message) {
 	var existing = $("#m" + message.id);
 	if (existing.length > 0) return;
@@ -155,7 +158,7 @@ var updater = {
                                 </li>';
 	var node = $(htmlnode);
 	node.hide();
-//	 $('#inbox').val($('#inbox').val()+message.text); 
+//	 $('#inbox').val($('#inbox').val()+message.text);
 	$("#inbox").prepend(node);
 	node.slideDown();
     }

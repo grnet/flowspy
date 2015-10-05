@@ -32,7 +32,7 @@ from django.core.urlresolvers import reverse
 from django.contrib import messages
 from accounts.models import *
 from ipaddr import *
-
+from django.db.models import Q
 from django.contrib.auth import authenticate, login
 
 from django.forms.models import model_to_dict
@@ -87,9 +87,9 @@ def welcome(request):
 @login_required
 @never_cache
 def dashboard(request):
-    group_routes = []
+    all_group_routes = []
     try:
-        peer = request.user.get_profile().peer
+        peers = request.user.get_profile().peers.all()
     except UserProfile.DoesNotExist:
         error = "User <strong>%s</strong> does not belong to any peer or organization. It is not possible to create new firewall rules.<br>Please contact Helpdesk to resolve this issue" % request.user.username
         return render(
@@ -99,26 +99,31 @@ def dashboard(request):
                 'error': error
             }
         )
-    if peer:
-        peer_members = UserProfile.objects.filter(peer=peer)
-        users = [prof.user for prof in peer_members]
-        group_routes = Route.objects.filter(applier__in=users).order_by('-expires')[:10]
+    if peers:
         if request.user.is_superuser:
-            group_routes = Route.objects.all().order_by('-expires')[:10]
-        return render(
-            request,
-            'dashboard.html',
-            {
-                'routes': group_routes
-            },
-        )
+            all_group_routes = Route.objects.all().order_by('-last_updated')[:10]
+        else:
+            query = Q()
+            for peer in peers:
+                query |= Q(applier__userprofile__in=peer.user_profile.all())
+            all_group_routes = Route.objects.filter(query)
+
+
+
+    return render(
+        request,
+        'dashboard.html',
+        {
+            'routes': all_group_routes
+        },
+    )
 
 
 @login_required
 @never_cache
 def group_routes(request):
     try:
-        request.user.get_profile().peer
+        request.user.get_profile().peers.all()
     except UserProfile.DoesNotExist:
         error = "User <strong>%s</strong> does not belong to any peer or organization. It is not possible to create new firewall rules.<br>Please contact Helpdesk to resolve this issue" % request.user.username
         return render(
@@ -138,9 +143,9 @@ def group_routes(request):
 @login_required
 @never_cache
 def group_routes_ajax(request):
-    group_routes = []
+    all_group_routes = []
     try:
-        peer = request.user.get_profile().peer
+        peers = request.user.get_profile().peers.all().select_related()
     except UserProfile.DoesNotExist:
         error = "User <strong>%s</strong> does not belong to any peer or organization. It is not possible to create new firewall rules.<br>Please contact Helpdesk to resolve this issue" % request.user.username
         return render(
@@ -148,14 +153,17 @@ def group_routes_ajax(request):
             'error.html',
             {'error': error}
         )
-    if peer:
-        peer_members = UserProfile.objects.filter(peer=peer)
-        users = [prof.user for prof in peer_members]
-        group_routes = Route.objects.filter(applier__in=users)
-        if request.user.is_superuser:
-            group_routes = Route.objects.all()
+    if request.user.is_superuser:
+        all_group_routes = Route.objects.all()
+    else:
+
+        query = Q()
+        for peer in peers:
+            query |= Q(applier__userprofile__in=peer.user_profile.all())
+        all_group_routes = Route.objects.filter(query)
+
     jresp = {}
-    routes = build_routes_json(group_routes)
+    routes = build_routes_json(all_group_routes)
     jresp['aaData'] = routes
     return HttpResponse(json.dumps(jresp), mimetype='application/json')
 
@@ -163,20 +171,20 @@ def group_routes_ajax(request):
 @login_required
 @never_cache
 def overview_routes_ajax(request):
-    group_routes = []
+    all_group_routes = []
     try:
-        peer = request.user.get_profile().peer
+        peers = request.user.get_profile().peers.all().select_related()
     except UserProfile.DoesNotExist:
         error = "User <strong>%s</strong> does not belong to any peer or organization. It is not possible to create new firewall rules.<br>Please contact Helpdesk to resolve this issue" % request.user.username
         return render_to_response('error.html', {'error': error}, context_instance=RequestContext(request))
-    if peer:
-        peer_members = UserProfile.objects.filter(peer=peer)
-        users = [prof.user for prof in peer_members]
-        group_routes = Route.objects.filter(applier__in=users)
-        if request.user.is_superuser or request.user.has_perm('accounts.overview'):
-            group_routes = Route.objects.all()
+    query = Q()
+    for peer in peers:
+        query |= Q(applier__userprofile__in=peer.user_profile.all())
+    all_group_routes = Route.objects.filter(query)
+    if request.user.is_superuser or request.user.has_perm('accounts.overview'):
+        all_group_routes = Route.objects.all()
     jresp = {}
-    routes = build_routes_json(group_routes)
+    routes = build_routes_json(all_group_routes)
     jresp['aaData'] = routes
     return HttpResponse(json.dumps(jresp), mimetype='application/json')
 
@@ -203,8 +211,18 @@ def build_routes_json(groutes):
             rd['applier'] = 'unknown'
             rd['peer'] = ''
         else:
+            peers = r.applier.get_profile().peers.all()
+            username = None
+            for peer in peers:
+                if username:
+                    break
+                for network in peer.networks.all():
+                    net = IPNetwork(network)
+                    if IPNetwork(r.destination) in net:
+                        username = peer.peer_name
+                        break
             try:
-                rd['peer'] = r.applier.get_profile().peer.peer_name
+                rd['peer'] = username
             except UserProfile.DoesNotExist:
                 rd['peer'] = ''
 
@@ -217,11 +235,14 @@ def build_routes_json(groutes):
 @login_required
 @never_cache
 def add_route(request):
+    applier_peer_networks = []
     applier = request.user.pk
     if request.user.is_superuser:
         applier_peer_networks = PeerRange.objects.all()
     else:
-        applier_peer_networks = request.user.get_profile().peer.networks.all()
+        user_peers = request.user.get_profile().peers.all()
+        for peer in user_peers:
+            applier_peer_networks.extend(peer.networks.all())
     if not applier_peer_networks:
         messages.add_message(
             request,
@@ -286,14 +307,20 @@ def add_route(request):
 @never_cache
 def edit_route(request, route_slug):
     applier = request.user.pk
-    applier_peer = request.user.get_profile().peer
     route_edit = get_object_or_404(Route, name=route_slug)
-    route_edit_applier_peer = route_edit.applier.get_profile().peer
-    if applier_peer != route_edit_applier_peer and (not request.user.is_superuser):
+
+    applier_peer_networks = []
+    if request.user.is_superuser:
+        applier_peer_networks = PeerRange.objects.all()
+    else:
+        user_peers = request.user.get_profile().peers.all()
+        for peer in user_peers:
+            applier_peer_networks.extend(peer.networks.all())
+    if not applier_peer_networks:
         messages.add_message(
             request,
             messages.WARNING,
-            ('Insufficient rights to edit rule %s') % (route_slug)
+            ('Insufficient rights on administrative networks. Cannot add rule. Contact your administrator')
         )
         return HttpResponseRedirect(reverse("group-routes"))
     if route_edit.status == 'PENDING':
@@ -387,15 +414,39 @@ def edit_route(request, route_slug):
 def delete_route(request, route_slug):
     if request.is_ajax():
         route = get_object_or_404(Route, name=route_slug)
-        applier_peer = route.applier.get_profile().peer
-        requester_peer = request.user.get_profile().peer
+        peers = route.applier.get_profile().peers.all()
+        username = None
+        for peer in peers:
+            if username:
+                break
+            for network in peer.networks.all():
+                net = IPNetwork(network)
+                if IPNetwork(route.destination) in net:
+                    username = peer
+                    break
+        applier_peer = username
+        peers = request.user.get_profile().peers.all()
+        username = None
+        for peer in peers:
+            if username:
+                break
+            for network in peer.networks.all():
+                net = IPNetwork(network)
+                if IPNetwork(route.destination) in net:
+                    username = peer
+                    break
+        requester_peer = username
         if applier_peer == requester_peer or request.user.is_superuser:
             route.status = "PENDING"
             route.expires = datetime.date.today()
             if not request.user.is_superuser:
                 route.applier = request.user
             route.response = "Deactivating"
-            route.requesters_address = request.META['HTTP_X_FORWARDED_FOR']
+            try:
+                route.requesters_address = request.META['HTTP_X_FORWARDED_FOR']
+            except:
+                # in case the header is not provided
+                route.requesters_address = 'unknown'
             route.save()
             route.commit_delete()
         html = "<html><body>Done</body></html>"
@@ -409,8 +460,7 @@ def delete_route(request, route_slug):
 def user_profile(request):
     user = request.user
     try:
-        peer = request.user.get_profile().peer
-        peers = Peer.objects.filter(pk=peer.pk)
+        peers = request.user.get_profile().peers.all()
         if user.is_superuser:
             peers = Peer.objects.all()
     except UserProfile.DoesNotExist:
@@ -483,7 +533,7 @@ def user_login(request):
 
         if user is not None:
             try:
-                user.get_profile().peer
+                user.get_profile().peers.all()
             except:
                 form = UserProfileForm()
                 form.fields['user'] = forms.ModelChoiceField(queryset=User.objects.filter(pk=user.pk), empty_label=None)
@@ -524,7 +574,7 @@ def user_login(request):
 
 def user_activation_notify(user):
     current_site = Site.objects.get_current()
-    peer = user.get_profile().peer
+    peers = user.get_profile().peers.all()
 
     # Email subject *must not* contain newlines
     # TechCs will be notified about new users.
@@ -555,27 +605,33 @@ def user_activation_notify(user):
             admin_mails,
             []
         )
-    # Mail to domain techCs plus platform admins (no activation hash sent)
-    subject = render_to_string(
-        'registration/activation_email_peer_notify_subject.txt',
-        {
-            'site': current_site,
-            'peer': peer
-        }
-    )
-    subject = ''.join(subject.splitlines())
-    message = render_to_string(
-        'registration/activation_email_peer_notify.txt',
-        {
-            'user': user,
-            'peer': peer
-        }
-    )
-    send_new_mail(
-        settings.EMAIL_SUBJECT_PREFIX + subject,
-        message,
-        settings.SERVER_EMAIL,
-        get_peer_techc_mails(user), [])
+    for peer in peers:
+        try:
+            PeerNotify.objects.get(peer=peer, user=user)
+        except:
+            peer_notification = PeerNotify(peer=peer, user=user)
+            peer_notification.save()
+            # Mail to domain techCs plus platform admins (no activation hash sent)
+            subject = render_to_string(
+                'registration/activation_email_peer_notify_subject.txt',
+                {
+                    'site': current_site,
+                    'peer': peer
+                }
+            )
+            subject = ''.join(subject.splitlines())
+            message = render_to_string(
+                'registration/activation_email_peer_notify.txt',
+                {
+                    'user': user,
+                    'peer': peer
+                }
+            )
+            send_new_mail(
+                settings.EMAIL_SUBJECT_PREFIX + subject,
+                message,
+                settings.SERVER_EMAIL,
+                get_peer_techc_mails(user, peer), [])
 
 
 @login_required

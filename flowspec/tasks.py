@@ -30,6 +30,7 @@ from django.core.mail import send_mail
 from django.template.loader import render_to_string
 import os
 from celery.exceptions import TimeLimitExceeded, SoftTimeLimitExceeded
+from ipaddr import *
 
 LOG_FILENAME = os.path.join(settings.LOG_FILE_LOCATION, 'celery_jobs.log')
 
@@ -57,22 +58,22 @@ def add(route, callback=None):
         route.status = status
         route.response = response
         route.save()
-        announce("[%s] Rule add: %s - Result: %s" %(route.applier, route.name, response), route.applier)
+        announce("[%s] Rule add: %s - Result: %s" % (route.applier, route.name, response), route.applier, route)
     except TimeLimitExceeded:
         route.status = "ERROR"
         route.response = "Task timeout"
         route.save()
-        announce("[%s] Rule add: %s - Result: %s"%(route.applier, route.name, route.response), route.applier)
+        announce("[%s] Rule add: %s - Result: %s" % (route.applier, route.name, route.response), route.applier, route)
     except SoftTimeLimitExceeded:
         route.status = "ERROR"
         route.response = "Task timeout"
         route.save()
-        announce("[%s] Rule add: %s - Result: %s"%(route.applier, route.name, route.response), route.applier)
+        announce("[%s] Rule add: %s - Result: %s" % (route.applier, route.name, route.response), route.applier, route)
     except Exception:
         route.status = "ERROR"
         route.response = "Error"
         route.save()
-        announce("[%s] Rule add: %s - Result: %s"%(route.applier, route.name, route.response), route.applier)
+        announce("[%s] Rule add: %s - Result: %s" % (route.applier, route.name, route.response), route.applier, route)
 
 
 @task(ignore_result=True)
@@ -87,22 +88,22 @@ def edit(route, callback=None):
         route.status = status
         route.response = response
         route.save()
-        announce("[%s] Rule edit: %s - Result: %s"%(route.applier, route.name, response), route.applier)
+        announce("[%s] Rule edit: %s - Result: %s" % (route.applier, route.name, response), route.applier, route)
     except TimeLimitExceeded:
         route.status = "ERROR"
         route.response = "Task timeout"
         route.save()
-        announce("[%s] Rule edit: %s - Result: %s"%(route.applier, route.name, route.response), route.applier)
+        announce("[%s] Rule edit: %s - Result: %s" % (route.applier, route.name, route.response), route.applier, route)
     except SoftTimeLimitExceeded:
         route.status = "ERROR"
         route.response = "Task timeout"
         route.save()
-        announce("[%s] Rule edit: %s - Result: %s"%(route.applier, route.name, route.response), route.applier)
+        announce("[%s] Rule edit: %s - Result: %s" % (route.applier, route.name, route.response), route.applier, route)
     except Exception:
         route.status = "ERROR"
         route.response = "Error"
         route.save()
-        announce("[%s] Rule edit: %s - Result: %s"%(route.applier, route.name, route.response), route.applier)
+        announce("[%s] Rule edit: %s - Result: %s" % (route.applier, route.name, route.response), route.applier, route)
 
 
 @task(ignore_result=True)
@@ -113,30 +114,30 @@ def delete(route, **kwargs):
         reason_text = ''
         if commit:
             status = "INACTIVE"
-            if "reason" in kwargs and kwargs['reason']=='EXPIRED':
+            if "reason" in kwargs and kwargs['reason'] == 'EXPIRED':
                 status = 'EXPIRED'
-                reason_text = " Reason: %s " %status
+                reason_text = " Reason: %s " % status
         else:
             status = "ERROR"
         route.status = status
         route.response = response
         route.save()
-        announce("[%s] Suspending rule : %s%s- Result %s" %(route.applier, route.name, reason_text, response), route.applier)
+        announce("[%s] Suspending rule : %s%s- Result %s" % (route.applier, route.name, reason_text, response), route.applier, route)
     except TimeLimitExceeded:
         route.status = "ERROR"
         route.response = "Task timeout"
         route.save()
-        announce("[%s] Suspending rule : %s - Result: %s"%(route.applier, route.name, route.response), route.applier)
+        announce("[%s] Suspending rule : %s - Result: %s" % (route.applier, route.name, route.response), route.applier, route)
     except SoftTimeLimitExceeded:
         route.status = "ERROR"
         route.response = "Task timeout"
         route.save()
-        announce("[%s] Suspending rule : %s - Result: %s"%(route.applier, route.name, route.response), route.applier)
+        announce("[%s] Suspending rule : %s - Result: %s" % (route.applier, route.name, route.response), route.applier, route)
     except Exception:
         route.status = "ERROR"
         route.response = "Error"
         route.save()
-        announce("[%s] Suspending rule : %s - Result: %s"%(route.applier, route.name, route.response), route.applier)
+        announce("[%s] Suspending rule : %s - Result: %s" % (route.applier, route.name, route.response), route.applier, route)
 
 
 # May not work in the first place... proxy is not aware of Route models
@@ -144,19 +145,19 @@ def delete(route, **kwargs):
 def batch_delete(routes, **kwargs):
     if routes:
         for route in routes:
-            route.status='PENDING';route.save()
+            route.status = 'PENDING';route.save()
         applier = PR.Applier(route_objects=routes)
         conf = applier.delete_routes()
-        commit, response = applier.apply(configuration = conf)
+        commit, response = applier.apply(configuration=conf)
         reason_text = ''
         if commit:
             status = "INACTIVE"
-            if "reason" in kwargs and kwargs['reason']=='EXPIRED':
+            if "reason" in kwargs and kwargs['reason'] == 'EXPIRED':
                 status = 'EXPIRED'
-                reason_text = " Reason: %s " %status
-            elif "reason" in kwargs and kwargs['reason']!='EXPIRED':
+                reason_text = " Reason: %s " % status
+            elif "reason" in kwargs and kwargs['reason'] != 'EXPIRED':
                 status = kwargs['reason']
-                reason_text = " Reason: %s " %status
+                reason_text = " Reason: %s " % status
         else:
             status = "ERROR"
         for route in routes:
@@ -164,15 +165,24 @@ def batch_delete(routes, **kwargs):
             route.response = response
             route.expires = datetime.date.today()
             route.save()
-            announce("[%s] Rule removal: %s%s- Result %s" % (route.applier, route.name, reason_text, response), route.applier)
+            announce("[%s] Rule removal: %s%s- Result %s" % (route.applier, route.name, reason_text, response), route.applier, route)
     else:
         return False
 
 
 #@task(ignore_result=True)
-def announce(messg, user):
+def announce(messg, user, route):
+    peers = user.get_profile().peers.all()
+    username = None
+    for peer in peers:
+        if username:
+            break
+        for network in peer.networks.all():
+            net = IPNetwork(network)
+            if IPNetwork(route.destination) in net:
+                username = peer.peer_tag
+                break
     messg = str(messg)
-    username = user.get_profile().peer.peer_tag
     b = beanstalkc.Connection()
     b.use(settings.POLLS_TUBE)
     tube_message = json.dumps({'message': messg, 'username': username})

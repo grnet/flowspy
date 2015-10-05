@@ -29,7 +29,6 @@ from utils import proxy as PR
 from ipaddr import *
 import datetime
 import logging
-from time import sleep
 
 from junos import create_junos_name
 
@@ -38,19 +37,6 @@ import beanstalkc
 from utils.randomizer import id_generator as id_gen
 
 from tasks import *
-
-
-def user_unicode_patch(self):
-    peer = None
-    try:
-        peer = self.get_profile().peer.peer_tag
-    except:
-        pass
-    if peer:
-        return '%s.::.%s' % (self.username, peer)
-    return self.username
-
-User.__unicode__ = user_unicode_patch
 
 
 FORMAT = '%(asctime)s %(levelname)s: %(message)s'
@@ -193,9 +179,8 @@ class Route(models.Model):
     def save(self, *args, **kwargs):
         if not self.pk:
             hash = id_gen()
-            self.name = "%s_%s" %(self.name, hash)
+            self.name = "%s_%s" % (self.name, hash)
         super(Route, self).save(*args, **kwargs) # Call the "real" save() method.
-
 
     def clean(self, *args, **kwargs):
         from django.core.exceptions import ValidationError
@@ -213,7 +198,20 @@ class Route(models.Model):
                 raise ValidationError(_('Invalid network address format at Source Field'))
 
     def commit_add(self, *args, **kwargs):
-        peer = self.applier.get_profile().peer.peer_tag
+        peers = self.applier.get_profile().peers.all()
+        username = None
+        for peer in peers:
+            if username:
+                break
+            for network in peer.networks.all():
+                net = IPNetwork(network)
+                if IPNetwork(self.destination) in net:
+                    username = peer
+                    break
+        if username:
+            peer = username.peer_tag
+        else:
+            peer = None
         send_message("[%s] Adding rule %s. Please wait..." % (self.applier.username, self.name), peer)
         response = add.delay(self)
         logger.info('Got add job id: %s' % response)
@@ -228,7 +226,8 @@ class Route(models.Model):
                 'route': self,
                 'address': self.requesters_address,
                 'action': 'creation',
-                'url': admin_url
+                'url': admin_url,
+                'peer': username
             }
         )
         user_mail = '%s' % self.applier.email
@@ -237,7 +236,7 @@ class Route(models.Model):
             settings.EMAIL_SUBJECT_PREFIX + 'Rule %s creation request submitted by %s' % (self.name, self.applier.username),
             mail_body,
             settings.SERVER_EMAIL, user_mail,
-            get_peer_techc_mails(self.applier)
+            get_peer_techc_mails(self.applier, username)
         )
         d = {
             'clientip': '%s' % self.requesters_address,
@@ -246,7 +245,20 @@ class Route(models.Model):
         logger.info(mail_body, extra=d)
 
     def commit_edit(self, *args, **kwargs):
-        peer = self.applier.get_profile().peer.peer_tag
+        peers = self.applier.get_profile().peers.all()
+        username = None
+        for peer in peers:
+            if username:
+                break
+            for network in peer.networks.all():
+                net = IPNetwork(network)
+                if IPNetwork(self.destination) in net:
+                    username = peer
+                    break
+        if username:
+            peer = username.peer_tag
+        else:
+            peer = None
         send_message(
             '[%s] Editing rule %s. Please wait...' %
             (
@@ -270,7 +282,8 @@ class Route(models.Model):
                 'route': self,
                 'address': self.requesters_address,
                 'action': 'edit',
-                'url': admin_url
+                'url': admin_url,
+                'peer': username
             }
         )
         user_mail = '%s' % self.applier.email
@@ -278,7 +291,7 @@ class Route(models.Model):
         send_new_mail(
             settings.EMAIL_SUBJECT_PREFIX + 'Rule %s edit request submitted by %s' % (self.name, self.applier.username),
             mail_body, settings.SERVER_EMAIL, user_mail,
-            get_peer_techc_mails(self.applier)
+            get_peer_techc_mails(self.applier, username)
         )
         d = {
             'clientip': self.requesters_address,
@@ -287,12 +300,25 @@ class Route(models.Model):
         logger.info(mail_body, extra=d)
 
     def commit_delete(self, *args, **kwargs):
+        username = None
         reason_text = ''
         reason = ''
         if "reason" in kwargs:
             reason = kwargs['reason']
             reason_text = 'Reason: %s.' % reason
-        peer = self.applier.get_profile().peer.peer_tag
+        peers = self.applier.get_profile().peers.all()
+        for peer in peers:
+            if username:
+                break
+            for network in peer.networks.all():
+                net = IPNetwork(network)
+                if IPNetwork(self.destination) in net:
+                    username = peer
+                    break
+        if username:
+            peer = username.peer_tag
+        else:
+            peer = None
         send_message(
             '[%s] Suspending rule %s. %sPlease wait...' % (
                 self.applier.username,
@@ -316,7 +342,8 @@ class Route(models.Model):
                 'route': self,
                 'address': self.requesters_address,
                 'action': 'removal',
-                'url': admin_url
+                'url': admin_url,
+                'peer': username
             }
         )
         user_mail = '%s' % self.applier.email
@@ -326,7 +353,7 @@ class Route(models.Model):
             mail_body,
             settings.SERVER_EMAIL,
             user_mail,
-            get_peer_techc_mails(self.applier)
+            get_peer_techc_mails(self.applier, username)
         )
         d = {
             'clientip': self.requesters_address,
@@ -560,12 +587,13 @@ class Route(models.Model):
     get_match.allow_tags = True
 
     @property
-    def applier_peer(self):
+    def applier_peers(self):
         try:
-            applier_peer = self.applier.get_profile().peer
+            peers = self.applier.get_profile().peers.all()
+            applier_peers = ''.join(('%s, ' % (peer.peer_name)) for peer in peers)[:-2]
         except:
-            applier_peer = None
-        return applier_peer
+            applier_peers = None
+        return applier_peers
 
     @property
     def days_to_expire(self):
@@ -591,6 +619,6 @@ def send_message(msg, user):
     peer = user
     b = beanstalkc.Connection()
     b.use(settings.POLLS_TUBE)
-    tube_message = json.dumps({'message': str(msg), 'username':peer})
+    tube_message = json.dumps({'message': str(msg), 'username': peer})
     b.put(tube_message)
     b.close()

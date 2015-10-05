@@ -1,6 +1,6 @@
 {% load tofqdn %}{% ifequal action 'expires' %}Rule {{route.name}} expires {% ifequal expiration_days 0 %}today{% else%}in {{expiration_days}} day{{ expiration_days|pluralize }}{% endifequal %}{% else %}A new rule {{action}} job has spawned
 
-Peer: {{route.applier.get_profile.peer.peer_name}}
+Peer: {{peer.peer_name}}
 User {{route.applier.username}} requested the {{action}} of the following rule from address {{address}} {% if address|tofqdn %}({{address|tofqdn}}){% endif %}:
 
 Rule name: {{route.name}}{% endifequal %}

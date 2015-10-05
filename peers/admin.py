@@ -19,7 +19,7 @@
 
 from django.contrib import admin
 
-from peers.models import PeerRange, TechcEmail, Peer
+from peers.models import PeerRange, TechcEmail, Peer, PeerNotify
 from django import forms
 from django.forms import ModelForm
 from django.contrib.admin.widgets import FilteredSelectMultiple
@@ -55,6 +55,12 @@ class TechcEmailAdmin(admin.ModelAdmin):
     search_fields = ['email']
 
 
+class PeerNotifyAdmin(admin.ModelAdmin):
+    list_display = ('peer', 'user', 'peer_activation_notified')
+    search_fields = ['peer', 'user']
+
+
 admin.site.register(Peer, PeerAdmin)
 admin.site.register(PeerRange, PeerRangeAdmin)
 admin.site.register(TechcEmail, TechcEmailAdmin)
+admin.site.register(PeerNotify, PeerNotifyAdmin)

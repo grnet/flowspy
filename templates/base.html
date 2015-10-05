@@ -62,7 +62,7 @@
                     <ul class="dropdown-menu dropdown-user" role="menu" >
                     	<li role="presentation" class="dropdown-header">{{user}}</li>
                     	<li class="divider"></li>
-                    	 {% if user.get_profile.peer %}
+                    {% if user.get_profile.peers.all %}
 				        <li>
 				            <a href="{% url user-profile %}"><i class="fa fa-user fa-fw"></i>{% trans "My profile" %}</a>
 				        </li>
@@ -109,7 +109,7 @@
                         <li><a href="{% url admin:index %}"><i class="fa fa-cogs fa-fw"></i> {% trans "Admin" %}</a>
                         </li>
 						{% endif %}
-					{% if user.get_profile.peer %}
+                    {% if user.get_profile.peers.all %}
 				        <li>
 				            <a href="{% url user-profile %}"><i class="fa fa-user fa-fw"></i> {% trans "My profile" %}</a>
 				        </li>

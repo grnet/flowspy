@@ -59,7 +59,8 @@ class RouteForm(forms.ModelForm):
 
     def clean_source(self):
         user = User.objects.get(pk=self.data['applier'])
-        peer = user.get_profile().peer
+        peers = user.get_profile().peers.all()
+        peers_names = ''.join(('%s, ' % (peer.peer_name)) for peer in peers)[:-2]
         data = self.cleaned_data['source']
         private_error = False
         protected_error = False
@@ -71,7 +72,7 @@ class RouteForm(forms.ModelForm):
                 for net in settings.PROTECTED_SUBNETS:
                     if address in IPNetwork(net):
                         protected_error = True
-                        mail_body = "User %s %s (%s) attempted to set %s as the source address in a firewall rule" %(user.username, user.email, peer.peer_name, data)
+                        mail_body = "User %s %s (%s) attempted to set %s as the source address in a firewall rule" % (user.username, user.email, peers_names, data)
                         send_mail(settings.EMAIL_SUBJECT_PREFIX + "Caught an attempt to set a protected IP/network as a source address",
                               mail_body, settings.SERVER_EMAIL,
                               settings.NOTIFY_ADMIN_MAILS, fail_silently=True)
@@ -101,7 +102,8 @@ class RouteForm(forms.ModelForm):
 
     def clean_destination(self):
         user = User.objects.get(pk=self.data['applier'])
-        peer = user.get_profile().peer
+        peers = user.get_profile().peers.all()
+        peers_names = ''.join(('%s, ' % (peer.peer_name)) for peer in peers)[:-2]
         data = self.cleaned_data['destination']
         error = None
         protected_error = False
@@ -113,13 +115,13 @@ class RouteForm(forms.ModelForm):
                 for net in settings.PROTECTED_SUBNETS:
                     if address in IPNetwork(net):
                         protected_error = True
-                        mail_body = "User %s %s (%s) attempted to set %s as the destination address in a firewall rule" %(user.username, user.email, peer.peer_name, data)
+                        mail_body = "User %s %s (%s) attempted to set %s as the destination address in a firewall rule" % (user.username, user.email, peers_names, data)
                         send_mail(settings.EMAIL_SUBJECT_PREFIX + "Caught an attempt to set a protected IP/network as the destination address",
                               mail_body, settings.SERVER_EMAIL,
                               settings.NOTIFY_ADMIN_MAILS, fail_silently=True)
                         raise Exception
                 if address.prefixlen < settings.PREFIX_LENGTH:
-                    error = _("Currently no prefix lengths < %s are allowed") %settings.PREFIX_LENGTH
+                    error = _("Currently no prefix lengths < %s are allowed") % settings.PREFIX_LENGTH
                     raise Exception
                 if address.version == 4 and int(address.prefixlen) == 32:
                     if int(address.network.compressed.split('.')[-1]) == 0:
@@ -152,7 +154,7 @@ class RouteForm(forms.ModelForm):
 
     def clean(self):
         if self.errors:
-            raise forms.ValidationError(_('Errors in form. Please review and fix them: %s'%", ".join(self.errors)))
+            raise forms.ValidationError(_('Errors in form. Please review and fix them: %s' % ", ".join(self.errors)))
         name = self.cleaned_data.get('name', None)
         source = self.cleaned_data.get('source', None)
         sourceports = self.cleaned_data.get('sourceport', None)
@@ -163,8 +165,10 @@ class RouteForm(forms.ModelForm):
         protocols = self.cleaned_data.get('protocol', None)
         user = self.cleaned_data.get('applier', None)
         issuperuser = self.data.get('issuperuser')
-        peer = user.get_profile().peer
-        networks = peer.networks.all()
+        peers = user.get_profile().peers.all()
+        networks = []
+        for peer in peers:
+            networks.extend(peer.networks.all())
         if issuperuser:
             networks = PeerRange.objects.filter(peer__in=Peer.objects.all()).distinct()
         mynetwork = False
@@ -187,9 +191,9 @@ class RouteForm(forms.ModelForm):
         if not (source or sourceports or ports or destination or destinationports):
             raise forms.ValidationError(_('Fill at least a Rule Match Condition'))
         if not user.is_superuser and then[0].action not in settings.UI_USER_THEN_ACTIONS:
-            raise forms.ValidationError(_('This action "%s" is not permitted') %(then[0].action))
+            raise forms.ValidationError(_('This action "%s" is not permitted') % (then[0].action))
         existing_routes = Route.objects.all()
-        existing_routes = existing_routes.filter(applier__userprofile__peer=peer)
+        existing_routes = existing_routes.filter(applier__userprofile__peer__in=peers)
         if source:
             source = IPNetwork(source).compressed
             existing_routes = existing_routes.filter(source=source)
@@ -225,7 +229,7 @@ class RouteForm(forms.ModelForm):
             if name != route.name:
                 existing_url = reverse('edit-route', args=[route.name])
                 if IPNetwork(destination) in IPNetwork(route.destination) or IPNetwork(route.destination) in IPNetwork(destination):
-                    raise forms.ValidationError('Found an exact %s rule, %s with destination prefix %s<br>To avoid overlapping try editing rule <a href=\'%s\'>%s</a>' %(route.status, route.name, route.destination, existing_url, route.name))
+                    raise forms.ValidationError('Found an exact %s rule, %s with destination prefix %s<br>To avoid overlapping try editing rule <a href=\'%s\'>%s</a>' % (route.status, route.name, route.destination, existing_url, route.name))
         return self.cleaned_data
 
 

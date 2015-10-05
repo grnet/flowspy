@@ -28,8 +28,15 @@ from accounts.models import UserProfile
 
 
 class UserPrAdmin(admin.ModelAdmin):
-    search_fields = ['user__username', 'peer__peer_name']
-    list_display = ('user', 'peer')
+    search_fields = ['user__username']
+    list_display = ('username', 'get_userprofile_peers')
+
+    def get_userprofile_peers(self, instance):
+        # instance is User instance
+        peers = instance.peers.all()
+        return ''.join(('%s, ' % (peer.peer_name)) for peer in peers)[:-2]
+
+    get_userprofile_peers.short_description = "User Peer(s)"
 
 admin.site.register(UserProfile, UserPrAdmin)
 

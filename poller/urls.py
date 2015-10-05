@@ -21,6 +21,14 @@ from django.conf.urls.defaults import patterns, url
 urlpatterns = patterns(
     'poller.views',
     ('^$', 'main'),
-    url('^message/existing$', 'message_existing', name='fetch-existing'),
-    url('^message/updates$', 'message_updates', name='fetch-updates')
+    url(
+        '^message/existing/(?P<peer_id>[\w\-]+)/$',
+        'message_existing',
+        name='fetch-existing'
+    ),
+    url(
+        '^message/updates/(?P<peer_id>[\w\-]+)/$',
+        'message_updates',
+        name='fetch-updates'
+    )
 )

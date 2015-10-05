@@ -17,6 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+from django.contrib.auth.models import User
 from django.db import models
 from utils.whois import *
 from django.conf import settings
@@ -48,7 +49,7 @@ class TechcEmail(models.Model):
 class Peer(models.Model):
     peer_id = models.AutoField(primary_key=True)
     peer_name = models.CharField(max_length=128)
-    peer_as = models.IntegerField()
+    peer_as = models.IntegerField(null=True, blank=True)
     # This needs to be converted to slug and an info message needs to be added.
     peer_tag = models.CharField(max_length=64)
     domain_name = models.CharField(max_length=128, null=True, blank=True)
@@ -74,3 +75,9 @@ class Peer(models.Model):
                 networks_list.append(range)
             self.networks = networks_list
             self.save()
+
+
+class PeerNotify(models.Model):
+    peer = models.ForeignKey(Peer)
+    user = models.ForeignKey(User)
+    peer_activation_notified = models.BooleanField(default=True)

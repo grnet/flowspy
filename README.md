@@ -87,6 +87,16 @@ And here is a PUT request example:
       curl -X PUT -F "name=Example" -F "comments=Description" -F "source=0.0.0.0/0" -F "sourceport=https://fod.example.com/api/ports/7/" -F "destination=83.212.9.93" https://fod.example.com/api/routes/12/ -H  'Authorization: Token <Your users token>'
 
 
+##Limitations##
+
+A user can belong to more than one peer, without any limitation. This fact may
+produce some limitations though, to FoD application. FoD uses polling for updating
+dashboard and let users know about other users' actions, who belong to the same
+peer. In order to fetch updates from all user's peers, FoD makes ajax calls for
+any one of them. It is recommended not to add more than 5 peers to any user,
+because it may cause malfunction to FoD application.
+
+
 ##Contact##
 
 You can find more about FoD or raise your issues at GRNET FoD

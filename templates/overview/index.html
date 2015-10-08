@@ -182,7 +182,7 @@ var refreshUrl = "{% url overview-ajax %}";
           },
         "aoColumns":[
                      {"mData":"id", "bSearchable": false,"bSortable": false, "bvisible":false},
-                     {"mData":"name", "sClass" : "alignCenter","bSearchable": true,"bSortable": true,
+                     {"mData":"details", "sClass" : "alignCenter","bSearchable": true,"bSortable": true,
                      "mRender": function (data, type, full) {
                      	if (!full.comments.trim()) {
  						   return '<small>'+data+'</small>';

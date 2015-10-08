@@ -89,7 +89,7 @@ def welcome(request):
 def dashboard(request):
     all_group_routes = []
     try:
-        peers = request.user.get_profile().peers.all()
+        peers = request.user.get_profile().peers.select_related('user_profile')
     except UserProfile.DoesNotExist:
         error = "User <strong>%s</strong> does not belong to any peer or organization. It is not possible to create new firewall rules.<br>Please contact Helpdesk to resolve this issue" % request.user.username
         return render(
@@ -107,14 +107,20 @@ def dashboard(request):
             for peer in peers:
                 query |= Q(applier__userprofile__in=peer.user_profile.all())
             all_group_routes = Route.objects.filter(query)
-
-
-
     return render(
         request,
         'dashboard.html',
         {
-            'routes': all_group_routes
+            'routes': all_group_routes.prefetch_related(
+                'applier',
+                'applier',
+                'fragmenttype',
+                'port',
+                'protocol',
+                'destinationport',
+                'sourceport',
+                'dscp',
+            )
         },
     )
 
@@ -211,7 +217,7 @@ def build_routes_json(groutes):
             rd['applier'] = 'unknown'
             rd['peer'] = ''
         else:
-            peers = r.applier.get_profile().peers.all()
+            peers = r.applier.get_profile().peers.select_related('networks')
             username = None
             for peer in peers:
                 if username:

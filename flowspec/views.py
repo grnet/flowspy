@@ -151,7 +151,7 @@ def group_routes(request):
 def group_routes_ajax(request):
     all_group_routes = []
     try:
-        peers = request.user.get_profile().peers.all().select_related()
+        peers = request.user.get_profile().peers.prefetch_related('userprofile', 'userprofile_user', 'networks')
     except UserProfile.DoesNotExist:
         error = "User <strong>%s</strong> does not belong to any peer or organization. It is not possible to create new firewall rules.<br>Please contact Helpdesk to resolve this issue" % request.user.username
         return render(
@@ -162,12 +162,10 @@ def group_routes_ajax(request):
     if request.user.is_superuser:
         all_group_routes = Route.objects.all()
     else:
-
         query = Q()
         for peer in peers:
             query |= Q(applier__userprofile__in=peer.user_profile.all())
         all_group_routes = Route.objects.filter(query)
-
     jresp = {}
     routes = build_routes_json(all_group_routes)
     jresp['aaData'] = routes
@@ -197,7 +195,15 @@ def overview_routes_ajax(request):
 
 def build_routes_json(groutes):
     routes = []
-    for r in groutes:
+    for r in groutes.prefetch_related(
+            'applier',
+            'fragmenttype',
+            'port',
+            'protocol',
+            'destinationport',
+            'sourceport',
+            'dscp',
+    ):
         rd = {}
         rd['id'] = r.pk
         # name with link to rule details

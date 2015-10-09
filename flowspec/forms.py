@@ -26,27 +26,25 @@ from flowspec.models import *
 from peers.models import *
 from accounts.models import *
 from ipaddr import *
+from flowspec.validators import (
+    clean_source,
+    clean_destination,
+    clean_expires,
+    clean_route_form
+)
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from django.conf import settings
 import datetime
-from django.core.mail import mail_admins, mail_managers, send_mail
+from django.core.mail import send_mail
+
 
 class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
 
-class RouteForm(forms.ModelForm):
-#    name = forms.CharField(help_text=ugettext_lazy("A unique route name,"
-#                                         " e.g. uoa_block_p80"), label=ugettext_lazy("Route Name"), required=False)
-#    source = forms.CharField(help_text=ugettext_lazy("A qualified IP Network address. CIDR notation,"
-#                                         " e.g.10.10.0.1/32"), label=ugettext_lazy("Source Address"), required=False)
-#    source_ports = forms.ModelMultipleChoiceField(queryset=MatchPort.objects.all(), help_text=ugettext_lazy("A set of source ports to block"), label=ugettext_lazy("Source Ports"), required=False)
-#    destination = forms.CharField(help_text=ugettext_lazy("A qualified IP Network address. CIDR notation,"
-#                                         " e.g.10.10.0.1/32"), label=ugettext_lazy("Destination Address"), required=False)
-#    destination_ports = forms.ModelMultipleChoiceField(queryset=MatchPort.objects.all(), help_text=ugettext_lazy("A set of destination ports to block"), label=ugettext_lazy("Destination Ports"), required=False)
-#    ports = forms.ModelMultipleChoiceField(queryset=MatchPort.objects.all(), help_text=ugettext_lazy("A set of ports to block"), label=ugettext_lazy("Ports"), required=False)
 
+class RouteForm(forms.ModelForm):
     class Meta:
         model = Route
 
@@ -58,142 +56,59 @@ class RouteForm(forms.ModelForm):
             raise forms.ValidationError('This field is required.')
 
     def clean_source(self):
-        user = User.objects.get(pk=self.data['applier'])
-        peers = user.get_profile().peers.all()
-        peers_names = ''.join(('%s, ' % (peer.peer_name)) for peer in peers)[:-2]
-        data = self.cleaned_data['source']
-        private_error = False
-        protected_error = False
-        networkaddr_error = False
-        broadcast_error = False
-        if data:
-            try:
-                address = IPNetwork(data)
-                for net in settings.PROTECTED_SUBNETS:
-                    if address in IPNetwork(net):
-                        protected_error = True
-                        mail_body = "User %s %s (%s) attempted to set %s as the source address in a firewall rule" % (user.username, user.email, peers_names, data)
-                        send_mail(settings.EMAIL_SUBJECT_PREFIX + "Caught an attempt to set a protected IP/network as a source address",
-                              mail_body, settings.SERVER_EMAIL,
-                              settings.NOTIFY_ADMIN_MAILS, fail_silently=True)
-                        raise Exception
-                if address.is_private:
-                    private_error = True
-                    raise Exception
-                if address.version == 4 and int(address.prefixlen) == 32:
-                    if int(address.network.compressed.split('.')[-1]) == 0:
-                        broadcast_error = True
-                        raise Exception
-                    elif int(address.network.compressed.split('.')[-1]) == 255:
-                        networkaddr_error = True
-                        raise Exception
-                return self.cleaned_data["source"]
-            except Exception:
-                error_text = _('Invalid network address format')
-                if private_error:
-                    error_text = _('Private addresses not allowed')
-                if networkaddr_error:
-                    error_text = _('Malformed address format. Cannot be ...255/32')
-                if broadcast_error:
-                    error_text = _('Malformed address format. Cannot be ...0/32')
-                if protected_error:
-                    error_text = _('You have no authority on this subnet')
-                raise forms.ValidationError(error_text)
+        # run validator which is used by rest framework too
+        source = self.cleaned_data['source']
+        res = clean_source(
+            User.objects.get(pk=self.data['applier']),
+            source
+        )
+        if res != source:
+            raise forms.ValidationError(res)
+        else:
+            return res
 
     def clean_destination(self):
-        user = User.objects.get(pk=self.data['applier'])
-        peers = user.get_profile().peers.all()
-        peers_names = ''.join(('%s, ' % (peer.peer_name)) for peer in peers)[:-2]
-        data = self.cleaned_data['destination']
-        error = None
-        protected_error = False
-        networkaddr_error = False
-        broadcast_error = False
-        if data:
-            try:
-                address = IPNetwork(data)
-                for net in settings.PROTECTED_SUBNETS:
-                    if address in IPNetwork(net):
-                        protected_error = True
-                        mail_body = "User %s %s (%s) attempted to set %s as the destination address in a firewall rule" % (user.username, user.email, peers_names, data)
-                        send_mail(settings.EMAIL_SUBJECT_PREFIX + "Caught an attempt to set a protected IP/network as the destination address",
-                              mail_body, settings.SERVER_EMAIL,
-                              settings.NOTIFY_ADMIN_MAILS, fail_silently=True)
-                        raise Exception
-                if address.prefixlen < settings.PREFIX_LENGTH:
-                    error = _("Currently no prefix lengths < %s are allowed") % settings.PREFIX_LENGTH
-                    raise Exception
-                if address.version == 4 and int(address.prefixlen) == 32:
-                    if int(address.network.compressed.split('.')[-1]) == 0:
-                        broadcast_error = True
-                        raise Exception
-                    elif int(address.network.compressed.split('.')[-1]) == 255:
-                        networkaddr_error = True
-                        raise Exception
-                return self.cleaned_data["destination"]
-            except Exception:
-                error_text = _('Invalid network address format')
-                if error:
-                    error_text = error
-                if protected_error:
-                    error_text = _('You have no authority on this subnet')
-                if networkaddr_error:
-                    error_text = _('Malformed address format. Cannot be ...255/32')
-                if broadcast_error:
-                    error_text = _('Malformed address format. Cannot be ...0/32')
-                raise forms.ValidationError(error_text)
+        destination = self.cleaned_data.get('destination')
+        res = clean_destination(
+            User.objects.get(pk=self.data['applier']),
+            destination
+        )
+        if destination != res:
+            raise forms.ValidationError(res)
+        else:
+            return res
 
     def clean_expires(self):
         date = self.cleaned_data['expires']
-        if date:
-            range_days = (date - datetime.date.today()).days
-            if range_days > 0 and range_days < 11:
-                return self.cleaned_data["expires"]
-            else:
-                raise forms.ValidationError('Invalid date range')
+        res = clean_expires(date)
+        if date != res:
+            raise forms.ValidationError(res)
+        return res
 
     def clean(self):
         if self.errors:
             raise forms.ValidationError(_('Errors in form. Please review and fix them: %s' % ", ".join(self.errors)))
+        error = clean_route_form(self.cleaned_data)
+        if error:
+            raise forms.ValidationError(error)
+
+        # check if same rule exists with other name
+        user = self.cleaned_data['applier']
+        if user.is_superuser:
+            peers = Peer.objects.all()
+        else:
+            peers = user.userprofile.peers.all()
+        existing_routes = Route.objects.all()
+        existing_routes = existing_routes.filter(applier__userprofile__peer__in=peers)
         name = self.cleaned_data.get('name', None)
+        protocols = self.cleaned_data.get('protocol', None)
         source = self.cleaned_data.get('source', None)
         sourceports = self.cleaned_data.get('sourceport', None)
         ports = self.cleaned_data.get('port', None)
-        then = self.cleaned_data.get('then', None)
         destination = self.cleaned_data.get('destination', None)
         destinationports = self.cleaned_data.get('destinationport', None)
-        protocols = self.cleaned_data.get('protocol', None)
         user = self.cleaned_data.get('applier', None)
-        issuperuser = self.data.get('issuperuser')
-        peers = user.get_profile().peers.all()
-        networks = []
-        for peer in peers:
-            networks.extend(peer.networks.all())
-        if issuperuser:
-            networks = PeerRange.objects.filter(peer__in=Peer.objects.all()).distinct()
-        mynetwork = False
-        route_pk_list = []
-        if destination:
-            for network in networks:
-                net = IPNetwork(network.network)
-                if IPNetwork(destination) in net:
-                    mynetwork = True
-            if not mynetwork:
-                raise forms.ValidationError(_('Destination address/network should belong to your administrative address space. Check My Profile to review your networks'))
-        if (sourceports and ports):
-            raise forms.ValidationError(_('Cannot create rule for source ports and ports at the same time. Select either ports or source ports'))
-        if (destinationports and ports):
-            raise forms.ValidationError(_('Cannot create rule for destination ports and ports at the same time. Select either ports or destination ports'))
-        if sourceports and not source:
-            raise forms.ValidationError(_('Once source port is matched, source has to be filled as well. Either deselect source port or fill source address'))
-        if destinationports and not destination:
-            raise forms.ValidationError(_('Once destination port is matched, destination has to be filled as well. Either deselect destination port or fill destination address'))
-        if not (source or sourceports or ports or destination or destinationports):
-            raise forms.ValidationError(_('Fill at least a Rule Match Condition'))
-        if not user.is_superuser and then[0].action not in settings.UI_USER_THEN_ACTIONS:
-            raise forms.ValidationError(_('This action "%s" is not permitted') % (then[0].action))
-        existing_routes = Route.objects.all()
-        existing_routes = existing_routes.filter(applier__userprofile__peer__in=peers)
+
         if source:
             source = IPNetwork(source).compressed
             existing_routes = existing_routes.filter(source=source)

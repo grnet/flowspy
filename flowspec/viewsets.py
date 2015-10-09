@@ -1,5 +1,6 @@
 from django.shortcuts import get_object_or_404
 from django.conf import settings
+from rest_framework.exceptions import PermissionDenied
 
 from rest_framework import viewsets
 from flowspec.models import (
@@ -32,7 +33,7 @@ class RouteViewSet(viewsets.ModelViewSet):
             elif self.request.user.is_authenticated():
                 return Route.objects.filter(applier=self.request.user)
             else:
-                raise Exception('User is not Authenticated')
+                raise PermissionDenied('User is not Authenticated')
 
         if self.request.user.is_superuser:
             return Route.objects.all()
@@ -42,6 +43,10 @@ class RouteViewSet(viewsets.ModelViewSet):
     def list(self, request):
         serializer = RouteSerializer(self.get_queryset(), many=True, context={'request': request})
         return Response(serializer.data)
+
+    def create(self, request):
+        serializer = RouteSerializer(context={'request': request})
+        return super(RouteViewSet, self).create(request)
 
     def retrieve(self, request, pk=None):
         route = get_object_or_404(self.get_queryset(), pk=pk)
@@ -57,7 +62,7 @@ class RouteViewSet(viewsets.ModelViewSet):
             elif self.request.user.is_authenticated():
                 obj.applier = self.request.user
             else:
-                raise Exception('User is not Authenticated')
+                raise PermissionDenied('User is not Authenticated')
         else:
             obj.applier = self.request.user
 

@@ -6,11 +6,54 @@ from flowspec.models import (
     FragmentType,
     MatchProtocol
 )
+from flowspec.validators import (
+    clean_source,
+    clean_destination,
+    clean_expires,
+    check_if_rule_exists
+)
 
 
-# Serializers define the API representation.
 class RouteSerializer(serializers.HyperlinkedModelSerializer):
     applier = serializers.CharField(source='applier_username', read_only=True)
+
+    def validate(self, data):
+        user = self.context.get('request').user
+        # validate source
+        source = data.get('source')
+        res = clean_source(
+            user,
+            source
+        )
+        if res != source:
+            raise serializers.ValidationError(res)
+
+        # validate destination
+        destination = data.get('destination')
+        res = clean_destination(
+            user,
+            destination
+        )
+        if res != destination:
+            raise serializers.ValidationError(res)
+
+        # validate expires
+        expires = data.get('expires')
+        res = clean_expires(
+            expires
+        )
+        if res != expires:
+            raise serializers.ValidationError(res)
+
+        # check if rule already exists with different name
+        fields = {
+            'source': data.get('source'),
+            'destination': data.get('destination'),
+        }
+        exists = check_if_rule_exists(fields)
+        if exists:
+            raise serializers.ValidationError(exists)
+        return data
 
     class Meta:
         model = Route
@@ -37,7 +80,7 @@ class RouteSerializer(serializers.HyperlinkedModelSerializer):
             'expires',
             'response',
             'comments',
-            'requesters_address'
+            'requesters_address',
         )
         read_only_fields = ('status', 'expires', 'requesters_address', 'response')
 

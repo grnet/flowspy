@@ -149,5 +149,5 @@ def check_if_rule_exists(fields):
         destination=IPNetwork(fields.get('destination')).compressed,
     )
     for route in routes:
-        return _('Rule exists: %s' % reverse('edit-route', args=[route.name]))
+        return _('Rule exists with id %s and status %s. Please edit it.' % (route.id, route.status))
     return False

@@ -112,7 +112,6 @@ def activate(request, activation_key):
         if account:
             # A user has been activated
             email = render_to_string(
-                request,
                 'registration/activation_complete.txt',
                 {
                     'site': Site.objects.get_current(),

@@ -3,6 +3,7 @@ import datetime
 from south.db import db
 from south.v2 import SchemaMigration
 from django.db import models
+from django.conf import settings
 
 
 # Probably due to a MySQL bug, the AutoField is not created properly and raises a 
@@ -21,12 +22,14 @@ class Migration(SchemaMigration):
     def forwards(self, orm):
         
         # Changing field 'Peer.peer_id'
-        db.alter_column(u'peer', 'peer_id', self.gf('django.db.models.fields.AutoField')(primary_key=True))
+        if settings.PEER_MANAGED_TABLE:
+            db.alter_column(u'peer', 'peer_id', self.gf('django.db.models.fields.AutoField')(primary_key=True))
 
     def backwards(self, orm):
 
         # Changing field 'Peer.peer_id'
-        db.alter_column(u'peer', 'peer_id', self.gf('django.db.models.fields.IntegerField')(primary_key=True))
+        if settings.PEER_MANAGED_TABLE:
+            db.alter_column(u'peer', 'peer_id', self.gf('django.db.models.fields.IntegerField')(primary_key=True))
 
     models = {
         'peers.peer': {

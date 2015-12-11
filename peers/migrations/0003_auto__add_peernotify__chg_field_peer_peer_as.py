@@ -3,12 +3,15 @@ import datetime
 from south.db import db
 from south.v2 import SchemaMigration
 from django.db import models
+from django.conf import settings
+
 
 class Migration(SchemaMigration):
-    
+
     def forwards(self, orm):
-        
+
         # Adding model 'PeerNotify'
+
         db.create_table('peers_peernotify', (
             ('peer', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['peers.Peer'])),
             ('peer_activation_notified', self.gf('django.db.models.fields.BooleanField')(default=True, blank=True)),
@@ -17,19 +20,19 @@ class Migration(SchemaMigration):
         ))
         db.send_create_signal('peers', ['PeerNotify'])
 
-        # Changing field 'Peer.peer_as'
-        db.alter_column(u'peer', 'peer_as', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True))
-    
-    
+        if settings.PEER_MANAGED_TABLE:
+            # Changing field 'Peer.peer_as'
+            db.alter_column(u'peer', 'peer_as', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True))
+
     def backwards(self, orm):
-        
+
         # Deleting model 'PeerNotify'
         db.delete_table('peers_peernotify')
 
-        # Changing field 'Peer.peer_as'
-        db.alter_column(u'peer', 'peer_as', self.gf('django.db.models.fields.IntegerField')())
-    
-    
+        if settings.PEER_MANAGED_TABLE:
+            # Changing field 'Peer.peer_as'
+            db.alter_column(u'peer', 'peer_as', self.gf('django.db.models.fields.IntegerField')())
+
     models = {
         'auth.group': {
             'Meta': {'object_name': 'Group'},
@@ -95,5 +98,5 @@ class Migration(SchemaMigration):
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'})
         }
     }
-    
+
     complete_apps = ['peers']

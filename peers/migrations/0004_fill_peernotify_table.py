@@ -4,13 +4,17 @@ from south.db import db
 from south.v2 import DataMigration
 from django.db import models
 
+
 class Migration(DataMigration):
+
+    depends_on = (
+        ('accounts', '0001_initial'),
+    )
 
     def forwards(self, orm):
         for userprofile in orm['accounts.UserProfile'].objects.all():
             peernotification = orm.PeerNotify(user=userprofile.user, peer=userprofile.peer)
             peernotification.save()
-
 
     def backwards(self, orm):
         pass

@@ -88,6 +88,7 @@ def welcome(request):
 @never_cache
 def dashboard(request):
     all_group_routes = []
+    message = ''
     try:
         peers = request.user.get_profile().peers.select_related('user_profile')
     except UserProfile.DoesNotExist:
@@ -115,7 +116,7 @@ def dashboard(request):
             request,
             'dashboard.html',
             {
-                'message': 'You have not added any rules yet'
+                'message': message
             }
         )
     return render(

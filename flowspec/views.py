@@ -107,6 +107,17 @@ def dashboard(request):
             for peer in peers:
                 query |= Q(applier__userprofile__in=peer.user_profile.all())
             all_group_routes = Route.objects.filter(query)
+        if all_group_routes is None:
+            message = 'You have not added any rules yet'
+    else:
+        message = 'You are not associated with a peer.'
+        return render(
+            request,
+            'dashboard.html',
+            {
+                'message': 'You have not added any rules yet'
+            }
+        )
     return render(
         request,
         'dashboard.html',
@@ -120,7 +131,8 @@ def dashboard(request):
                 'destinationport',
                 'sourceport',
                 'dscp',
-            )
+            ),
+            'message': message
         },
     )
 

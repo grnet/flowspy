@@ -24,7 +24,7 @@ import djcelery
 djcelery.setup_loader()
 from celery.schedules import crontab
 
-DEBUG = True
+DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (

@@ -37,20 +37,22 @@ class Migration(SchemaMigration):
             db.send_create_signal('peers', ['Peer'])
 
         # Adding M2M table for field networks on 'Peer'
-        db.create_table(u'peer_networks', (
-            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('peer', models.ForeignKey(orm['peers.peer'], null=False)),
-            ('peerrange', models.ForeignKey(orm['peers.peerrange'], null=False))
-        ))
-        db.create_unique(u'peer_networks', ['peer_id', 'peerrange_id'])
+        if settings.PEER_MANAGED_TABLE and settings.PEER_RANGE_MANAGED_TABLE:
+            db.create_table(u'peer_networks', (
+                ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
+                ('peer', models.ForeignKey(orm['peers.peer'], null=False)),
+                ('peerrange', models.ForeignKey(orm['peers.peerrange'], null=False))
+            ))
+            db.create_unique(u'peer_networks', ['peer_id', 'peerrange_id'])
 
         # Adding M2M table for field techc_emails on 'Peer'
-        db.create_table(u'peer_techc_emails', (
-            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('peer', models.ForeignKey(orm['peers.peer'], null=False)),
-            ('techcemail', models.ForeignKey(orm['peers.techcemail'], null=False))
-        ))
-        db.create_unique(u'peer_techc_emails', ['peer_id', 'techcemail_id'])
+        if settings.PEER_MANAGED_TABLE and settings.PEER_TECHC_MANAGED_TABLE:
+            db.create_table(u'peer_techc_emails', (
+                ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
+                ('peer', models.ForeignKey(orm['peers.peer'], null=False)),
+                ('techcemail', models.ForeignKey(orm['peers.techcemail'], null=False))
+            ))
+            db.create_unique(u'peer_techc_emails', ['peer_id', 'techcemail_id'])
 
     def backwards(self, orm):
         # Deleting model 'PeerRange'
@@ -66,10 +68,12 @@ class Migration(SchemaMigration):
             db.delete_table(u'peer')
 
         # Removing M2M table for field networks on 'Peer'
-        db.delete_table('peer_networks')
+        if settings.PEER_MANAGED_TABLE and settings.PEER_RANGE_MANAGED_TABLE:
+            db.delete_table('peer_networks')
 
         # Removing M2M table for field techc_emails on 'Peer'
-        db.delete_table('peer_techc_emails')
+        if settings.PEER_MANAGED_TABLE and settings.PEER_TECHC_MANAGED_TABLE:
+            db.delete_table('peer_techc_emails')
 
     models = {
         'peers.peer': {

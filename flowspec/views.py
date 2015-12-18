@@ -164,7 +164,7 @@ def group_routes(request):
 def group_routes_ajax(request):
     all_group_routes = []
     try:
-        peers = request.user.get_profile().peers.prefetch_related('userprofile', 'userprofile_user', 'networks')
+        peers = request.user.get_profile().peers.prefetch_related('networks')
     except UserProfile.DoesNotExist:
         error = "User <strong>%s</strong> does not belong to any peer or organization. It is not possible to create new firewall rules.<br>Please contact Helpdesk to resolve this issue" % request.user.username
         return render(
@@ -760,8 +760,6 @@ def selectinst(request):
                 },
             )
         else:
-            form.fields['user'] = forms.ModelChoiceField(queryset=User.objects.filter(pk=user.pk), empty_label=None)
-            form.fields['institution'] = forms.ModelChoiceField(queryset=Peer.objects.all(), empty_label=None)
             return render(
                 request,
                 'registration/select_institution.html',

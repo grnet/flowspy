@@ -12,6 +12,8 @@
 		}
 }
 </style>
+<link href="{{STATIC_URL}}js/select2/select2.css" rel="stylesheet">
+<link href="{{STATIC_URL}}js/select2/select2-bootstrap.css" rel="stylesheet">
 {% endblock %}
 
        {% block contentplaceholder %}
@@ -38,11 +40,11 @@
 							<p class="error">{{ form.non_field_errors}}</p>
 							{% endif %}
 							<div style="display: none">{{form.user}}</div>
-							<div class="form-group {% if form.peer.errors %} has-error {% endif %}">
+							<div class="form-group {% if form.peers.errors %} has-error {% endif %}">
 								<label class="col-md-2 control-label" for="id_peer"><b>{% trans "Institution" %}</b></label>
 								<div class="col-md-8">
-		            				{% render_field form.peer class+="form-control"  %}
-		            				{% if form.peer.errors %} <span class="help-block"> {{ form.peer.errors|join:", " }} </span>
+		            				{% render_field form.peers class+="form-control"  %}
+		            				{% if form.peers.errors %} <span class="help-block"> {{ form.peers.errors|join:", " }} </span>
 		           					 {% endif %}
 		       					 </div>
 							</div>
@@ -63,3 +65,13 @@
 	{% endblock %}
 
 
+
+
+{% block pagejsbottom %}
+	<script type="text/javascript" src="{{STATIC_URL}}js/select2/select2.js"></script>
+	<script>
+		$(document).ready( function(){
+			$('#id_peers').select2();
+		});
+	</script>
+{% endblock %}

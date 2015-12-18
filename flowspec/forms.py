@@ -40,6 +40,7 @@ from django.core.mail import send_mail
 
 
 class UserProfileForm(forms.ModelForm):
+
     class Meta:
         model = UserProfile
 
@@ -99,7 +100,7 @@ class RouteForm(forms.ModelForm):
         else:
             peers = user.userprofile.peers.all()
         existing_routes = Route.objects.all()
-        existing_routes = existing_routes.filter(applier__userprofile__peer__in=peers)
+        existing_routes = existing_routes.filter(applier__userprofile__peers__in=peers)
         name = self.cleaned_data.get('name', None)
         protocols = self.cleaned_data.get('protocol', None)
         source = self.cleaned_data.get('source', None)

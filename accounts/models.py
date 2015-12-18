@@ -24,7 +24,6 @@ from peers.models import Peer
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User)
-    peer = models.ForeignKey(Peer)
     peers = models.ManyToManyField(Peer, related_name='user_profile')
 
     class Meta:

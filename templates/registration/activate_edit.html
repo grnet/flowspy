@@ -12,6 +12,8 @@
 		}
 }
 </style>
+<link href="{{STATIC_URL}}js/select2/select2.css" rel="stylesheet">
+<link href="{{STATIC_URL}}js/select2/select2-bootstrap.css" rel="stylesheet">
 {% endblock %}
 
        {% block contentplaceholder %}
@@ -43,27 +45,35 @@
 		           					 {% endif %}
 		       					 </div>
 							</div>
-							<div class="form-group {% if form.peer.errors %} has-error {% endif %}">
+							<div class="form-group {% if form.peers.errors %} has-error {% endif %}">
 								<label class="col-md-2 control-label" for="id_peer"><b>{% trans "Institution" %}</b></label>
 								<div class="col-md-8">
-		            				{% render_field form.peer class+="form-control"  %}
-		            				{% if form.peer.errors %} <span class="help-block"> {{ form.peer.errors|join:", " }} </span>
+		            				{% render_field form.peers class+="form-control"  %}
+		            				{% if form.peers.errors %} <span class="help-block"> {{ form.peers.errors|join:", " }} </span>
 		           					 {% endif %}
 		       					 </div>
 							</div>
 
 							<div class="form-group">
-			 	<div class="col-md-2"></div>
-			 	 <div class="col-md-8">
-			<button type="submit" id="applybutton" value="{% trans 'Apply' %}" class="btn btn-md btn-primary">{% trans "Activate" %}</button>
-				</div>
-			</div>
+				 	<div class="col-md-2"></div>
+				 	 	<div class="col-md-8">
+							<button type="submit" id="applybutton" value="{% trans 'Apply' %}" class="btn btn-md btn-primary">{% trans "Activate" %}</button>
+						</div>
+					</div>
 
-            			</div>
-            			</div>
-            			</div>
-            			</div>
+            	</div>
+        	</div>
+    	</div>
+	</div>
 </div>
 
 	{% endblock %}
 
+{% block pagejsbottom %}
+	<script type="text/javascript" src="{{STATIC_URL}}js/select2/select2.js"></script>
+	<script>
+		$(document).ready( function(){
+			$('#id_peers').select2();
+		});
+	</script>
+{% endblock %}

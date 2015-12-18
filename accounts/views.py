@@ -72,8 +72,6 @@ def activate(request, activation_key):
             )
 
         form = UserProfileForm(instance=userProfile)
-        form.fields['user'] = forms.ModelChoiceField(queryset=User.objects.filter(pk=rp.user.pk), empty_label=None)
-        form.fields['peer'] = forms.ModelChoiceField(queryset=Peer.objects.all(), empty_label=None)
 
         return render(
             request,
@@ -90,7 +88,8 @@ def activate(request, activation_key):
         try:
             user = User.objects.get(pk=request_data['user'])
             up = user.get_profile()
-            up.peer = Peer.objects.get(pk=request_data['peer'])
+            for peer in request_data['peers']:
+                up.peers.add(Peer.objects.get(pk=peer))
             up.save()
 
         except:

@@ -266,6 +266,7 @@ ACCOUNT_ACTIVATION_DAYS = 7
 
 # Define subnets that should not have any rules applied whatsoever
 PROTECTED_SUBNETS = ['10.10.0.0/16']
+MAX_RULE_EXPIRE_DAYS = 10
 
 # Add two whois servers in order to be able to get all the subnets for an AS.
 PRIMARY_WHOIS = 'whois.example.com'

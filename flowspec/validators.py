@@ -28,6 +28,27 @@ def clean_ip(address):
             return _('Malformed address format. Cannot be ...255/32')
 
 
+def clean_status(status):
+    """
+    Verifies the `status` of a `Route` is valid.
+    Only allows `ACTIVE` / `INACTIVE` states since the rest should be
+    assigned from the application
+
+    :param status: the status of a `Route`
+    :type status: str
+
+    :returns: Either the status or a validation error message
+    :rtype: str
+    """
+
+    allowed_states = ['ACTIVE', 'INACTIVE']
+
+    if status not in allowed_states:
+        return _('Invalid status value. You are allowed to use "{}".'.format(
+            ', '.join(allowed_states)))
+    return status
+
+
 def clean_source(user, source):
     success, address = get_network(source)
     if not success:
@@ -88,10 +109,12 @@ def clean_destination(user, destination):
 def clean_expires(date):
     if date:
         range_days = (date - datetime.date.today()).days
-        if range_days > 0 and range_days < 11:
+        if range_days > 0 and range_days < settings.MAX_RULE_EXPIRE_DAYS:
             return date
         else:
-            return _('Invalid date range')
+            return _(
+                'Invalid date range. A rule cannot remain active '
+                'for more than {} days'.format(settings.MAX_RULE_EXPIRE_DAYS))
 
 
 def value_list_to_list(valuelist):
@@ -143,11 +166,40 @@ def clean_route_form(data):
         return _('This action "%s" is not permitted') % (then[0].action)
 
 
-def check_if_rule_exists(fields):
+def check_if_rule_exists(fields, queryset):
+    """
+    Checks if a `Route` object with the same source / destination
+    addresses exists in a queryset. If not, it checks any `Route`
+    object (belonging to any user) exists with the same addresses
+    and reports respectively
+
+    :param fields: the source / destination IP addresses
+    :type fields: dict
+
+    :param queryset: the queryset with the user's `Route` objects
+    :type queryset: `django.db.models.query.QuerySet`
+
+    :returns: if the rule exists or not, a message
+    :rtype: tuple(bool, str)
+    """
+
+    routes = queryset.filter(
+        source=fields.get('source'),
+        destination=IPNetwork(fields.get('destination')).compressed,
+    )
+    if routes:
+        ids = [str(item[0]) for item in routes.values_list('pk')]
+        return (
+            True, _('Rule(s) regarding those addresses already exist '
+                    'with id(s) {}. Please edit those instead'.format(', '.join(ids))))
+
     routes = Route.objects.filter(
         source=fields.get('source'),
         destination=IPNetwork(fields.get('destination')).compressed,
     )
     for route in routes:
-        return _('Rule exists with id %s and status %s. Please edit it.' % (route.id, route.status))
-    return False
+        return (
+            True, _('Rule(s) regarding those addresses already exist '
+                    'but you cannot edit them. Please refer to the '
+                    'application\'s administrators for further clarification'))
+    return (False, None)

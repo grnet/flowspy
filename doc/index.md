@@ -26,7 +26,7 @@ case the flowspec capable device is an EX4200.
 
 > ** Attention **
 >
-> Make sure your FoD server has ssh access to your flowspec device.
+> Make sure your FoD server has SSH access to your flowspec device.
 
 # Contact
 
@@ -37,14 +37,12 @@ You can contact us directly at dev{at}noc[dot]grnet(.)gr
 
 # Repositories
 
-  - [GRNET FoD repository](https://code.grnet.gr/projects/flowspy)
-
   - [Github FoD repository](https://github.com/grnet/flowspy)
 
 
 ## Copyright and license
 
-Copyright © 2010-2014 Greek Research and Technology Network (GRNET S.A.)
+Copyright © 2010-2017 Greek Research and Technology Network (GRNET S.A.)
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -58,5 +56,3 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-

@@ -9,6 +9,7 @@ from flowspec.viewsets import (
     ThenActionViewSet,
     FragmentTypeViewSet,
     MatchProtocolViewSet,
+    MatchDscpViewSet,
 )
 
 admin.autodiscover()
@@ -20,6 +21,7 @@ router.register(r'ports', PortViewSet)
 router.register(r'thenactions', ThenActionViewSet)
 router.register(r'fragmentypes', FragmentTypeViewSet)
 router.register(r'matchprotocol', MatchProtocolViewSet)
+router.register(r'matchdscp', MatchDscpViewSet)
 
 
 urlpatterns = patterns(

@@ -1,8 +1,8 @@
 [![Documentation Status](https://readthedocs.org/projects/flowspy/badge/?version=latest)](https://readthedocs.org/projects/flowspy/?badge=latest)
 
-#Firewall on Demand#
+# Firewall on Demand
 
-##Description##
+## Description
 
 Firewall on Demand applies via NETCONF, flow rules to a network
 device. These rules are then propagated via e-bgp to peering routers.
@@ -29,84 +29,40 @@ flowspec capable routers. Of course FoD could apply rules directly
 (via NETCONF always) to a router and then ibgp would do the rest. In
 GRNET's case the flowspec capable device is an EX4200.
 
-**Attention**: Make sure your FoD server has ssh access to your flowspec device.
+**Attention**: Make sure your FoD server has SSH access to your flowspec device.
 
-##Installation Considerations##
+## Documentation
 
-You can find the installation instructions for Debian Wheezy (64)
-with Django 1.4.x at [Flowspy documentation](http://flowspy.readthedocs.org).
-If upgrading from a previous version bear in mind the changes introduced in Django 1.4.
+You can find detailed documentation including installation / configuration
+examples at [Flowspy documentation](http://flowspy.readthedocs.org).
 
+## Installation Considerations
 
-##Rest Api##
-FoD provides a rest api. It uses token as authentication method.
+If you are upgrading from a previous version bear in mind the changes
+introduced in Django 1.4.
 
-### Generating Tokens
-A user can generate a token for his account on "my profile" page from FoD's
-UI. Then by using this token in the header of the request he can list, retrieve,
-modify and create rules.
+## Rest Api
+FoD provides a rest api. It uses token as authentication method. For usage
+instructions & examples check the documentation.
 
-### Example Usage
-Here are some examples:
+## Limitations
 
-#### GET items
-- List all the rules your user has created (admin users can see all the rules)
-
-            curl -X GET https://fod.example.com/api/routes/ -H 'Authorization: Token <Your users token>'
-
-- Retrieve a specific rule:
-
-            curl -X GET https://fod.example.com/api/routes/<rule_id>/ -H 'Authorization: Token <Your users token>'
-
-- In order to create or modify a rule you have to use POST/PUT methods.
-
-#### POST/PUT rules
-In order to update or create rules you can follow this example:
-
-##### Foreign Keys
-In order to create/modify a rule you have to connect the rule with some foreign keys:
-
-###### Ports, Fragmentypes, protocols, thenactions
-When creating a rule, one can specify:
-
-- source port
-- destination port
-- port (if source = destination)
-
-That can be done by getting the url of the desired port instance from `/api/ports/<port_id>/`
-
-Same with Fragmentypes in `/api/fragmenttypes/<fragmenttype_id>/`, protocols in `/api/matchprotocol/<protocol_id>/` and then actions in `/api/thenactions/<action_id>/`.
-
-Since we have the urls we want to connect with the rule we want to create, we can make a POST request like the following:
+A user can belong to more than one `Peer` without any limitations.
+FoD UI polls the server to dynamically update the dashboard and the
+"Live Status" about the `Route`s they are aware of. In addition, the polling
+implementation fetches information for every `Peer` the user is associated
+with. Thus, if a user belongs to many `Peer`s too many AJAX calls will be sent
+to the backend which may result in a non responsive state. It is recommended to
+keep the peers associated with any user under 5.
 
 
-      curl -X POST -H 'Authorization: Token <Your users token>' -F "name=Example" -F "comments=Description" -F "source=0.0.0.0/0" -F "sourceport=https://fod.example.com/api/ports/7/" -F "destination=203.0.113.12" https://fod.example.com/api/routes/
-
-And here is a PUT request example:
-
-      curl -X PUT -F "name=Example" -F "comments=Description" -F "source=0.0.0.0/0" -F "sourceport=https://fod.example.com/api/ports/7/" -F "destination=83.212.9.93" https://fod.example.com/api/routes/12/ -H  'Authorization: Token <Your users token>'
-
-
-##Limitations##
-
-A user can belong to more than one peer, without any limitation. This fact may
-produce some limitations though, to FoD application. FoD uses polling for updating
-dashboard and let users know about other users' actions, who belong to the same
-peer. In order to fetch updates from all user's peers, FoD makes ajax calls for
-any one of them. It is recommended not to add more than 5 peers to any user,
-because it may cause malfunction to FoD application.
-
-
-##Contact##
-
-You can find more about FoD or raise your issues at GRNET FoD
-repository: [GRNET repo](https://code.grnet.gr/fod) or [Github repo](https://github.com/grnet/flowspy).
+## Contact 
 
 You can contact us directly at dev{at}noc[dot]grnet(.)gr
 
 ## Copyright and license
 
-Copyright © 2010-2014 Greek Research and Technology Network (GRNET S.A.)
+Copyright © 2010-2017 Greek Research and Technology Network (GRNET S.A.)
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

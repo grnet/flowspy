@@ -336,5 +336,3 @@ if SENTRY.get('activate'):
         'class': 'raven.contrib.django.handlers.SentryHandler'
     }
     LOGGING['loggers']['django.request']['handlers'] = ['sentry']
-
-TEST_RUNNER = 'django.test.runner.DiscoverRunner'

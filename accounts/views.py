@@ -60,7 +60,7 @@ def activate(request, activation_key):
                 }
             )
         try:
-            userProfile = rp.user.get_profile()
+            userProfile = rp.user.userprofile
         except UserProfile.DoesNotExist:
             return render(
                 request,
@@ -87,7 +87,7 @@ def activate(request, activation_key):
         request_data = request.POST.copy()
 	try:
             user = User.objects.get(pk=request_data['user'])
-            up = user.get_profile()
+            up = user.userprofile
 
             # use getlist to get the list of peers (might be multiple)
             profile_peers = request.POST.getlist('peers')

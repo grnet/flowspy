@@ -34,7 +34,7 @@
 							<h2>{{ BRANDING.name }} - Firewall on Demand</h2>
 							<h4>Protect your network, protect the network</h4>
 							<p>
-								<a href="{% url login %}" type="button" class="btn btn-lg btn-outline btn-primary">{% trans "Join Now" %}</a>
+								<a href="{% url 'login' %}" type="button" class="btn btn-lg btn-outline btn-primary">{% trans "Join Now" %}</a>
 							</p>
 						</div>
 					</div>
@@ -78,7 +78,7 @@
 						<img src="{% static 'shib_login.png' %}" style="border:none;">
 					</p>
 					<p>
-						<a href="{% url login %}" type="button" class="btn btn-outline btn-primary">{% trans "Shibboleth Login" %}</a>
+						<a href="{% url 'login' %}" type="button" class="btn btn-outline btn-primary">{% trans "Shibboleth Login" %}</a>
 					</p>
 				</div>
 			</div>

@@ -60,7 +60,7 @@
 		 	{% endif %}
 		 	{% if route.status != 'PENDING'  %}
 
-		 		<a href="{% url edit-route route.name  %}" class="btn-info btn btn-sm btn-outline">{% trans "Edit" %}</a>
+		 		<a href="{% url 'edit-route' route.name  %}" class="btn-info btn btn-sm btn-outline">{% trans "Edit" %}</a>
 		 		{% if route.status = 'ACTIVE' %}
 		 			<button class="del_button btn-warning btn btn-sm btn-outline" id="{{ route.name }}" data-routename="{{ route.name }}">{% trans "Deactivate" %}</button>
 		 		{% endif %}
@@ -79,7 +79,7 @@
 			    <span></span> <b class="caret"></b>
 			</div>
 		</div>
-		<div class="graphs col-md-12" data-url="{% url graphs route.name %}" >
+		<div class="graphs col-md-12" data-url="{% url 'graphs' route.name %}" >
 		loading...
 		</div>
 	</div>
@@ -134,7 +134,7 @@
 	    	var my = $(this);
 	    	my.html('Deactivating...')
 			var routename = $(this).data("routename");
-			var delurl = "{% url delete-route 'route_placeholder'%}".replace('route_placeholder', routename.toString());
+			var delurl = "{% url 'delete-route' 'route_placeholder'%}".replace('route_placeholder', routename.toString());
 			$.ajax({
 				type: 'POST',
 				url: delurl,

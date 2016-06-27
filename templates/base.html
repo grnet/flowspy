@@ -31,7 +31,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="{% url dashboard %}"><img src="{% static BRANDING.logo %}">&nbsp;</a>
+                <a class="navbar-brand" href="{% url 'dashboard' %}"><img src="{% static BRANDING.logo %}">&nbsp;</a>
             </div>
             <!-- /.navbar-header -->
 
@@ -39,7 +39,7 @@
             	<li class="dropdown">
 				            <a href="#" class="dropdown-toggle" data-toggle="dropdown">{% trans "Language" %}: {% for lang in LANGUAGES %}{% ifequal LANGUAGE_CODE lang.0 %}{% trans lang.1 %}{% endifequal %}{% endfor %}<b class="caret"></b></a>
 				            <ul class="dropdown-menu">
-				            <form action="{% url django.views.i18n.set_language %}" method="post" style="display:inline;" id="langform">
+				            <form action="{% url 'django.views.i18n.set_language' %}" method="post" style="display:inline;" id="langform">
 												{% csrf_token %}
 												<input name="next" type="hidden" value="{{ next }}" />
 												<input id="langsel" name="language" type="hidden" value="" />
@@ -62,25 +62,25 @@
                     <ul class="dropdown-menu dropdown-user" role="menu" >
                     	<li role="presentation" class="dropdown-header">{{user}}</li>
                     	<li class="divider"></li>
-                    {% if user.get_profile.peers.all %}
+                    {% if user.userprofile.peers.all %}
 				        <li>
-				            <a href="{% url user-profile %}"><i class="fa fa-user fa-fw"></i>{% trans "My profile" %}</a>
+				            <a href="{% url 'user-profile' %}"><i class="fa fa-user fa-fw"></i>{% trans "My profile" %}</a>
 				        </li>
 				    {% endif %}
 				    	{% if user.is_superuser %}
 						<li class="divider"></li>
-                        <li><a href="{% url admin:index %}"><i class="fa fa-cogs"></i> {% trans "Admin" %}</a>
+                        <li><a href="{% url 'admin:index' %}"><i class="fa fa-cogs"></i> {% trans "Admin" %}</a>
                         </li>
 						{% endif %}
                         <li class="divider"></li>
-                        <li><a href="{% url logout %}"><i class="fa fa-sign-out fa-fw"></i> {% trans "Logout" %}</a>
+                        <li><a href="{% url 'logout' %}"><i class="fa fa-sign-out fa-fw"></i> {% trans "Logout" %}</a>
                         </li>
 
                     </ul>
                     <!-- /.dropdown-user -->
                 </li>
                 {% else %}
-				        <li><a href="{% url login %}">{% trans "Shibboleth Login" %}</a></li>
+				        <li><a href="{% url 'login' %}">{% trans "Shibboleth Login" %}</a></li>
 				        {% endif %}
                 <!-- /.dropdown -->
             </ul>
@@ -94,24 +94,24 @@
             <div class="sidebar-collapse">
                 <ul class="nav" id="side-menu">
                     <li>
-                        <a href="{% url dashboard %}"><i class="fa fa-dashboard fa-fw"></i> {% trans "Dashboard" %}</a>
+                        <a href="{% url 'dashboard' %}"><i class="fa fa-dashboard fa-fw"></i> {% trans "Dashboard" %}</a>
                     </li>
                     <li>
-                        <a href="{% url group-routes %}"><i class="fa fa-shield fa-fw"></i> {% trans "Rules" %}</a>
+                        <a href="{% url 'group-routes' %}"><i class="fa fa-shield fa-fw"></i> {% trans "Rules" %}</a>
                     </li>
                     <li>
-                        <a href="{% url add-route %}"><i class="fa fa-plus-circle fa-fw"></i> {% trans "Add Rule" %}</a>
+                        <a href="{% url 'add-route' %}"><i class="fa fa-plus-circle fa-fw"></i> {% trans "Add Rule" %}</a>
                     </li>
                     {% if perms.accounts.overview %}<li>
-                            <a href="{% url overview %}"><i class="fa fa-desktop fa-fw"></i> {% trans "Overview" %}</a>
+                            <a href="{% url 'overview' %}"><i class="fa fa-desktop fa-fw"></i> {% trans "Overview" %}</a>
                         </li>{% endif %}
                     {% if user.is_superuser %}
-                        <li><a href="{% url admin:index %}"><i class="fa fa-cogs fa-fw"></i> {% trans "Admin" %}</a>
+                        <li><a href="{% url 'admin:index' %}"><i class="fa fa-cogs fa-fw"></i> {% trans "Admin" %}</a>
                         </li>
 						{% endif %}
-                    {% if user.get_profile.peers.all %}
+                    {% if user.userprofile.peers.all %}
 				        <li>
-				            <a href="{% url user-profile %}"><i class="fa fa-user fa-fw"></i> {% trans "My profile" %}</a>
+				            <a href="{% url 'user-profile' %}"><i class="fa fa-user fa-fw"></i> {% trans "My profile" %}</a>
 				        </li>
 				    {% endif %}
                 </ul>

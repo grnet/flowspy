@@ -60,8 +60,8 @@
                         </div>
                         <!-- /.panel-heading -->
 <div class="panel-body">
-				<a class="btn btn-sm btn-outline btn-success" id="routebutton" href="{% url add-route %}"><i class="fa fa-plus-circle"></i> {% trans "Add Rule" %}</a>
-				<a class="btn btn-sm btn-outline btn-info"  href="{% url user-profile %}"><i class="fa fa-user"></i> {% trans "My Profile" %}</a>
+				<a class="btn btn-sm btn-outline btn-success" id="routebutton" href="{% url 'add-route' %}"><i class="fa fa-plus-circle"></i> {% trans "Add Rule" %}</a>
+				<a class="btn btn-sm btn-outline btn-info"  href="{% url 'user-profile' %}"><i class="fa fa-user"></i> {% trans "My Profile" %}</a>
                         </div>
                         <!-- /.panel-body -->
                     </div>
@@ -88,7 +88,7 @@
     <script src="{{STATIC_URL}}js/dataTableslatest/jquery.dataTables.min.js"></script>
     <script src="{{STATIC_URL}}js/dataTableslatest/dataTables.bootstrap.js"></script>
     {% if user.is_authenticated %}
-<script type="text/javascript" src="{% url load-js 'poller' %}"></script>
+<script type="text/javascript" src="{% url 'load-js' 'poller' %}"></script>
 {% endif %}
 
 <script type="text/javascript">
@@ -172,7 +172,7 @@ var start;
 var end;
 var oldhtml;
 var last_element = false;
-var refreshUrl = "{% url group-routes-ajax %}";
+var refreshUrl = "{% url 'group-routes-ajax' %}";
 $(document).ready( function(){
 
 
@@ -219,7 +219,7 @@ $(document).ready( function(){
             	var my = $(this);
             	my.html('Deactivating...')
 				var routename = $(this).data("routename");
-				var delurl = "{% url delete-route 'route_placeholder'%}".replace('route_placeholder', routename.toString());
+				var delurl = "{% url 'delete-route' 'route_placeholder'%}".replace('route_placeholder', routename.toString());
 				$.ajax({
         			type: 'POST',
         			url: delurl,
@@ -326,7 +326,7 @@ $(document).ready( function(){
                       "mRender": function (data, type, full) {
                      status = full.status;
                      btn = '';
-                     editurl = "{% url edit-route 'routename'  %}".replace('routename', full.name.toString());
+                     editurl = "{% url 'edit-route' 'routename'  %}".replace('routename', full.name.toString());
                      if (status == "ACTIVE" ){
                      	btn = '<a href="'+editurl+'" class="btn-info btn btn-sm btn-outline">{% trans "Edit" %}</a>';
         				btn = btn + ' <button class="del_buttonpre btn-warning btn btn-sm btn-outline" id="'+full.name+'" data-routename="'+full.name+'">{% trans "Deactivate" %}</button>';

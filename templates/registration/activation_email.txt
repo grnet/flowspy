@@ -6,7 +6,7 @@ E-mail: {{ user.email }}
 Για να ενεργοποιήσετε το λογαριασμό και να επιτρέψετε στο χρήστη να
 χρησιμοποιήσει την υπηρεσία, επισκεφθείτε τον ακόλουθο σύνδεσμο:
 
-http://{{ site.domain }}{% url activate_account activation_key %}
+http://{{ site.domain }}{% url 'activate_account' activation_key %}
 
 Ο χρήστης θα ενημερωθεί για την ενεργοποίηση του λογαριασμού του μέσω e-mail.
 
@@ -20,6 +20,6 @@ E-mail: {{user.email}}
 To activate the user's account and allow them to access the service, click on
 the following link:
 
-http://{{ site.domain }}{% url activate_account activation_key %}
+http://{{ site.domain }}{% url 'activate_account' activation_key %}
 
 The user will be notified via mail about the account activation

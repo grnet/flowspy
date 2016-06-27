@@ -126,7 +126,7 @@
 			buttons: {
 		'{% trans "Add" %}': function() {
 			$.ajax({
-			url:"{% url add-rate-limit %}",
+			url:"{% url 'add-rate-limit' %}",
 			data:$("#add_rl_form").serialize(),
 			type: "POST",
 			cache: false,
@@ -158,7 +158,7 @@
 			})
 			.click(function(){
 				$.ajax({
-					url: "{% url add-rate-limit %}",
+					url: "{% url 'add-rate-limit' %}",
 					cache: false,
 					success: function(data){
 						$("#then_diag").html(data);
@@ -173,7 +173,7 @@
 				$(".new_port").hide();
 				$("#addnewport").show()
 				$.ajax({
-					url: "{% url add-port %}",
+					url: "{% url 'add-port' %}",
 					cache: false,
 					success: function(data){
 						$("#port_diag").html(data);

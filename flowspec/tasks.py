@@ -172,7 +172,7 @@ def batch_delete(routes, **kwargs):
 
 #@task(ignore_result=True)
 def announce(messg, user, route):
-    peers = user.get_profile().peers.all()
+    peers = user.userprofile.peers.all()
     username = None
     for peer in peers:
         if username:
@@ -211,7 +211,7 @@ def check_sync(route_name=None, selected_routes=[]):
 
 @task(ignore_result=True)
 def notify_expired():
-    from flowspec.models import *
+    from flowspec.models import Route
     from django.contrib.sites.models import Site
     logger.info('Initializing expiration notification')
     routes = Route.objects.all()

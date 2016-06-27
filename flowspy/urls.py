@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, include, url
-from django.views.generic.simple import direct_to_template
 from django.conf import settings
+from django.views.generic import TemplateView
 from django.contrib import admin
 from rest_framework import routers
 from flowspec.viewsets import (
@@ -44,8 +44,8 @@ urlpatterns = patterns(
     url(r'^load_js/(?P<file>[\w\s\d_-]+)/$', 'flowspec.views.load_jscript', name="load-js"),
     url(
         r'^activate/complete/$',
-        direct_to_template,
-        {'template': 'registration/activation_complete.html'},
+        TemplateView.as_view(
+            template_name='registration/activation_complete.html'),
         name='registration_activation_complete'
     ),
     (r'^admin/', include(admin.site.urls)),

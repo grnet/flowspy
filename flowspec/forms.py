@@ -42,11 +42,13 @@ from django.core.mail import send_mail
 class UserProfileForm(forms.ModelForm):
 
     class Meta:
+        fields = '__all__'
         model = UserProfile
 
 
 class RouteForm(forms.ModelForm):
     class Meta:
+        fields = '__all__'
         model = Route
 
     def clean_applier(self):
@@ -152,6 +154,7 @@ class RouteForm(forms.ModelForm):
 class ThenPlainForm(forms.ModelForm):
 #    action = forms.CharField(initial='rate-limit')
     class Meta:
+        fields = '__all__'
         model = ThenAction
 
     def clean_action_value(self):
@@ -178,6 +181,7 @@ class ThenPlainForm(forms.ModelForm):
 class PortPlainForm(forms.ModelForm):
 #    action = forms.CharField(initial='rate-limit')
     class Meta:
+        fields = '__all__'
         model = MatchPort
 
     def clean_port(self):

@@ -35,7 +35,7 @@
                         <div class="panel-body">
 
                         	<div class="alert alert-info">Excellent! You are a step away from joining the service. Select your institution from the dropdown list.</div>
-						<form method="POST" class="form-horizontal"	action="{% url selectinst %}">
+						<form method="POST" class="form-horizontal"	action="{% url 'selectinst' %}">
 							{% csrf_token %} {% if form.non_field_errors %}
 							<p class="error">{{ form.non_field_errors}}</p>
 							{% endif %}

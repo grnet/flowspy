@@ -56,7 +56,7 @@ var updater = {
     	    var date = new Date();
 			var timestamp = date.getTime();
         {% for peer in user.userprofile.peers.all %}
-        $.ajax({url: "{% url fetch-existing  peer.pk %}?="+timestamp, type: "POST", dataType: "json", cache:false,
+        $.ajax({url: "{% url 'fetch-existing'  peer.pk %}?="+timestamp, type: "POST", dataType: "json", cache:false,
     		success: updater.onFetchExisting,
     		error: updater.onError});
         {% endfor %}
@@ -70,7 +70,7 @@ var updater = {
     	    var date = new Date();
 			var timestamp = date.getTime();
         {% for peer in user.userprofile.peers.all %}
-        $.ajax({url: "{% url fetch-updates  peer.pk %}?="+timestamp, type: "POST", dataType: "json", cache:false,
+        $.ajax({url: "{% url 'fetch-updates'  peer.pk %}?="+timestamp, type: "POST", dataType: "json", cache:false,
     		success: updater.onSuccess,
     		timeout: timeout,
     		error: updater.onError});

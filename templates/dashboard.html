@@ -107,17 +107,17 @@
 										</small>
 										<div>
 										{% ifequal route.status 'ACTIVE' %}
-											<a href="{% url edit-route route.name %}" class="btn-info btn btn-xs btn-outline" id="edit_button_{{route.pk}}">{% trans "Edit" %}</a>
+											<a href="{% url 'edit-route' route.name %}" class="btn-info btn btn-xs btn-outline" id="edit_button_{{route.pk}}">{% trans "Edit" %}</a>
 											<button class="del_buttonpre btn-outline btn btn-xs btn-warning" id="{{route.name}}" data-routename="{{route.name}}">{% trans "Deactivate" %}</button>
 										{% else %}
 											{% if route.status == 'EXPIRED' or route.status == 'ADMININACTIVE' or route.status == 'INACTIVE' %}
-												<a href="{% url edit-route route.name %}" class="btn-info btn btn-xs btn-outline" id="edit_button_{{route.pk}}" type="button">{% trans "Reactivate" %}</a>
+												<a href="{% url 'edit-route' route.name %}" class="btn-info btn btn-xs btn-outline" id="edit_button_{{route.pk}}" type="button">{% trans "Reactivate" %}</a>
 											{% else %}
 												{% ifequal route.status 'OUTOFSYNC' %}
-													<a href="{% url edit-route route.name %}" class="btn-info btn btn-xs btn-outline" id="edit_button_{{route.pk}}">{% trans "ReSync" %}</a>
+													<a href="{% url 'edit-route' route.name %}" class="btn-info btn btn-xs btn-outline" id="edit_button_{{route.pk}}">{% trans "ReSync" %}</a>
 												{% else %}
 													{% ifequal route.status 'ERROR' %}
-														<a href="{% url edit-route route.name %}" class="btn-info btn btn-xs btn-outline" id="edit_button_{{route.pk}}">{% trans "Fix it!" %}</a>
+														<a href="{% url 'edit-route' route.name %}" class="btn-info btn btn-xs btn-outline" id="edit_button_{{route.pk}}">{% trans "Fix it!" %}</a>
 													{% else %}
 													-
 													{% endifequal %}
@@ -143,9 +143,9 @@
                         </div>
                         <!-- /.panel-heading -->
 <div class="panel-body">
-				<a class="btn btn-sm btn-outline btn-success" id="routebutton" href="{% url add-route %}"><i class="fa fa-plus-circle"></i> {% trans "Add Rule" %}</a>
-				<a class="btn btn-sm btn-outline btn-primary"  href="{% url group-routes %}"><i class="fa fa-shield fa-fw"></i> {% trans "My Rules" %}</a>
-				<a class="btn btn-sm btn-outline btn-info"  href="{% url user-profile %}"><i class="fa fa-user"></i> {% trans "My Profile" %}</a>
+				<a class="btn btn-sm btn-outline btn-success" id="routebutton" href="{% url 'add-route' %}"><i class="fa fa-plus-circle"></i> {% trans "Add Rule" %}</a>
+				<a class="btn btn-sm btn-outline btn-primary"  href="{% url 'group-routes' %}"><i class="fa fa-shield fa-fw"></i> {% trans "My Rules" %}</a>
+				<a class="btn btn-sm btn-outline btn-info"  href="{% url 'user-profile' %}"><i class="fa fa-user"></i> {% trans "My Profile" %}</a>
                         </div>
                         <!-- /.panel-body -->
                     </div>
@@ -171,14 +171,14 @@
 {% endblock %}
 {% block pagejsbottom %}
 {% if user.is_authenticated %}
-<script type="text/javascript" src="{% url load-js 'pollerdash' %}"></script>
+<script type="text/javascript" src="{% url 'load-js' 'pollerdash' %}"></script>
 {% endif %}
 <script type="text/javascript" src="{{STATIC_URL}}js/jquery.dataTables.js"></script>
 <script type="text/javascript" src="{{STATIC_URL}}js/datatables_bootstrap.js"></script>
 <script>
 var oldhtml;
 var last_element = false;
-var refreshUrl = "{% url group-routes-ajax %}";
+var refreshUrl = "{% url 'group-routes-ajax' %}";
 	$(document).ready( function(){
 		$('body').on('click', ".del_buttonpre", function(){
             	var my = $(this);
@@ -199,7 +199,7 @@ var refreshUrl = "{% url group-routes-ajax %}";
             	var my = $(this);
             	my.html('Deactivating...')
 				var routename = $(this).data("routename");
-				var delurl = "{% url delete-route 'route_placeholder'%}".replace('route_placeholder', routename.toString());
+				var delurl = "{% url 'delete-route' 'route_placeholder'%}".replace('route_placeholder', routename.toString());
 				$.ajax({
         			type: 'POST',
         			url: delurl,

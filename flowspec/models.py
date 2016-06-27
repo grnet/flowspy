@@ -198,7 +198,7 @@ class Route(models.Model):
                 raise ValidationError(_('Invalid network address format at Source Field'))
 
     def commit_add(self, *args, **kwargs):
-        peers = self.applier.get_profile().peers.all()
+        peers = self.applier.userprofile.peers.all()
         username = None
         for peer in peers:
             if username:
@@ -245,7 +245,7 @@ class Route(models.Model):
         logger.info(mail_body, extra=d)
 
     def commit_edit(self, *args, **kwargs):
-        peers = self.applier.get_profile().peers.all()
+        peers = self.applier.userprofile.peers.all()
         username = None
         for peer in peers:
             if username:
@@ -306,7 +306,7 @@ class Route(models.Model):
         if "reason" in kwargs:
             reason = kwargs['reason']
             reason_text = 'Reason: %s.' % reason
-        peers = self.applier.get_profile().peers.all()
+        peers = self.applier.userprofile.peers.all()
         for peer in peers:
             if username:
                 break
@@ -589,7 +589,7 @@ class Route(models.Model):
     @property
     def applier_peers(self):
         try:
-            peers = self.applier.get_profile().peers.all()
+            peers = self.applier.userprofile.peers.all()
             applier_peers = ''.join(('%s, ' % (peer.peer_name)) for peer in peers)[:-2]
         except:
             applier_peers = None

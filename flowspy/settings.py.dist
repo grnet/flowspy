@@ -255,9 +255,6 @@ CELERYBEAT_SCHEDULE = {
     },
 }
 
-# List of modules to import when celery starts.
-CELERY_IMPORTS = ("flowspec.tasks", )
-
 # Notifications
 SERVER_EMAIL = "Example FoD Service <noreply@example.com>"
 EMAIL_SUBJECT_PREFIX = "[FoD] "
@@ -357,3 +354,5 @@ if SENTRY.get('activate'):
         'class': 'raven.contrib.django.handlers.SentryHandler'
     }
     LOGGING['loggers']['django.request']['handlers'] = ['sentry']
+
+TEST_RUNNER = 'django.test.runner.DiscoverRunner'

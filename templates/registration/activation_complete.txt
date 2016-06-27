@@ -2,10 +2,10 @@
 Μπορείτε να χρησιμοποιήσετε την υπηρεσία FoD, κάνοντας login στην παρακάτω
 διεύθυνση:
 
-	http://{{ site.domain }}{% url login %}
+	http://{{ site.domain }}{% url 'login' %}
 
 ---------------------------------------------------------------------------
 Your account with username “{{ user.username }}” has been activated.
 You may login to FoD using the following URL:
 
-	http://{{ site.domain }}{% url login %}
+	http://{{ site.domain }}{% url 'login' %}

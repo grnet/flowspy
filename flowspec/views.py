@@ -90,7 +90,7 @@ def dashboard(request):
     all_group_routes = []
     message = ''
     try:
-        peers = request.user.get_profile().peers.select_related('user_profile')
+        peers = request.user.userprofile.peers.select_related()
     except UserProfile.DoesNotExist:
         error = "User <strong>%s</strong> does not belong to any peer or organization. It is not possible to create new firewall rules.<br>Please contact Helpdesk to resolve this issue" % request.user.username
         return render(
@@ -142,7 +142,7 @@ def dashboard(request):
 @never_cache
 def group_routes(request):
     try:
-        request.user.get_profile().peers.all()
+        request.user.userprofile.peers.all()
     except UserProfile.DoesNotExist:
         error = "User <strong>%s</strong> does not belong to any peer or organization. It is not possible to create new firewall rules.<br>Please contact Helpdesk to resolve this issue" % request.user.username
         return render(
@@ -164,7 +164,7 @@ def group_routes(request):
 def group_routes_ajax(request):
     all_group_routes = []
     try:
-        peers = request.user.get_profile().peers.prefetch_related('networks')
+        peers = request.user.userprofile.peers.prefetch_related('networks')
     except UserProfile.DoesNotExist:
         error = "User <strong>%s</strong> does not belong to any peer or organization. It is not possible to create new firewall rules.<br>Please contact Helpdesk to resolve this issue" % request.user.username
         return render(
@@ -182,7 +182,7 @@ def group_routes_ajax(request):
     jresp = {}
     routes = build_routes_json(all_group_routes)
     jresp['aaData'] = routes
-    return HttpResponse(json.dumps(jresp), mimetype='application/json')
+    return HttpResponse(json.dumps(jresp), content_type='application/json')
 
 
 @login_required
@@ -190,7 +190,7 @@ def group_routes_ajax(request):
 def overview_routes_ajax(request):
     all_group_routes = []
     try:
-        peers = request.user.get_profile().peers.all().select_related()
+        peers = request.user.userprofile.peers.all().select_related()
     except UserProfile.DoesNotExist:
         error = "User <strong>%s</strong> does not belong to any peer or organization. It is not possible to create new firewall rules.<br>Please contact Helpdesk to resolve this issue" % request.user.username
         return render_to_response('error.html', {'error': error}, context_instance=RequestContext(request))
@@ -203,7 +203,7 @@ def overview_routes_ajax(request):
     jresp = {}
     routes = build_routes_json(all_group_routes)
     jresp['aaData'] = routes
-    return HttpResponse(json.dumps(jresp), mimetype='application/json')
+    return HttpResponse(json.dumps(jresp), content_type='application/json')
 
 
 def build_routes_json(groutes):
@@ -236,7 +236,7 @@ def build_routes_json(groutes):
             rd['applier'] = 'unknown'
             rd['peer'] = ''
         else:
-            peers = r.applier.get_profile().peers.select_related('networks')
+            peers = r.applier.userprofile.peers.select_related()
             username = None
             for peer in peers:
                 if username:
@@ -265,7 +265,7 @@ def add_route(request):
     if request.user.is_superuser:
         applier_peer_networks = PeerRange.objects.all()
     else:
-        user_peers = request.user.get_profile().peers.all()
+        user_peers = request.user.userprofile.peers.all()
         for peer in user_peers:
             applier_peer_networks.extend(peer.networks.all())
     if not applier_peer_networks:
@@ -337,7 +337,7 @@ def edit_route(request, route_slug):
     if request.user.is_superuser:
         applier_peer_networks = PeerRange.objects.all()
     else:
-        user_peers = request.user.get_profile().peers.all()
+        user_peers = request.user.userprofile.peers.all()
         for peer in user_peers:
             applier_peer_networks.extend(peer.networks.all())
     if not applier_peer_networks:
@@ -437,7 +437,7 @@ def edit_route(request, route_slug):
 def delete_route(request, route_slug):
     if request.is_ajax():
         route = get_object_or_404(Route, name=route_slug)
-        peers = route.applier.get_profile().peers.all()
+        peers = route.applier.userprofile.peers.all()
         username = None
         for peer in peers:
             if username:
@@ -448,7 +448,7 @@ def delete_route(request, route_slug):
                     username = peer
                     break
         applier_peer = username
-        peers = request.user.get_profile().peers.all()
+        peers = request.user.userprofile.peers.all()
         username = None
         for peer in peers:
             if username:
@@ -482,7 +482,7 @@ def delete_route(request, route_slug):
 def user_profile(request):
     user = request.user
     try:
-        peers = request.user.get_profile().peers.all()
+        peers = request.user.userprofile.peers.all()
         if user.is_superuser:
             peers = Peer.objects.all()
     except UserProfile.DoesNotExist:
@@ -555,7 +555,7 @@ def user_login(request):
 
         if user is not None:
             try:
-                user.get_profile().peers.all()
+                user.userprofile.peers.all()
             except:
                 form = UserProfileForm()
                 form.fields['user'] = forms.ModelChoiceField(queryset=User.objects.filter(pk=user.pk), empty_label=None)
@@ -596,7 +596,7 @@ def user_login(request):
 
 def user_activation_notify(user):
     current_site = Site.objects.get_current()
-    peers = user.get_profile().peers.all()
+    peers = user.userprofile.peers.all()
 
     # Email subject *must not* contain newlines
     # TechCs will be notified about new users.
@@ -679,7 +679,7 @@ def add_rate_limit(request):
             response_data['value'] = "%s:%s" % (then.action, then.action_value)
             return HttpResponse(
                 json.dumps(response_data),
-                mimetype='application/json'
+                content_type='application/json'
             )
         else:
             return render(
@@ -712,7 +712,7 @@ def add_port(request):
             response_data['text'] = "%s" % port.port
             return HttpResponse(
                 json.dumps(response_data),
-                mimetype='application/json'
+                content_type='application/json'
             )
         else:
             return render(
@@ -802,7 +802,7 @@ def user_logout(request):
 @never_cache
 def load_jscript(request, file):
     long_polling_timeout = int(settings.POLL_SESSION_UPDATE) * 1000 + 10000
-    return render_to_response('%s.js' % file, {'timeout': long_polling_timeout}, context_instance=RequestContext(request), mimetype="text/javascript")
+    return render_to_response('%s.js' % file, {'timeout': long_polling_timeout}, context_instance=RequestContext(request), content_type="text/javascript")
 
 
 def lookupShibAttr(attrmap, requestMeta):

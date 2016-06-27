@@ -48,9 +48,9 @@
             </div>
             <!-- /.panel-heading -->
             <div class="panel-body">
-				<a class="btn btn-sm btn-outline btn-success" id="routebutton" href="{% url add-route %}"><i class="fa fa-plus-circle"></i> {% trans "Add Rule" %}</a>
-				<a class="btn btn-sm btn-outline btn-primary"  href="{% url group-routes %}"><i class="fa fa-shield fa-fw"></i> {% trans "My Rules" %}</a>
-				<a class="btn btn-sm btn-outline btn-info"  href="{% url dashboard %}"><i class="fa fa-dashboard"></i> {% trans "Dashboard" %}</a>
+				<a class="btn btn-sm btn-outline btn-success" id="routebutton" href="{% url 'add-route' %}"><i class="fa fa-plus-circle"></i> {% trans "Add Rule" %}</a>
+				<a class="btn btn-sm btn-outline btn-primary"  href="{% url 'group-routes' %}"><i class="fa fa-shield fa-fw"></i> {% trans "My Rules" %}</a>
+				<a class="btn btn-sm btn-outline btn-info"  href="{% url 'dashboard' %}"><i class="fa fa-dashboard"></i> {% trans "Dashboard" %}</a>
             </div>
         <!-- /.panel-body -->
         </div>
@@ -78,7 +78,7 @@
                     {% if user.auth_token %}
                         {{ user.auth_token }}
                     {% else %}
-                        <a id="generate_token" href="{% url user-profile-token %}">{% trans "Generate One" %}</a>
+                        <a id="generate_token" href="{% url 'user-profile-token' %}">{% trans "Generate One" %}</a>
                     {% endif %}
                     </dd>
                 </dl>

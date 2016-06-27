@@ -156,7 +156,7 @@ var start;
 var end;
 var oldhtml;
 var last_element = false;
-var refreshUrl = "{% url overview-ajax %}";
+var refreshUrl = "{% url 'overview-ajax' %}";
 
 
 
@@ -364,7 +364,7 @@ $("body").tooltip({ selector: '[data-toggle="tooltip"]' });
 	                	<td>{{user.email}}</td>
 	                	<td>{{user.first_name}} {{user.last_name}}</td>
 	                	<td>{% if user.registrationprofile_set.all %}{% if user.registrationprofile_set.all.0.activation_key == "ALREADY_ACTIVATED" %}{% trans "Active" %}{% else %}{% trans "Inactive" %} or {% trans "Key Expired" %}{% endif %}{% else %}-{% endif %}</td>
-                        <td>{% if user.get_profile.peers.all %}{% for peer in user.get_profile.peers.all %}{{peer}} {% endfor %}{% endif %}</td>
+                        <td>{% if user.userprofile.peers.all %}{% for peer in user.userprofile.peers.all %}{{peer}} {% endfor %}{% endif %}</td>
 	                </tr>
 	              	{% endfor %}
 	              	</tbody>

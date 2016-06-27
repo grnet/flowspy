@@ -40,7 +40,7 @@
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
-    <form class="form-horizontal" method="post" action="{% url altlogin %}" role="form">
+    <form class="form-horizontal" method="post" action="{% url 'altlogin' %}" role="form">
 
             {% csrf_token %}
             {% load unescape %}
@@ -72,7 +72,7 @@
 			<button type="submit" id="applybutton" value="{% trans 'Login' %}" class="btn btn-md btn-primary">Login</button>
 				</div>
 			</div>
-        	<input name="next" id="next" type="hidden" value="{% url group-routes %}">
+        	<input name="next" id="next" type="hidden" value="{% url 'group-routes' %}">
             </form>
             </div>
             </div>

@@ -20,9 +20,7 @@
 #
 
 import os
-import djcelery
-djcelery.setup_loader()
-from celery.schedules import crontab
+
 
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
@@ -233,27 +231,9 @@ EXPIRATION_DAYS_OFFSET = 7
 
 USE_X_FORWARDED_HOST = True
 
-# Beanstalk configuration (as a broker for celery)
-BROKER_HOST = "localhost"
-BROKER_PORT = 11300
-POLLS_TUBE = 'polls'
-BROKER_URL = "beanstalk://localhost:11300//"
-BROKER_VHOST = "/"
 CELERY_CONCURRENCY = 1
 POLL_SESSION_UPDATE = 60.0
 
-CELERYBEAT_SCHEDULE = {
-    "every-day-sync": {
-        "task": "flowspec.tasks.check_sync",
-        "schedule": crontab(minute=01, hour=01),
-        "args": (),
-    },
-    "notify-expired": {
-        "task": "flowspec.tasks.notify_expired",
-        "schedule": crontab(minute=01, hour=02),
-        "args": (),
-    },
-}
 
 # Notifications
 SERVER_EMAIL = "Example FoD Service <noreply@example.com>"

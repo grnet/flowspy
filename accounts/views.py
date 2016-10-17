@@ -85,10 +85,19 @@ def activate(request, activation_key):
 
     if request.method == "POST":
         request_data = request.POST.copy()
-        try:
+	try:
             user = User.objects.get(pk=request_data['user'])
             up = user.get_profile()
-            for peer in request_data['peers']:
+
+            # use getlist to get the list of peers (might be multiple)
+            profile_peers = request.POST.getlist('peers')
+
+            # remove already assigned peers, as these are selected by
+            # the user, no admin has yet verified those. They will be
+            # replaced by the admin's selection.
+            up.peers.clear()
+
+            for peer in profile_peers:
                 up.peers.add(Peer.objects.get(pk=peer))
             up.save()
 

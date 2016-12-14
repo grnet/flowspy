@@ -698,7 +698,7 @@ def add_rate_limit(request):
 @never_cache
 def add_port(request):
     if request.method == "GET":
-        form = PortPlainForm()
+        form = PortRangeForm()
         return render(
             request,
             'add_port.html',
@@ -707,7 +707,7 @@ def add_port(request):
             },
         )
     else:
-        form = PortPlainForm(request.POST)
+        form = PortRangeForm(request.POST)
         if form.is_valid():
             port = form.save()
             response_data = {}

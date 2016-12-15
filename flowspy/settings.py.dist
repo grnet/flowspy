@@ -151,6 +151,8 @@ INSTALLED_APPS = (
     'djcelery',
     'peers',
     'registration',
+    'rest_framework',
+    'rest_framework.authtoken',
     'accounts',
     'tinymce',
     'widget_tweaks',

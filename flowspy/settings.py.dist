@@ -338,3 +338,7 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated'
     ]
 }
+
+# Limit of ports in 'ports' / 'SrcPorts' / 'DstPorts' of a rule:
+PORTRANGE_LIMIT = 100
+

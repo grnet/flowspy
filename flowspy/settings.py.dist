@@ -21,7 +21,6 @@
 
 import os
 
-
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
@@ -144,9 +143,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'flowspec',
     'poller',
-    'south',
     'django.contrib.admin',
-    'djcelery',
     'peers',
     'registration',
     'rest_framework',
@@ -231,8 +228,12 @@ EXPIRATION_DAYS_OFFSET = 7
 
 USE_X_FORWARDED_HOST = True
 
-CELERY_CONCURRENCY = 1
+POLLS_TUBE = 'polls'
 POLL_SESSION_UPDATE = 60.0
+
+BROKER_URL = 'redis://localhost:6379/0'
+CELERY_CONCURRENCY = 1
+CELERY_RESULT_BACKEND = BROKER_URL
 
 
 # Notifications

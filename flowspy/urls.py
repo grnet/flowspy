@@ -63,4 +63,4 @@ urlpatterns = patterns(
 if 'graphs' in settings.INSTALLED_APPS:
     from graphs import urls as graphs_urls
     urlpatterns += (
-        '', url(r'^graphs/', include(graphs_urls)),)
+        url(r'^graphs/', include(graphs_urls)),)

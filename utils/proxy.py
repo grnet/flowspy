@@ -26,6 +26,7 @@ import logging
 from django.core.cache import cache
 import os
 from celery.exceptions import TimeLimitExceeded, SoftTimeLimitExceeded
+from portrange import parse_portrange
 
 cwd = os.getcwd()
 
@@ -100,6 +101,10 @@ class Applier(object):
     def to_xml(self, operation=None):
         logger.info("Operation: %s"%operation)
         if self.route_object:
+            try:
+                settings.PORTRANGE_LIMIT
+            except:
+                settings.PORTRANGE_LIMIT = 100
             logger.info("Generating XML config")
             route_obj = self.route_object
             device = np.Device()
@@ -124,21 +129,48 @@ class Applier(object):
             except:
                 pass
             try:
+                ports = []
                 if route_obj.port:
                     for port in route_obj.port.all():
-                        route.match['port'].append(port.port)
+                        portrange = parse_portrange(str(port))
+                        for oneport in portrange:
+                            ports.append(oneport)
+                if ports:
+                    if len(ports) > settings.PORTRANGE_LIMIT:
+                        # We do not allow more than PORTRANGE_LIMIT ports
+                        return False
+                    else:
+                        route.match['port'] = ports
             except:
                 pass
             try:
+                ports = []
                 if route_obj.destinationport:
                     for port in route_obj.destinationport.all():
-                        route.match['destination-port'].append(port.port)
+                        portrange = parse_portrange(str(port))
+                        for oneport in portrange:
+                            ports.append(oneport)
+                if ports:
+                    if len(ports) > settings.PORTRANGE_LIMIT:
+                        # We do not allow more than PORTRANGE_LIMIT ports
+                        return False
+                    else:
+                        route.match['destination-port'] = ports
             except:
                 pass
             try:
+                ports = []
                 if route_obj.sourceport:
                     for port in route_obj.sourceport.all():
-                        route.match['source-port'].append(port.port)
+                        portrange = parse_portrange(str(port))
+                        for oneport in portrange:
+                            ports.append(oneport)
+                if ports:
+                    if len(ports) > settings.PORTRANGE_LIMIT:
+                        # We do not allow more than PORTRANGE_LIMIT ports
+                        return False
+                    else:
+                        route.match['source-port'] = ports
             except:
                 pass
             if route_obj.icmpcode:

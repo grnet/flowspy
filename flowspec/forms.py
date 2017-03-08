@@ -36,6 +36,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from django.conf import settings
 import datetime
+import re
 from django.core.mail import send_mail
 
 
@@ -174,6 +175,47 @@ class ThenPlainForm(forms.ModelForm):
         else:
             return self.cleaned_data["action"]
 
+
+class PortRangeForm(forms.ModelForm):
+    class Meta:
+        model = MatchPort
+
+    def clean_port(self):
+        """Validation of Port Range value.
+
+Supported format is the list of ports or port ranges separated by ','.
+A port range is a tuple of ports separated by '-'.
+
+Example: 80,1000-1100,8088
+This method validates input:
+* input must not be empty
+* all ports must be integer 0 >= p >= 65535
+* value is matched with regular expression: "^[1-9][0-9]*([-,][1-9][0-9]*)*$"
+* ports in a port range A-B must ordered: A < B
+"""
+        value = self.cleaned_data['port']
+        if value:
+            regexp = re.compile(r"^[1-9][0-9]*([-,][1-9][0-9]*)*$")
+            r = re.match(regexp, value)
+            if r:
+                res = []
+                pranges = value.split(",")
+                for prange in pranges:
+                    ports = prange.split("-")
+                    prev = -1
+                    for port in ports:
+                        p = int(port)
+                        if p < 0 or p > 65535:
+                            raise forms.ValidationError(_('Port should be < 65535 and >= 0'))
+                        if p <= prev:
+                            print(prev, p, len(ports))
+                            raise forms.ValidationError(_('First port must be < the second port in a port range (e.g. A < B for A-B).'))
+                        prev = p
+                return value
+            else:
+                raise forms.ValidationError(_('Malformed port range format, example: 80,1000-1100,6000-6010'))
+        else:
+            raise forms.ValidationError(_('Cannot be empty'))
 
 class PortPlainForm(forms.ModelForm):
 #    action = forms.CharField(initial='rate-limit')

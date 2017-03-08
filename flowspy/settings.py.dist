@@ -19,6 +19,12 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+# _uuid_generate_random was deprecated and removed in newer python
+try:
+    from uuid import _uuid_generate_random
+except ImportError:
+    _uuid_generate_random = None
+
 import os
 import djcelery
 djcelery.setup_loader()
@@ -334,3 +340,7 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated'
     ]
 }
+
+# Limit of ports in 'ports' / 'SrcPorts' / 'DstPorts' of a rule:
+PORTRANGE_LIMIT = 100
+

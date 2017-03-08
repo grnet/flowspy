@@ -7,7 +7,7 @@
     {% csrf_token %}
 		<div class="form-group {% if form.port.errors %} has-error {% endif %}">
 		<div class="col-md-5">
-		            {% render_field form.port class+="form-control" placeholder="Port number, eg. 8088" %}
+		            {% render_field form.port class+="form-control" placeholder="Port(s), eg. 80,1000-1100,8088" %}
 		            {% if form.port.errors %} <span class="help-block"> {{ form.port.errors|join:", " }} </span>
 		            {% endif %}
 		        </div>

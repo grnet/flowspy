@@ -1,8 +1,8 @@
 from django.conf.urls import patterns, include, url
 from django.views.generic.simple import direct_to_template
+from django.conf import settings
 from django.contrib import admin
 from rest_framework import routers
-from graphs import urls as graphs_urls
 from flowspec.viewsets import (
     RouteViewSet,
     PortViewSet,
@@ -59,3 +59,8 @@ urlpatterns = patterns(
     url(r'^api/', include(router.urls)),
     url(r'^details/(?P<route_slug>[\w\-]+)/$', 'flowspec.views.routedetails', name="route-details"),
 )
+
+if 'graphs' in settings.INSTALLED_APPS:
+    from graphs import urls as graphs_urls
+    urlpatterns += (
+        '', url(r'^graphs/', include(graphs_urls)),)

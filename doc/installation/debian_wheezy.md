@@ -41,10 +41,7 @@ Update and install the required packages:
 
     apt-get update
     apt-get upgrade
-    apt-get install mysql-server apache2 memcached libapache2-mod-proxy-html gunicorn beanstalkd python-django python-django-south python-django-tinymce tinymce python-mysqldb python-yaml python-memcache python-django-registration python-ipaddr python-lxml mysql-client git python-django-celery python-paramiko python-gevent
-
-Also, django rest framework package is required. In debian Wheezy it is
-not available, but one can install it via pip.
+    apt-get install apache2 beanstalkd gcc git gunicorn libapache2-mod-proxy-html libapache2-mod-shib2 libevent-dev libmysqlclient-dev libxml2-dev libxslt-dev memcached mysql-client mysql-server python python-dev python-pip tinymce
 
 > **note**
 >
@@ -64,10 +61,6 @@ If you are using mysql, you should create a database:
 
 ### Required application packages
 
-Get the required packages and their dependencies and install them:
-
-    apt-get install libxml2-dev libxslt-dev gcc python-dev
-
 -   ncclient: NETCONF python client:
 
         cd ~
@@ -82,11 +75,16 @@ Get the required packages and their dependencies and install them:
         cd nxpy
         python setup.py install
 
-- flowspy: core web application. Installation is done at /srv/flowspy::
+- flowspy: core web application. Installation is done at /srv/flowspy:
 
         cd /srv
         git clone https://code.grnet.gr/git/flowspy
         cd flowspy
+
+- In order to install the required python packages for Flowspy you can use pip:
+
+        pip install -r requirements.txt
+
 
 Let’s move on with some copies and dir creations:
 
@@ -137,7 +135,7 @@ should be:
           'mode': 'django',
           'working_dir': '/srv/flowspy',
           'args': (
-               '--bind=127.0.0.1:8081',
+               '--bind=127.0.0.1:8080',
                '--workers=1',
                '--worker-class=egg:gunicorn#gevent',
                '--timeout=30',
@@ -441,8 +439,8 @@ be:
              ProxyPass          /shibboleth !
              ProxyPass        /Shibboleth.sso !
 
-               ProxyPass           / http://localhost:8081/ retry=0
-               ProxyPassReverse / http://localhost:8081/
+               ProxyPass           / http://localhost:8080/ retry=0
+               ProxyPassReverse / http://localhost:8080/
 
           Alias /static          /srv/flowspy/static
 

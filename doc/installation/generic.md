@@ -119,7 +119,7 @@ should be:
           'mode': 'django',
           'working_dir': '/srv/flowspy',
           'args': (
-               '--bind=127.0.0.1:8081',
+               '--bind=127.0.0.1:8080',
                '--workers=1',
                '--worker-class=egg:gunicorn#gevent',
                '--timeout=30',
@@ -128,4 +128,3 @@ should be:
                '--log-file=/var/log/gunicorn/fod.log',
           ),
     }
-

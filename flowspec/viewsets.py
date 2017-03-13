@@ -37,7 +37,7 @@ class RouteViewSet(viewsets.ModelViewSet):
 
         if self.request.user.is_superuser:
             return Route.objects.all()
-        elif self.request.user.is_authenticated and not self.request.user.is_anonymous():
+        elif self.request.user.is_authenticated() and not self.request.user.is_anonymous():
             return Route.objects.filter(applier=self.request.user)
 
     def list(self, request):

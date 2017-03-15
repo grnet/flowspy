@@ -296,8 +296,7 @@ def add_route(request):
         form = RouteForm(request_data)
         if form.is_valid():
             route = form.save(commit=False)
-            if not request.user.is_superuser:
-                route.applier = request.user
+            route.applier = User.objects.get(username=request.user.username)
             route.status = "PENDING"
             route.response = "Applying"
             route.source = IPNetwork('%s/%s' % (IPNetwork(route.source).network.compressed, IPNetwork(route.source).prefixlen)).compressed

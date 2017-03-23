@@ -376,8 +376,7 @@ def edit_route(request, route_slug):
             route.name = route_original.name
             route.status = route_original.status
             route.response = route_original.response
-            if not request.user.is_superuser:
-                route.applier = request.user
+            route.applier = User.objects.get(username=request.user.username)
             if bool(set(changed_data) & set(critical_changed_values)) or (not route_original.status == 'ACTIVE'):
                 route.status = "PENDING"
                 route.response = "Applying"
@@ -463,8 +462,7 @@ def delete_route(request, route_slug):
         if applier_peer == requester_peer or request.user.is_superuser:
             route.status = "PENDING"
             route.expires = datetime.date.today()
-            if not request.user.is_superuser:
-                route.applier = request.user
+            route.applier = User.objects.get(username=request.user.username)
             route.response = "Deactivating"
             try:
                 route.requesters_address = request.META['HTTP_X_FORWARDED_FOR']

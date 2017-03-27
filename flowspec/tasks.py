@@ -48,95 +48,66 @@ logger.addHandler(handler)
 
 
 @task(ignore_result=True)
-def add(route, callback=None):
+def add(route):
+    """
+    Asynchronous rule `add` task implementation
+
+    :param route: The `Route` object to sync with the flowspec
+    device
+    :type route: `flowspec.models.Route`
+    """
     try:
         applier = PR.Applier(route_object=route)
         commit, response = applier.apply()
-        if commit:
-            status = "ACTIVE"
-        else:
-            status = "ERROR"
-        route.status = status
+        route.status = 'ACTIVE' if commit else 'ERROR'
         route.response = response
-        route.save()
-        announce(
-            "[%s] Rule add: %s - Result: %s" % (
-                route.applier, route.name, response),
-            route.applier, route)
-    except TimeLimitExceeded:
+    except (TimeLimitExceeded, SoftTimeLimitExceeded, Exception) as exc:
         route.status = "ERROR"
-        route.response = "Task timeout"
+        route.response = "Task timeout" if issubclass(
+            exc, (TimeLimitExceeded, SoftTimeLimitExceeded)) else 'Error'
+    finally:
         route.save()
-        announce(
-            "[%s] Rule add: %s - Result: %s" % (
-                route.applier, route.name, route.response),
-            route.applier, route)
-    except SoftTimeLimitExceeded:
-        route.status = "ERROR"
-        route.response = "Task timeout"
-        route.save()
-        announce(
-            "[%s] Rule add: %s - Result: %s" % (
-                route.applier, route.name, route.response),
-            route.applier, route)
-    except Exception:
-        route.status = "ERROR"
-        route.response = "Error"
-        route.save()
-        announce(
-            "[%s] Rule add: %s - Result: %s" % (
-                route.applier, route.name, route.response),
-            route.applier, route)
+        announce("[%s] Rule add: %s - Result: %s" % (
+            route.applier, route.name, route.response), route.applier, route)
 
 
 @task(ignore_result=True)
-def edit(route, callback=None):
+def edit(route):
+    """
+    Asynchronous rule `edit` task implementation
+
+    :param route: The `Route` object to sync with the flowspec
+    device
+    :type route: `flowspec.models.Route`
+    """
     try:
         applier = PR.Applier(route_object=route)
         commit, response = applier.apply(operation="replace")
-        if commit:
-            status = "ACTIVE"
-        else:
-            status = "ERROR"
-        route.status = status
+        route.status = 'ACTIVE' if commit else 'ERROR'
         route.response = response
-        route.save()
-        announce(
-            "[%s] Rule edit: %s - Result: %s" % (
-                route.applier, route.name, response),
-            route.applier, route)
-    except TimeLimitExceeded:
+    except (TimeLimitExceeded, SoftTimeLimitExceeded, Exception) as exc:
         route.status = "ERROR"
-        route.response = "Task timeout"
+        route.response = "Task timeout" if issubclass(
+            exc, (TimeLimitExceeded, SoftTimeLimitExceeded)) else 'Error'
+    finally:
         route.save()
-        announce(
-            "[%s] Rule edit: %s - Result: %s" % (
-                route.applier, route.name, route.response),
-            route.applier, route)
-    except SoftTimeLimitExceeded:
-        route.status = "ERROR"
-        route.response = "Task timeout"
-        route.save()
-        announce(
-            "[%s] Rule edit: %s - Result: %s" % (
-                route.applier, route.name, route.response),
-            route.applier, route)
-    except Exception:
-        route.status = "ERROR"
-        route.response = "Error"
-        route.save()
-        announce(
-            "[%s] Rule edit: %s - Result: %s" % (
-                route.applier, route.name, route.response),
-            route.applier, route)
+        announce("[%s] Rule edit: %s - Result: %s" % (
+            route.applier, route.name, route.response), route.applier, route)
 
 
 @task(ignore_result=True)
 def delete(route, **kwargs):
+    """
+    Asynchronous rule `delete` task implementation
+
+    :param route: The `Route` object to delete from the flowspec
+    device
+    :type route: `flowspec.models.Route`
+    """
+    reason_text = ''
     try:
         applier = PR.Applier(route_object=route)
         commit, response = applier.apply(operation="delete")
-        reason_text = ''
         if commit:
             status = "INACTIVE"
             if "reason" in kwargs and kwargs['reason'] == 'EXPIRED':
@@ -146,35 +117,15 @@ def delete(route, **kwargs):
             status = "ERROR"
         route.status = status
         route.response = response
-        route.save()
-        announce(
-            "[%s] Suspending rule : %s%s- Result %s" % (
-                route.applier, route.name, reason_text, response),
-            route.applier, route)
-    except TimeLimitExceeded:
+    except (TimeLimitExceeded, SoftTimeLimitExceeded, Exception) as exc:
         route.status = "ERROR"
-        route.response = "Task timeout"
+        route.response = "Task timeout" if issubclass(
+            exc, (TimeLimitExceeded, SoftTimeLimitExceeded)) else 'Error'
+    finally:
         route.save()
-        announce(
-            "[%s] Suspending rule : %s - Result: %s" % (
-                route.applier, route.name, route.response),
-            route.applier, route)
-    except SoftTimeLimitExceeded:
-        route.status = "ERROR"
-        route.response = "Task timeout"
-        route.save()
-        announce(
-            "[%s] Suspending rule : %s - Result: %s" % (
-                route.applier, route.name, route.response),
-            route.applier, route)
-    except Exception:
-        route.status = "ERROR"
-        route.response = "Error"
-        route.save()
-        announce(
-            "[%s] Suspending rule : %s - Result: %s" % (
-                route.applier, route.name, route.response),
-            route.applier, route)
+        announce("[%s] Suspending rule : %s%s- Result %s" % (
+            route.applier, route.name, reason_text, response),
+                 route.applier, route)
 
 
 # May not work in the first place... proxy is not aware of Route models

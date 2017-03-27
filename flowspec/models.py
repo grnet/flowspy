@@ -197,169 +197,146 @@ class Route(models.Model):
             except Exception:
                 raise ValidationError(_('Invalid network address format at Source Field'))
 
-    def commit_add(self, *args, **kwargs):
-        peers = self.applier.userprofile.peers.all()
-        username = None
-        for peer in peers:
-            if username:
-                break
-            for network in peer.networks.all():
-                net = IPNetwork(network)
-                if IPNetwork(self.destination) in net:
-                    username = peer
-                    break
-        if username:
-            peer = username.peer_tag
+    def commit(self, *args, **kwargs):
+        """
+        Takes care of some required actions when adding / deleting / editing
+        a `Route` such as:
+
+        1) issuing asynchronous tasks (w Celery) to sync the changes to the
+        flowspec device
+        2) emails the user's administrators for the changes in the rule
+
+        :param action: If specified this action will be forced
+        :type action: str - One of ['add', 'delete', 'edit']
+        """
+
+        def get_acting_peer():
+            """
+            A user might belong to multiple `Peer`s. Using the subnet,
+            (since subnets will belong to one `Peer` only) we can see
+            which `Peer` the user is "acting" under at this time.
+
+            :returns: The acting peer and his peer tag
+            :rtype: tuple(`accounts.models.Peer`, str)
+            """
+
+            acting_peer = next((
+                peer for peer in self.applier.userprofile.peers.all()
+                for network in peer.networks.all()
+                if IPNetwork(self.destination) in IPNetwork(network)), None)
+            peer_tag = acting_peer.peer_tag if (
+                acting_peer and acting_peer.peer_tag) else None
+            return (acting_peer, peer_tag)
+
+        def format_action(action):
+            """
+            Word mappings for the different actions. Required for rendering
+            the correct email / log messages for each action
+
+            :param action: the name of the action
+            :type action: str
+
+            :returns: the word mappings for this action
+            :rtype: tuple(str, str)
+            """
+
+            mappings = {
+                'delete': ('deleting', 'deletion'),
+                'add': ('adding', 'addition'),
+                'edit': ('editing', 'edit')}
+
+            return mappings.get(action, ('', ''))
+
+        def commit_actions(case, case_func, *args, **kwargs):
+            """
+            Takes care of the actual commit actions 
+            (send async task, messages etc)
+
+            :param case: The commit case
+            :type case: str
+
+            :param case_func: The function that implements the commit case
+            :type case_func: func
+            """
+
+            (_, peer_tag) = get_acting_peer()
+            send_message(
+                "[{}] {} rule {}. Please wait...".format(
+                    self.applier.username, format_action(case)[0].capitalize(),
+                    self.name), peer_tag)
+            response = case_func.delay(self)
+            logger.info('Got {} job id: {}'.format(case, response))
+
+        def post_commit_actions(case, *args, **kwargs):
+            """
+            Takes care of some post-commit actions
+            (sends emails to the correct authorities & so on)
+
+            :param case: The commit case
+            :type case: str
+            """
+            (peer, _) = get_acting_peer()
+            fqdn = Site.objects.get_current().domain
+            admin_url = 'https://%s%s' % (
+                fqdn, reverse('edit-route', kwargs={'route_slug': self.name}))
+            mail_body = render_to_string(
+                'rule_action.txt',
+                {'route': self, 'address': self.requesters_address,
+                 'action': format_action(case)[1], 'url': admin_url,
+                 'peer': peer})
+            user_mail = '%s' % self.applier.email
+            user_mail = user_mail.split(';')
+            send_new_mail(
+                settings.EMAIL_SUBJECT_PREFIX +
+                'Rule {} {} request submitted by {}'.format(
+                    self.name, format_action(case)[1], self.applier.username),
+                mail_body, settings.SERVER_EMAIL, user_mail,
+                get_peer_techc_mails(self.applier, peer))
+            data = {
+                'clientip': '%s' % self.requesters_address,
+                'user': self.applier.username }
+            logger.info(mail_body, extra=data)
+
+        action = kwargs.get('action')
+        if action not in ['add', 'delete', 'edit', None]:
+            raise RuntimeError(
+                'Valid actions are [\'add\', \'edit\', \'delete\']')
         else:
-            peer = None
-        send_message("[%s] Adding rule %s. Please wait..." % (self.applier.username, self.name), peer)
-        response = add.delay(self)
-        logger.info('Got add job id: %s' % response)
-        fqdn = Site.objects.get_current().domain
-        admin_url = 'https://%s%s' % (
-            fqdn,
-            reverse('edit-route', kwargs={'route_slug': self.name})
-        )
-        mail_body = render_to_string(
-            'rule_action.txt',
-            {
-                'route': self,
-                'address': self.requesters_address,
-                'action': 'creation',
-                'url': admin_url,
-                'peer': username
-            }
-        )
-        user_mail = '%s' % self.applier.email
-        user_mail = user_mail.split(';')
-        send_new_mail(
-            settings.EMAIL_SUBJECT_PREFIX + 'Rule %s creation request submitted by %s' % (self.name, self.applier.username),
-            mail_body,
-            settings.SERVER_EMAIL, user_mail,
-            get_peer_techc_mails(self.applier, username)
-        )
-        d = {
-            'clientip': '%s' % self.requesters_address,
-            'user': self.applier.username
-        }
-        logger.info(mail_body, extra=d)
+            if action == 'add':
+                commit_actions('add', add, args, kwargs)
+            elif action == 'edit':
+                commit_actions('edit', edit, args, kwargs)
+            elif action == 'delete':
+                commit_actions('delete', delete, args, kwargs)
+            else:
+                # This function should (at sometime) figure out the action
+                # it needs to do without someone forcing it as an argument.
+                # In that case, `action` will be `None`
+                raise NotImplementedError(
+                    'Automatically figuring out the action'
+                    'is not implemented yet')
+            post_commit_actions(action)
+
+    def commit_add(self, *args, **kwargs):
+        """
+        Forces an "add" commit
+        """
+        kwargs.update({'action': 'add'})
+        self.commit(*args, **kwargs)
 
     def commit_edit(self, *args, **kwargs):
-        peers = self.applier.userprofile.peers.all()
-        username = None
-        for peer in peers:
-            if username:
-                break
-            for network in peer.networks.all():
-                net = IPNetwork(network)
-                if IPNetwork(self.destination) in net:
-                    username = peer
-                    break
-        if username:
-            peer = username.peer_tag
-        else:
-            peer = None
-        send_message(
-            '[%s] Editing rule %s. Please wait...' %
-            (
-                self.applier.username,
-                self.name
-            ), peer
-        )
-        response = edit.delay(self)
-        logger.info('Got edit job id: %s' % response)
-        fqdn = Site.objects.get_current().domain
-        admin_url = 'https://%s%s' % (
-            fqdn,
-            reverse(
-                'edit-route',
-                kwargs={'route_slug': self.name}
-            )
-        )
-        mail_body = render_to_string(
-            'rule_action.txt',
-            {
-                'route': self,
-                'address': self.requesters_address,
-                'action': 'edit',
-                'url': admin_url,
-                'peer': username
-            }
-        )
-        user_mail = '%s' % self.applier.email
-        user_mail = user_mail.split(';')
-        send_new_mail(
-            settings.EMAIL_SUBJECT_PREFIX + 'Rule %s edit request submitted by %s' % (self.name, self.applier.username),
-            mail_body, settings.SERVER_EMAIL, user_mail,
-            get_peer_techc_mails(self.applier, username)
-        )
-        d = {
-            'clientip': self.requesters_address,
-            'user': self.applier.username
-        }
-        logger.info(mail_body, extra=d)
+        """
+        Forces an "edit" commit
+        """
+        kwargs.update({'action': 'edit'})
+        self.commit(*args, **kwargs)
 
     def commit_delete(self, *args, **kwargs):
-        username = None
-        reason_text = ''
-        reason = ''
-        if "reason" in kwargs:
-            reason = kwargs['reason']
-            reason_text = 'Reason: %s.' % reason
-        peers = self.applier.userprofile.peers.all()
-        for peer in peers:
-            if username:
-                break
-            for network in peer.networks.all():
-                net = IPNetwork(network)
-                if IPNetwork(self.destination) in net:
-                    username = peer
-                    break
-        if username:
-            peer = username.peer_tag
-        else:
-            peer = None
-        send_message(
-            '[%s] Suspending rule %s. %sPlease wait...' % (
-                self.applier.username,
-                self.name,
-                reason_text
-            ), peer
-        )
-        response = delete.delay(self, reason=reason)
-        logger.info('Got delete job id: %s' % response)
-        fqdn = Site.objects.get_current().domain
-        admin_url = 'https://%s%s' % (
-            fqdn,
-            reverse(
-                'edit-route',
-                kwargs={'route_slug': self.name}
-            )
-        )
-        mail_body = render_to_string(
-            'rule_action.txt',
-            {
-                'route': self,
-                'address': self.requesters_address,
-                'action': 'removal',
-                'url': admin_url,
-                'peer': username
-            }
-        )
-        user_mail = '%s' % self.applier.email
-        user_mail = user_mail.split(';')
-        send_new_mail(
-            settings.EMAIL_SUBJECT_PREFIX + 'Rule %s removal request submitted by %s' % (self.name, self.applier.username),
-            mail_body,
-            settings.SERVER_EMAIL,
-            user_mail,
-            get_peer_techc_mails(self.applier, username)
-        )
-        d = {
-            'clientip': self.requesters_address,
-            'user': self.applier.username
-        }
-        logger.info(mail_body, extra=d)
+        """
+        Forces a "delete" commit
+        """
+        kwargs.update({'action': 'delete'})
+        self.commit(*args, **kwargs)
 
     def has_expired(self):
         today = datetime.date.today()

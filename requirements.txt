@@ -7,5 +7,5 @@ djangorestframework==2.4.3
 gevent==0.13.6
 greenlet==0.4.11
 ncclient==0.5.3
-nxpy==0.4.2
+git+https://code.grnet.gr/git/nxpy
 redis==2.10.1

@@ -64,10 +64,12 @@ To succesfully upgrade to the new version you first need to make sure you have
 applied the latest migrations before the upgrade. To do this:
 
     git pull origin master
-    git checkout pre-upgrade
+    git checkout v1.3.1
     ./manage.py migrate
 
 Then you are ready to upgrade to the latest version.
+
+    git checkout master
 
 ### Installation of new packages
 
@@ -91,7 +93,6 @@ It is also suggested (but not directly required) to upgrade your `nxpy` &
 
 To upgrade:
 
-    git checkout master
     ./manage.py migrate
 
 To install `python-celery` you must first ensure that any previous custom
@@ -119,15 +120,90 @@ and the upgrade is complete.
 
 ## Post upgrade configuration
 
-### Celery & Celerybeat
+### Celery using Debian Jessie system package
 
 In production you will probably want to run Celery as a service (using `init.d`)
 . To do so, you must update the Celery init.d scripts since Debian Jessie has a
 bug:
 
-Then, you need to update the default Celery config with your environment
-specific options:
+    /etc/init.d/celeryd:
+     
+    _chuid () {
+    -    su "$CELERYD_USER" -c "$CELERYD_MULTI $*"
+    +    su "$CELERYD_USER" --shell=/bin/sh -c "$CELERYD_MULTI $*"
+    }
 
-In the previous init script we used to run Celery as `root`. Since we now
-changed the user to `celery`, you need to make sure that this user is allowed
-to write on the logfile. To do so:
+    /etc/init.d/celerybeat:
+
+    _chuid () {
+    -    su "$CELERYBEAT_USER" -c "$CELERYBEAT $*"
+    +    su --shell=/bin/sh "$CELERYBEAT_USER" -c "$CELERYBEAT $*"
+    }
+
+Then, you need to update the default Celery config
+with your environment specific options.
+Some defaults would be:
+
+
+    /etc/defaults/celeryd:
+
+    # Change this to true when done to enable the init.d script.
+    # Default: false
+    ENABLED="true"
+    
+    # Name of nodes to start
+    # here we have a single node
+    CELERYD_NODES="flowspy"
+    # or we could have three nodes:
+    # CELERYD_NODES="w1 w2 w3"
+    
+    # Where to chdir at start.
+    CELERYD_CHDIR="<your-deployment-directory>"
+    CELERY_APP="flowspy"
+    
+    # Extra arguments to celeryd
+    CELERYD_OPTS="--time-limit=300 --concurrency=2"
+    
+    # %n will be replaced with the nodename.
+    CELERYD_LOG_FILE="/var/log/celery/%n.log"
+    
+    # Workers should run as an unprivileged user.
+    CELERYD_USER="<a-user-to-run-celery>"
+    CELERYD_GROUP="<a-group>"
+
+
+    /etc/defaults/celerybeat:
+ 
+    # Default: false
+    ENABLED="true"
+    
+    # Where to chdir at start.
+    CELERYBEAT_CHDIR="<your-deployment-directory>"
+    
+    # Extra arguments to celeryd
+    CELERYBEAT_OPTS="--schedule=/var/run/celery/celerybeat-schedule "
+    # Name of the celery config module.
+    CELERY_CONFIG_MODULE="flowspy"
+    
+    # Workers should run as an unprivileged user.
+    CELERYD_USER="celery"
+    CELERYD_GROUP="celery"
+
+
+Finally, make sure the user has permissions to write to the log files
+
+You can now run celery / celerybeat using
+
+    /etc/init.d/celeryd start
+    /etc/init.d/celerybeat start
+
+### Celery running from a virtualenv
+
+Things are quite simple here. Go to the installation directory,
+activate your virtualenv and run a celery worker:
+
+    celery -A flowspy worker
+
+To run celerybeat:
+
+    celery -A flowspy beat

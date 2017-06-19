@@ -126,14 +126,19 @@ In production you will probably want to run Celery as a service (using `init.d`)
 . To do so, you must update the Celery init.d scripts since Debian Jessie has a
 bug:
 
-    /etc/defaults/celeryd:
+    /etc/init.d/celeryd:
      
-     _chuid () {
+    _chuid () {
     -    su "$CELERYD_USER" -c "$CELERYD_MULTI $*"
     +    su "$CELERYD_USER" --shell=/bin/sh -c "$CELERYD_MULTI $*"
-     }
+    }
 
-    /etc/default/celerybeat:
+    /etc/init.d/celerybeat:
+
+    _chuid () {
+    -    su "$CELERYBEAT_USER" -c "$CELERYBEAT $*"
+    +    su --shell=/bin/sh "$CELERYBEAT_USER" -c "$CELERYBEAT $*"
+    }
 
 Then, you need to update the default Celery config
 with your environment specific options.

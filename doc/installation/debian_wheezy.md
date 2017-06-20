@@ -46,6 +46,10 @@ Update and install the required packages:
 Also, django rest framework package is required. In debian Wheezy it is
 not available, but one can install it via pip.
 
+Please note that if you install `djangorestframework>2.3` you will also need `South>=1`.
+You can only install this via pip since the debian wheezy version is 0.7.
+Also, only versions 2.x are supported.
+
 > **note**
 >
 > Set username and password for mysql if used

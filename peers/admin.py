@@ -58,7 +58,7 @@ class TechcEmailAdmin(admin.ModelAdmin):
 
 class PeerNotifyAdmin(admin.ModelAdmin):
     list_display = ('peer', 'user', 'peer_activation_notified')
-    search_fields = ['peer', 'user']
+    search_fields = ['peer__peer_name', 'user__username']
 
 
 admin.site.register(Peer, PeerAdmin)

@@ -9,3 +9,5 @@ greenlet==0.4.11
 ncclient==0.5.3
 nxpy==0.4.2
 redis==2.10.1
+ipaddr==2.1.10
+git+https://code.grnet.gr/git/nxpy

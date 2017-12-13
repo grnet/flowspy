@@ -109,12 +109,13 @@ def clean_destination(user, destination):
 def clean_expires(date):
     if date:
         range_days = (date - datetime.date.today()).days
-        if 0 < range_days < settings.MAX_RULE_EXPIRE_DAYS:
+        max_rule_expire_days = getattr(settings, "MAX_RULE_EXPIRE_DAYS", 10)
+        if 0 < range_days < max_rule_expire_days:
             return date
         else:
             return _(
                 'Invalid date range. A rule cannot remain active '
-                'for more than {} days'.format(settings.MAX_RULE_EXPIRE_DAYS))
+                'for more than {} days'.format(max_rule_expire_days))
 
 
 def value_list_to_list(valuelist):

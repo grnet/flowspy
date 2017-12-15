@@ -1,4 +1,43 @@
 =======
+2.0 RELEASE
+Update to django 1.8 and enhancements. Check documentation for updating from previous versions
+    - Upgrade path from Django 1.4 -> 1.8. Drop support for versions < 1.8
+    - Fallback for optional MAX_RULE_EXPIRE_DAYS setting
+    - Add missing ipaddr and nxpy requirements
+    - Fix invalid field ref in admin peer notify search
+    - Update docs with some notes for djangorestframework
+    - Fix REST API issues
+    - Update translations
+    - Refactor `commit_*` & `flowspec/tasks.py`
+    - Change default SHIB_* attributes
+    - Upgrade docs, requirements, settings.py.dist
+    - Reform static files, add paths to `.gitignore`
+    - Changes for Celery 3
+    - Migrations & changes in models
+    - Propagate changes in `edit_route`, `delete_route`
+    - Propagate changes in `edit_route`, `delete_route`
+    - Fix issue with `request.user` in Celery task
+    - Support optional members sentry config
+    - Fix issues causing REST API to throw HTTP500
+
+=======
+1.3 RELEASE
+Updates and enhancements. Check documentation for updating from previous versions
+    - Fix wrong graphs urls import, remove `urls.py.dist`
+    - Fix user accounts assigned with wrong peers
+    - Fix image dimensions in welcome page
+    - Fix multi-peer registration
+    - Exclude tables from migrations
+    - Change DEBUG to False in settings.py.dist
+    - Handle bug when user is not associated with peer
+    - Add dependencies on migrations
+    - Update migrations to exclude non-django managed db tables
+    - Form validation logic moved to validators in order to be used by the serializer as well.
+    - Reduce queries
+    - Prefetch related in order to reduce sql from 80 to 24 queries
+    - Update south
+
+=======
 1.2 RELEASE
 Updates and enhancements. Check documentation for updating from previous versions
 	- Code Cleanup

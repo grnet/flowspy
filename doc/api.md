@@ -268,7 +268,7 @@ existing) since we need it's `id`. Let's assume a `ThenAction` with an `id` of
 `4` exists. To create a new `Route` with this `ThenAction`:
 
 ```
-curl -X POST https://fod.example.com/api/routes/ -F "source=62.217.45.75/32" -F "destination=62.217.45.91/32" -F "name=testroute" -F "comments=Route for testing" -F "then=https://fod.example.com/api/thenactions/4" -H "Authorization: Token <your-token>"
+curl -X POST -H "Content-Type: application/json" -H "Authorization: Token <your-token>" https://fod.staging.grnet.gr/api/routes/ -d '{"source":"62.217.45.75/32", "destination":"62.217.45.91/32", "name":"testroute", "then":["https://fod.staging.grnet.gr/api/thenactions/4/"]}'
 
 {
     "name":"testroute_9Q5Y90",

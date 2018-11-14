@@ -5,7 +5,6 @@ from django.core.mail import send_mail
 from django.utils.translation import ugettext as _
 from peers.models import PeerRange, Peer
 from flowspec.models import Route
-from django.core.urlresolvers import reverse
 
 
 def get_network(ip):
@@ -31,8 +30,6 @@ def clean_ip(address):
 def clean_status(status):
     """
     Verifies the `status` of a `Route` is valid.
-    Only allows `ACTIVE` / `INACTIVE` states since the rest should be
-    assigned from the application
 
     :param status: the status of a `Route`
     :type status: str
@@ -41,7 +38,7 @@ def clean_status(status):
     :rtype: str
     """
 
-    allowed_states = ['ACTIVE', 'INACTIVE']
+    allowed_states = ['ACTIVE', 'INACTIVE', 'PENDING']
 
     if status not in allowed_states:
         return _('Invalid status value. You are allowed to use "{}".'.format(
